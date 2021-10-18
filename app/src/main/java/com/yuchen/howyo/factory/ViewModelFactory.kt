@@ -2,6 +2,7 @@ package com.yuchen.howyo.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.data.source.HowYoRepository
 
 class ViewModelFactory constructor(
@@ -12,8 +13,8 @@ class ViewModelFactory constructor(
         with(modelClass) {
             when {
                 //Sample
-//                isAssignableFrom(CheckoutSuccessViewModel::class.java) ->
-//                    CheckoutSuccessViewModel(stylishRepository)
+                isAssignableFrom(MainViewModel::class.java) ->
+                    MainViewModel(howYoRepository)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

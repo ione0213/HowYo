@@ -1,6 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/navigation">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
 
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.yuchen.howyo.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.yuchen.howyo.home.notification.NotificationFragment"
+        android:label="NotificationFragment"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/discoverFragment"
+        android:name="com.yuchen.howyo.discover.DiscoverFragment"
+        android:label="DiscoverFragment"
+        tools:layout="@layout/fragment_discover" />
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.yuchen.howyo.favorite.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.yuchen.howyo.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.yuchen.howyo.profile.friends.FriendsFragment"
+        android:label="FriendsFragment"
+        tools:layout="@layout/fragment_friends" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.yuchen.howyo.profile.setting.SettingFragment"
+        android:label="SettingFragment"
+        tools:layout="@layout/fragment_friends" />
+    <fragment
+        android:id="@+id/planFragment"
+        android:name="com.yuchen.howyo.plan.PlanFragment"
+        android:label="PlanFragment"
+        tools:layout="@layout/fragment_plan" />
+    <fragment
+        android:id="@+id/groupMessageFragment"
+        android:name="com.yuchen.howyo.plan.groupmessage.GroupMessageFragment"
+        android:label="GroupMessageFragment"
+        tools:layout="@layout/fragment_group_message" />
+    <fragment
+        android:id="@+id/shoppingListFragment"
+        android:name="com.yuchen.howyo.plan.shoppinglist.ShoppingListFragment"
+        android:label="ShoppingListFragment"
+        tools:layout="@layout/fragment_shopping_list" />
+    <fragment
+        android:id="@+id/checkListFragment"
+        android:name="com.yuchen.howyo.plan.checklist.CheckListFragment"
+        android:label="CheckListFragment"
+        tools:layout="@layout/fragment_check_list" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.yuchen.howyo.plan.payment.PaymentFragment"
+        android:label="PaymentFragment"
+        tools:layout="@layout/fragment_payment" />
+    <fragment
+        android:id="@+id/paymentDetailFragment"
+        android:name="com.yuchen.howyo.plan.payment.paymentdetail.PaymentDetailFragment"
+        android:label="PaymentDetailFragment"
+        tools:layout="@layout/fragment_payment_detail" />
+    <fragment
+        android:id="@+id/findLocationFragment"
+        android:name="com.yuchen.howyo.plan.findlocation.FindLocationFragment"
+        android:label="FindLocationFragment"
+        tools:layout="@layout/fragment_find_location" />
+    <dialog
+        android:id="@+id/PlanCoverDialog"
+        android:name="com.yuchen.howyo.plan.cover.PlanCoverDialog"
+        android:label="PlanCoverDialog"
+        tools:layout="@layout/dialog_plan_cover" />
+
+    <action
+        android:id="@+id/nav_to_home_fragment"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_discover_fragment"
+        app:destination="@id/discoverFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_favorite_fragment"
+        app:destination="@id/favoriteFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_profile_fragment"
+        app:destination="@id/profileFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_friends_fragment"
+        app:destination="@id/friendsFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_setting_fragment"
+        app:destination="@id/settingFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_plan_fragment"
+        app:destination="@id/planFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_group_message_fragment"
+        app:destination="@id/groupMessageFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_shopping_list_fragment"
+        app:destination="@id/shoppingListFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_check_list_fragment"
+        app:destination="@id/checkListFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_payment_fragment"
+        app:destination="@id/paymentFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_payment_detail_fragment"
+        app:destination="@id/paymentDetailFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_find_locaiton_fragment"
+        app:destination="@id/findLocationFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/nav_to_plan_cover_dialog"
+        app:destination="@id/PlanCoverDialog" />
 </navigation>

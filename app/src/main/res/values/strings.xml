@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">HowYo</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- General -->
+    <string name="home">好友行程</string>
+    <string name="discover">探索</string>
+    <string name="favorite">收藏行程</string>
+    <string name="notification">通知</string>
+    <string name="shopping_list">購物清單</string>
+    <string name="check_list">行李清單</string>
+    <string name="payment">款項清單</string>
+    <string name="add_payment">新增款項</string>
+    <string name="payment_detail">款項資訊</string>
+    <string name="find_location">尋找景點</string>
+    <string name="setting">設定</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
