@@ -1,4 +1,4 @@
-package com.yuchen.howyo.plan.detail
+package com.yuchen.howyo.plan.detail.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

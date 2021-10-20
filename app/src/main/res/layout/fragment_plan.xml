@@ -29,7 +29,7 @@
             android:id="@+id/button_plan_close"
             android:layout_width="@dimen/plan_img_btn_small"
             android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/standard_padding"
             android:background="@drawable/icons_44px_back01"
             app:layout_constraintStart_toStartOf="parent"

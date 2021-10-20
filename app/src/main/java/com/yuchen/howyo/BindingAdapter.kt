@@ -16,10 +16,7 @@ import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.ext.toDate
 import com.yuchen.howyo.plan.PlanDaysAdapter
 import com.yuchen.howyo.plan.ScheduleAdapter
-import com.yuchen.howyo.plan.detail.DetailImagesAdapter
-import com.yuchen.howyo.util.Logger
-import java.text.SimpleDateFormat
-import java.util.*
+import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")

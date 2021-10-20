@@ -102,6 +102,7 @@ dependencies {
 
     //Google Map
     implementation "com.google.android.gms:play-services-maps:$varsion_map_service"
+    implementation "com.google.android.gms:play-services-location:$varsion_location_service"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

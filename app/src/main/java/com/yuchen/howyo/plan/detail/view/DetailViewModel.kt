@@ -1,4 +1,4 @@
-package com.yuchen.howyo.plan.detail
+package com.yuchen.howyo.plan.detail.view
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

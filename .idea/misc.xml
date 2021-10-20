@@ -22,7 +22,8 @@
         <entry key="app/src/main/res/layout/fragment_add_new_plan_dialog.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_check_list.xml" value="0.20833333333333334" />
-        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.4536741214057508" />
+        <entry key="app/src/main/res/layout/fragment_detail_edit.xml" value="0.22916666666666666" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_find_location.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.20833333333333334" />

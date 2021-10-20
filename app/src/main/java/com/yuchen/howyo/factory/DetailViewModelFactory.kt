@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.source.HowYoRepository
-import com.yuchen.howyo.plan.detail.DetailViewModel
+import com.yuchen.howyo.plan.detail.view.DetailViewModel
 
 class DetailViewModelFactory(
     private val howYoRepository: HowYoRepository,

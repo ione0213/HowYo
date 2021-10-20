@@ -47,7 +47,7 @@
         tools:layout="@layout/fragment_plan" />
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.yuchen.howyo.plan.detail.DetailFragment"
+        android:name="com.yuchen.howyo.plan.detail.view.DetailFragment"
         android:label="DetailFragment"
         tools:layout="@layout/fragment_detail">
         <argument
