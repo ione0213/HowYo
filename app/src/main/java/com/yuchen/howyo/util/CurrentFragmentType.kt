@@ -7,6 +7,7 @@ enum class CurrentFragmentType(val value: String) {
     HOME(getString(R.string.home)),
     DISCOVER(getString(R.string.discover)),
     FAVORITE(getString(R.string.favorite)),
+    PLAN(""),
     NOTIFICATION(getString(R.string.notification)),
     GROUP_MESSAGE("Plan title(tmp)"),
     SHOPPING_LIST(getString(R.string.shopping_list)),

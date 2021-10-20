@@ -3,6 +3,9 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
+
 }
 
 android {
@@ -91,6 +94,14 @@ dependencies {
 
     // Fragment
     implementation "androidx.fragment:fragment-ktx:$version_fragment"
+
+    //Firebase
+    implementation 'com.google.firebase:firebase-firestore:23.0.4'
+    implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //Google Map
+    implementation "com.google.android.gms:play-services-maps:$varsion_map_service"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

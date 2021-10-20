@@ -3,7 +3,23 @@
     <dimen name="elevation_all">4dp</dimen>
     <dimen name="size_bottom_nav_icon">36dp</dimen>
 
+    <!-- Padding -->
+    <dimen name="large_padding">36dp</dimen>
+    <dimen name="standard_padding">24dp</dimen>
+    <dimen name="middle_padding">16dp</dimen>
+    <dimen name="small_padding">8dp</dimen>
+
+    <!-- EditText-->
+    <dimen name="cover_plan_edittext">70dp</dimen>
+
     <!-- Toolbar -->
     <dimen name="height_toolbar">80dp</dimen>
     <dimen name="height_status_bar_origin">24dp</dimen>
+    <dimen name="plan_img_btn_big">56dp</dimen>
+    <dimen name="plan_img_btn">36dp</dimen>
+    <dimen name="plan_img_btn_small">24dp</dimen>
+    <dimen name="plan_bottom_layout">36dp</dimen>
+
+
+    <dimen name="height_detail_gallery">250dp</dimen>
 </resources>

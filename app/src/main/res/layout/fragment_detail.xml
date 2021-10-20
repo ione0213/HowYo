@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.detail.DetailViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".plan.detail.DetailFragment">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_detail_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:background="@drawable/icons_44px_back01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_detail_images"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_detail_gallery"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:images="@{viewModel.schedule.photoUrlList}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_detail_image"/>
+
+        <ImageView
+            android:id="@+id/img_detail_type"
+            android:layout_width="@dimen/plan_img_btn"
+            android:layout_height="@dimen/plan_img_btn"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginStart="@dimen/large_padding"
+            android:src="@drawable/train"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_detail_images" />
+
+        <TextView
+            android:id="@+id/text_detail_title"
+            style="@style/TextStyle2_black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:text="APA Hotel Nagoya-Sakae"
+            android:textAlignment="viewStart"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/img_detail_type"
+            app:layout_constraintTop_toTopOf="@+id/img_detail_type"
+            app:layout_constraintBottom_toBottomOf="@+id/img_detail_type"
+            android:layout_marginEnd="@dimen/small_padding"
+            tools:text="APA Hotel Nagoya-Sakae" />
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

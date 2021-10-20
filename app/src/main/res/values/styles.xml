@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PlanCoverDialog">
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+        <item name="android:windowBackground">@color/translucent_40</item>
+        <item name="android:animation">@null</item>
+    </style>
+
+    <style name="InputTextColorTheme" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/gray2</item>
+        <item name="colorControlActivated">@color/gray_black</item>
+        <item name="android:colorControlHighlight">@color/gray_black</item>
+    </style>
+    <style name="circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

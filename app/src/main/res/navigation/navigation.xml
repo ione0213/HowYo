@@ -46,6 +46,16 @@
         android:label="PlanFragment"
         tools:layout="@layout/fragment_plan" />
     <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.yuchen.howyo.plan.detail.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="schedule"
+            app:argType="com.yuchen.howyo.data.Schedule"
+            app:nullable="false" />
+    </fragment>
+    <fragment
         android:id="@+id/groupMessageFragment"
         android:name="com.yuchen.howyo.plan.groupmessage.GroupMessageFragment"
         android:label="GroupMessageFragment"
@@ -116,6 +126,9 @@
         app:destination="@id/planFragment"
         app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_detail_fragment"
+        app:destination="@id/detailFragment" />
     <action
         android:id="@+id/nav_to_group_message_fragment"
         app:destination="@id/groupMessageFragment"

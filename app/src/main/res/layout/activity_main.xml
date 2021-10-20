@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="com.yuchen.howyo.util.CurrentFragmentType" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.MainViewModel" />
@@ -27,6 +31,7 @@
                 android:layout_height="@dimen/height_toolbar"
                 android:background="@color/white"
                 android:elevation="@dimen/elevation_all"
+                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PLAN ? View.GONE : View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -38,10 +43,10 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/noto_sans"
                     android:letterSpacing="0.15"
+                    android:text="@{viewModel.currentFragmentType.value}"
                     android:textColor="@color/gray_black"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:text="@{viewModel.currentFragmentType.value}"
                     tools:layout_editor_absoluteX="177dp"
                     tools:layout_editor_absoluteY="18dp"
                     tools:text="Stylish"
@@ -74,6 +79,7 @@
                 android:layout_height="56dp"
                 android:background="@color/white"
                 android:elevation="@dimen/elevation_all"
+                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PLAN ? View.GONE : View.VISIBLE}"
                 app:itemIconSize="@dimen/size_bottom_nav_icon"
                 app:itemIconTint="@drawable/bottom_nav_item_selector"
                 app:labelVisibilityMode="unlabeled"

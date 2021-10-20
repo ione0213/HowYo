@@ -5,15 +5,43 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.yuchen.howyo.MainViewModel
+import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
+import com.yuchen.howyo.databinding.FragmentPlanBinding
+import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.util.Logger
 
 class PlanFragment : Fragment() {
+
+    private lateinit var binding: FragmentPlanBinding
+    val viewModel by viewModels<PlanViewModel> { getVmFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_plan, container, false)
+    ): View {
+
+        binding = FragmentPlanBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        binding.recyclerPlanDays.adapter = PlanDaysAdapter(viewModel)
+        binding.recyclerPlanSchedules.adapter =
+            ScheduleAdapter(viewModel, ScheduleAdapter.OnClickListener {
+                viewModel.navigateToDetail(it)
+            })
+
+        viewModel.navigateToDetail.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToDetailFragment(it))
+                viewModel.onDetailNavigated()
+            }
+        })
+
+        return binding.root
     }
 }
