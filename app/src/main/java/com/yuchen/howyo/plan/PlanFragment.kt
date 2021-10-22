@@ -5,15 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.util.Logger
 
 class PlanFragment : Fragment() {
 
@@ -39,6 +35,13 @@ class PlanFragment : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToDetailFragment(it))
                 viewModel.onDetailNavigated()
+            }
+        })
+
+        viewModel.navigateToMapMode.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToFindLocaitonFragment())
+                viewModel.onMapModeNavigated()
             }
         })
 

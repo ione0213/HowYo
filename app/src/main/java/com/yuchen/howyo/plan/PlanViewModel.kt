@@ -37,6 +37,12 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val navigateToDetail: LiveData<Schedule>
         get() = _navigateToDetail
 
+    // Handle navigation to map mode
+    private val _navigateToMapMode = MutableLiveData<List<Day>>()
+
+    val navigateToMapMode: LiveData<List<Day>>
+        get() = _navigateToMapMode
+
     init {
         _plan.value = Plan(
             "aabb",
@@ -66,10 +72,11 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 title = "train to kyoto",
                 listOf(
                     "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
+                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
                     "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/Tokyo-Subway-Ticket.jpeg?alt=media&token=a2ea35b5-0e24-4f12-a35c-fd8f740b35ac"
                 ),
-                latitude = 135.75791610883104,
-                longitude = 34.98586570883951,
+//                latitude = 135.75791610883104,
+//                longitude = 34.98586570883951,
                 startTime = 1634599800,
                 endTime = 1634605200,
                 from = "Osaka",
@@ -80,6 +87,10 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 dayId = "001",
                 scheduleType = "hotel",
                 title = "Check in",
+                listOf(
+                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
+                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/Tokyo-Subway-Ticket.jpeg?alt=media&token=a2ea35b5-0e24-4f12-a35c-fd8f740b35ac"
+                ),
                 latitude = 135.77027806381324,
                 longitude = 35.009169898670926,
                 startTime = 1634616900,
@@ -151,5 +162,13 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     fun onDetailNavigated() {
         _navigateToDetail.value = null
+    }
+
+    fun navigateToMapMode() {
+        _navigateToMapMode.value = days.value
+    }
+
+    fun onMapModeNavigated() {
+        _navigateToMapMode.value = null
     }
 }

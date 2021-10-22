@@ -173,6 +173,7 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
+            android:onClick="@{() -> viewModel.navigateToMapMode()}"
             android:background="@drawable/map"
             app:layout_constraintEnd_toStartOf="@id/button_plan_companion"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />

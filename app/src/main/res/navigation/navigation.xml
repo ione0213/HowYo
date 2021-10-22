@@ -56,6 +56,16 @@
             app:nullable="false" />
     </fragment>
     <fragment
+        android:id="@+id/detailEditFragment"
+        android:name="com.yuchen.howyo.plan.detail.edit.DetailEditFragment"
+        android:label="DetailEditFragment"
+        tools:layout="@layout/fragment_detail_edit">
+        <argument
+            android:name="schedule"
+            app:argType="com.yuchen.howyo.data.Schedule"
+            app:nullable="true" />
+    </fragment>
+    <fragment
         android:id="@+id/groupMessageFragment"
         android:name="com.yuchen.howyo.plan.groupmessage.GroupMessageFragment"
         android:label="GroupMessageFragment"
@@ -84,7 +94,11 @@
         android:id="@+id/findLocationFragment"
         android:name="com.yuchen.howyo.plan.findlocation.FindLocationFragment"
         android:label="FindLocationFragment"
-        tools:layout="@layout/fragment_find_location" />
+        tools:layout="@layout/fragment_find_location">
+<!--        <argument-->
+<!--            android:name="days"-->
+<!--            app:argType="com.yuchen.howyo.data.Day[]" />-->
+    </fragment>
     <dialog
         android:id="@+id/PlanCoverDialog"
         android:name="com.yuchen.howyo.plan.cover.PlanCoverDialog"
@@ -130,6 +144,9 @@
         android:id="@+id/nav_to_detail_fragment"
         app:destination="@id/detailFragment" />
     <action
+        android:id="@+id/nav_to_detail_edit_fragment"
+        app:destination="@+id/detailEditFragment" />
+    <action
         android:id="@+id/nav_to_group_message_fragment"
         app:destination="@id/groupMessageFragment"
         app:popUpTo="@id/navigation"
@@ -156,9 +173,7 @@
         app:popUpToInclusive="true" />
     <action
         android:id="@+id/nav_to_find_locaiton_fragment"
-        app:destination="@id/findLocationFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/findLocationFragment" />
 
     <action
         android:id="@+id/nav_to_plan_cover_dialog"

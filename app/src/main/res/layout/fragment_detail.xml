@@ -49,6 +49,7 @@
                     android:layout_marginBottom="@dimen/middle_padding"
                     android:background="@drawable/edit"
                     android:backgroundTint="@{viewModel.schedule.photoUrlList.size == 0 ? @color/black : @color/gray2}"
+                    android:onClick="@{() -> viewModel.navigateToEditSchedule()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,6 +62,7 @@
                     app:images="@{viewModel.schedule.photoUrlList}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:listitem="@layout/item_detail_image" />
@@ -94,18 +96,29 @@
                     app:layout_constraintTop_toTopOf="@+id/img_detail_type"
                     tools:text="APA Hotel Nagoya-Sakae" />
 
-                <fragment
-                    android:id="@+id/map_detail_destination"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_detail_destination"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/standard_padding"
                     android:layout_marginTop="@dimen/middle_padding"
                     android:layout_marginEnd="@dimen/standard_padding"
-                    android:clickable="false"
+                    android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_detail_title" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_detail_title">
+
+                    <fragment
+                        android:id="@+id/map_detail_destination"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:clickable="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_detail_resize"
@@ -114,8 +127,9 @@
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/small_padding"
                     android:background="@drawable/resize_arrow"
-                    app:layout_constraintStart_toStartOf="@+id/map_detail_destination"
-                    app:layout_constraintTop_toTopOf="@id/map_detail_destination" />
+                    android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="@+id/layout_detail_destination"
+                    app:layout_constraintTop_toTopOf="@id/layout_detail_destination" />
 
                 <ImageView
                     android:id="@+id/img_detail_time"
@@ -125,7 +139,7 @@
                     android:layout_marginTop="@dimen/standard_padding"
                     android:src="@drawable/clock"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/map_detail_destination" />
+                    app:layout_constraintTop_toBottomOf="@+id/layout_detail_destination" />
 
                 <TextView
                     android:id="@+id/text_detail_time"
@@ -259,7 +273,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_url" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch1"
+                    android:id="@+id/switch_detail_notification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"

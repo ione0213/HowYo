@@ -22,4 +22,19 @@
     <string name="plan_date_range">旅程區間</string>
     <string name="plan_save">儲存</string>
     <string name="select_plan_duration">選擇旅程日期區間</string>
+    <string name="detail_edit_schedule_type">類別</string>
+    <string name="detail_edit_schedule_notification">行程通知</string>
+    <string name="detail_edit_schedule_title">標題</string>
+    <string name="detail_edit_schedule_address">地址</string>
+    <string name="detail_edit_schedule_start_time">開始時間</string>
+    <string name="detail_edit_schedule_end_time">結束時間</string>
+    <string name="detail_edit_schedule_remark">備註</string>
+    <string name="detail_edit_schedule_budge">預算</string>
+    <string name="detail_edit_schedule_ref_url">參考網址</string>
+    <string name="select_schedule_type">選擇類別</string>
+    <string name="air_flight">飛行計劃</string>
+    <string name="traffic">交通</string>
+    <string name="hotel">住宿</string>
+    <string name="place">景點</string>
+    <string name="insert_keywords">Insert keywords</string>
 </resources>

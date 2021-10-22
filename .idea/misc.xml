@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2537037037037037" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/add_image_background.xml" value="0.184375" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/add_image_ripple.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/button_ripple.xml" value="0.25" />
         <entry key="app/src/main/res/drawable-xxxhdpi/day_selector.xml" value="0.21302083333333333" />
         <entry key="app/src/main/res/drawable-xxxhdpi/day_text_color_selector.xml" value="0.29468845760980594" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/edit_image_background.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/bg_dialog_corner.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/bottom_nav_discover_selector.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/bottom_nav_item_selector.xml" value="0.11296296296296296" />
@@ -22,13 +26,16 @@
         <entry key="app/src/main/res/layout/fragment_add_new_plan_dialog.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_check_list.xml" value="0.20833333333333334" />
-        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.4536741214057508" />
+        <entry key="app/src/main/res/layout/fragment_companion.xml" value="0.26197916666666665" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_detail_edit.xml" value="0.22916666666666666" />
+        <entry key="app/src/main/res/layout/fragment_discover.xml" value="0.18115942028985507" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.2418478260869565" />
-        <entry key="app/src/main/res/layout/fragment_find_location.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_find_location.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_group_message.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_map_mode.xml" value="0.19972826086956522" />
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment_detail.xml" value="0.20833333333333334" />
@@ -36,7 +43,11 @@
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_shopping_list.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/item_detail_edit_image.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_detail_edit_image_add.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/item_detail_edit_spinner.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_detail_image.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/item_find_location_day.xml" value="0.335" />
         <entry key="app/src/main/res/layout/item_plan_day.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_plan_days.xml" value="0.26358695652173914" />
         <entry key="app/src/main/res/layout/item_plan_schedule.xml" value="0.27812113720642767" />

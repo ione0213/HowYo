@@ -16,7 +16,10 @@ import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.ext.toDate
 import com.yuchen.howyo.plan.PlanDaysAdapter
 import com.yuchen.howyo.plan.ScheduleAdapter
+import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
+import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
+import com.yuchen.howyo.util.Logger
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")
@@ -26,10 +29,18 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
 
 @BindingAdapter("days")
 fun bindRecyclerViewWithDays(recyclerView: RecyclerView, days: List<Day>?) {
+    Logger.i("days size: ${days?.size}")
     days?.let {
         recyclerView.adapter?.apply {
             when (this) {
-                is PlanDaysAdapter -> submitList(it)
+                is PlanDaysAdapter -> {
+                    Logger.i("PlanDaysAdapter")
+                    submitList(it)
+                }
+                is FindLocationDaysAdapter -> {
+                    Logger.i("FindLocationDaysAdapter")
+                    submitList(it)
+                }
             }
         }
     }
@@ -71,7 +82,7 @@ fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?
         recyclerView.adapter?.apply {
             when (this) {
                 is DetailImagesAdapter -> submitList(it)
-
+                is DetailEditImagesAdapter -> addPhotoAndBtn(it)
             }
         }
     }

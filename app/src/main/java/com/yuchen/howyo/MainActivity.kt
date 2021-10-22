@@ -128,7 +128,7 @@ class MainActivity : BaseActivity() {
                 R.id.checkListFragment -> CurrentFragmentType.CHECK_LIST
                 R.id.paymentFragment -> CurrentFragmentType.PAYMENT
                 R.id.paymentDetailFragment -> CurrentFragmentType.PAYMENT_DETAIL
-                R.id.findLocationFragment -> CurrentFragmentType.FIND_LOCATION
+//                R.id.findLocationFragment -> CurrentFragmentType.FIND_LOCATION
                 R.id.friendsFragment -> CurrentFragmentType.FRIENDS
                 R.id.settingFragment -> CurrentFragmentType.SETTING
                 else -> viewModel.currentFragmentType.value

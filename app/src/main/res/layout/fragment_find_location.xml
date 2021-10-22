@@ -3,15 +3,84 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.findlocation.FindLocationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".plan.findlocation.FindLocationFragment">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Find location" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_find_location_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:background="@drawable/icons_44px_back01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_find_location_days"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:orientation="horizontal"
+            app:days="@{viewModel.days}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_find_location_close"
+            tools:listitem="@layout/item_plan_day" />
+
+        <fragment
+            android:id="@+id/map_find_location_destination"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginStart="@dimen/standard_padding"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/standard_padding"
+            android:clickable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_find_location_days" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:foreground="@drawable/edit_image_background"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/map_find_location_destination"
+            app:layout_constraintStart_toStartOf="@+id/map_find_location_destination"
+            app:layout_constraintTop_toTopOf="@+id/map_find_location_destination">
+
+            <ImageView
+                android:id="@+id/img_find_location_search"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/small_padding"
+                android:elevation="1dp"
+                android:src="@drawable/search" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginStart="@dimen/small_padding"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_find_location_search"
+                android:background="@color/white"
+                android:hint="@string/insert_keywords" />
+        </RelativeLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
