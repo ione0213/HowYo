@@ -13,9 +13,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Schedule
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.ext.toDate
 import com.yuchen.howyo.plan.PlanDaysAdapter
 import com.yuchen.howyo.plan.ScheduleAdapter
+import com.yuchen.howyo.plan.companion.CompanionAdapter
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
@@ -29,7 +31,6 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
 
 @BindingAdapter("days")
 fun bindRecyclerViewWithDays(recyclerView: RecyclerView, days: List<Day>?) {
-    Logger.i("days size: ${days?.size}")
     days?.let {
         recyclerView.adapter?.apply {
             when (this) {
@@ -100,5 +101,18 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
                     .error(R.drawable.ic_placeholder)
             )
             .into(imageView)
+    }
+}
+
+@BindingAdapter("user")
+fun bindRecyclerViewWithDays(recyclerView: RecyclerView, user: User) {
+    user.let {
+        recyclerView.adapter?.apply {
+            when (this) {
+                is CompanionAdapter -> {
+                    submitList(it.followingList)
+                }
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Schedule
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.util.Logger
 
@@ -29,6 +30,12 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
+    //Current user data
+    private val _user = MutableLiveData<User>()
+
+    val user: LiveData<User>
+        get() = _user
+
     var selectedDayPosition = MutableLiveData<Int>()
 
     // Handle navigation to detail
@@ -43,7 +50,19 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val navigateToMapMode: LiveData<List<Day>>
         get() = _navigateToMapMode
 
+    // Handle navigation to companion
+    private val _navigateToCompanion = MutableLiveData<User>()
+
+    val navigateToCompanion: LiveData<User>
+        get() = _navigateToCompanion
+
     init {
+        _user.value = User(
+            id = "788",
+            fansList = listOf("Mark", "Mary"),
+            followingList = listOf("Mark", "Mary","22", "112121", "12143ffad", "ddfadfdfdf", "aaaa", "bbbb", "ccc")
+        )
+
         _plan.value = Plan(
             "aabb",
             "ione0213",
@@ -170,5 +189,13 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     fun onMapModeNavigated() {
         _navigateToMapMode.value = null
+    }
+
+    fun navigateToCompanion() {
+        _navigateToCompanion.value = user.value
+    }
+
+    fun onCompanionNavigated() {
+        _navigateToCompanion.value = null
     }
 }

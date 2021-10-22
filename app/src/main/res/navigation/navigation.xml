@@ -95,15 +95,27 @@
         android:name="com.yuchen.howyo.plan.findlocation.FindLocationFragment"
         android:label="FindLocationFragment"
         tools:layout="@layout/fragment_find_location">
-<!--        <argument-->
-<!--            android:name="days"-->
-<!--            app:argType="com.yuchen.howyo.data.Day[]" />-->
+        <!--        <argument-->
+        <!--            android:name="days"-->
+        <!--            app:argType="com.yuchen.howyo.data.Day[]" />-->
     </fragment>
     <dialog
-        android:id="@+id/PlanCoverDialog"
+        android:id="@+id/planCoverDialog"
         android:name="com.yuchen.howyo.plan.cover.PlanCoverDialog"
         android:label="PlanCoverDialog"
         tools:layout="@layout/dialog_plan_cover" />
+    <dialog
+        android:id="@+id/companionDialog"
+        android:name="com.yuchen.howyo.plan.companion.CompanionDialog"
+        android:label="CompanionDialog"
+        tools:layout="@layout/dialog_companion">
+        <argument
+            android:name="user"
+            app:argType="com.yuchen.howyo.data.User" />
+        <!--        <argument-->
+        <!--            android:name="plan"-->
+        <!--            app:argType="com.yuchen.howyo.data.Plan" />-->
+    </dialog>
 
     <action
         android:id="@+id/nav_to_home_fragment"
@@ -137,9 +149,7 @@
         app:popUpToInclusive="true" />
     <action
         android:id="@+id/nav_to_plan_fragment"
-        app:destination="@id/planFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/planFragment" />
     <action
         android:id="@+id/nav_to_detail_fragment"
         app:destination="@id/detailFragment" />
@@ -177,5 +187,9 @@
 
     <action
         android:id="@+id/nav_to_plan_cover_dialog"
-        app:destination="@id/PlanCoverDialog" />
+        app:destination="@id/planCoverDialog" />
+    <action
+        android:id="@+id/nav_to_companion_dialog"
+        app:destination="@id/companionDialog" />
+
 </navigation>

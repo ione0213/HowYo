@@ -17,19 +17,17 @@ import com.yuchen.howyo.databinding.DialogPlanCoverBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 import com.yuchen.howyo.util.Logger
-import java.text.SimpleDateFormat
 import java.util.*
 
-
+const val TAG = "DATE_PICKER"
 class PlanCoverDialog : AppCompatDialogFragment() {
 
     private lateinit var binding: DialogPlanCoverBinding
     private val viewModel by viewModels<PlanCoverViewModel> { getVmFactory() }
-    val TAG = "DATE_PICKER"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_FRAME, com.yuchen.howyo.R.style.PlanCoverDialog)
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Dialog)
     }
 
     override fun onCreateView(
@@ -67,7 +65,7 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         binding.layoutPlanCover.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
-                com.yuchen.howyo.R.anim.anim_slide_down
+                R.anim.anim_slide_down
             )
         )
         Handler().postDelayed({ super.dismiss() }, 200)

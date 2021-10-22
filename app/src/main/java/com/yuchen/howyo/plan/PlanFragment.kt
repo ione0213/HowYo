@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.NavigationDirections
+import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 
@@ -42,6 +43,18 @@ class PlanFragment : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToFindLocaitonFragment())
                 viewModel.onMapModeNavigated()
+            }
+        })
+
+        viewModel.navigateToCompanion.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToCompanionDialog(
+                        it
+//                        viewModel.plan.value ?: Plan()
+                    )
+                )
+                viewModel.onCompanionNavigated()
             }
         })
 
