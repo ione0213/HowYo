@@ -68,6 +68,12 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val navigateToLocateCompanion: LiveData<Plan>
         get() = _navigateToLocateCompanion
 
+    // Handle navigation to check or shopping list
+    private val _navigateToCheckOrShoppingList = MutableLiveData<String>()
+
+    val navigateToCheckOrShoppingList: LiveData<String>
+        get() = _navigateToCheckOrShoppingList
+
     init {
         _user.value = User(
             id = "788",
@@ -225,5 +231,14 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     fun onLocateCompanionNavigated() {
         _navigateToLocateCompanion.value = null
+    }
+
+    fun navigateToCheckList(listType: String) {
+        Logger.i("listType: $listType")
+        _navigateToCheckOrShoppingList.value = listType
+    }
+
+    fun onCheckLIstNavigated() {
+        _navigateToCheckOrShoppingList.value = null
     }
 }

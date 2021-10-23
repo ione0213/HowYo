@@ -9,4 +9,4 @@ data class Day(
     val id: String? = "",
     @get:PropertyName("plan_id") val planId: String? = "",
     val position: Int? = -1
-): Parcelable
+) : Parcelable

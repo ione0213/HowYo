@@ -11,12 +11,14 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.Gravity
+import android.view.Menu
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
+import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -94,6 +96,13 @@ class MainActivity : BaseActivity() {
             }
         }
 
+//    private val onNavigationViewListener =
+//        NavigationView.OnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.
+//            }
+//        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -124,8 +133,7 @@ class MainActivity : BaseActivity() {
                 R.id.notificationFragment -> CurrentFragmentType.NOTIFICATION
                 R.id.planFragment -> CurrentFragmentType.PLAN
                 R.id.groupMessageFragment -> CurrentFragmentType.GROUP_MESSAGE
-                R.id.shoppingListFragment -> CurrentFragmentType.SHOPPING_LIST
-                R.id.checkListFragment -> CurrentFragmentType.CHECK_LIST
+                R.id.checkorShoppingListFragment -> CurrentFragmentType.CHECK_OR_SHOPPING_LIST
                 R.id.paymentFragment -> CurrentFragmentType.PAYMENT
                 R.id.paymentDetailFragment -> CurrentFragmentType.PAYMENT_DETAIL
 //                R.id.findLocationFragment -> CurrentFragmentType.FIND_LOCATION
@@ -173,13 +181,19 @@ class MainActivity : BaseActivity() {
                             layoutParams.topMargin = statusBarHeight - oriStatusBarHeight
                         }
                     }
-                    binding.imageToolbarLogo.layoutParams = layoutParams
+//                    binding.imageToolbarLogo.layoutParams = layoutParams
                     binding.textToolbarTitle.layoutParams = layoutParams
                 }
             }
             Logger.i("====== ${Build.MODEL} ======")
         }
     }
+
+        override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+            menuInflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
+            return true
+        }
 
     private fun setupDrawer() {
 
@@ -254,6 +268,12 @@ class MainActivity : BaseActivity() {
                 }
             }
         )
+    }
+
+    override fun onBackPressed() {
+
+        viewModel.resetSharedToolbarTitle()
+        super.onBackPressed()
     }
 
     //These function about getting location should be in a dependent class

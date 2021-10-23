@@ -80,15 +80,17 @@
             app:argType="com.yuchen.howyo.data.Plan" />
     </fragment>
     <fragment
-        android:id="@+id/shoppingListFragment"
-        android:name="com.yuchen.howyo.plan.shoppinglist.ShoppingListFragment"
-        android:label="ShoppingListFragment"
-        tools:layout="@layout/fragment_shopping_list" />
-    <fragment
-        android:id="@+id/checkListFragment"
-        android:name="com.yuchen.howyo.plan.checklist.CheckListFragment"
-        android:label="CheckListFragment"
-        tools:layout="@layout/fragment_check_list" />
+        android:id="@+id/checkorShoppingListFragment"
+        android:name="com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListFragment"
+        android:label="CheckOrShoppingListFragment"
+        tools:layout="@layout/fragment_check_or_shopping_list">
+        <argument
+            android:name="planId"
+            app:argType="string" />
+        <argument
+            android:name="mainType"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/paymentFragment"
         android:name="com.yuchen.howyo.plan.payment.PaymentFragment"
@@ -172,15 +174,8 @@
         android:id="@+id/nav_to_locate_companion_fragment"
         app:destination="@id/locateFragment" />
     <action
-        android:id="@+id/nav_to_shopping_list_fragment"
-        app:destination="@id/shoppingListFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
-    <action
         android:id="@+id/nav_to_check_list_fragment"
-        app:destination="@id/checkListFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/checkorShoppingListFragment" />
     <action
         android:id="@+id/nav_to_payment_fragment"
         app:destination="@id/paymentFragment"

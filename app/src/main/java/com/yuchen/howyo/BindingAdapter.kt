@@ -1,6 +1,7 @@
 package com.yuchen.howyo
 
 import android.annotation.SuppressLint
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -10,23 +11,47 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.yuchen.howyo.data.Day
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.data.User
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.ext.toDate
 import com.yuchen.howyo.plan.PlanDaysAdapter
 import com.yuchen.howyo.plan.ScheduleAdapter
+import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
 import com.yuchen.howyo.plan.companion.CompanionAdapter
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
+import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.Logger
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")
 fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
     text = "${starDate.toDate()} - ${endDate.toDate()}"
+}
+
+@BindingAdapter("currentFragmentType")
+fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType) {
+    visibility = when (currentFragmentType) {
+        CurrentFragmentType.PLAN,
+        CurrentFragmentType.CHECK_OR_SHOPPING_LIST -> {
+            View.GONE
+        }
+        else -> View.VISIBLE
+    }
+}
+
+@BindingAdapter("currentFragmentTypeForText", "sharedFragmentTitle")
+fun TextView.bindToolbarTitle(
+    currentFragmentTypeForText: CurrentFragmentType,
+    sharedFragmentTitle: String
+) {
+    text = when (currentFragmentTypeForText) {
+        CurrentFragmentType.CHECK_OR_SHOPPING_LIST -> {
+            sharedFragmentTitle
+        }
+        else -> currentFragmentTypeForText.value
+    }
 }
 
 @BindingAdapter("days")
@@ -111,6 +136,22 @@ fun bindRecyclerViewWithDays(recyclerView: RecyclerView, user: User) {
             when (this) {
                 is CompanionAdapter -> {
                     submitList(it.followingList)
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("checkLists")
+fun bindRecyclerViewWithCheckLists(
+    recyclerView: RecyclerView,
+    checkLists: List<CheckShoppingItemResult>
+) {
+    checkLists.let {
+        recyclerView.adapter?.apply {
+            when (this) {
+                is CheckOrShoppingListAdapter -> {
+                    addTitleAndItem(it)
                 }
             }
         }

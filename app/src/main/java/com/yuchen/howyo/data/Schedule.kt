@@ -22,4 +22,4 @@ data class Schedule(
     val position: Int? = -1,
     val address: String? = "",
     val remark: String? = ""
-): Parcelable
+) : Parcelable

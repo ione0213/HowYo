@@ -17,4 +17,4 @@ data class Plan(
     val destination: String? = "",
     @get:PropertyName("like_list") val likeList: List<String>? = listOf(),
     @get:PropertyName("plan_collected_list") val planCollectedList: List<String>? = listOf()
-): Parcelable
+) : Parcelable

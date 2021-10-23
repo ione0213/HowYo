@@ -5,10 +5,7 @@ import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.User
-import com.yuchen.howyo.factory.CompanionViewModelFactory
-import com.yuchen.howyo.factory.DetailViewModelFactory
-import com.yuchen.howyo.factory.LocateViewModelFactory
-import com.yuchen.howyo.factory.ViewModelFactory
+import com.yuchen.howyo.factory.*
 
 fun Fragment.getVmFactory(): ViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
@@ -36,4 +33,9 @@ fun Fragment.getVmFactory(
 fun Fragment.getVmFactory(plan: Plan): LocateViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return LocateViewModelFactory(repository, plan)
+}
+
+fun Fragment.getVmFactory(planId: String, mainType: String): CheckListViewModelFactory {
+    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
+    return CheckListViewModelFactory(repository, planId, mainType)
 }

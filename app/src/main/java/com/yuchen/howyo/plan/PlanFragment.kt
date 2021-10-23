@@ -1,14 +1,16 @@
 package com.yuchen.howyo.plan
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.data.Plan
+import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 
@@ -73,6 +75,21 @@ class PlanFragment : Fragment() {
                     NavigationDirections.navToLocateCompanionFragment(it)
                 )
                 viewModel.onLocateCompanionNavigated()
+            }
+        })
+
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        viewModel.navigateToCheckOrShoppingList.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToCheckListFragment(
+                        viewModel.plan.value?.id ?: "",
+                        it
+                    )
+                )
+                viewModel.onCheckLIstNavigated()
+                mainViewModel.setSharedToolbarTitle(it)
             }
         })
 

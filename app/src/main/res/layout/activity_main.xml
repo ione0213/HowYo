@@ -43,7 +43,8 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/noto_sans"
                     android:letterSpacing="0.15"
-                    android:text="@{viewModel.currentFragmentType.value}"
+                    app:currentFragmentTypeForText="@{viewModel.currentFragmentType}"
+                    app:sharedFragmentTitle="@{viewModel.sharedToolbarTitle}"
                     android:textColor="@color/gray_black"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -51,13 +52,6 @@
                     tools:layout_editor_absoluteY="18dp"
                     tools:text="Stylish"
                     tools:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/image_toolbar_logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    tools:visibility="gone" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -79,8 +73,8 @@
                 android:layout_height="56dp"
                 android:background="@color/white"
                 android:elevation="@dimen/elevation_all"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PLAN ? View.GONE : View.VISIBLE}"
                 app:itemIconSize="@dimen/size_bottom_nav_icon"
+                app:currentFragmentType="@{viewModel.currentFragmentType}"
                 app:itemIconTint="@drawable/bottom_nav_item_selector"
                 app:labelVisibilityMode="unlabeled"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -11,7 +11,7 @@ enum class CurrentFragmentType(val value: String) {
     NOTIFICATION(getString(R.string.notification)),
     GROUP_MESSAGE(getString(R.string.group_message)),
     SHOPPING_LIST(getString(R.string.shopping_list)),
-    CHECK_LIST(getString(R.string.check_list)),
+    CHECK_OR_SHOPPING_LIST(getString(R.string.check_list)),
     PAYMENT(getString(R.string.payment)),
     PAYMENT_DETAIL(""),
     FIND_LOCATION(getString(R.string.find_location)),

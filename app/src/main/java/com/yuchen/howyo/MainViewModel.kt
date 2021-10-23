@@ -20,7 +20,7 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 CurrentFragmentType.NOTIFICATION,
                 CurrentFragmentType.GROUP_MESSAGE,
                 CurrentFragmentType.SHOPPING_LIST,
-                CurrentFragmentType.CHECK_LIST,
+                CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
                 CurrentFragmentType.PAYMENT,
                 CurrentFragmentType.PAYMENT_DETAIL,
                 CurrentFragmentType.FIND_LOCATION,
@@ -29,4 +29,22 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 else -> DrawerToggleType.NORMAL
             }
         }
+
+    private val _sharedToolbarTitle = MutableLiveData<String>()
+
+    val sharedToolbarTitle: LiveData<String>
+        get() = _sharedToolbarTitle
+
+    init {
+        _sharedToolbarTitle.value = ""
+    }
+
+    //For shared fragment title
+    fun setSharedToolbarTitle(title: String) {
+        _sharedToolbarTitle.value = title
+    }
+
+    fun resetSharedToolbarTitle() {
+        _sharedToolbarTitle.value = ""
+    }
 }

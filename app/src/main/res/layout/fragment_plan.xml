@@ -195,6 +195,7 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
+            android:onClick="@{() -> viewModel.navigateToCheckList(@string/check_list)}"
             android:background="@drawable/luggage"
             app:layout_constraintEnd_toStartOf="@id/button_plan_payment"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
@@ -205,6 +206,7 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
+            android:onClick="@{() -> viewModel.navigateToCheckList(@string/shopping_list)}"
             android:background="@drawable/shopping"
             app:layout_constraintEnd_toStartOf="@id/button_plan_luggage"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
