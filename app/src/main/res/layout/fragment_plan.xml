@@ -216,8 +216,20 @@
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/chat"
+            android:onClick="@{() -> viewModel.navigateToGroupMessage()}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_shopping"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
+
+        <ImageButton
+            android:id="@+id/button_plan_locate_friend"
+            android:layout_width="@dimen/plan_img_btn_small"
+            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:layout_marginBottom="@dimen/middle_padding"
+            android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
+            android:background="@drawable/map"
+            app:layout_constraintEnd_toStartOf="@id/button_plan_chatting"
+            app:layout_constraintTop_toTopOf="@+id/button_plan_chatting" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_plan_days"

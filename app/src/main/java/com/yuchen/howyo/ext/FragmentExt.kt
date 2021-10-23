@@ -7,6 +7,7 @@ import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.factory.CompanionViewModelFactory
 import com.yuchen.howyo.factory.DetailViewModelFactory
+import com.yuchen.howyo.factory.LocateViewModelFactory
 import com.yuchen.howyo.factory.ViewModelFactory
 
 fun Fragment.getVmFactory(): ViewModelFactory {
@@ -24,9 +25,15 @@ fun Fragment.getVmFactory(schedule: Schedule?): DetailViewModelFactory {
 //    return FindLocationViewModelFactory(repository, days)
 //}
 
-fun Fragment.getVmFactory(user: User
+fun Fragment.getVmFactory(
+    user: User
 //                          , plan: Plan
 ): CompanionViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return CompanionViewModelFactory(repository, user)
+}
+
+fun Fragment.getVmFactory(plan: Plan): LocateViewModelFactory {
+    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
+    return LocateViewModelFactory(repository, plan)
 }

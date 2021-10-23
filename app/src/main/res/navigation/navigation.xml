@@ -71,6 +71,15 @@
         android:label="GroupMessageFragment"
         tools:layout="@layout/fragment_group_message" />
     <fragment
+        android:id="@+id/locateFragment"
+        android:name="com.yuchen.howyo.plan.companion.locate.LocateFragment"
+        android:label="LocateFragment"
+        tools:layout="@layout/fragment_locate">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
+    </fragment>
+    <fragment
         android:id="@+id/shoppingListFragment"
         android:name="com.yuchen.howyo.plan.shoppinglist.ShoppingListFragment"
         android:label="ShoppingListFragment"
@@ -158,9 +167,10 @@
         app:destination="@+id/detailEditFragment" />
     <action
         android:id="@+id/nav_to_group_message_fragment"
-        app:destination="@id/groupMessageFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/groupMessageFragment" />
+    <action
+        android:id="@+id/nav_to_locate_companion_fragment"
+        app:destination="@id/locateFragment" />
     <action
         android:id="@+id/nav_to_shopping_list_fragment"
         app:destination="@id/shoppingListFragment"
@@ -184,7 +194,6 @@
     <action
         android:id="@+id/nav_to_find_locaiton_fragment"
         app:destination="@id/findLocationFragment" />
-
     <action
         android:id="@+id/nav_to_plan_cover_dialog"
         app:destination="@id/planCoverDialog" />

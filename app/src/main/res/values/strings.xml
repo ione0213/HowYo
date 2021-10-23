@@ -10,6 +10,7 @@
     <string name="favorite">收藏行程</string>
     <string name="notification">通知</string>
     <string name="shopping_list">購物清單</string>
+    <string name="group_message">群組聊天</string>
     <string name="check_list">行李清單</string>
     <string name="payment">款項清單</string>
     <string name="add_payment">新增款項</string>

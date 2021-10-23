@@ -9,7 +9,7 @@ enum class CurrentFragmentType(val value: String) {
     FAVORITE(getString(R.string.favorite)),
     PLAN(""),
     NOTIFICATION(getString(R.string.notification)),
-    GROUP_MESSAGE("Plan title(tmp)"),
+    GROUP_MESSAGE(getString(R.string.group_message)),
     SHOPPING_LIST(getString(R.string.shopping_list)),
     CHECK_LIST(getString(R.string.check_list)),
     PAYMENT(getString(R.string.payment)),

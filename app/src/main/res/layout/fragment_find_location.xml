@@ -56,8 +56,8 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:foreground="@drawable/edit_image_background"
             android:background="@color/white"
+            android:foreground="@drawable/edit_image_background"
             app:layout_constraintEnd_toEndOf="@+id/map_find_location_destination"
             app:layout_constraintStart_toStartOf="@+id/map_find_location_destination"
             app:layout_constraintTop_toTopOf="@+id/map_find_location_destination">
@@ -72,6 +72,7 @@
                 android:src="@drawable/search" />
 
             <EditText
+                android:id="@+id/edittext_find_location_search"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_centerVertical="true"

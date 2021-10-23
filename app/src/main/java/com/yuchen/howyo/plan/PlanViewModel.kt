@@ -56,6 +56,18 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val navigateToCompanion: LiveData<User>
         get() = _navigateToCompanion
 
+    // Handle navigation to group message
+    private val _navigateToGroupMessage = MutableLiveData<Plan>()
+
+    val navigateToGroupMessage: LiveData<Plan>
+        get() = _navigateToGroupMessage
+
+    // Handle navigation to locating companion
+    private val _navigateToLocateCompanion = MutableLiveData<Plan>()
+
+    val navigateToLocateCompanion: LiveData<Plan>
+        get() = _navigateToLocateCompanion
+
     init {
         _user.value = User(
             id = "788",
@@ -197,5 +209,21 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     fun onCompanionNavigated() {
         _navigateToCompanion.value = null
+    }
+
+    fun navigateToGroupMessage() {
+        _navigateToGroupMessage.value = plan.value
+    }
+
+    fun onGroupMessageNavigated() {
+        _navigateToGroupMessage.value = null
+    }
+
+    fun navigateToLocateCompanion() {
+        _navigateToLocateCompanion.value = plan.value
+    }
+
+    fun onLocateCompanionNavigated() {
+        _navigateToLocateCompanion.value = null
     }
 }

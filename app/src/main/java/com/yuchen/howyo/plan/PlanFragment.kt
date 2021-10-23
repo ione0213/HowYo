@@ -58,6 +58,24 @@ class PlanFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToGroupMessage.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToGroupMessageFragment()
+                )
+                viewModel.onGroupMessageNavigated()
+            }
+        })
+
+        viewModel.navigateToLocateCompanion.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToLocateCompanionFragment(it)
+                )
+                viewModel.onLocateCompanionNavigated()
+            }
+        })
+
         return binding.root
     }
 }
