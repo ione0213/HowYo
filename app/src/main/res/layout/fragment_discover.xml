@@ -3,15 +3,64 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.discover.DiscoverViewModel" />
+    </data>
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".discover.DiscoverFragment">
 
-        <TextView
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:id="@+id/layout_discover_search"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:foreground="@drawable/edit_image_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_discover_search"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/small_padding"
+                android:elevation="1dp"
+                android:src="@drawable/search" />
+
+            <EditText
+                android:id="@+id/edittext_discover_search"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/small_padding"
+                android:layout_toEndOf="@+id/img_discover_search"
+                android:background="@color/white"
+                android:hint="@string/insert_keywords" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_discover_plans"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Discover fragment" />
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:layout_marginStart="@dimen/small_padding"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:plans="@{viewModel.plans}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_discover_search"
+            app:layout_constraintVertical_bias="1.0"
+            app:spanCount="1"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_plans_home" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

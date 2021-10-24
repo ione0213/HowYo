@@ -6,32 +6,27 @@
     <data>
         <variable
             name="viewModel"
-            type="com.yuchen.howyo.favorite.FavoriteViewModel" />
+            type="com.yuchen.howyo.profile.friends.item.FriendItemViewModel" />
     </data>
-
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".favorite.FavoriteFragment">
+        tools:context=".profile.friends.item.FriendItemFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_favorite_plans"
+            android:id="@+id/recycler_friends"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/small_padding"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/small_padding"
-            android:layout_marginStart="@dimen/small_padding"
             app:layout_constraintHorizontal_bias="0.0"
-            app:plans="@{viewModel.plans}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
-            app:spanCount="2"
+            app:spanCount="1"
             tools:itemCount="10"
-            tools:listitem="@layout/item_plans_favorite" />
-
+            tools:listitem="@layout/item_friend" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

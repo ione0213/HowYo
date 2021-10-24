@@ -1,13 +1,12 @@
-package com.yuchen.howyo.plan.detail.view
+package com.yuchen.howyo.plan.detail.view.map
 
+import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearSnapHelper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -17,55 +16,43 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yuchen.howyo.HowYoApplication
-import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
-import com.yuchen.howyo.databinding.FragmentDetailBinding
+import com.yuchen.howyo.databinding.FragmentLocateBinding
+import com.yuchen.howyo.databinding.FragmentMapBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.plan.companion.locate.LocateFragmentArgs
+import com.yuchen.howyo.plan.companion.locate.LocateViewModel
 
+class MapFragment : Fragment(), OnMapReadyCallback {
 
-class DetailFragment : Fragment(), OnMapReadyCallback {
-
-    private lateinit var binding: FragmentDetailBinding
-    private val viewModel by viewModels<DetailViewModel> {
+    private lateinit var binding: FragmentMapBinding
+    private val viewModel by viewModels<MapViewModel> {
         getVmFactory(
-            DetailFragmentArgs.fromBundle(requireArguments()).schedule
+            MapFragmentArgs.fromBundle(requireArguments()).schedule
         )
     }
-
     private var googleMap: GoogleMap? = null
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+    private var locationPermissionGranted = false
+    private lateinit var mContext: Context
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
-        binding = FragmentDetailBinding.inflate(inflater, container, false)
-
+        binding = FragmentMapBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-        binding.recyclerDetailImages.adapter = DetailImagesAdapter()
 
-        LinearSnapHelper().attachToRecyclerView(binding.recyclerDetailImages)
+        mContext = HowYoApplication.instance
 
         //Map
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(HowYoApplication.instance)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_detail_destination) as SupportMapFragment
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
+            HowYoApplication.instance
+        )
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.map_view_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
-            it?.let {
-                findNavController().navigate(NavigationDirections.navToDetailEditFragment(it))
-                viewModel.onEditScheduleNavigated()
-            }
-        })
-
-        viewModel.navigateToViewMap.observe(viewLifecycleOwner, {
-            it?.let {
-                findNavController().navigate(NavigationDirections.navToMapFragment(it))
-                viewModel.onViewMapNavigated()
-            }
-        })
 
         return binding.root
     }

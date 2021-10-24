@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.source.HowYoRepository
-import com.yuchen.howyo.util.Logger
 
 class DetailViewModel(
     private val howYoRepository: HowYoRepository,
@@ -26,12 +25,25 @@ class DetailViewModel(
     val navigateToEditSchedule: LiveData<Schedule>
         get() = _navigateToEditSchedule
 
+    // Handle navigation to view map
+    private val _navigateToViewMap = MutableLiveData<Schedule>()
+
+    val navigateToViewMap: LiveData<Schedule>
+        get() = _navigateToViewMap
+
     fun navigateToEditSchedule() {
-        Logger.i("navigateToDetail@@@@@@@@@@")
         _navigateToEditSchedule.value = schedule.value
     }
 
     fun onEditScheduleNavigated() {
         _navigateToEditSchedule.value = null
+    }
+
+    fun navigateToViewMap() {
+        _navigateToViewMap.value = schedule.value
+    }
+
+    fun onViewMapNavigated() {
+        _navigateToViewMap.value = null
     }
 }

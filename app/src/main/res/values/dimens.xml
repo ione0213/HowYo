@@ -35,8 +35,13 @@
     <!-- Profile-->
     <dimen name="profile_avatar">70dp</dimen>
     <dimen name="profile_avatar_setting">100dp</dimen>
+    <dimen name="profile_friend_tab">48dp</dimen>
+
 
     <!-- Home-->
     <dimen name="home_avatar">48dp</dimen>
+
+    <!-- Favorite-->
+    <dimen name="favorite_avatar">36dp</dimen>
 
 </resources>

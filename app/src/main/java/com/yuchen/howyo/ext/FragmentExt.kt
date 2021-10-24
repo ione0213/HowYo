@@ -7,6 +7,7 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.factory.*
+import com.yuchen.howyo.profile.friends.FriendFilter
 
 fun Fragment.getVmFactory(): ViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
@@ -44,4 +45,9 @@ fun Fragment.getVmFactory(planId: String, mainType: String): CheckListViewModelF
 fun Fragment.getVmFactory(payment: Payment?, plan: Plan): PaymentDetailViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PaymentDetailViewModelFactory(repository, payment, plan)
+}
+
+fun Fragment.getVmFactory(friendType: FriendFilter): FriendItemViewModelFactory {
+    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
+    return FriendItemViewModelFactory(repository, friendType)
 }

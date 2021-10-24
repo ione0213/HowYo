@@ -5,21 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.yuchen.howyo.R
+import com.google.android.material.tabs.TabLayout
 import com.yuchen.howyo.databinding.FragmentFriendsBinding
 
 class FriendsFragment : Fragment() {
-
-    private lateinit var binding: FragmentFriendsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentFriendsBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-
-        return binding.root
+        FragmentFriendsBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewpagerFriend.let {
+                tabsFriend.setupWithViewPager(it)
+                it.adapter = FriendAdapter(
+                    childFragmentManager
+                )
+                it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabsFriend))
+            }
+            return@onCreateView root
+        }
     }
 }

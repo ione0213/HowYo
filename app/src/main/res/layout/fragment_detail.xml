@@ -126,6 +126,7 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/small_padding"
+                    android:onClick="@{() -> viewModel.navigateToViewMap()}"
                     android:background="@drawable/resize_arrow"
                     android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="@+id/layout_detail_destination"

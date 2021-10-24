@@ -14,7 +14,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yuchen.howyo.data.*
+import com.yuchen.howyo.discover.DiscoverAdapter
 import com.yuchen.howyo.ext.toDate
+import com.yuchen.howyo.favorite.FavoriteAdapter
 import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
 import com.yuchen.howyo.plan.PlanDaysAdapter
@@ -214,6 +216,12 @@ fun bindRecyclerViewWithPlans(
                     submitList(it)
                 }
                 is HomeAdapter -> {
+                    submitList(it)
+                }
+                is DiscoverAdapter -> {
+                    submitList(it)
+                }
+                is FavoriteAdapter -> {
                     submitList(it)
                 }
             }

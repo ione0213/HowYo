@@ -64,6 +64,16 @@
             app:nullable="false" />
     </fragment>
     <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.yuchen.howyo.plan.detail.view.map.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map">
+        <argument
+            android:name="schedule"
+            app:argType="com.yuchen.howyo.data.Schedule"
+            app:nullable="false" />
+    </fragment>
+    <fragment
         android:id="@+id/detailEditFragment"
         android:name="com.yuchen.howyo.plan.detail.edit.DetailEditFragment"
         android:label="DetailEditFragment"
@@ -188,6 +198,9 @@
     <action
         android:id="@+id/nav_to_detail_fragment"
         app:destination="@id/detailFragment" />
+    <action
+        android:id="@+id/nav_to_map_fragment"
+        app:destination="@id/mapFragment" />
     <action
         android:id="@+id/nav_to_detail_edit_fragment"
         app:destination="@+id/detailEditFragment" />

@@ -118,8 +118,8 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                     "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
                     "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/Tokyo-Subway-Ticket.jpeg?alt=media&token=a2ea35b5-0e24-4f12-a35c-fd8f740b35ac"
                 ),
-//                latitude = 135.75791610883104,
-//                longitude = 34.98586570883951,
+                latitude = 135.75791610883104,
+                longitude = 34.98586570883951,
                 startTime = 1634599800,
                 endTime = 1634605200,
                 from = "Osaka",
