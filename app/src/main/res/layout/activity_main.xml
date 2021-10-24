@@ -31,7 +31,7 @@
                 android:layout_height="@dimen/height_toolbar"
                 android:background="@color/white"
                 android:elevation="@dimen/elevation_all"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PLAN ? View.GONE : View.VISIBLE}"
+                app:currentFragmentTypeForToolbar="@{viewModel.currentFragmentType}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

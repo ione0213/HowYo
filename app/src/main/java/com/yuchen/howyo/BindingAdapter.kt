@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.ext.toDate
+import com.yuchen.howyo.home.HomeAdapter
+import com.yuchen.howyo.home.notification.NotificationAdapter
 import com.yuchen.howyo.plan.PlanDaysAdapter
 import com.yuchen.howyo.plan.ScheduleAdapter
 import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
@@ -45,6 +48,26 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
         else -> View.VISIBLE
     }
 }
+
+@BindingAdapter("currentFragmentTypeForToolbar")
+fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
+    visibility = when (currentFragmentType) {
+        CurrentFragmentType.PLAN-> {
+            View.GONE
+        }
+        else -> View.VISIBLE
+    }
+}
+//@BindingAdapter("currentFragmentTypeForToolbar")
+//fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
+//    visibility = when (currentFragmentType) {
+//        CurrentFragmentType.PLAN,
+//        CurrentFragmentType.NOTIFICATION -> {
+//            View.GONE
+//        }
+//        else -> View.VISIBLE
+//    }
+//}
 
 @BindingAdapter("currentFragmentTypeForText", "sharedFragmentTitle")
 fun TextView.bindToolbarTitle(
@@ -189,6 +212,25 @@ fun bindRecyclerViewWithPlans(
             when (this) {
                 is PlanAdapter -> {
                     submitList(it)
+                }
+                is HomeAdapter -> {
+                    submitList(it)
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("notifications")
+fun bindRecyclerViewWithNotifications(
+    recyclerView: RecyclerView,
+    plans: List<Notification>
+) {
+    plans.let {
+        recyclerView.adapter?.apply {
+            when (this) {
+                is NotificationAdapter -> {
+                    addNotificationItem(it)
                 }
             }
         }

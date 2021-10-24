@@ -55,4 +55,10 @@
     <string name="profile_modify_id">ID</string>
     <string name="profile_modify_info">個人簡介</string>
 
+    <!-- Notification-->
+    <string name="notification_like_msg">說你的行程讚</string>
+    <string name="notification_like_type">like</string>
+    <string name="notification_follow_msg">開始追蹤你</string>
+    <string name="notification_follow_type">follow</string>
+
 </resources>

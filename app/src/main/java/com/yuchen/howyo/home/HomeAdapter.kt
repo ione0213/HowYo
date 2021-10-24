@@ -1,4 +1,4 @@
-package com.yuchen.howyo.profile
+package com.yuchen.howyo.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,16 +6,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.databinding.ItemPlansProfileBinding
+import com.yuchen.howyo.databinding.ItemPlansHomeBinding
 
-class PlanAdapter(private val onClickListener: OnClickListener) :
-    ListAdapter<Plan, PlanAdapter.PlanViewHolder>(DiffCallback) {
+class HomeAdapter(private val onClickListener: OnClickListener) :
+    ListAdapter<Plan, HomeAdapter.PlanViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
         fun onClick(plan: Plan) = clickListener(plan)
     }
 
-    class PlanViewHolder(private var binding: ItemPlansProfileBinding) :
+    class PlanViewHolder(private var binding: ItemPlansHomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(plan: Plan, onClickListener: OnClickListener) {
@@ -38,7 +38,7 @@ class PlanAdapter(private val onClickListener: OnClickListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanViewHolder {
         return PlanViewHolder(
-            ItemPlansProfileBinding.inflate(
+            ItemPlansHomeBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

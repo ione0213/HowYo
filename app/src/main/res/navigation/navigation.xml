@@ -157,6 +157,9 @@
         app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
     <action
+        android:id="@+id/nav_to_home_notification"
+        app:destination="@id/notificationFragment" />
+    <action
         android:id="@+id/nav_to_discover_fragment"
         app:destination="@id/discoverFragment"
         app:popUpTo="@id/navigation"
