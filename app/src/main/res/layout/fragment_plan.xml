@@ -164,8 +164,8 @@
             android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/friends"
-            app:layout_constraintEnd_toEndOf="parent"
             android:onClick="@{() -> viewModel.navigateToCompanion()}"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
 
         <ImageButton
@@ -174,8 +174,8 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToMapMode()}"
             android:background="@drawable/map"
+            android:onClick="@{() -> viewModel.navigateToMapMode()}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_companion"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
 
@@ -184,6 +184,7 @@
             android:layout_width="@dimen/plan_img_btn_small"
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/middle_padding"
+            android:onClick="@{() -> viewModel.navigateToPayment()}"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/coin"
             app:layout_constraintEnd_toEndOf="parent"
@@ -195,8 +196,8 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToCheckList(@string/check_list)}"
             android:background="@drawable/luggage"
+            android:onClick="@{() -> viewModel.navigateToCheckList(@string/check_list)}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_payment"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
 
@@ -206,8 +207,8 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToCheckList(@string/shopping_list)}"
             android:background="@drawable/shopping"
+            android:onClick="@{() -> viewModel.navigateToCheckList(@string/shopping_list)}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_luggage"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
 
@@ -228,8 +229,8 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
             android:background="@drawable/map"
+            android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_chatting"
             app:layout_constraintTop_toTopOf="@+id/button_plan_chatting" />
 
@@ -238,8 +239,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/middle_padding"
-            android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
             android:orientation="horizontal"
             app:days="@{viewModel.days}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -253,9 +254,9 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/small_padding"
             android:layout_marginEnd="@dimen/middle_padding"
             android:orientation="vertical"
-            android:layout_marginTop="@dimen/small_padding"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/layout_plan_bottom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -280,8 +281,8 @@
                 android:id="@+id/button_plan_lock"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/lock"
                 android:layout_marginStart="@dimen/middle_padding"
+                android:background="@drawable/lock"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -290,8 +291,8 @@
                 android:id="@+id/button_plan_unlock"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/unlock"
                 android:layout_marginStart="@dimen/middle_padding"
+                android:background="@drawable/unlock"
 
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -301,8 +302,8 @@
                 android:id="@+id/button_plan_heart"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/heart_normal"
                 android:layout_marginEnd="@dimen/small_padding"
+                android:background="@drawable/heart_normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -311,8 +312,8 @@
                 android:id="@+id/button_plan_heart_selected"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/heart_selected"
                 android:layout_marginEnd="@dimen/small_padding"
+                android:background="@drawable/heart_selected"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -321,8 +322,8 @@
                 android:id="@+id/button_plan_comment"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/comment"
                 android:layout_marginEnd="40dp"
+                android:background="@drawable/comment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -331,8 +332,8 @@
                 android:id="@+id/button_plan_star"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/star_normal"
                 android:layout_marginEnd="@dimen/small_padding"
+                android:background="@drawable/star_normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -341,8 +342,8 @@
                 android:id="@+id/button_plan_star_selected"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/star_selected"
                 android:layout_marginEnd="@dimen/small_padding"
+                android:background="@drawable/star_selected"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -351,8 +352,8 @@
                 android:id="@+id/button_plan_copy"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:background="@drawable/copy"
                 android:layout_marginEnd="@dimen/middle_padding"
+                android:background="@drawable/copy"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

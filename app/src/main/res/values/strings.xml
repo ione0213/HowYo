@@ -15,9 +15,11 @@
     <string name="new_item">新增項目</string>
     <string name="payment">款項清單</string>
     <string name="add_payment">新增款項</string>
+    <string name="delete_payment">刪除款項</string>
     <string name="payment_detail">款項資訊</string>
     <string name="find_location">尋找景點</string>
     <string name="setting">設定</string>
+    <string name="save_setting">儲存</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="plan_name">行程名稱</string>
@@ -39,4 +41,11 @@
     <string name="hotel">住宿</string>
     <string name="place">景點</string>
     <string name="insert_keywords">Insert keywords</string>
+
+    <!-- Payment-->
+    <string name="payment_item">品項名稱</string>
+    <string name="payment_amount">金額</string>
+    <string name="payment_payer">付款人</string>
+
+
 </resources>

@@ -3,15 +3,74 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.payment.PaymentViewModel" />
+    </data>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".plan.payment.PaymentFragment">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Payment" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_payment_avatar"
+            android:layout_width="@dimen/plan_img_btn_big"
+            android:layout_height="@dimen/plan_img_btn_big"
+            android:layout_marginStart="@dimen/standard_padding"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar_sample"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circle" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/text_payment_user_name"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:text="traveller"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/img_payment_avatar"
+            app:layout_constraintTop_toTopOf="@+id/img_payment_avatar"
+            app:layout_goneMarginStart="@dimen/small_padding"
+            tools:text="traveller" />
+
+        <TextView
+            android:id="@+id/text_payment_should_pay"
+            style="@style/TextStyle2_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="應付 987"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/text_payment_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_payment_user_name" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_payment_items"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:orientation="vertical"
+            app:payments="@{viewModel.payments}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_payment_should_pay"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/item_payment" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

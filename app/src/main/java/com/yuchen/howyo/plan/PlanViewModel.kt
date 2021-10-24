@@ -74,6 +74,12 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val navigateToCheckOrShoppingList: LiveData<String>
         get() = _navigateToCheckOrShoppingList
 
+    // Handle navigation to payment
+    private val _navigateToPayment = MutableLiveData<Plan>()
+
+    val navigateToPayment: LiveData<Plan>
+        get() = _navigateToPayment
+
     init {
         _user.value = User(
             id = "788",
@@ -234,11 +240,18 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     fun navigateToCheckList(listType: String) {
-        Logger.i("listType: $listType")
         _navigateToCheckOrShoppingList.value = listType
     }
 
     fun onCheckLIstNavigated() {
         _navigateToCheckOrShoppingList.value = null
+    }
+
+    fun navigateToPayment() {
+        _navigateToPayment.value = plan.value
+    }
+
+    fun onPaymentNavigated() {
+        _navigateToPayment.value = null
     }
 }

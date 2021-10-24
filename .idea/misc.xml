@@ -32,6 +32,7 @@
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_detail_edit.xml" value="0.22916666666666666" />
         <entry key="app/src/main/res/layout/fragment_discover.xml" value="0.18115942028985507" />
+        <entry key="app/src/main/res/layout/fragment_edit_payment.xml" value="0.2546875" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_find_location.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.20833333333333334" />
@@ -55,11 +56,13 @@
         <entry key="app/src/main/res/layout/item_detail_edit_spinner.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_detail_image.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_find_location_day.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/item_payment.xml" value="0.42439862542955326" />
         <entry key="app/src/main/res/layout/item_plan_day.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_plan_days.xml" value="0.26358695652173914" />
         <entry key="app/src/main/res/layout/item_plan_schedule.xml" value="0.27812113720642767" />
         <entry key="app/src/main/res/layout/item_shopping_list_item.xml" value="0.17916666666666667" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.26979166666666665" />
+        <entry key="app/src/main/res/menu/home_toolbar_nav_view_menu.xml" value="0.2" />
         <entry key="app/src/main/res/menu/toolbar_nav_view_menu.xml" value="0.19427083333333334" />
       </map>
     </option>

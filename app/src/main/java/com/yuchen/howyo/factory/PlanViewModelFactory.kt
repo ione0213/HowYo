@@ -8,8 +8,9 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.plan.companion.locate.LocateViewModel
 import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
 import com.yuchen.howyo.plan.detail.view.DetailViewModel
+import com.yuchen.howyo.plan.payment.PaymentViewModel
 
-class LocateViewModelFactory(
+class PlanViewModelFactory(
     private val howYoRepository: HowYoRepository,
     private val plan: Plan,
 ) : ViewModelProvider.Factory {
@@ -19,6 +20,8 @@ class LocateViewModelFactory(
             when {
                 isAssignableFrom(LocateViewModel::class.java) ->
                     LocateViewModel(howYoRepository, plan)
+                isAssignableFrom(PaymentViewModel::class.java) ->
+                    PaymentViewModel(howYoRepository, plan)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

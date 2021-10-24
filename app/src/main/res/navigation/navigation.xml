@@ -80,7 +80,7 @@
             app:argType="com.yuchen.howyo.data.Plan" />
     </fragment>
     <fragment
-        android:id="@+id/checkorShoppingListFragment"
+        android:id="@+id/checkOrShoppingListFragment"
         android:name="com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListFragment"
         android:label="CheckOrShoppingListFragment"
         tools:layout="@layout/fragment_check_or_shopping_list">
@@ -95,12 +95,27 @@
         android:id="@+id/paymentFragment"
         android:name="com.yuchen.howyo.plan.payment.PaymentFragment"
         android:label="PaymentFragment"
-        tools:layout="@layout/fragment_payment" />
+        tools:layout="@layout/fragment_payment">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
+    </fragment>
     <fragment
         android:id="@+id/paymentDetailFragment"
         android:name="com.yuchen.howyo.plan.payment.paymentdetail.PaymentDetailFragment"
         android:label="PaymentDetailFragment"
-        tools:layout="@layout/fragment_payment_detail" />
+        tools:layout="@layout/fragment_payment_detail">
+
+        <argument
+            android:name="payment"
+            app:argType="com.yuchen.howyo.data.Payment"
+            app:nullable="true" />
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan"
+            app:nullable="false" />
+    </fragment>
+
     <fragment
         android:id="@+id/findLocationFragment"
         android:name="com.yuchen.howyo.plan.findlocation.FindLocationFragment"
@@ -175,19 +190,15 @@
         app:destination="@id/locateFragment" />
     <action
         android:id="@+id/nav_to_check_list_fragment"
-        app:destination="@id/checkorShoppingListFragment" />
+        app:destination="@id/checkOrShoppingListFragment" />
     <action
         android:id="@+id/nav_to_payment_fragment"
-        app:destination="@id/paymentFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/paymentFragment" />
     <action
         android:id="@+id/nav_to_payment_detail_fragment"
-        app:destination="@id/paymentDetailFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/paymentDetailFragment" />
     <action
-        android:id="@+id/nav_to_find_locaiton_fragment"
+        android:id="@+id/nav_to_find_location_fragment"
         app:destination="@id/findLocationFragment" />
     <action
         android:id="@+id/nav_to_plan_cover_dialog"

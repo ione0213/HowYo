@@ -43,7 +43,7 @@ class PlanFragment : Fragment() {
 
         viewModel.navigateToMapMode.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(NavigationDirections.navToFindLocaitonFragment())
+                findNavController().navigate(NavigationDirections.navToFindLocationFragment())
                 viewModel.onMapModeNavigated()
             }
         })
@@ -90,6 +90,15 @@ class PlanFragment : Fragment() {
                 )
                 viewModel.onCheckLIstNavigated()
                 mainViewModel.setSharedToolbarTitle(it)
+            }
+        })
+
+        viewModel.navigateToPayment.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToPaymentFragment(it)
+                )
+                viewModel.onPaymentNavigated()
             }
         })
 

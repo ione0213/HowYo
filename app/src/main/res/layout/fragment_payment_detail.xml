@@ -3,15 +3,95 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.payment.paymentdetail.PaymentDetailViewModel" />
+    </data>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".plan.payment.paymentdetail.PaymentDetailFragment">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Payment Detail" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_payment_detail_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:layout_marginBottom="@dimen/middle_padding"
+            android:theme="@style/InputTextColorTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/cover_plan_edittext"
+                android:hint="@string/payment_item"
+                android:imeOptions="actionNext"
+                android:text="@={viewModel.item}"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/gray_black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_payment_detail_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:layout_marginBottom="@dimen/middle_padding"
+            android:theme="@style/InputTextColorTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_payment_detail_item">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/cover_plan_edittext"
+                android:hint="@string/payment_amount"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:text="@={viewModel.amount}"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/gray_black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinner_payment_detail_payer"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_detail_edit"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:prompt="@string/payment_payer"
+            android:selectedItemPosition="@={viewModel.selectedScheduleTypePosition}"
+            android:spinnerMode="dialog"
+            app:layout_constraintStart_toStartOf="@+id/layout_payment_detail_amount"
+            app:layout_constraintEnd_toEndOf="@+id/layout_payment_detail_amount"
+            app:layout_constraintTop_toBottomOf="@id/layout_payment_detail_amount" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_payment_detail_save"
+            style="@style/TextStyle2_white"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:background="@drawable/button_ripple"
+            android:gravity="center"
+            android:text="@string/plan_save"
+            android:textAllCaps="false"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_payment_detail_payer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

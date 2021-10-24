@@ -21,6 +21,7 @@ import com.yuchen.howyo.plan.companion.CompanionAdapter
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
+import com.yuchen.howyo.plan.payment.PaymentAdapter
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.Logger
 
@@ -34,7 +35,9 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
 fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType) {
     visibility = when (currentFragmentType) {
         CurrentFragmentType.PLAN,
-        CurrentFragmentType.CHECK_OR_SHOPPING_LIST -> {
+        CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
+        CurrentFragmentType.PAYMENT,
+        CurrentFragmentType.PAYMENT_DETAIL -> {
             View.GONE
         }
         else -> View.VISIBLE
@@ -152,6 +155,22 @@ fun bindRecyclerViewWithCheckLists(
             when (this) {
                 is CheckOrShoppingListAdapter -> {
                     addTitleAndItem(it)
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("payments")
+fun bindRecyclerViewWithPayments(
+    recyclerView: RecyclerView,
+    paymentLists: List<Payment>
+) {
+    paymentLists.let {
+        recyclerView.adapter?.apply {
+            when (this) {
+                is PaymentAdapter -> {
+                    submitList(it)
                 }
             }
         }

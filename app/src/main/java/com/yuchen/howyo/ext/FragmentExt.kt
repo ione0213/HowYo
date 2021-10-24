@@ -2,6 +2,7 @@ package com.yuchen.howyo.ext
 
 import androidx.fragment.app.Fragment
 import com.yuchen.howyo.HowYoApplication
+import com.yuchen.howyo.data.Payment
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.User
@@ -30,12 +31,17 @@ fun Fragment.getVmFactory(
     return CompanionViewModelFactory(repository, user)
 }
 
-fun Fragment.getVmFactory(plan: Plan): LocateViewModelFactory {
+fun Fragment.getVmFactory(plan: Plan): PlanViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return LocateViewModelFactory(repository, plan)
+    return PlanViewModelFactory(repository, plan)
 }
 
 fun Fragment.getVmFactory(planId: String, mainType: String): CheckListViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return CheckListViewModelFactory(repository, planId, mainType)
+}
+
+fun Fragment.getVmFactory(payment: Payment?, plan: Plan): PaymentDetailViewModelFactory {
+    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
+    return PaymentDetailViewModelFactory(repository, payment, plan)
 }

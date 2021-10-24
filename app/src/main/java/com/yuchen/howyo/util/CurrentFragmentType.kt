@@ -13,7 +13,7 @@ enum class CurrentFragmentType(val value: String) {
     SHOPPING_LIST(getString(R.string.shopping_list)),
     CHECK_OR_SHOPPING_LIST(getString(R.string.check_list)),
     PAYMENT(getString(R.string.payment)),
-    PAYMENT_DETAIL(""),
+    PAYMENT_DETAIL(getString(R.string.payment_detail)),
     FIND_LOCATION(getString(R.string.find_location)),
     PROFILE("User id(tmp)"),
     FRIENDS("User id(tmp)"),
