@@ -31,4 +31,8 @@
 
     <!-- Schedule Detail Edit-->
     <dimen name="height_detail_edit">56dp</dimen>
+
+    <!-- Profile-->
+    <dimen name="profile_avatar">70dp</dimen>
+    <dimen name="profile_avatar_setting">100dp</dimen>
 </resources>

@@ -47,5 +47,12 @@
     <string name="payment_amount">金額</string>
     <string name="payment_payer">付款人</string>
 
+    <!-- Profile-->
+    <string name="profile_following">%d\n追蹤中</string>
+    <string name="profile_fans">%d\n紛絲</string>
+    <string name="profile_plans">%d\n行程</string>
+    <string name="profile_modify_avatar">更換大頭貼</string>
+    <string name="profile_modify_id">ID</string>
+    <string name="profile_modify_info">個人簡介</string>
 
 </resources>

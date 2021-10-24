@@ -7,6 +7,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.plan.PlanViewModel
 import com.yuchen.howyo.plan.cover.PlanCoverViewModel
 import com.yuchen.howyo.plan.findlocation.FindLocationViewModel
+import com.yuchen.howyo.profile.ProfileViewModel
 
 class ViewModelFactory constructor(
     private val howYoRepository: HowYoRepository
@@ -23,6 +24,8 @@ class ViewModelFactory constructor(
                     PlanViewModel(howYoRepository)
                 isAssignableFrom(FindLocationViewModel::class.java) ->
                     FindLocationViewModel(howYoRepository)
+                isAssignableFrom(ProfileViewModel::class.java) ->
+                    ProfileViewModel(howYoRepository)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

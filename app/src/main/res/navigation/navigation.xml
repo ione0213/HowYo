@@ -44,7 +44,15 @@
         android:id="@+id/planFragment"
         android:name="com.yuchen.howyo.plan.PlanFragment"
         android:label="PlanFragment"
-        tools:layout="@layout/fragment_plan" />
+        tools:layout="@layout/fragment_plan">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan"
+            app:nullable="true" />
+        <argument
+            android:name="accessType"
+            app:argType="com.yuchen.howyo.plan.AccessPlanType" />
+    </fragment>
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.yuchen.howyo.plan.detail.view.DetailFragment"
@@ -170,9 +178,7 @@
         app:popUpToInclusive="true" />
     <action
         android:id="@+id/nav_to_setting_fragment"
-        app:destination="@id/settingFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/settingFragment" />
     <action
         android:id="@+id/nav_to_plan_fragment"
         app:destination="@id/planFragment" />

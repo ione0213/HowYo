@@ -3,6 +3,7 @@ package com.yuchen.howyo.plan.cover
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.util.Logger
 import java.util.*
@@ -22,9 +23,9 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
         get() = _selectDate
 
     // Handle save plan cover
-    private val _save = MutableLiveData<Boolean>()
+    private val _save = MutableLiveData<Plan>()
 
-    val save: LiveData<Boolean>
+    val save: LiveData<Plan>
         get() = _save
 
     val startDate = MutableLiveData<Long>()
@@ -43,7 +44,7 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
     }
 
     fun save() {
-        _save.value = true
+        _save.value = Plan(id = "987")
     }
 
     fun onSaveCompleted() {

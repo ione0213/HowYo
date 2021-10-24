@@ -63,7 +63,7 @@
 
                 <View
                     android:id="@+id/view_payment_separation"
-                    style="@style/Separation"
+                    style="@style/SeparationVertical"
                     android:layout_marginStart="@dimen/middle_padding"
                     app:layout_constraintStart_toEndOf="@+id/text_payment_amount"
                     app:layout_constraintTop_toTopOf="@+id/text_payment_amount"

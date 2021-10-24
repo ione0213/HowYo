@@ -16,6 +16,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.DialogPlanCoverBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
+import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.util.Logger
 import java.util.*
 
@@ -53,7 +54,10 @@ class PlanCoverDialog : AppCompatDialogFragment() {
 
         viewModel.save.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(NavigationDirections.navToPlanFragment())
+                findNavController().navigate(NavigationDirections.navToPlanFragment(
+                    it,
+                    AccessPlanType.EDIT
+                ))
                 viewModel.onSaveCompleted()
             }
         })

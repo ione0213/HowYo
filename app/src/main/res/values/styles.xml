@@ -24,9 +24,15 @@
         <item name="cornerSize">20%</item>
     </style>
 
-    <style name="Separation">
+    <style name="SeparationVertical">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">24dp</item>
+        <item name="android:background">@color/gray2</item>
+    </style>
+
+    <style name="SeparationHorizontal">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/gray2</item>
     </style>
 </resources>

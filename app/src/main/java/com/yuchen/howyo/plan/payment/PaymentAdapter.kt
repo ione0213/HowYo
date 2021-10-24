@@ -22,7 +22,6 @@ class PaymentAdapter(private val onClickListener: OnClickListener) :
             binding.payment = payment
             binding.root.setOnClickListener { onClickListener.onClick(payment) }
             binding.executePendingBindings()
-
         }
     }
 
