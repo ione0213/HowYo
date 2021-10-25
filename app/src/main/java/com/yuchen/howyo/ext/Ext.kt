@@ -27,3 +27,7 @@ fun View.setTouchDelegate() {
 fun Long.toDate(): String {
     return SimpleDateFormat("yyyy/MM/dd").format(this)
 }
+
+fun Long.toTime(): String {
+    return SimpleDateFormat("HH:mm a").format(this)
+}

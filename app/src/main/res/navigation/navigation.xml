@@ -87,7 +87,11 @@
         android:id="@+id/groupMessageFragment"
         android:name="com.yuchen.howyo.plan.groupmessage.GroupMessageFragment"
         android:label="GroupMessageFragment"
-        tools:layout="@layout/fragment_group_message" />
+        tools:layout="@layout/fragment_group_message">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
+    </fragment>
     <fragment
         android:id="@+id/locateFragment"
         android:name="com.yuchen.howyo.plan.companion.locate.LocateFragment"

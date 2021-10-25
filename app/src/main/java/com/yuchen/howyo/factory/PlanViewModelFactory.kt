@@ -8,6 +8,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.plan.companion.locate.LocateViewModel
 import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
 import com.yuchen.howyo.plan.detail.view.DetailViewModel
+import com.yuchen.howyo.plan.groupmessage.GroupMessageViewModel
 import com.yuchen.howyo.plan.payment.PaymentViewModel
 
 class PlanViewModelFactory(
@@ -22,6 +23,8 @@ class PlanViewModelFactory(
                     LocateViewModel(howYoRepository, plan)
                 isAssignableFrom(PaymentViewModel::class.java) ->
                     PaymentViewModel(howYoRepository, plan)
+                isAssignableFrom(GroupMessageViewModel::class.java) ->
+                    GroupMessageViewModel(howYoRepository, plan)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

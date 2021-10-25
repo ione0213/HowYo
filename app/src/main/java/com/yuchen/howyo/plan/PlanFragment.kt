@@ -62,7 +62,7 @@ class PlanFragment : Fragment() {
         viewModel.navigateToGroupMessage.observe(viewLifecycleOwner, {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToGroupMessageFragment()
+                    NavigationDirections.navToGroupMessageFragment(it)
                 )
                 viewModel.onGroupMessageNavigated()
             }

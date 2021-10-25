@@ -80,6 +80,12 @@ class PlanViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val navigateToPayment: LiveData<Plan>
         get() = _navigateToPayment
 
+    // Handle navigation to group msg
+    private val _navigateToGroupMsg = MutableLiveData<Plan>()
+
+    val navigateToGroupMsg: LiveData<Plan>
+        get() = _navigateToGroupMsg
+
     init {
         _user.value = User(
             id = "788",

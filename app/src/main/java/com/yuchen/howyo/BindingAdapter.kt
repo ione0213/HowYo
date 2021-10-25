@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.discover.DiscoverAdapter
 import com.yuchen.howyo.ext.toDate
+import com.yuchen.howyo.ext.toTime
 import com.yuchen.howyo.favorite.FavoriteAdapter
 import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
@@ -26,6 +27,7 @@ import com.yuchen.howyo.plan.companion.CompanionAdapter
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
+import com.yuchen.howyo.plan.groupmessage.GroupMessageAdapter
 import com.yuchen.howyo.plan.payment.PaymentAdapter
 import com.yuchen.howyo.profile.PlanAdapter
 import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
@@ -38,6 +40,12 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
     text = "${starDate.toDate()} - ${endDate.toDate()}"
 }
 
+@SuppressLint("SetTextI18n")
+@BindingAdapter("time")
+fun TextView.bindMsgTime(time: Long) {
+    text = "${time.toTime()}"
+}
+
 @BindingAdapter("currentFragmentType")
 fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType) {
     visibility = when (currentFragmentType) {
@@ -45,7 +53,8 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
         CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
         CurrentFragmentType.PAYMENT,
         CurrentFragmentType.PAYMENT_DETAIL,
-        CurrentFragmentType.SETTING -> {
+        CurrentFragmentType.SETTING,
+        CurrentFragmentType.GROUP_MESSAGE -> {
             View.GONE
         }
         else -> View.VISIBLE
@@ -255,6 +264,22 @@ fun bindRecyclerViewWithUsers(
         recyclerView.adapter?.apply {
             when (this) {
                 is FriendItemAdapter -> {
+                    submitList(it)
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("groupMessages")
+fun bindRecyclerViewWithMessages(
+    recyclerView: RecyclerView,
+    groupMessages: List<GroupMessage>
+) {
+    groupMessages.let {
+        recyclerView.adapter?.apply {
+            when (this) {
+                is GroupMessageAdapter -> {
                     submitList(it)
                 }
             }

@@ -61,4 +61,7 @@
     <string name="notification_follow_msg">開始追蹤你</string>
     <string name="notification_follow_type">follow</string>
 
+    <!--Group Msg-->
+    <string name="type_message_here">Type message here</string>
+
 </resources>
