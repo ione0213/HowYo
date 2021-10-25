@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="notification"
+            type="com.yuchen.howyo.data.Notification" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:background="@color/gray_f5f5f5"
+            android:elevation="5dp"
+            app:cardBackgroundColor="@color/gray_f5f5f5"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/img_notify_like_avatar"
+                    android:layout_width="@dimen/home_avatar"
+                    android:layout_height="@dimen/home_avatar"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_marginBottom="@dimen/standard_padding"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/avatar_sample"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/circle" />
+
+                <TextView
+                    android:id="@+id/text_notify_like_user_name"
+                    style="@style/TextStyle2_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:text="@{notification.fromUserId}"
+                    android:textStyle="bold"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_notify_like_avatar"
+                    app:layout_constraintTop_toTopOf="@+id/img_notify_like_avatar"
+                    tools:text="traveller" />
+
+                <TextView
+                    android:id="@+id/text_notify_like_msg"
+                    style="@style/TextStyle3_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_padding"
+                    android:text="@string/notification_follow_msg"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="@+id/text_notify_like_user_name"
+                    app:layout_constraintTop_toBottomOf="@+id/text_notify_like_user_name" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.cover.PlanCoverViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="@{() -> viewModel.leave()}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_plan_cover"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_dialog_corner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_plan_cover_close"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="@dimen/middle_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/icons_24px_close"
+                android:onClick="@{() -> viewModel.leave()}"
+                app:layout_constraintBottom_toTopOf="@+id/img_plan_cover"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_plan_cover"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginStart="@dimen/middle_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/small_padding"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sample_cover"
+                app:layout_constraintBottom_toTopOf="@id/btn_plan_cover_select_photo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_plan_cover_select_photo"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/small_padding"
+                android:background="@drawable/camera"
+                app:layout_constraintBottom_toTopOf="@+id/layout_plan_title"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_plan_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/middle_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:theme="@style/InputTextColorTheme"
+                app:layout_constraintBottom_toTopOf="@id/layout_plan_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/cover_plan_edittext"
+                    android:hint="@string/plan_name"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/gray_black" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_plan_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/middle_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:theme="@style/InputTextColorTheme"
+                app:layout_constraintBottom_toTopOf="@id/btn_plan_cover_save"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/cover_plan_edittext"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/plan_date_range"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:onClick="@{()-> viewModel.selectDate()}"
+                    android:singleLine="true"
+                    android:textColor="@color/gray_black"
+                    app:endDate="@{viewModel.endDate}"
+                    app:startDate="@{viewModel.startDate}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_plan_cover_save"
+                style="@style/TextStyle2_white"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/middle_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/button_ripple"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.save()}"
+                android:text="@string/plan_save"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_goneMarginTop="16dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

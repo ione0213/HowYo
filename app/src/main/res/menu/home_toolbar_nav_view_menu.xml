@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/notification"
+        android:icon="@drawable/bell"
+        android:title="@string/notification"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/plus"
+        android:icon="@drawable/plus"
+        android:title="@string/add_payment"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/setting"
+        android:icon="@drawable/setting"
+        android:title="@string/setting"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/save"
+        android:title="@string/save_setting"
+        android:visible="false"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/delete"
+        android:visible="false"
+        android:title="@string/delete_payment"
+        app:showAsAction="always|withText" />
+</menu>

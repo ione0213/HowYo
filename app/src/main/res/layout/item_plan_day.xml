@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.PlanViewModel" />
+
+        <variable
+            name="day"
+            type="com.yuchen.howyo.data.Day" />
+
+        <variable
+            name="viewHolder"
+            type="com.yuchen.howyo.plan.PlanDaysAdapter.DayViewHolder" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="84dp"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_plan_day"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/small_padding"
+            app:selected="@{viewHolder.isSelected}"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:text="第一天\n10/1 週五"
+            android:textColor="@drawable/day_text_color_selector"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

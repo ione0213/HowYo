@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="groupMessage"
+            type="com.yuchen.howyo.data.GroupMessage" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_chat_received_avatar"
+            android:layout_width="@dimen/favorite_avatar"
+            android:layout_height="@dimen/favorite_avatar"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar_sample"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circle" />
+
+        <TextView
+            android:id="@+id/textview_chat_received_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:text="@{groupMessage.name}"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/img_chat_received_avatar"
+            app:layout_constraintTop_toTopOf="@+id/img_chat_received_avatar"
+            tools:text="Mark" />
+
+        <TextView
+            android:id="@+id/textview_chat_received_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/textview_chat_received_msg"
+            app:layout_constraintBottom_toBottomOf="@+id/textview_chat_received_msg"
+            app:time="@{groupMessage.createdTime}"
+            tools:text="06:30 下午" />
+
+        <TextView
+            android:id="@+id/textview_chat_received_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_bubble_sent"
+            android:maxWidth="256dp"
+            android:paddingStart="@dimen/standard_padding"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingEnd="@dimen/small_padding"
+            android:paddingBottom="@dimen/small_padding"
+            android:text="@{groupMessage.message}"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toStartOf="@+id/textview_chat_received_name"
+            app:layout_constraintTop_toBottomOf="@+id/textview_chat_received_name"
+            tools:text="This is a sent message keep the text going so we can see" />
+
+        <!--        <com.google.android.material.imageview.ShapeableImageView-->
+        <!--            android:id="@+id/img_chat_sent_avatar"-->
+        <!--            android:layout_width="@dimen/favorite_avatar"-->
+        <!--            android:layout_height="@dimen/favorite_avatar"-->
+        <!--            android:scaleType="centerCrop"-->
+        <!--            android:src="@drawable/avatar_sample"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:shapeAppearanceOverlay="@style/circle" />-->
+
+        <TextView
+            android:id="@+id/textview_chat_sent_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@+id/textview_chat_sent"
+            app:layout_constraintBottom_toBottomOf="@+id/textview_chat_sent"
+            app:time="@{groupMessage.createdTime}"
+            tools:text="06:30 下午" />
+
+        <TextView
+            android:id="@+id/textview_chat_sent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/shape_bubble_received"
+            android:maxWidth="256dp"
+            android:paddingStart="@dimen/small_padding"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingEnd="@dimen/standard_padding"
+            android:paddingBottom="@dimen/small_padding"
+            android:text="@{groupMessage.message}"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="This is a received message keep the text going so we can see" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

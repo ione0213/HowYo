@@ -1,3 +1,67 @@
 <resources>
     <string name="app_name">HowYo</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- General -->
+    <string name="home">好友行程</string>
+    <string name="discover">探索</string>
+    <string name="favorite">收藏行程</string>
+    <string name="notification">通知</string>
+    <string name="shopping_list">購物清單</string>
+    <string name="group_message">群組聊天</string>
+    <string name="check_list">行李清單</string>
+    <string name="new_item">新增項目</string>
+    <string name="payment">款項清單</string>
+    <string name="add_payment">新增款項</string>
+    <string name="delete_payment">刪除款項</string>
+    <string name="payment_detail">款項資訊</string>
+    <string name="find_location">尋找景點</string>
+    <string name="setting">設定</string>
+    <string name="save_setting">儲存</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="plan_name">行程名稱</string>
+    <string name="plan_date_range">旅程區間</string>
+    <string name="plan_save">儲存</string>
+    <string name="select_plan_duration">選擇旅程日期區間</string>
+    <string name="detail_edit_schedule_type">類別</string>
+    <string name="detail_edit_schedule_notification">行程通知</string>
+    <string name="detail_edit_schedule_title">標題</string>
+    <string name="detail_edit_schedule_address">地址</string>
+    <string name="detail_edit_schedule_start_time">開始時間</string>
+    <string name="detail_edit_schedule_end_time">結束時間</string>
+    <string name="detail_edit_schedule_remark">備註</string>
+    <string name="detail_edit_schedule_budge">預算</string>
+    <string name="detail_edit_schedule_ref_url">參考網址</string>
+    <string name="select_schedule_type">選擇類別</string>
+    <string name="air_flight">飛行計劃</string>
+    <string name="traffic">交通</string>
+    <string name="hotel">住宿</string>
+    <string name="place">景點</string>
+    <string name="insert_keywords">Insert keywords</string>
+
+    <!-- Payment-->
+    <string name="payment_item">品項名稱</string>
+    <string name="payment_amount">金額</string>
+    <string name="payment_payer">付款人</string>
+
+    <!-- Profile-->
+    <string name="profile_following">%d\n追蹤中</string>
+    <string name="profile_fans">%d\n紛絲</string>
+    <string name="profile_plans">%d\n行程</string>
+    <string name="profile_modify_avatar">更換大頭貼</string>
+    <string name="profile_modify_id">ID</string>
+    <string name="profile_modify_info">個人簡介</string>
+
+    <!-- Notification-->
+    <string name="notification_like_msg">說你的行程讚</string>
+    <string name="notification_like_type">like</string>
+    <string name="notification_follow_msg">開始追蹤你</string>
+    <string name="notification_follow_type">follow</string>
+
+    <!--Group Msg-->
+    <string name="type_message_here">Type message here</string>
+
 </resources>

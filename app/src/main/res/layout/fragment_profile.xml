@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.profile.ProfileViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".profile.ProfileFragment">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_profile_avatar"
+            android:layout_width="@dimen/profile_avatar"
+            android:layout_height="@dimen/profile_avatar"
+            android:layout_marginStart="@dimen/standard_padding"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar_sample"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circle" />
+
+        <TextView
+            android:id="@+id/text_profile_following"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/large_padding"
+            android:layout_marginEnd="@dimen/standard_padding"
+            android:onClick="@{() -> viewModel.navigateToFriend()}"
+            android:text="@{String.format(@string/profile_following, 0)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/profile_following" />
+
+        <TextView
+            android:id="@+id/text_profile_fans"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/large_padding"
+            android:layout_marginEnd="@dimen/standard_padding"
+            android:onClick="@{() -> viewModel.navigateToFriend()}"
+            android:text="@{String.format(@string/profile_fans, 0)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/text_profile_following"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/profile_fans" />
+
+        <TextView
+            android:id="@+id/text_profile_plans"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/large_padding"
+            android:layout_marginEnd="@dimen/standard_padding"
+            android:text="@{String.format(@string/profile_plans, viewModel.plans.size)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/text_profile_fans"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/profile_plans" />
+
+        <TextView
+            android:id="@+id/text_profile_user_name"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="traveller"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/img_profile_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/img_profile_avatar"
+            tools:text="traveller" />
+
+        <TextView
+            android:id="@+id/text_profile_information"
+            style="@style/TextStyle3_black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="Wanna travel?🇯🇵🇹🇼🇺🇸"
+            android:textAlignment="viewStart"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/text_profile_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_profile_user_name"
+            tools:text="traveller" />
+
+        <View
+            android:id="@+id/view_profile_separation"
+            style="@style/SeparationHorizontal"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_profile_information" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_profile_plans"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_profile_separation"
+            app:layout_constraintVertical_bias="1.0"
+            app:plans="@{viewModel.plans}"
+            app:spanCount="3"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_plans_profile" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
