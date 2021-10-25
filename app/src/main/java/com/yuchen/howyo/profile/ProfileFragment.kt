@@ -60,6 +60,17 @@ class ProfileFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToFriends.observe(viewLifecycleOwner, {
+            it?.let {
+                when {
+                    it -> {
+                        findNavController().navigate(NavigationDirections.navToFriendsFragment())
+                    }
+                }
+                viewModel.onFriendNavigated()
+            }
+        })
+
         return binding.root
     }
 

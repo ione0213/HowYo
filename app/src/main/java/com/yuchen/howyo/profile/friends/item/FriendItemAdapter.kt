@@ -4,13 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.ItemFriendBinding
 
 class FriendItemAdapter(
     private val viewModel: FriendItemViewModel
-) : PagingDataAdapter<User, FriendItemAdapter.FriendViewHolder>(DiffCallback) {
+) : ListAdapter<User, FriendItemAdapter.FriendViewHolder>(DiffCallback) {
 
     class FriendViewHolder(private var binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {

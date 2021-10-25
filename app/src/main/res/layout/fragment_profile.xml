@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.yuchen.howyo.profile.ProfileViewModel"/>
+            type="com.yuchen.howyo.profile.ProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/large_padding"
             android:layout_marginEnd="@dimen/standard_padding"
+            android:onClick="@{() -> viewModel.navigateToFriend()}"
             android:text="@{String.format(@string/profile_following, 0)}"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/large_padding"
             android:layout_marginEnd="@dimen/standard_padding"
+            android:onClick="@{() -> viewModel.navigateToFriend()}"
             android:text="@{String.format(@string/profile_fans, 0)}"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/text_profile_following"
@@ -115,16 +118,16 @@
             android:id="@+id/recycler_profile_plans"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/small_padding"
-            android:layout_marginStart="@dimen/small_padding"
             app:layout_constraintHorizontal_bias="0.0"
-            app:plans="@{viewModel.plans}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_profile_separation"
             app:layout_constraintVertical_bias="1.0"
+            app:plans="@{viewModel.plans}"
             app:spanCount="3"
             tools:itemCount="10"
             tools:listitem="@layout/item_plans_profile" />

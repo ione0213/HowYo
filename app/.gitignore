@@ -90,3 +90,6 @@ lint/tmp/
 
 #Google Map API KEY
 src/main/res/values/google_api_key.xml
+
+#Facebook API KEY
+src/main/res/values/facebook_api_key.xml

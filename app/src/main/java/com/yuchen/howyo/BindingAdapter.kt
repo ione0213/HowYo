@@ -28,6 +28,7 @@ import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
 import com.yuchen.howyo.plan.payment.PaymentAdapter
 import com.yuchen.howyo.profile.PlanAdapter
+import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.Logger
 
@@ -239,6 +240,22 @@ fun bindRecyclerViewWithNotifications(
             when (this) {
                 is NotificationAdapter -> {
                     addNotificationItem(it)
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("users")
+fun bindRecyclerViewWithUsers(
+    recyclerView: RecyclerView,
+    plans: List<User>
+) {
+    plans.let {
+        recyclerView.adapter?.apply {
+            when (this) {
+                is FriendItemAdapter -> {
+                    submitList(it)
                 }
             }
         }

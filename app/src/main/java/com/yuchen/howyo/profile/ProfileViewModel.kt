@@ -26,6 +26,12 @@ class ProfileViewModel(private val howYoRepository: HowYoRepository) : ViewModel
     val navigateToSetting: LiveData<Boolean>
         get() = _navigateToSetting
 
+    // Handle navigation to friends
+    private val _navigateToFriends = MutableLiveData<Boolean>()
+
+    val navigateToFriends: LiveData<Boolean>
+        get() = _navigateToFriends
+
     init {
 
         _plans.value = listOf(
@@ -82,5 +88,13 @@ class ProfileViewModel(private val howYoRepository: HowYoRepository) : ViewModel
 
     fun onSettingNavigated() {
         _navigateToSetting.value = null
+    }
+
+    fun navigateToFriend() {
+        _navigateToFriends.value = true
+    }
+
+    fun onFriendNavigated() {
+        _navigateToFriends.value = null
     }
 }

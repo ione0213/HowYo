@@ -186,9 +186,7 @@
         app:popUpToInclusive="true" />
     <action
         android:id="@+id/nav_to_friends_fragment"
-        app:destination="@id/friendsFragment"
-        app:popUpTo="@id/navigation"
-        app:popUpToInclusive="true" />
+        app:destination="@id/friendsFragment" />
     <action
         android:id="@+id/nav_to_setting_fragment"
         app:destination="@id/settingFragment" />
