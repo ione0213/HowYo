@@ -37,6 +37,7 @@ import com.yuchen.howyo.util.Logger
 @SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")
 fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
+    Logger.i("start date: $starDate, end date: $endDate")
     text = "${starDate.toDate()} - ${endDate.toDate()}"
 }
 

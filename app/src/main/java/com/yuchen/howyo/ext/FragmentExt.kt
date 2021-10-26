@@ -7,6 +7,7 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.factory.*
+import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.profile.friends.FriendFilter
 
 fun Fragment.getVmFactory(): ViewModelFactory {
@@ -32,9 +33,14 @@ fun Fragment.getVmFactory(
     return CompanionViewModelFactory(repository, user)
 }
 
-fun Fragment.getVmFactory(plan: Plan): PlanViewModelFactory {
+fun Fragment.getVmFactory(plan: Plan): PlanContentViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return PlanViewModelFactory(repository, plan)
+    return PlanContentViewModelFactory(repository, plan)
+}
+
+fun Fragment.getVmFactory(plan: Plan, accessPlanType: AccessPlanType): PlanViewModelFactory {
+    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
+    return PlanViewModelFactory(repository, plan, accessPlanType)
 }
 
 fun Fragment.getVmFactory(planId: String, mainType: String): CheckListViewModelFactory {

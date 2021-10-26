@@ -1,30 +1,44 @@
 package com.yuchen.howyo.plan.cover
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.DialogPlanCoverBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 import com.yuchen.howyo.plan.AccessPlanType
-import com.yuchen.howyo.util.Logger
-import java.util.*
+import java.io.File
 
 const val TAG = "DATE_PICKER"
+
 class PlanCoverDialog : AppCompatDialogFragment() {
 
     private lateinit var binding: DialogPlanCoverBinding
     private val viewModel by viewModels<PlanCoverViewModel> { getVmFactory() }
+    private val takePhoto = 1
+    private val fromAlbum = 2
+    lateinit var imageUri: Uri
+    lateinit var outputImage: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +63,55 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         })
 
         viewModel.selectDate.observe(viewLifecycleOwner, {
-            showDateRangePicker()
+            it?.let {
+                when {
+                    it -> showDateRangePicker()
+                }
+            }
         })
 
-        viewModel.save.observe(viewLifecycleOwner, {
+        viewModel.takePhoto.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(NavigationDirections.navToPlanFragment(
-                    it,
-                    AccessPlanType.EDIT
-                ))
-                viewModel.onSaveCompleted()
+                takePhoto()
+                viewModel.onTookPhoto()
+            }
+        })
+
+        viewModel.selectPhoto.observe(viewLifecycleOwner, {
+            it?.let {
+                selectPhoto()
+                viewModel.onSelectedPhoto()
+            }
+        })
+
+        viewModel.isPlanReady.observe(viewLifecycleOwner, {
+            it?.let {
+                when {
+                    it -> {
+                        viewModel.createPlan()
+                    }
+                }
+            }
+        })
+
+        viewModel.planId.observe(viewLifecycleOwner, {
+            it?.let {
+                when {
+                    it.isNotEmpty() -> viewModel.getPlanData()
+                }
+            }
+        })
+
+        viewModel.navToDetail.observe(viewLifecycleOwner, {
+            it?.let {
+
+                findNavController().navigate(
+                    NavigationDirections.navToPlanFragment(
+                        it,
+                        AccessPlanType.EDIT
+                    )
+                )
+                viewModel.onNavToDetailCompleted()
             }
         })
 
@@ -85,11 +138,100 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         dateRangePicker.show(childFragmentManager, TAG)
 
         dateRangePicker.addOnPositiveButtonClickListener {
-            Logger.i("${it.first}, ${it.second}")
+//            viewModel.setPlanDate(Pair(it.first, it.second))
             viewModel.apply {
-                startDate.value = it.first
-                endDate.value = it.second
+                startDateFromUser.value = it.first
+                endDateFromUser.value = it.second
+                onSelectedDate()
             }
         }
     }
+
+    private fun takePhoto() {
+
+        outputImage = File(activity?.externalCacheDir, "output_image.jpg")
+
+        if (outputImage.exists()) {
+            outputImage.delete()
+        }
+
+        outputImage.createNewFile()
+
+        imageUri =
+            FileProvider.getUriForFile(
+                HowYoApplication.instance,
+                "com.yuchen.howyo.fileProvider",
+                outputImage
+            )
+
+        val intent = Intent("android.media.action.IMAGE_CAPTURE")
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        startActivityForResult(intent, takePhoto)
+    }
+
+    private fun selectPhoto() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+
+        intent.type = "image/*"
+
+        startActivityForResult(intent, fromAlbum)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            takePhoto -> {
+                if (resultCode == Activity.RESULT_OK) {
+
+                    viewModel.setCoverBitmap(imageUri)
+                    binding.imgPlanCover.setImageBitmap(
+                        rotateIfRequired(
+                            BitmapFactory.decodeStream(
+                                activity?.contentResolver?.openInputStream(imageUri)
+                            )
+                        )
+                    )
+                }
+            }
+            fromAlbum -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+
+                    data.data?.let { uri ->
+
+                        viewModel.setCoverBitmap(uri)
+                        binding.imgPlanCover.setImageBitmap(getBitmapFromUri(uri))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun rotateIfRequired(bitmap: Bitmap): Bitmap {
+        val exif = ExifInterface(outputImage.path)
+        return when (exif.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        )) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270)
+            else -> bitmap
+        }
+
+    }
+
+    private fun rotateBitmap(bitmap: Bitmap, degree: Int): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degree.toFloat())
+        val rotatedBitmap =
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        bitmap.recycle()
+        return rotatedBitmap
+    }
+
+    private fun getBitmapFromUri(uri: Uri) =
+        context?.contentResolver?.openFileDescriptor(uri, "r")?.use {
+            BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+        }
 }

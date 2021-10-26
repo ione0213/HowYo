@@ -67,7 +67,7 @@
                     android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
                     android:scaleType="centerCrop"
-                    app:imageUrl="@{plan.coverPhotoUrl}"
+                    app:imageUrl="@{String.valueOf(plan.coverPhotoUrl)}"
                     app:layout_constraintBottom_toTopOf="@+id/img_favorite_plan_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

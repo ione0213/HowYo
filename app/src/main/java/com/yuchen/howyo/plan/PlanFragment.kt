@@ -16,7 +16,10 @@ import com.yuchen.howyo.ext.getVmFactory
 class PlanFragment : Fragment() {
 
     private lateinit var binding: FragmentPlanBinding
-    val viewModel by viewModels<PlanViewModel> { getVmFactory() }
+    val viewModel by viewModels<PlanViewModel> { getVmFactory(
+        PlanFragmentArgs.fromBundle(requireArguments()).plan!!,
+        PlanFragmentArgs.fromBundle(requireArguments()).accessType
+    ) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

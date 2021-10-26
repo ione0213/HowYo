@@ -24,8 +24,6 @@ class ViewModelFactory constructor(
                     MainViewModel(howYoRepository)
                 isAssignableFrom(PlanCoverViewModel::class.java) ->
                     PlanCoverViewModel(howYoRepository)
-                isAssignableFrom(PlanViewModel::class.java) ->
-                    PlanViewModel(howYoRepository)
                 isAssignableFrom(FindLocationViewModel::class.java) ->
                     FindLocationViewModel(howYoRepository)
                 isAssignableFrom(ProfileViewModel::class.java) ->

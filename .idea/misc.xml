@@ -76,6 +76,7 @@
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/menu/home_toolbar_nav_view_menu.xml" value="0.2" />
         <entry key="app/src/main/res/menu/toolbar_nav_view_menu.xml" value="0.19427083333333334" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.2477355072463768" />
       </map>
     </option>
   </component>
