@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".profile.setting.SettingFragment">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_profile_setting_avatar"
+            android:layout_width="@dimen/profile_avatar_setting"
+            android:layout_height="@dimen/profile_avatar_setting"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar_sample"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circle" />
+
+        <TextView
+            android:id="@+id/text_profile_setting_change_avatar"
+            style="@style/TextStyle2_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="@string/profile_modify_avatar"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/img_profile_setting_avatar"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/img_profile_setting_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/img_profile_setting_avatar" />
+
+        <TextView
+            android:id="@+id/text_profile_setting_user_name"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:text="@string/profile_modify_id"
+            android:textStyle="bold"
+            android:layout_marginStart="@dimen/small_padding"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_profile_setting_change_avatar" />
+
+        <EditText
+            android:id="@+id/edittext_profile_setting_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:maxLines="1"
+            android:layout_marginEnd="@dimen/small_padding"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/text_profile_setting_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_profile_setting_user_name" />
+
+        <TextView
+            android:id="@+id/text_profile_setting_information"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:text="@string/profile_modify_info"
+            android:textAlignment="viewStart"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/text_profile_setting_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/edittext_profile_setting_user_name" />
+
+        <EditText
+            android:id="@+id/edittext_profile_setting_information"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/small_padding"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/text_profile_setting_information"
+            app:layout_constraintTop_toBottomOf="@+id/text_profile_setting_information" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

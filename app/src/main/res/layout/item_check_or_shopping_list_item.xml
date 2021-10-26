@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListViewModel" />
+
+        <variable
+            name="checkShoppingItem"
+            type="com.yuchen.howyo.data.CheckShoppingItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_check_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray_f5f5f5">
+
+        <ImageView
+            android:id="@+id/img_check_list_checked"
+            android:layout_width="@dimen/plan_img_btn_small"
+            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:background="@drawable/check_item_normal"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+             />
+
+        <TextView
+            android:id="@+id/text_check_list_item_name"
+            style="@style/TextStyle2_black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard_padding"
+            android:text="@{checkShoppingItem.item}"
+            tools:text="護照"
+            android:textAlignment="viewStart"
+            app:layout_constraintBottom_toBottomOf="@+id/img_check_list_checked"
+            app:layout_constraintEnd_toStartOf="@+id/btn_check_list_delete"
+            app:layout_constraintStart_toEndOf="@+id/img_check_list_checked"
+            app:layout_constraintTop_toTopOf="@+id/img_check_list_checked" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_check_list_delete"
+            android:layout_width="@dimen/plan_img_btn_small"
+            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:layout_marginBottom="@dimen/middle_padding"
+            android:background="@drawable/icons_24px_close"
+            app:layout_constraintBottom_toBottomOf="@+id/text_check_list_item_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_check_list_item_name" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

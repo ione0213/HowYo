@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.detail.view.DetailViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/recycler_detail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".plan.detail.view.DetailFragment">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_detail_close"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:background="@drawable/icons_44px_back01"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_plan_edit"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:layout_marginBottom="@dimen/middle_padding"
+                    android:background="@drawable/edit"
+                    android:backgroundTint="@{viewModel.schedule.photoUrlList.size == 0 ? @color/black : @color/gray2}"
+                    android:onClick="@{() -> viewModel.navigateToEditSchedule()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_detail_images"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_detail_gallery"
+                    android:orientation="horizontal"
+                    android:visibility="@{viewModel.schedule.photoUrlList.size == 0 ? View.GONE : View.VISIBLE}"
+                    app:images="@{viewModel.schedule.photoUrlList}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/item_detail_image" />
+
+                <ImageView
+                    android:id="@+id/img_detail_type"
+                    android:layout_width="@dimen/plan_img_btn"
+                    android:layout_height="@dimen/plan_img_btn"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:src="@drawable/train"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_detail_images"
+                    app:layout_goneMarginTop="@dimen/largest_padding" />
+
+                <TextView
+                    android:id="@+id/text_detail_title"
+                    style="@style/TextStyle2_black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:text="APA Hotel Nagoya-Sakae"
+                    android:textAlignment="viewStart"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_detail_type"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_detail_type"
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_type"
+                    tools:text="APA Hotel Nagoya-Sakae" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_detail_destination"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/standard_padding"
+                    android:layout_marginTop="@dimen/middle_padding"
+                    android:layout_marginEnd="@dimen/standard_padding"
+                    android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_detail_title">
+
+                    <fragment
+                        android:id="@+id/map_detail_destination"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:clickable="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_detail_resize"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginTop="@dimen/small_padding"
+                    android:onClick="@{() -> viewModel.navigateToViewMap()}"
+                    android:background="@drawable/resize_arrow"
+                    android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="@+id/layout_detail_destination"
+                    app:layout_constraintTop_toTopOf="@id/layout_detail_destination" />
+
+                <ImageView
+                    android:id="@+id/img_detail_time"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:src="@drawable/clock"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_detail_destination" />
+
+                <TextView
+                    android:id="@+id/text_detail_time"
+                    style="@style/TextStyle3_black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:text="09:00 to 12:00"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_detail_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_detail_time"
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_time" />
+
+                <ImageView
+                    android:id="@+id/img_detail_address"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:src="@drawable/locator"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_detail_time" />
+
+                <TextView
+                    android:id="@+id/text_detail_address"
+                    style="@style/TextStyle3_black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:text="愛知県名古屋市中区栄4丁目10-16愛知県名古屋市中区栄4丁目10-16"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_detail_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_detail_address"
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_address" />
+
+                <ImageView
+                    android:id="@+id/img_detail_note"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:src="@drawable/note"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_detail_address" />
+
+                <TextView
+                    android:id="@+id/text_detail_note"
+                    style="@style/TextStyle3_black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:text="地鐵站出來走約五分鐘 全家對面"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_detail_note"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_detail_note"
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_note" />
+
+                <ImageView
+                    android:id="@+id/img_detail_budge"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:src="@drawable/coin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_detail_note" />
+
+                <TextView
+                    android:id="@+id/text_detail_budge"
+                    style="@style/TextStyle3_black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:text="4000"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_detail_budge"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_detail_budge"
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_budge" />
+
+                <ImageView
+                    android:id="@+id/img_detail_url"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:src="@drawable/hyperlink"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_detail_budge" />
+
+                <TextView
+                    android:id="@+id/text_detail_url"
+                    style="@style/TextStyle3_black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:text="https://google.com"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_detail_url"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_detail_url"
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_url" />
+
+                <ImageView
+                    android:id="@+id/img_detail_notify"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_marginBottom="@dimen/standard_padding"
+                    android:src="@drawable/bell"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_detail_url" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_detail_notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:checked="true"
+                    android:clickable="false"
+                    android:switchMinWidth="56dp"
+                    android:textOff="OFF"
+                    android:textOn="ON"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_detail_notify"
+                    app:layout_constraintStart_toEndOf="@+id/img_detail_notify"
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_notify" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="payment"
+            type="com.yuchen.howyo.data.Payment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:background="@color/gray"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/gray_f5f5f5"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/img_payment_icon"
+                    android:layout_width="@dimen/plan_img_btn"
+                    android:layout_height="@dimen/plan_img_btn"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/small_padding"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:src="@drawable/coin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_payment_amount"
+                    style="@style/TextStyle2_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/middle_padding"
+                    android:layout_marginBottom="@dimen/middle_padding"
+                    android:text="@{String.valueOf(payment.amount)}"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_payment_icon"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/img_payment_icon"
+                    app:layout_constraintTop_toTopOf="@+id/img_payment_icon"
+                    tools:text="2800" />
+
+                <View
+                    android:id="@+id/view_payment_separation"
+                    style="@style/SeparationVertical"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    app:layout_constraintStart_toEndOf="@+id/text_payment_amount"
+                    app:layout_constraintTop_toTopOf="@+id/text_payment_amount"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_payment_amount"/>
+
+                <TextView
+                    android:id="@+id/text_payment_item_name"
+                    style="@style/TextStyle2_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/middle_padding"
+                    android:layout_marginBottom="@dimen/middle_padding"
+                    android:textStyle="bold"
+                    android:text="@{payment.item}"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/view_payment_separation"
+                    app:layout_constraintTop_toTopOf="@+id/view_payment_separation"
+                    app:layout_constraintBottom_toBottomOf="@+id/view_payment_separation"
+                     />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
