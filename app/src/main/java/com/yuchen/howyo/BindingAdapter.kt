@@ -17,6 +17,7 @@ import com.yuchen.howyo.data.*
 import com.yuchen.howyo.discover.DiscoverAdapter
 import com.yuchen.howyo.ext.toDate
 import com.yuchen.howyo.ext.toTime
+import com.yuchen.howyo.ext.toWeekDay
 import com.yuchen.howyo.favorite.FavoriteAdapter
 import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
@@ -44,7 +45,7 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
 @SuppressLint("SetTextI18n")
 @BindingAdapter("time")
 fun TextView.bindMsgTime(time: Long) {
-    text = "${time.toTime()}"
+    text = time.toTime()
 }
 
 @BindingAdapter("currentFragmentType")
@@ -65,7 +66,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
 @BindingAdapter("currentFragmentTypeForToolbar")
 fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
     visibility = when (currentFragmentType) {
-        CurrentFragmentType.PLAN-> {
+        CurrentFragmentType.PLAN -> {
             View.GONE
         }
         else -> View.VISIBLE
@@ -113,6 +114,12 @@ fun bindRecyclerViewWithDays(recyclerView: RecyclerView, days: List<Day>?) {
     }
 }
 
+@BindingAdapter("day", "firstDate")
+fun TextView.bindTextWithDay(day: Int, firstDate: Long?) {
+    val date = firstDate?.plus((1000 * 60 * 60 * 24 * day))
+    text = HowYoApplication.instance.getString(R.string.day, day.plus(1), date?.toWeekDay())
+ }
+
 @BindingAdapter("schedules")
 fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Schedule>?) {
     schedules?.let {
@@ -124,24 +131,24 @@ fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Sc
     }
 }
 
-@BindingAdapter("selected")
-fun drawDaySelected(button: AppCompatButton, isSelected: Boolean?) {
-    button.background = when (isSelected) {
-        true -> AppCompatResources.getDrawable(
-            HowYoApplication.instance,
-            R.drawable.day_corner_selected
-        )
-        else -> AppCompatResources.getDrawable(
-            HowYoApplication.instance,
-            R.drawable.day_corner_normal
-        )
-    }
-}
+//@BindingAdapter("selected")
+//fun drawDaySelected(textView: TextView, isSelected: Boolean?) {
+//    textView.background = when (isSelected) {
+//        true -> AppCompatResources.getDrawable(
+//            HowYoApplication.instance,
+//            R.drawable.day_corner_selected
+//        )
+//        else -> AppCompatResources.getDrawable(
+//            HowYoApplication.instance,
+//            R.drawable.day_corner_normal
+//        )
+//    }
+//}
 
-@BindingAdapter("day", "plan")
-fun bindDayInfo(button: AppCompatButton, day: Day, plan: Plan) {
-//    button.text =
-}
+//@BindingAdapter("day", "plan")
+//fun bindDayInfo(button: AppCompatButton, day: Day, plan: Plan) {
+////    button.text =
+//}
 
 @BindingAdapter("images")
 fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?) {

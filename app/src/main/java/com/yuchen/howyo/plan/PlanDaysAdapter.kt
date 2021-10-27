@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.databinding.ItemPlanDayBinding
+import com.yuchen.howyo.util.Logger
 
 class PlanDaysAdapter(val viewModel: PlanViewModel) :
     ListAdapter<Day, PlanDaysAdapter.DayViewHolder>(DiffCallback) {
@@ -22,6 +23,7 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
         }
 
         fun bind(day: Day) {
+            binding.lifecycleOwner = this
             binding.viewModel = viewModel
             binding.viewHolder = this
             day.let {
@@ -29,21 +31,21 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
                 binding.executePendingBindings()
             }
         }
-//
+
         private val lifecycleRegistry = LifecycleRegistry(this)
-//
-//        init {
-//            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
-//        }
-//
-//        fun onAttach() {
-//            lifecycleRegistry.currentState = Lifecycle.State.STARTED
-//        }
-//
-//        fun onDetach() {
-//            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-//        }
-//
+
+        init {
+            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+        }
+
+        fun onAttach() {
+            lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        }
+
+        fun onDetach() {
+            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
+        }
+
         override fun getLifecycle(): Lifecycle {
             return lifecycleRegistry
         }
@@ -72,13 +74,13 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
         holder.bind(getItem(position))
     }
 
-//    override fun onViewAttachedToWindow(holder: DayViewHolder) {
-//        super.onViewAttachedToWindow(holder)
-//        holder.onAttach()
-//    }
-//
-//    override fun onViewDetachedFromWindow(holder: DayViewHolder) {
-//        super.onViewDetachedFromWindow(holder)
-//        holder.onDetach()
-//    }
+    override fun onViewAttachedToWindow(holder: DayViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.onAttach()
+    }
+
+    override fun onViewDetachedFromWindow(holder: DayViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.onDetach()
+    }
 }

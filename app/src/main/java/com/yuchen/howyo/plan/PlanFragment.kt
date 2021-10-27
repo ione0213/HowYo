@@ -1,5 +1,6 @@
 package com.yuchen.howyo.plan
 
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
+import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+
 
 class PlanFragment : Fragment() {
 
     private lateinit var binding: FragmentPlanBinding
-    val viewModel by viewModels<PlanViewModel> { getVmFactory(
-        PlanFragmentArgs.fromBundle(requireArguments()).plan!!,
-        PlanFragmentArgs.fromBundle(requireArguments()).accessType
-    ) }
+    val viewModel by viewModels<PlanViewModel> {
+        getVmFactory(
+            PlanFragmentArgs.fromBundle(requireArguments()).plan!!,
+            PlanFragmentArgs.fromBundle(requireArguments()).accessType
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +42,12 @@ class PlanFragment : Fragment() {
             ScheduleAdapter(viewModel, ScheduleAdapter.OnClickListener {
                 viewModel.navigateToDetail(it)
             })
+
+        //Reduce saturation to make text clear
+        val cm = ColorMatrix()
+        cm.setSaturation(0.4F)
+        val grayColorFilter = ColorMatrixColorFilter(cm)
+        binding.imgPlanCover.colorFilter = grayColorFilter
 
         viewModel.navigateToDetail.observe(viewLifecycleOwner, {
             it?.let {

@@ -1,7 +1,9 @@
 package com.yuchen.howyo.data.source.remote
 
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
@@ -22,6 +24,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_PLANS = "plans"
     private const val PATH_DAYS = "days"
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
+    private const val KEY_POSITION = "position"
 
     override suspend fun uploadPhoto(imgUri: Uri): Result<String> =
         suspendCoroutine { continuation ->
@@ -137,8 +140,34 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override suspend fun getDays(planId: String): Result<List<Day>> {
-        TODO("Not yet implemented")
+    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
+
+        val liveData = MutableLiveData<List<Day>>()
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_DAYS)
+            .whereEqualTo("plan_id", planId)
+            .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting days. ${it.message}")
+                }
+
+                val list = mutableListOf<Day>()
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
+
+                    val day = document.toObject(Day::class.java)
+                    list.add(day)
+                }
+
+                liveData.value = list
+            }
+
+        return liveData
     }
 
     override suspend fun createMainCheckList(planId: String, mainType: String, subtype: String?): Result<Boolean> =

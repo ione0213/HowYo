@@ -17,6 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
         android:onClick="@{() -> viewModel.leave()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +37,7 @@
                 android:layout_marginEnd="@dimen/middle_padding"
                 android:layout_marginBottom="@dimen/middle_padding"
                 android:background="@drawable/icons_24px_close"
+                android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:onClick="@{() -> viewModel.leave()}"
                 app:layout_constraintBottom_toTopOf="@+id/layout_dialog_plan_cover_empty_image"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -146,18 +148,18 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_plan_cover_save"
+                style="@style/Button"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="@dimen/middle_padding"
                 android:layout_marginEnd="@dimen/middle_padding"
                 android:layout_marginBottom="@dimen/middle_padding"
-                style="@style/Button"
-                android:textColor="@color/white"
                 android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.uploadCoverImg()}"
                 android:text="@{viewModel.status != LoadApiStatus.LOADING ? @string/plan_save : null}"
                 android:textAllCaps="false"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -169,8 +171,8 @@
                 android:id="@+id/progress_plan_cover"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:theme="@style/ProgressThemeDark"
                 android:elevation="1dp"
+                android:theme="@style/ProgressThemeDark"
                 android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/btn_plan_cover_save"
                 app:layout_constraintEnd_toEndOf="@+id/btn_plan_cover_save"

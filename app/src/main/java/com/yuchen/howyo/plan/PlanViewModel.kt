@@ -27,11 +27,11 @@ class PlanViewModel(
     val accessType: AccessPlanType
         get() = argumentAccessPlanType
 
-    //Days list of plans
-    private val _days = MutableLiveData<List<Day>>()
+    //live days list of plans
+    var days = MutableLiveData<List<Day>>()
 
-    val days: LiveData<List<Day>>
-        get() = _days
+//    val days: LiveData<List<Day>>
+//        get() = _days
 
     //Schedule list of days
     private val _schedules = MutableLiveData<List<Schedule>>()
@@ -101,22 +101,17 @@ class PlanViewModel(
         Logger.i("argumentAccessPlanType: $argumentAccessPlanType")
         Logger.i("=========================")
 
+        getLiveDaysResult()
+
+        //Select first item of days by default
+        selectedDayPosition.value = 0
+
         _user.value = User(
             id = "788",
             fansList = listOf("Mark", "Mary"),
             followingList = listOf("Mark", "Mary","22", "112121", "12143ffad", "ddfadfdfdf", "aaaa", "bbbb", "ccc")
         )
 
-//        _plan.value = Plan(
-//            "aabb",
-//            "ione0213",
-//            listOf("Alex111", "Joe987"),
-//            "let's go Japan",
-//            "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
-//            1634601600000,
-//            1634688000000
-//        )
-//
 //        _days.value = listOf(
 //            Day("001", "987", 0),
 //            Day("002", "987", 1),
@@ -213,8 +208,12 @@ class PlanViewModel(
 //        )
     }
 
+    fun getLiveDaysResult() {
+        days = howYoRepository.getLiveDays(plan.value?.id!!)
+    }
+
     fun selectDay(position: Int) {
-        Logger.i("selectDay@@@@@@@@@@")
+        Logger.i("selectDay@@@@@@@@@@:$position")
         selectedDayPosition.value = position
     }
 

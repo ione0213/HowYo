@@ -24,6 +24,7 @@
     <string name="select_capture_image">Please select or capture image</string>
     <string name="file_provider_name" translatable="false">.fileProvider</string>
 
+    <!-- Plan-->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="plan_name">行程名稱</string>
     <string name="plan_date_range">旅程區間</string>
@@ -44,6 +45,7 @@
     <string name="hotel">住宿</string>
     <string name="place">景點</string>
     <string name="insert_keywords">Insert keywords</string>
+    <string name="day">第%d天\n%S</string>
 
     <!-- Payment-->
     <string name="payment_item">品項名稱</string>

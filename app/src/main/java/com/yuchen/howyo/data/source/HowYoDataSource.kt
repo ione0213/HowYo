@@ -1,6 +1,7 @@
 package com.yuchen.howyo.data.source
 
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
@@ -15,7 +16,7 @@ interface HowYoDataSource {
 
     suspend fun createDay(position: Int, planId: String): Result<Boolean>
 
-    suspend fun getDays(planId: String): Result<List<Day>>
+    fun getLiveDays(planId: String): MutableLiveData<List<Day>>
 
     suspend fun createMainCheckList(
         planId: String,

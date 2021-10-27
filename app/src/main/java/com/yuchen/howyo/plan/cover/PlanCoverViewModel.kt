@@ -9,9 +9,11 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.ext.toDate
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -44,7 +46,7 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
     //Cover photo bitmap
     private val _photoUri = MutableLiveData<Uri>()
 
-    val photoUri: LiveData<Uri>
+    private val photoUri: LiveData<Uri>
         get() = _photoUri
 
     // Handle the plan data is ready or not
@@ -56,13 +58,13 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
     // Handle the days data is ready or not
     private val _isDaysReady = MutableLiveData<Boolean>()
 
-    val isDaysReady: LiveData<Boolean>
+    private val isDaysReady: LiveData<Boolean>
         get() = _isDaysReady
 
     // Handle the main data of the check and shopping list are ready or not
     private val _isChkListReady = MutableLiveData<Boolean>()
 
-    val isChkListReady: LiveData<Boolean>
+    private val isChkListReady: LiveData<Boolean>
         get() = _isChkListReady
 
     // Handle the main data of the check and shopping list are ready or not
@@ -82,12 +84,6 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
 
     val selectDate: LiveData<Boolean>
         get() = _selectDate
-
-    // Handle save plan cover
-    private val _navToDetail = MutableLiveData<Plan>()
-
-    val navToDetail: LiveData<Plan>
-        get() = _navToDetail
 
     // Handle add the cover photo by camera
     private val _takePhoto = MutableLiveData<Boolean>()
@@ -124,6 +120,9 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
         startDateFromUser.value = calendar.timeInMillis
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         endDateFromUser.value = calendar.timeInMillis
+
+        val test = Calendar.getInstance().timeInMillis
+        val test2 = test + (1000 * 60 * 60 * 24 * 2)
     }
 
     fun uploadCoverImg() {
@@ -138,18 +137,14 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
                 is Result.Success -> {
                     _plan.value?.coverPhotoUrl = result.data
                     _isCoverPhotoReady.value = true
-//                    _status.value = LoadApiStatus.DONE
                 }
                 is Result.Fail -> {
-//                    _status.value = LoadApiStatus.ERROR
                     _isCoverPhotoReady.value = false
                 }
                 is Result.Error -> {
-//                    _status.value = LoadApiStatus.ERROR
                     _isCoverPhotoReady.value = false
                 }
                 else -> {
-//                    _status.value = LoadApiStatus.ERROR
                     _isCoverPhotoReady.value = false
                 }
             }
@@ -164,61 +159,23 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
 
         coroutineScope.launch {
 
-//            _status.value = LoadApiStatus.LOADING
-
             val result = howYoRepository.createPlan(plan)
 
             _planId.value = when (result) {
                 is Result.Success -> {
-//                    _status.value = LoadApiStatus.DONE
                     result.data
                 }
                 is Result.Fail -> {
-//                    _status.value = LoadApiStatus.ERROR
                     null
                 }
                 is Result.Error -> {
-//                    _status.value = LoadApiStatus.ERROR
                     null
                 }
                 else -> {
-//                    _status.value = LoadApiStatus.ERROR
                     null
                 }
             }
             _isCoverPhotoReady.value = null
-        }
-    }
-
-    fun getPlanData() {
-
-        val planId = planId.value
-
-        coroutineScope.launch {
-
-            _status.value = LoadApiStatus.LOADING
-
-            val result = howYoRepository.getPlan(planId!!)
-
-            _navToDetail.value = when (result) {
-                is Result.Success -> {
-                    _status.value = LoadApiStatus.DONE
-                    Logger.i("Plan======: ${result.data}")
-                    result.data
-                }
-                is Result.Fail -> {
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-                is Result.Error -> {
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-                else -> {
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-            }
         }
     }
 
@@ -229,8 +186,7 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
                 _isDaysReady.postValue(createDays()!!)
                 _isChkListReady.postValue(createMainCheckList()!!)
             }
-            Logger.i("isDaysReady : ${isDaysReady.value}")
-            Logger.i("isChkListReady : ${isChkListReady.value}")
+
             when {
                 isDaysReady.value == true && isChkListReady.value == true -> {
                     _isAllDataReady.value = true
@@ -240,7 +196,7 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
         }
     }
 
-    suspend fun createDays(): Boolean {
+    private suspend fun createDays(): Boolean {
 
         val planId = planId.value
         val days =
@@ -248,10 +204,6 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
                 ?.div((60 * 60 * 24 * 1000)))?.toInt()
         val dayResults = mutableListOf<Boolean>()
 
-//        coroutineScope.launch {
-//            _status.value = LoadApiStatus.LOADING
-
-//            withContext(Dispatchers.IO) {
         for (position in 0..days!!) {
 
             val result = howYoRepository.createDay(position, planId!!)
@@ -262,20 +214,10 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
                 dayResults.add(false)
             }
         }
-//            }
-
-        if (dayResults.contains(false)) {
-
-//                _status.value = LoadApiStatus.ERROR
-        } else {
-//                _status.value = LoadApiStatus.DONE
-//                _isDaysReady.value = true
-        }
-//        }
         return !dayResults.contains(false)
     }
 
-    suspend fun createMainCheckList(): Boolean {
+    private suspend fun createMainCheckList(): Boolean {
 
         val planId = planId.value
         val mainTypeList = HowYoApplication.instance.resources.getStringArray(R.array.main_list)
@@ -283,10 +225,6 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
 
         val mainCheckListResults = mutableListOf<Boolean>()
 
-//        coroutineScope.launch {
-//            _status.value = LoadApiStatus.LOADING
-
-//            withContext(Dispatchers.IO) {
         mainTypeList.forEach { mainType ->
             when (mainType) {
                 HowYoApplication.instance.getString(R.string.check) -> {
@@ -319,21 +257,7 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
                 }
             }
         }
-//            }
-
-        if (mainCheckListResults.contains(false)) {
-//                _status.value = LoadApiStatus.ERROR
-        } else {
-//                _status.value = LoadApiStatus.DONE
-//                _isChkListReady.value = true
-        }
-//        }
         return !mainCheckListResults.contains(false)
-
-    }
-
-    fun onNavToDetailCompleted() {
-        _navToDetail.value = null
     }
 
     fun leave() {

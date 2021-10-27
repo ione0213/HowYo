@@ -1,6 +1,7 @@
 package com.yuchen.howyo.data.source
 
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
@@ -26,8 +27,8 @@ class DefaultHowYoRepository(
         return remoteDataSource.createDay(position, planId)
     }
 
-    override suspend fun getDays(planId: String): Result<List<Day>> {
-        TODO("Not yet implemented")
+    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
+        return remoteDataSource.getLiveDays(planId)
     }
 
     override suspend fun createMainCheckList(

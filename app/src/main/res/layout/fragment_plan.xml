@@ -46,7 +46,7 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginTop="@dimen/standard_padding"
             android:layout_marginEnd="@dimen/middle_padding"
-            android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.VISIBLE : View.GONE}"
             android:background="@drawable/delete"
             android:backgroundTint="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"

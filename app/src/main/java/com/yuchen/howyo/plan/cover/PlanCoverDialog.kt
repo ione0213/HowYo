@@ -118,34 +118,6 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             }
         })
 
-//        viewModel.isDaysReady.observe(viewLifecycleOwner, {
-//            it?.let {
-//                when {
-//                    it -> viewModel.createMainCheckList()
-//                }
-//            }
-//        })
-
-//        viewModel.isChkListReady.observe(viewLifecycleOwner, {
-//            it?.let {
-//                Logger.i("check list: $it")
-//                Logger.i("plan: ${viewModel.plan.value}")
-//            }
-//        })
-
-//        viewModel.navToDetail.observe(viewLifecycleOwner, {
-//            it?.let {
-//
-//                findNavController().navigate(
-//                    NavigationDirections.navToPlanFragment(
-//                        it,
-//                        AccessPlanType.EDIT
-//                    )
-//                )
-//                viewModel.onNavToDetailCompleted()
-//            }
-//        })
-
         return binding.root
     }
 
@@ -169,8 +141,6 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         dateRangePicker.show(childFragmentManager, TAG)
 
         dateRangePicker.addOnPositiveButtonClickListener {
-//            val day = it.second - it.first
-            Logger.i("${(it.second - it.first) / (60 * 60 * 24 * 1000)}")
             viewModel.apply {
                 startDateFromUser.value = it.first
                 endDateFromUser.value = it.second

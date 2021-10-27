@@ -22,6 +22,7 @@
     <dimen name="plan_img_btn">36dp</dimen>
     <dimen name="plan_img_btn_middle">30dp</dimen>
     <dimen name="plan_img_btn_small">24dp</dimen>
+    <dimen name="plan_img_btn_smallest">16dp</dimen>
     <dimen name="plan_bottom_layout">36dp</dimen>
 
 

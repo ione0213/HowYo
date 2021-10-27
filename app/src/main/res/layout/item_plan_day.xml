@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.yuchen.howyo.plan.AccessPlanType" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.PlanViewModel" />
@@ -19,23 +23,53 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="84dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}">
+        >
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_plan_day"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/button_plan_day_normal"
+            android:layout_width="90dp"
+            style="@style/TextStyle2_green"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
-            app:selected="@{viewHolder.isSelected}"
             android:layout_marginEnd="@dimen/small_padding"
-            android:text="第一天\n10/1 週五"
-            android:textColor="@drawable/day_text_color_selector"
-            android:textSize="12sp"
+            android:textAlignment="center"
+            android:visibility="@{viewHolder.isSelected ? View.GONE : View.VISIBLE}"
+            app:day="@{day.position}"
+            android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}"
+            app:firstDate="@{viewModel.plan.startDate}"
+            android:background="@drawable/day_corner_normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_plan_day_delete"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/button_plan_day_selected"
+            android:layout_width="90dp"
+            style="@style/TextStyle2_white"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:textAlignment="center"
+            android:background="@drawable/day_corner_selected"
+            android:visibility="@{viewHolder.isSelected ? View.VISIBLE : View.GONE}"
+            app:day="@{day.position}"
+            app:firstDate="@{viewModel.plan.startDate}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_plan_day_delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/button_plan_day_delete"
+            android:layout_width="@dimen/plan_img_btn_smallest"
+            android:layout_height="@dimen/plan_img_btn_small"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.VISIBLE : View.GONE}"
+            android:background="@drawable/delete"
+            android:backgroundTint="@color/gray_black"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
