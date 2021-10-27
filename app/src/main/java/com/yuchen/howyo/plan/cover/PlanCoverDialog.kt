@@ -27,6 +27,7 @@ import com.yuchen.howyo.databinding.DialogPlanCoverBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.util.Logger
 import java.io.File
 
 const val TAG = "DATE_PICKER"
@@ -84,7 +85,7 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             }
         })
 
-        viewModel.isPlanReady.observe(viewLifecycleOwner, {
+        viewModel.isCoverPhotoReady.observe(viewLifecycleOwner, {
             it?.let {
                 when {
                     it -> {
@@ -97,23 +98,53 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         viewModel.planId.observe(viewLifecycleOwner, {
             it?.let {
                 when {
-                    it.isNotEmpty() -> viewModel.getPlanData()
+                    it.isNotEmpty() -> viewModel.setRelatedCollection()
                 }
             }
         })
 
-        viewModel.navToDetail.observe(viewLifecycleOwner, {
+        viewModel.isAllDataReady.observe(viewLifecycleOwner, {
             it?.let {
-
-                findNavController().navigate(
-                    NavigationDirections.navToPlanFragment(
-                        it,
-                        AccessPlanType.EDIT
-                    )
-                )
-                viewModel.onNavToDetailCompleted()
+                when {
+                    it -> {
+                        findNavController().navigate(
+                            NavigationDirections.navToPlanFragment(
+                                viewModel.plan.value,
+                                AccessPlanType.EDIT
+                            )
+                        )
+                    }
+                }
             }
         })
+
+//        viewModel.isDaysReady.observe(viewLifecycleOwner, {
+//            it?.let {
+//                when {
+//                    it -> viewModel.createMainCheckList()
+//                }
+//            }
+//        })
+
+//        viewModel.isChkListReady.observe(viewLifecycleOwner, {
+//            it?.let {
+//                Logger.i("check list: $it")
+//                Logger.i("plan: ${viewModel.plan.value}")
+//            }
+//        })
+
+//        viewModel.navToDetail.observe(viewLifecycleOwner, {
+//            it?.let {
+//
+//                findNavController().navigate(
+//                    NavigationDirections.navToPlanFragment(
+//                        it,
+//                        AccessPlanType.EDIT
+//                    )
+//                )
+//                viewModel.onNavToDetailCompleted()
+//            }
+//        })
 
         return binding.root
     }
@@ -138,7 +169,8 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         dateRangePicker.show(childFragmentManager, TAG)
 
         dateRangePicker.addOnPositiveButtonClickListener {
-//            viewModel.setPlanDate(Pair(it.first, it.second))
+//            val day = it.second - it.first
+            Logger.i("${(it.second - it.first) / (60 * 60 * 24 * 1000)}")
             viewModel.apply {
                 startDateFromUser.value = it.first
                 endDateFromUser.value = it.second

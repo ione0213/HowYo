@@ -24,6 +24,9 @@ class PlanViewModel(
     val plan: LiveData<Plan>
         get() = _plan
 
+    val accessType: AccessPlanType
+        get() = argumentAccessPlanType
+
     //Days list of plans
     private val _days = MutableLiveData<List<Day>>()
 

@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.yuchen.howyo.plan.AccessPlanType" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.PlanViewModel" />
@@ -23,8 +27,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:src="@drawable/sample_cover"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/sample_cover" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_plan_close"
@@ -42,6 +46,7 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginTop="@dimen/standard_padding"
             android:layout_marginEnd="@dimen/middle_padding"
+            android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
             android:background="@drawable/delete"
             android:backgroundTint="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,12 +59,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             app:endDate="@{viewModel.plan.endDate}"
-            app:startDate="@{viewModel.plan.startDate}"
             app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/img_plan_cover"
+            app:startDate="@{viewModel.plan.startDate}"
             tools:text="2021/10/1 - 2021/10/13" />
 
         <TextView
@@ -98,6 +103,7 @@
             android:layout_marginTop="@dimen/standard_padding"
             android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginBottom="@dimen/middle_padding"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
             android:background="@drawable/share"
             android:backgroundTint="@color/gray2"
             app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
@@ -111,6 +117,7 @@
             android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/edit"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
             android:backgroundTint="@color/gray2"
             app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
             app:layout_constraintEnd_toStartOf="@+id/button_plan_share" />
@@ -151,6 +158,7 @@
             android:layout_marginTop="@dimen/small_padding"
             android:text="追蹤中▼"
             android:textStyle="bold"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@+id/img_plan_avatar"
@@ -160,21 +168,23 @@
 
         <ImageButton
             android:id="@+id/button_plan_companion"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn_middle"
+            android:layout_height="@dimen/plan_img_btn_middle"
             android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/friends"
+            android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.navigateToCompanion()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
 
         <ImageButton
             android:id="@+id/button_plan_map_mode"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn_middle"
+            android:layout_height="@dimen/plan_img_btn_middle"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
+            android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
             android:background="@drawable/map"
             android:onClick="@{() -> viewModel.navigateToMapMode()}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_companion"
@@ -182,54 +192,59 @@
 
         <ImageButton
             android:id="@+id/button_plan_payment"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn_middle"
+            android:layout_height="@dimen/plan_img_btn_middle"
             android:layout_marginEnd="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToPayment()}"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/coin"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> viewModel.navigateToPayment()}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
+            app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
 
         <ImageButton
             android:id="@+id/button_plan_luggage"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn_middle"
+            android:layout_height="@dimen/plan_img_btn_middle"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/luggage"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.navigateToCheckList(@string/check_list)}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_payment"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
+            app:layout_constraintTop_toTopOf="@+id/button_plan_payment" />
 
         <ImageButton
             android:id="@+id/button_plan_shopping"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn_middle"
+            android:layout_height="@dimen/plan_img_btn_middle"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/shopping"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.navigateToCheckList(@string/shopping_list)}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_luggage"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
+            app:layout_constraintTop_toTopOf="@+id/button_plan_luggage" />
 
         <ImageButton
             android:id="@+id/button_plan_chatting"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn_middle"
+            android:layout_height="@dimen/plan_img_btn_middle"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/chat"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.navigateToGroupMessage()}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_shopping"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
+            app:layout_constraintTop_toTopOf="@+id/button_plan_shopping" />
 
         <ImageButton
             android:id="@+id/button_plan_locate_friend"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn_middle"
+            android:layout_height="@dimen/plan_img_btn_middle"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/middle_padding"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
             android:background="@drawable/map"
             android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
             app:layout_constraintEnd_toStartOf="@id/button_plan_chatting"

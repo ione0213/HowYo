@@ -64,7 +64,23 @@
     <string name="notification_follow_msg">開始追蹤你</string>
     <string name="notification_follow_type">follow</string>
 
-    <!--Group Msg-->
+    <!-- Group Msg-->
     <string name="type_message_here">Type message here</string>
+
+    <!-- Default subtype for check list-->
+    <string name="check">check</string>
+    <string name="shopping">shopping</string>
+    <string-array name="main_list">
+        <item>check</item>
+        <item>shopping</item>
+    </string-array>
+    <string-array name="check_list">
+        <item>necessary</item>
+        <item>clothe</item>
+        <item>wash</item>
+        <item>3C</item>
+        <item>health</item>
+        <item>other</item>
+    </string-array>
 
 </resources>

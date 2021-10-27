@@ -3,9 +3,10 @@ package com.yuchen.howyo.data
 import com.google.firebase.firestore.PropertyName
 
 data class CheckShoppingItem(
-    val id: String? = null,
+    var id: String? = null,
     @get:PropertyName("check_shopping_list_id")
-    val checkShoppingListId: String? = null,
-    val item: String? = null,
-    val checked: Boolean? = false
+    @set:PropertyName("check_shopping_list_id")
+    var checkShoppingListId: String? = null,
+    var item: String? = null,
+    var checked: Boolean? = false
 )

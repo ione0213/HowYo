@@ -5,6 +5,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
+import com.yuchen.howyo.data.CheckShoppingList
+import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.source.HowYoDataSource
@@ -18,6 +20,8 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
     private const val PATH_COVERS = "covers"
     private const val PATH_PLANS = "plans"
+    private const val PATH_DAYS = "days"
+    private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
 
     override suspend fun uploadPhoto(imgUri: Uri): Result<String> =
         suspendCoroutine { continuation ->
@@ -89,19 +93,84 @@ object HowYoRemoteDataSource : HowYoDataSource {
             .get()
             .addOnCompleteListener { task ->
                 val plan: Plan
+
                 if (task.isSuccessful) {
                     plan = task.result.first().toObject(Plan::class.java)
-
                     continuation.resume(Result.Success(plan))
                 } else {
                     task.exception?.let {
-
                         Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
                         continuation.resume(Result.Error(it))
                         return@addOnCompleteListener
                     }
+
                     continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
                 }
             }
     }
+
+    override suspend fun createDay(position: Int, planId: String): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val dayRef = FirebaseFirestore.getInstance().collection(PATH_DAYS)
+            val document = dayRef.document()
+
+            val day = Day(
+                document.id,
+                planId,
+                position = position
+            )
+
+            document
+                .set(day)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        continuation.resume(Result.Success(true))
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error creating day. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
+
+    override suspend fun getDays(planId: String): Result<List<Day>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createMainCheckList(planId: String, mainType: String, subtype: String?): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val mainCheckListRef = FirebaseFirestore.getInstance().collection(
+                PATH_CHECK_SHOPPING_LIST
+            )
+
+            val document = mainCheckListRef.document()
+
+            val mainCheckList = CheckShoppingList(
+                id = document.id,
+                planId = planId,
+                mainType = mainType,
+                subType = subtype
+            )
+
+            document
+                .set(mainCheckList)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        continuation.resume(Result.Success(true))
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error creating main check list. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+
+        }
 }
