@@ -47,7 +47,7 @@
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment_detail.xml" value="0.20833333333333334" />
-        <entry key="app/src/main/res/layout/fragment_plan.xml" value="0.37725118483412323" />
+        <entry key="app/src/main/res/layout/fragment_plan.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_shopping_list.xml" value="0.20833333333333334" />
@@ -66,6 +66,7 @@
         <entry key="app/src/main/res/layout/item_notify_like.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_payment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_plan_day.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_plan_day_add.xml" value="0.625" />
         <entry key="app/src/main/res/layout/item_plan_days.xml" value="0.26358695652173914" />
         <entry key="app/src/main/res/layout/item_plan_schedule.xml" value="0.27812113720642767" />
         <entry key="app/src/main/res/layout/item_plans_discover.xml" value="0.1" />

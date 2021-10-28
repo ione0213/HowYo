@@ -120,9 +120,6 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
         startDateFromUser.value = calendar.timeInMillis
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         endDateFromUser.value = calendar.timeInMillis
-
-        val test = Calendar.getInstance().timeInMillis
-        val test2 = test + (1000 * 60 * 60 * 24 * 2)
     }
 
     fun uploadCoverImg() {

@@ -103,7 +103,7 @@ fun bindRecyclerViewWithDays(recyclerView: RecyclerView, days: List<Day>?) {
             when (this) {
                 is PlanDaysAdapter -> {
                     Logger.i("PlanDaysAdapter")
-                    submitList(it)
+                    submitDays(it)
                 }
                 is FindLocationDaysAdapter -> {
                     Logger.i("FindLocationDaysAdapter")

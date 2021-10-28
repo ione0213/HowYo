@@ -1,14 +1,20 @@
 package com.yuchen.howyo.plan
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
+import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.util.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class PlanViewModel(
     private val howYoRepository: HowYoRepository,
@@ -46,6 +52,11 @@ class PlanViewModel(
         get() = _user
 
     var selectedDayPosition = MutableLiveData<Int>()
+
+    private val _newDayResult = MutableLiveData<Boolean>()
+
+    val newDayResult: LiveData<Boolean>
+        get() = _newDayResult
 
     // Handle navigation to detail
     private val _navigateToDetail = MutableLiveData<Schedule>()
@@ -94,6 +105,16 @@ class PlanViewModel(
 
     val navigateToGroupMsg: LiveData<Plan>
         get() = _navigateToGroupMsg
+
+    private var viewModelJob = Job()
+
+    // the Coroutine runs using the Main (UI) dispatcher
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 
     init {
         Logger.i("=========================")
@@ -215,6 +236,26 @@ class PlanViewModel(
     fun selectDay(position: Int) {
         Logger.i("selectDay@@@@@@@@@@:$position")
         selectedDayPosition.value = position
+    }
+
+    fun addNewDay() {
+
+        val newPosition = days.value?.maxByOrNull { it.position!! }!!.position?.plus(1)
+        val planId = plan.value?.id
+
+        coroutineScope.launch {
+
+            val result = howYoRepository.createDay(newPosition!!, planId!!)
+
+            _newDayResult.value = when (result) {
+                is Result.Success -> {
+                    result.data
+                }
+                else -> {
+                    null
+                }
+            }
+        }
     }
 
     fun navigateToDetail(schedule: Schedule) {

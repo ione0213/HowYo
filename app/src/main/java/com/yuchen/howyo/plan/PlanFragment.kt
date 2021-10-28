@@ -16,6 +16,12 @@ import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.view.forEachIndexed
+import androidx.core.view.get
+import androidx.core.view.size
+import com.yuchen.howyo.util.Logger
 
 
 class PlanFragment : Fragment() {
@@ -48,6 +54,14 @@ class PlanFragment : Fragment() {
         cm.setSaturation(0.4F)
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
+
+        viewModel.newDayResult.observe(viewLifecycleOwner, {
+            it?.let {
+                when {
+                    it -> viewModel.getLiveDaysResult()
+                }
+            }
+        })
 
         viewModel.navigateToDetail.observe(viewLifecycleOwner, {
             it?.let {
