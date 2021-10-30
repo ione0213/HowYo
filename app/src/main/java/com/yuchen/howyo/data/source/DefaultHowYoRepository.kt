@@ -11,8 +11,12 @@ class DefaultHowYoRepository(
     private val remoteDataSource: HowYoRemoteDataSource
 ) : HowYoRepository {
 
-    override suspend fun uploadPhoto(imgUri: Uri): Result<String> {
-        return remoteDataSource.uploadPhoto(imgUri)
+    override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> {
+        return remoteDataSource.uploadPhoto(imgUri, fileName)
+    }
+
+    override suspend fun deletePhoto(fileName: String): Result<Boolean> {
+        return remoteDataSource.deletePhoto(fileName)
     }
 
     override suspend fun createPlan(plan: Plan): Result<String> {

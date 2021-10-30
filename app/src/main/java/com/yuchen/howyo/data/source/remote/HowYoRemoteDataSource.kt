@@ -2,7 +2,6 @@ package com.yuchen.howyo.data.source.remote
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -14,7 +13,6 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.source.HowYoDataSource
 import com.yuchen.howyo.util.Logger
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -28,10 +26,9 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_CHECK_ITEM_LIST = "check_item_lists"
     private const val KEY_POSITION = "position"
 
-    override suspend fun uploadPhoto(imgUri: Uri): Result<String> =
+    override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> =
         suspendCoroutine { continuation ->
-            val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
-            val fileName = "cover_${formatter.format(Date())}"
+
             val storageRef =
                 FirebaseStorage.getInstance().reference.child("$PATH_COVERS/$fileName")
 
@@ -65,6 +62,27 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     }
                 }
 
+        }
+
+    override suspend fun deletePhoto(fileName: String): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            FirebaseStorage.getInstance().reference
+                .child("$PATH_COVERS/$fileName")
+                .delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        continuation.resume(Result.Success(true))
+                    } else {
+                        task.exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error deleting img. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                        )
+                    }
+                }
         }
 
     override suspend fun createPlan(plan: Plan): Result<String> = suspendCoroutine { continuation ->

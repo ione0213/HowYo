@@ -26,6 +26,7 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
 
         value = Plan(
             authorId = "userIdFromSharePreference",
+            coverFileName = "",
             startDate = today.timeInMillis,
             endDate = tomorrow.timeInMillis
         )
@@ -120,17 +121,26 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
         startDateFromUser.value = calendar.timeInMillis
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         endDateFromUser.value = calendar.timeInMillis
+
+        _photoUri.value = Uri.parse("android.resource://com.yuchen.howyo/drawable/sample_cover")
     }
 
     fun uploadCoverImg() {
 
         val uri = photoUri.value!!
+        val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
+        val fileName = "userIdFromSharePreference_${formatter.format(Date())}"
+
+        Logger.i("Plan old:${plan.value}")
+        _plan.value?.coverFileName = fileName
+        Logger.i("Plan new:${plan.value}")
+
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            when (val result = howYoRepository.uploadPhoto(uri)) {
+            when (val result = howYoRepository.uploadPhoto(uri, fileName)) {
                 is Result.Success -> {
                     _plan.value?.coverPhotoUrl = result.data
                     _isCoverPhotoReady.value = true
@@ -260,6 +270,8 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
     fun leave() {
         _leave.value = true
     }
+
+    fun nothing() {}
 
     fun onLeaveCompleted() {
         _leave.value = null

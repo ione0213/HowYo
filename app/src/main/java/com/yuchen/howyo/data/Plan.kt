@@ -18,6 +18,9 @@ data class Plan(
     @get:PropertyName("cover_photo_url")
     @set:PropertyName("cover_photo_url")
     var coverPhotoUrl: String? = "",
+    @get:PropertyName("cover_file_name")
+    @set:PropertyName("cover_file_name")
+    var coverFileName: String = "",
     @get:PropertyName("start_date")
     @set:PropertyName("start_date")
     var startDate: Long? = 0L,

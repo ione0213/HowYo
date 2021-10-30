@@ -87,7 +87,6 @@ class PlanFragment : Fragment() {
             it?.let {
                 when {
                     it -> {
-                        Logger.i("DOOOOOOOOOOOOOONNNNE")
                         mainViewModel.navigateToHomeByBottomNav()
                         viewModel.onNavigatedHome()
                     }
@@ -101,6 +100,8 @@ class PlanFragment : Fragment() {
                     it -> {
                         viewModel.getPlanResult()
                         viewModel.getLiveDaysResult()
+                        viewModel.setDefaultSelectedDay()
+                        binding.recyclerPlanDays.layoutManager?.scrollToPosition(0)
                     }
                 }
             }

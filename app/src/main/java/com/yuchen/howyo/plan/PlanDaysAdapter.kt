@@ -7,12 +7,10 @@ import androidx.lifecycle.*
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.yuchen.howyo.data.CheckListItem
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.DayItem
 import com.yuchen.howyo.databinding.ItemPlanDayAddBinding
 import com.yuchen.howyo.databinding.ItemPlanDayBinding
-import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,14 +36,12 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
 
         fun bind(day: Day) {
 
-//            val isSelected = (adapterPosition == viewModel.selectedDayPosition.value)
-
-//            Logger.i("viewModel.selectedDayPosition:${viewModel.selectedDayPosition.value}")
-//            Logger.i("day:${day.position}")
+            val isTrueSelected = (adapterPosition == viewModel.selectedDayPosition.value)
             binding.lifecycleOwner = this
             binding.viewModel = viewModel
             binding.viewHolder = this
             binding.day = day
+            binding.isSelectedOnBind = isTrueSelected
             binding.executePendingBindings()
 
         }

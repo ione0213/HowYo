@@ -3,14 +3,9 @@ package com.yuchen.howyo.plan
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.yuchen.howyo.data.Day
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Result
-import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.data.User
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -32,9 +27,6 @@ class PlanViewModel(
 
     //live days list of plans
     var days = MutableLiveData<List<Day>>()
-
-//    val days: LiveData<List<Day>>
-//        get() = _days
 
     //Schedule list of days
     private val _schedules = MutableLiveData<List<Schedule>>()
@@ -62,23 +54,28 @@ class PlanViewModel(
 
     private val _planResult = MutableLiveData<Boolean>()
 
-    val planResult: LiveData<Boolean>
+    private val planResult: LiveData<Boolean>
         get() = _planResult
 
     private val _mainCheckListResult = MutableLiveData<Boolean>()
 
-    val mainCheckListResult: LiveData<Boolean>
+    private val mainCheckListResult: LiveData<Boolean>
         get() = _mainCheckListResult
 
     private val _checkListResult = MutableLiveData<Boolean>()
 
-    val checkListResult: LiveData<Boolean>
+    private val checkListResult: LiveData<Boolean>
         get() = _checkListResult
 
     private val _dayResult = MutableLiveData<Boolean>()
 
     private val dayResult: LiveData<Boolean>
         get() = _dayResult
+
+    private val _photoResult = MutableLiveData<Boolean>()
+
+    private val photoResult: LiveData<Boolean>
+        get() = _photoResult
 
     private val _updatePlanResult = MutableLiveData<Boolean>()
 
@@ -159,31 +156,9 @@ class PlanViewModel(
     }
 
     init {
-        Logger.i("=========================")
-        Logger.i("argumentPlan: $argumentPlan")
-        Logger.i("argumentAccessPlanType: $argumentAccessPlanType")
-        Logger.i("=========================")
 
+        setDefaultSelectedDay()
         getLiveDaysResult()
-
-        //Select first item of days by default
-        selectedDayPosition.value = 0
-
-        _user.value = User(
-            id = "788",
-            fansList = listOf("Mark", "Mary"),
-            followingList = listOf(
-                "Mark",
-                "Mary",
-                "22",
-                "112121",
-                "12143ffad",
-                "ddfadfdfdf",
-                "aaaa",
-                "bbbb",
-                "ccc"
-            )
-        )
     }
 
     fun selectDay(position: Int) {
@@ -205,6 +180,11 @@ class PlanViewModel(
                 }
             }
         }
+    }
+
+    fun setDefaultSelectedDay() {
+        //Select first item of days by default
+        selectedDayPosition.value = 0
     }
 
     fun getLiveDaysResult() {
@@ -257,10 +237,9 @@ class PlanViewModel(
                 }
                 _updatePlanResult.postValue(updatePlan(HandleDayType.DELETE)!!)
             }
-            _dayResult.postValue(!daysResult.contains(false))
 
             when {
-                dayResult.value == true && updatePlanResult.value == true -> {
+                !daysResult.contains(false) && updatePlanResult.value == true -> {
                     _handleDaySuccess.value = true
                 }
             }
@@ -321,15 +300,9 @@ class PlanViewModel(
                 _mainCheckListResult.postValue(deleteMainCheckList(plan.id))
                 _checkListResult.postValue(deleteCheckList(plan.id))
                 _planResult.postValue(deletePlan(plan)!!)
+                _photoResult.postValue(deletePhoto(plan.coverFileName))
             }
-            _dayResult.postValue(!daysResult.contains(false))
 
-            Logger.i("daysResult: $daysResult")
-
-            Logger.i("dayResult.value: ${dayResult.value}")
-            Logger.i("planResult.value: ${planResult.value}")
-            Logger.i("mainCheckListResult.value: ${mainCheckListResult.value}")
-            Logger.i("checkListResult.value: ${checkListResult.value}")
             when {
                 !daysResult.contains(false)
                         && planResult.value == true
@@ -349,29 +322,6 @@ class PlanViewModel(
             }
             else -> null
         }
-
-//        coroutineScope.launch {
-
-//            _status.value = LoadApiStatus.LOADING
-//
-//            val result = howYoRepository.deletePlan(plan)
-//
-//            _planResult.value = when (result) {
-//                is Result.Success -> {
-//                    result.data
-//                }
-//                is Result.Fail -> {
-//                    null
-//                }
-//                is Result.Error -> {
-//                    null
-//                }
-//                else -> {
-//                    null
-//                }
-//            }
-//        }
-
 
     private suspend fun updatePlan(type: HandleDayType): Boolean {
 
@@ -410,6 +360,13 @@ class PlanViewModel(
             else -> false
         }
 
+    private suspend fun deletePhoto(fileName: String): Boolean? =
+        when (val result = howYoRepository.deletePhoto(fileName)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> null
+        }
 
     fun checkDeletePlan() {
         _deletingPlan.value = plan.value

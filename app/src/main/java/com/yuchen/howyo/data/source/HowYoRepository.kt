@@ -8,7 +8,9 @@ import com.yuchen.howyo.data.Result
 
 interface HowYoRepository {
 
-    suspend fun uploadPhoto(imgUri: Uri): Result<String>
+    suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String>
+
+    suspend fun deletePhoto(fileName: String): Result<Boolean>
 
     suspend fun createPlan(plan: Plan): Result<String>
 
