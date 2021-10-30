@@ -23,8 +23,24 @@ class DefaultHowYoRepository(
         return remoteDataSource.getPlan(planId)
     }
 
+    override suspend fun updatePlan(plan: Plan): Result<Boolean> {
+        return remoteDataSource.updatePlan(plan)
+    }
+
+    override suspend fun deletePlan(plan: Plan): Result<Boolean> {
+        return remoteDataSource.deletePlan(plan)
+    }
+
     override suspend fun createDay(position: Int, planId: String): Result<Boolean> {
         return remoteDataSource.createDay(position, planId)
+    }
+
+    override suspend fun updateDay(day: Day): Result<Boolean> {
+        return remoteDataSource.updateDay(day)
+    }
+
+    override suspend fun deleteDay(day: Day): Result<Boolean> {
+        return remoteDataSource.deleteDay(day)
     }
 
     override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
@@ -37,5 +53,13 @@ class DefaultHowYoRepository(
         subtype: String?
     ): Result<Boolean> {
         return remoteDataSource.createMainCheckList(planId, mainType, subtype)
+    }
+
+    override suspend fun deleteMainCheckList(planId: String): Result<Boolean> {
+        return remoteDataSource.deleteMainCheckList(planId)
+    }
+
+    override suspend fun deleteCheckList(planId: String): Result<Boolean> {
+        return remoteDataSource.deleteCheckList(planId)
     }
 }

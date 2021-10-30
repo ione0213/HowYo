@@ -32,9 +32,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
     ) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
 
         val isSelected: LiveData<Boolean> = Transformations.map(viewModel.selectedDayPosition) {
-            Logger.i("adapterPosition:$adapterPosition")
-            Logger.i("it == adapterPosition:${it == adapterPosition}")
-
             it == adapterPosition
         }
 
@@ -43,9 +40,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
 
 //            val isSelected = (adapterPosition == viewModel.selectedDayPosition.value)
 
-            Logger.i("bind->isSelected:${isSelected.value}")
-            Logger.i("bind->viewModel.selectedDayPosition:${viewModel.selectedDayPosition.value}")
-            Logger.i("bind->adapterPosition:$adapterPosition")
 //            Logger.i("viewModel.selectedDayPosition:${viewModel.selectedDayPosition.value}")
 //            Logger.i("day:${day.position}")
             binding.lifecycleOwner = this
@@ -164,7 +158,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
 
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        Logger.i("onViewAttachedToWindow")
         when (holder) {
             is DayViewHolder -> holder.onAttach()
         }
@@ -172,7 +165,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         super.onViewDetachedFromWindow(holder)
-        Logger.i("onViewDetachedFromWindow")
         when (holder) {
             is DayViewHolder -> holder.onDetach()
         }

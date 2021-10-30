@@ -38,7 +38,6 @@ class CompanionViewModel(
         get() = _leave
 
     fun leave() {
-        Logger.i("Leaveeeee")
         _leave.value = true
     }
 

@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Day(
-    var id: String? = "",
+    var id: String = "",
     @get:PropertyName("plan_id")
     @set:PropertyName("plan_id")
     var planId: String? = "",

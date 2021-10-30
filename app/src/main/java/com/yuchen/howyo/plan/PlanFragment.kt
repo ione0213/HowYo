@@ -1,6 +1,5 @@
 package com.yuchen.howyo.plan
 
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.view.forEachIndexed
-import androidx.core.view.get
-import androidx.core.view.size
+import androidx.appcompat.app.AlertDialog
+import com.yuchen.howyo.R
 import com.yuchen.howyo.util.Logger
 
 
@@ -55,10 +50,58 @@ class PlanFragment : Fragment() {
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
 
-        viewModel.newDayResult.observe(viewLifecycleOwner, {
+        viewModel.deletingDay.observe(viewLifecycleOwner, {
+            it?.let { day ->
+                context?.let { context ->
+                    AlertDialog.Builder(context)
+                        .setMessage(getString(R.string.confirm_delete_day, day.position?.plus(1)))
+                        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.delExistDay(day)
+                        }
+                        .setNegativeButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.onDeletedDay()
+                        }
+                        .show()
+                }
+            }
+        })
+
+        viewModel.deletingPlan.observe(viewLifecycleOwner, {
+            it?.let { plan ->
+                context?.let { context ->
+                    AlertDialog.Builder(context)
+                        .setMessage(getString(R.string.confirm_delete_plan))
+                        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.delExistPlan(plan)
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                            viewModel.onDeletedPlan()
+                        }
+                        .show()
+                }
+            }
+        })
+
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        viewModel.navigateToHomeAfterDeletingPlan.observe(viewLifecycleOwner, {
             it?.let {
                 when {
-                    it -> viewModel.getLiveDaysResult()
+                    it -> {
+                        Logger.i("DOOOOOOOOOOOOOONNNNE")
+                        mainViewModel.navigateToHomeByBottomNav()
+                        viewModel.onNavigatedHome()
+                    }
+                }
+            }
+        })
+
+        viewModel.handleDaySuccess.observe(viewLifecycleOwner, {
+            it?.let {
+                when {
+                    it -> {
+                        viewModel.getPlanResult()
+                        viewModel.getLiveDaysResult()
+                    }
                 }
             }
         })
@@ -106,8 +149,6 @@ class PlanFragment : Fragment() {
                 viewModel.onLocateCompanionNavigated()
             }
         })
-
-        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         viewModel.navigateToCheckOrShoppingList.observe(viewLifecycleOwner, {
             it?.let {

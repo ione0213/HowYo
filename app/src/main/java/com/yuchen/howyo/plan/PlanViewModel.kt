@@ -1,6 +1,5 @@
 package com.yuchen.howyo.plan
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,17 +9,15 @@ import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.util.Logger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class PlanViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan,
     private val argumentAccessPlanType: AccessPlanType
-    ) : ViewModel() {
+) : ViewModel() {
 
     //Plan data
     private val _plan = MutableLiveData<Plan>().apply {
@@ -53,10 +50,50 @@ class PlanViewModel(
 
     var selectedDayPosition = MutableLiveData<Int>()
 
-    private val _newDayResult = MutableLiveData<Boolean>()
+    private val _deletingDay = MutableLiveData<Day>()
 
-    val newDayResult: LiveData<Boolean>
-        get() = _newDayResult
+    val deletingDay: LiveData<Day>
+        get() = _deletingDay
+
+    private val _deletingPlan = MutableLiveData<Plan>()
+
+    val deletingPlan: LiveData<Plan>
+        get() = _deletingPlan
+
+    private val _planResult = MutableLiveData<Boolean>()
+
+    val planResult: LiveData<Boolean>
+        get() = _planResult
+
+    private val _mainCheckListResult = MutableLiveData<Boolean>()
+
+    val mainCheckListResult: LiveData<Boolean>
+        get() = _mainCheckListResult
+
+    private val _checkListResult = MutableLiveData<Boolean>()
+
+    val checkListResult: LiveData<Boolean>
+        get() = _checkListResult
+
+    private val _dayResult = MutableLiveData<Boolean>()
+
+    private val dayResult: LiveData<Boolean>
+        get() = _dayResult
+
+    private val _updatePlanResult = MutableLiveData<Boolean>()
+
+    private val updatePlanResult: LiveData<Boolean>
+        get() = _updatePlanResult
+
+    private val _navigateToHomeAfterDeletingPlan = MutableLiveData<Boolean>()
+
+    val navigateToHomeAfterDeletingPlan: LiveData<Boolean>
+        get() = _navigateToHomeAfterDeletingPlan
+
+    private val _handleDaySuccess = MutableLiveData<Boolean>()
+
+    val handleDaySuccess: LiveData<Boolean>
+        get() = _handleDaySuccess
 
     // Handle navigation to detail
     private val _navigateToDetail = MutableLiveData<Schedule>()
@@ -106,6 +143,11 @@ class PlanViewModel(
     val navigateToGroupMsg: LiveData<Plan>
         get() = _navigateToGroupMsg
 
+    private val _status = MutableLiveData<LoadApiStatus>()
+
+    val status: LiveData<LoadApiStatus>
+        get() = _status
+
     private var viewModelJob = Job()
 
     // the Coroutine runs using the Main (UI) dispatcher
@@ -130,136 +172,262 @@ class PlanViewModel(
         _user.value = User(
             id = "788",
             fansList = listOf("Mark", "Mary"),
-            followingList = listOf("Mark", "Mary","22", "112121", "12143ffad", "ddfadfdfdf", "aaaa", "bbbb", "ccc")
+            followingList = listOf(
+                "Mark",
+                "Mary",
+                "22",
+                "112121",
+                "12143ffad",
+                "ddfadfdfdf",
+                "aaaa",
+                "bbbb",
+                "ccc"
+            )
         )
-
-//        _days.value = listOf(
-//            Day("001", "987", 0),
-//            Day("002", "987", 1),
-//            Day("003", "987", 2),
-//            Day("004", "987", 3),
-//            Day("005", "987", 4),
-//            Day("006", "987", 5),
-//            Day("007", "987", 6),
-//            Day("008", "987", 7),
-//        )
-//
-//        _schedules.value = listOf(
-//            Schedule(
-//                dayId = "001",
-//                scheduleType = "traffic",
-//                title = "train to kyoto",
-//                listOf(
-//                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
-//                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
-//                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/Tokyo-Subway-Ticket.jpeg?alt=media&token=a2ea35b5-0e24-4f12-a35c-fd8f740b35ac"
-//                ),
-//                latitude = 135.75791610883104,
-//                longitude = 34.98586570883951,
-//                startTime = 1634599800,
-//                endTime = 1634605200,
-//                from = "Osaka",
-//                to = "Kyoto",
-//                position = 0
-//            ),
-//            Schedule(
-//                dayId = "001",
-//                scheduleType = "hotel",
-//                title = "Check in",
-//                listOf(
-//                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
-//                    "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/Tokyo-Subway-Ticket.jpeg?alt=media&token=a2ea35b5-0e24-4f12-a35c-fd8f740b35ac"
-//                ),
-//                latitude = 135.77027806381324,
-//                longitude = 35.009169898670926,
-//                startTime = 1634616900,
-//                endTime = 1634625000,
-//                from = "Kyoto Station",
-//                to = "THE PRIME POD KYOTO",
-//                position = 1
-//            ),
-//            Schedule(
-//                dayId = "001",
-//                scheduleType = "hotel",
-//                title = "Check in",
-//                latitude = 135.77027806381324,
-//                longitude = 35.009169898670926,
-//                startTime = 1634616900,
-//                endTime = 1634625000,
-//                from = "Kyoto Station",
-//                to = "THE PRIME POD KYOTO",
-//                position = 2
-//            ),
-//            Schedule(
-//                dayId = "001",
-//                scheduleType = "hotel",
-//                title = "Check in",
-//                latitude = 135.77027806381324,
-//                longitude = 35.009169898670926,
-//                startTime = 1634616900,
-//                endTime = 1634625000,
-//                from = "Kyoto Station",
-//                to = "THE PRIME POD KYOTO",
-//                position = 3
-//            ),
-//            Schedule(
-//                dayId = "001",
-//                scheduleType = "hotel",
-//                title = "Check in",
-//                latitude = 135.77027806381324,
-//                longitude = 35.009169898670926,
-//                startTime = 1634616900,
-//                endTime = 1634625000,
-//                from = "Kyoto Station",
-//                to = "THE PRIME POD KYOTO",
-//                position = 4
-//            ),
-//            Schedule(
-//                dayId = "001",
-//                scheduleType = "hotel",
-//                title = "Check in",
-//                latitude = 135.77027806381324,
-//                longitude = 35.009169898670926,
-//                startTime = 1634616900,
-//                endTime = 1634625000,
-//                from = "Kyoto Station",
-//                to = "THE PRIME POD KYOTO",
-//                position = 5
-//            )
-//        )
-    }
-
-    fun getLiveDaysResult() {
-        days = howYoRepository.getLiveDays(plan.value?.id!!)
     }
 
     fun selectDay(position: Int) {
-        Logger.i("selectDay@@@@@@@@@@:$position")
         selectedDayPosition.value = position
     }
 
-    fun addNewDay() {
+    fun getPlanResult() {
 
-        val newPosition = days.value?.maxByOrNull { it.position!! }!!.position?.plus(1)
         val planId = plan.value?.id
 
         coroutineScope.launch {
 
-            val result = howYoRepository.createDay(newPosition!!, planId!!)
-
-            _newDayResult.value = when (result) {
+            _plan.value = when (val result = planId?.let { howYoRepository.getPlan(it) }) {
                 is Result.Success -> {
                     result.data
                 }
                 else -> {
-                    null
+                    _plan.value
                 }
             }
         }
     }
 
+    fun getLiveDaysResult() {
+        days = howYoRepository.getLiveDays(plan.value?.id!!)
+        _status.value = LoadApiStatus.DONE
+    }
+
+    fun addNewDay() {
+        coroutineScope.launch {
+            _status.value = LoadApiStatus.LOADING
+            withContext(Dispatchers.IO) {
+
+                _dayResult.postValue(addDay()!!)
+                _updatePlanResult.postValue(
+                    updatePlan(HandleDayType.NEW)!!
+                )
+            }
+
+            when {
+                dayResult.value == true && updatePlanResult.value == true -> {
+                    _handleDaySuccess.value = true
+                }
+            }
+        }
+    }
+
+    fun delExistDay(day: Day) {
+
+        val daysResult = mutableListOf<Boolean>()
+
+        coroutineScope.launch {
+            _status.value = LoadApiStatus.LOADING
+
+            withContext(Dispatchers.IO) {
+                days.value?.forEach {
+
+                    when {
+                        it.position!! > day.position!! -> {
+                            val newDay = Day(
+                                it.id,
+                                it.planId,
+                                it.position!! - 1
+                            )
+                            daysResult.add(updateDay(newDay))
+                        }
+                        it.position!! == day.position!! -> {
+                            daysResult.add(deleteDay(it))
+                        }
+                    }
+                }
+                _updatePlanResult.postValue(updatePlan(HandleDayType.DELETE)!!)
+            }
+            _dayResult.postValue(!daysResult.contains(false))
+
+            when {
+                dayResult.value == true && updatePlanResult.value == true -> {
+                    _handleDaySuccess.value = true
+                }
+            }
+        }
+    }
+
+    private suspend fun addDay(): Boolean {
+
+        val newPosition = days.value?.maxByOrNull { it.position!! }!!.position?.plus(1)
+        val planId = plan.value?.id
+
+        return when (val result = howYoRepository.createDay(newPosition!!, planId!!)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private suspend fun updateDay(day: Day): Boolean {
+
+        return when (val result = howYoRepository.updateDay(day)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private suspend fun deleteDay(day: Day): Boolean {
+
+        return when (val result = howYoRepository.deleteDay(day)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    fun delExistPlan(plan: Plan) {
+
+        val daysResult = mutableListOf<Boolean>()
+
+        coroutineScope.launch {
+            _status.value = LoadApiStatus.LOADING
+
+            withContext(Dispatchers.IO) {
+                days.value?.forEach {
+
+                    daysResult.add(deleteDay(it))
+                }
+                _mainCheckListResult.postValue(deleteMainCheckList(plan.id))
+                _checkListResult.postValue(deleteCheckList(plan.id))
+                _planResult.postValue(deletePlan(plan)!!)
+            }
+            _dayResult.postValue(!daysResult.contains(false))
+
+            Logger.i("daysResult: $daysResult")
+
+            Logger.i("dayResult.value: ${dayResult.value}")
+            Logger.i("planResult.value: ${planResult.value}")
+            Logger.i("mainCheckListResult.value: ${mainCheckListResult.value}")
+            Logger.i("checkListResult.value: ${checkListResult.value}")
+            when {
+                !daysResult.contains(false)
+                        && planResult.value == true
+                        && mainCheckListResult.value == true
+                        && checkListResult.value == true -> {
+                    onDeletedPlan()
+                    _navigateToHomeAfterDeletingPlan.value = true
+                }
+            }
+        }
+    }
+
+    private suspend fun deletePlan(plan: Plan): Boolean? =
+        when (val result = howYoRepository.deletePlan(plan)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> null
+        }
+
+//        coroutineScope.launch {
+
+//            _status.value = LoadApiStatus.LOADING
+//
+//            val result = howYoRepository.deletePlan(plan)
+//
+//            _planResult.value = when (result) {
+//                is Result.Success -> {
+//                    result.data
+//                }
+//                is Result.Fail -> {
+//                    null
+//                }
+//                is Result.Error -> {
+//                    null
+//                }
+//                else -> {
+//                    null
+//                }
+//            }
+//        }
+
+
+    private suspend fun updatePlan(type: HandleDayType): Boolean {
+
+        _plan.value?.endDate = when (type) {
+            HandleDayType.NEW -> {
+                _plan.value?.endDate?.plus(60 * 60 * 24 * 1000)
+            }
+            HandleDayType.DELETE -> {
+                _plan.value?.endDate?.minus(60 * 60 * 24 * 1000)
+            }
+        }
+
+        return when (val result = _plan.value?.let { howYoRepository.updatePlan(it) }) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private suspend fun deleteMainCheckList(planId: String): Boolean =
+        when (val result = howYoRepository.deleteMainCheckList(planId)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> false
+        }
+
+    private suspend fun deleteCheckList(planId: String): Boolean =
+        when (val result = howYoRepository.deleteCheckList(planId)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> false
+        }
+
+
+    fun checkDeletePlan() {
+        _deletingPlan.value = plan.value
+    }
+
+    fun onDeletedPlan() {
+        _deletingPlan.value = null
+    }
+
+    fun checkDeleteDay(day: Day) {
+        _deletingDay.value = day
+    }
+
+    fun onDeletedDay() {
+        _deletingDay.value = null
+    }
+
     fun navigateToDetail(schedule: Schedule) {
-        Logger.i("navigateToDetail@@@@@@@@@@")
         _navigateToDetail.value = schedule
     }
 
@@ -313,5 +481,10 @@ class PlanViewModel(
 
     fun onPaymentNavigated() {
         _navigateToPayment.value = null
+    }
+
+    fun onNavigatedHome() {
+        _status.value = LoadApiStatus.DONE
+        _navigateToHomeAfterDeletingPlan.value = null
     }
 }

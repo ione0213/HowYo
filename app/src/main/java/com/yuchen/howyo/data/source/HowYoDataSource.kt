@@ -14,7 +14,15 @@ interface HowYoDataSource {
 
     suspend fun getPlan(planId: String): Result<Plan>
 
+    suspend fun updatePlan(plan: Plan): Result<Boolean>
+
+    suspend fun deletePlan(plan: Plan): Result<Boolean>
+
     suspend fun createDay(position: Int, planId: String): Result<Boolean>
+
+    suspend fun updateDay(day: Day) : Result<Boolean>
+
+    suspend fun deleteDay(day: Day) : Result<Boolean>
 
     fun getLiveDays(planId: String): MutableLiveData<List<Day>>
 
@@ -23,4 +31,8 @@ interface HowYoDataSource {
         mainType: String,
         subtype: String?
     ): Result<Boolean>
+
+    suspend fun deleteMainCheckList(planId: String) : Result<Boolean>
+
+    suspend fun deleteCheckList(planId: String) : Result<Boolean>
 }

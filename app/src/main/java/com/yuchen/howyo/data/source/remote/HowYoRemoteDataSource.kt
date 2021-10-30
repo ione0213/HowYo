@@ -2,6 +2,7 @@ package com.yuchen.howyo.data.source.remote
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -24,6 +25,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_PLANS = "plans"
     private const val PATH_DAYS = "days"
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
+    private const val PATH_CHECK_ITEM_LIST = "check_item_lists"
     private const val KEY_POSITION = "position"
 
     override suspend fun uploadPhoto(imgUri: Uri): Result<String> =
@@ -112,6 +114,39 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
     }
 
+    override suspend fun updatePlan(plan: Plan): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            FirebaseFirestore.getInstance()
+                .collection(PATH_PLANS)
+                .document(plan.id)
+                .set(plan)
+                .addOnSuccessListener {
+                    Logger.i("Update: $plan")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error updating plan. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
+    override suspend fun deletePlan(plan: Plan): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_PLANS)
+                .document(plan.id)
+                .delete()
+                .addOnSuccessListener {
+                    Logger.i("Delete: $plan")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error deleting plan. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
     override suspend fun createDay(position: Int, planId: String): Result<Boolean> =
         suspendCoroutine { continuation ->
             val dayRef = FirebaseFirestore.getInstance().collection(PATH_DAYS)
@@ -139,6 +174,38 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     }
                 }
         }
+
+    override suspend fun updateDay(day: Day): Result<Boolean> = suspendCoroutine { continuation ->
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_DAYS)
+            .document(day.id)
+            .set(day)
+            .addOnSuccessListener {
+                Logger.i("Update: $day")
+
+                continuation.resume(Result.Success(true))
+            }.addOnFailureListener {
+                Logger.w("[${this::class.simpleName}] Error updating day. ${it.message}")
+                continuation.resume(Result.Error(it))
+            }
+    }
+
+    override suspend fun deleteDay(day: Day): Result<Boolean> = suspendCoroutine { continuation ->
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_DAYS)
+            .document(day.id)
+            .delete()
+            .addOnSuccessListener {
+                Logger.i("Delete: $day")
+
+                continuation.resume(Result.Success(true))
+            }.addOnFailureListener {
+                Logger.w("[${this::class.simpleName}] Error deleting day. ${it.message}")
+                continuation.resume(Result.Error(it))
+            }
+    }
 
     override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
 
@@ -170,7 +237,11 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
-    override suspend fun createMainCheckList(planId: String, mainType: String, subtype: String?): Result<Boolean> =
+    override suspend fun createMainCheckList(
+        planId: String,
+        mainType: String,
+        subtype: String?
+    ): Result<Boolean> =
         suspendCoroutine { continuation ->
             val mainCheckListRef = FirebaseFirestore.getInstance().collection(
                 PATH_CHECK_SHOPPING_LIST
@@ -201,5 +272,87 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     }
                 }
 
+        }
+
+    override suspend fun deleteMainCheckList(planId: String): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val firebaseRef = FirebaseFirestore.getInstance()
+            val collectionRef = firebaseRef.collection(PATH_CHECK_SHOPPING_LIST)
+
+            val deleteResults = mutableListOf<Boolean>()
+
+            collectionRef.whereEqualTo("plan_id", planId)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        task.result.forEach { it ->
+                            collectionRef.document(it.id).delete()
+                                .addOnCompleteListener { subTask ->
+                                    if (subTask.isSuccessful) {
+                                        deleteResults.add(true)
+                                    } else {
+                                        deleteResults.add(false)
+                                    }
+                                }
+                        }
+
+                        continuation.resume(
+                            when (!deleteResults.contains(false)) {
+                                true -> Result.Success(true)
+                                false -> Result.Success(false)
+                            }
+                        )
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error deleting main check list. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
+
+    override suspend fun deleteCheckList(planId: String): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val firebaseRef = FirebaseFirestore.getInstance()
+            val collectionRef = firebaseRef.collection(PATH_CHECK_ITEM_LIST)
+
+            val deleteResults = mutableListOf<Boolean>()
+
+            collectionRef.whereEqualTo("plan_id", planId)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        task.result.forEach { it ->
+                            collectionRef.document(it.id).delete()
+                                .addOnCompleteListener { subTask ->
+                                    if (subTask.isSuccessful) {
+                                        deleteResults.add(true)
+                                    } else {
+                                        deleteResults.add(false)
+                                    }
+                                }
+                        }
+
+                        continuation.resume(
+                            when (!deleteResults.contains(false)) {
+                                true -> Result.Success(true)
+                                false -> Result.Success(false)
+                            }
+                        )
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error deleting check list. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
         }
 }

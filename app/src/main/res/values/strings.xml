@@ -23,6 +23,8 @@
     <string name="save_setting">儲存</string>
     <string name="select_capture_image">Please select or capture image</string>
     <string name="file_provider_name" translatable="false">.fileProvider</string>
+    <string name="confirm">確定</string>
+    <string name="cancel">取消</string>
 
     <!-- Plan-->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -46,6 +48,8 @@
     <string name="place">景點</string>
     <string name="insert_keywords">Insert keywords</string>
     <string name="day">第%d天\n%S</string>
+    <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
+    <string name="confirm_delete_plan">您確定要移除行程嗎？</string>
 
     <!-- Payment-->
     <string name="payment_item">品項名稱</string>

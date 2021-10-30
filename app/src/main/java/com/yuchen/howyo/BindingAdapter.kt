@@ -38,7 +38,6 @@ import com.yuchen.howyo.util.Logger
 @SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")
 fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
-    Logger.i("start date: $starDate, end date: $endDate")
     text = "${starDate.toDate()} - ${endDate.toDate()}"
 }
 
@@ -102,11 +101,9 @@ fun bindRecyclerViewWithDays(recyclerView: RecyclerView, days: List<Day>?) {
         recyclerView.adapter?.apply {
             when (this) {
                 is PlanDaysAdapter -> {
-                    Logger.i("PlanDaysAdapter")
                     submitDays(it)
                 }
                 is FindLocationDaysAdapter -> {
-                    Logger.i("FindLocationDaysAdapter")
                     submitList(it)
                 }
             }
