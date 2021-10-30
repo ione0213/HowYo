@@ -1,5 +1,6 @@
 package com.yuchen.howyo.plan
 
+import android.content.ClipData
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +16,12 @@ import com.yuchen.howyo.ext.getVmFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.R
 import com.yuchen.howyo.util.Logger
+import kotlinx.coroutines.launch
 
 
 class PlanFragment : Fragment() {
@@ -29,6 +34,58 @@ class PlanFragment : Fragment() {
         )
     }
 
+    private val itemTouchHelper by lazy {
+        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+            0
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val adapter = recyclerView.adapter as PlanDaysAdapter
+                val from = viewHolder.adapterPosition
+                val to = target.adapterPosition
+                Logger.i("FROM:$from, TO:$to")
+                viewModel.moveDay(from, to)
+                adapter.notifyItemMoved(from, to)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    viewHolder?.itemView?.alpha = 0.5f
+                } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+                    when {
+                        !(viewModel.days.value === viewModel.tempDays) -> {
+                            lifecycleScope.launch {
+                                viewModel.movedDay()
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                super.clearView(recyclerView, viewHolder)
+
+                viewHolder.itemView.alpha = 1.0f
+            }
+        }
+
+        ItemTouchHelper(simpleItemTouchCallback)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +95,7 @@ class PlanFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        itemTouchHelper.attachToRecyclerView(binding.recyclerPlanDays)
         binding.recyclerPlanDays.adapter = PlanDaysAdapter(viewModel)
         binding.recyclerPlanSchedules.adapter =
             ScheduleAdapter(viewModel, ScheduleAdapter.OnClickListener {

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -27,6 +28,8 @@ class PlanViewModel(
 
     //live days list of plans
     var days = MutableLiveData<List<Day>>()
+
+    var tempDays = mutableListOf<Day>()
 
     //Schedule list of days
     private val _schedules = MutableLiveData<List<Schedule>>()
@@ -367,6 +370,121 @@ class PlanViewModel(
             }
             else -> null
         }
+
+    fun moveDay(from: Int, to: Int) {
+
+//        _status.postValue(LoadApiStatus.LOADING)
+
+        val daysResult = mutableListOf<Boolean>()
+        val newDays = when {
+            tempDays.isNotEmpty() -> tempDays.toMutableList()
+            else -> days.value?.toMutableList()
+        }
+
+        Logger.i("origin days: ${days.value}")
+//        withContext(Dispatchers.IO) {
+        when (from > to) {
+            true -> {
+                Logger.i("from > to")
+                newDays?.forEachIndexed { index, day ->
+                    when {
+                        day.position!! < to || day.position!! > from -> {
+                        }
+                        day.position!! >= to && day.position!! != from -> {
+//                                Logger.i("old day:$day")
+                            val newDay = Day(
+                                day.id,
+                                day.planId,
+                                day.position!! + 1
+                            )
+                            Logger.i("new day:$newDay")
+                            newDays[index] = newDay
+
+//                                updateDay(newDay)
+                        }
+                        day.position!! == from -> {
+//                                Logger.i("old day:$day")
+
+                            val newDay = Day(
+                                day.id,
+                                day.planId,
+                                to
+                            )
+                            Logger.i("new day:$newDay")
+                            newDays[index] = newDay
+
+//                                updateDay(newDay)
+                        }
+                    }
+                }
+            }
+            false -> {
+                Logger.i("to > from")
+                newDays?.forEachIndexed { index, day ->
+                    when {
+                        day.position!! < from || day.position!! > to -> {
+                        }
+                        day.position!! > from -> {
+                            Logger.i("old day:$day")
+
+                            val newDay = Day(
+                                day.id,
+                                day.planId,
+                                day.position!! - 1
+                            )
+                            Logger.i("new day:$newDay")
+
+                            newDays[index] = newDay
+
+//                                updateDay(newDay)
+                        }
+                        day.position!! == from -> {
+                            Logger.i("old day:$day")
+
+                            val newDay = Day(
+                                day.id,
+                                day.planId,
+                                to
+                            )
+                            Logger.i("new day:$newDay")
+                            newDays[index] = newDay
+//                                updateDay(newDay)
+                        }
+                    }
+                }
+            }
+        }
+//        }
+//        newDays?.sortBy { it.position }
+        if (newDays != null) {
+            tempDays = newDays.toMutableList()
+        }
+        Logger.i("new days: $tempDays")
+
+        _status.postValue(LoadApiStatus.DONE)
+    }
+
+    suspend fun movedDay() {
+
+        val daysResult = mutableListOf<Boolean>()
+
+        _status.value = LoadApiStatus.LOADING
+
+        withContext(Dispatchers.IO) {
+
+            tempDays.forEach { tempDay ->
+                days.value?.forEach { day ->
+                    when {
+                        tempDay.position != day.position -> {
+                            daysResult.add(updateDay(tempDay))
+                        }
+                    }
+                }
+            }
+        }
+
+        _handleDaySuccess.value = !daysResult.contains(false)
+    }
 
     fun checkDeletePlan() {
         _deletingPlan.value = plan.value
