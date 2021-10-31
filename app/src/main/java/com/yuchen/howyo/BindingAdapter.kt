@@ -1,11 +1,10 @@
 package com.yuchen.howyo
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -122,7 +121,7 @@ fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Sc
     schedules?.let {
         recyclerView.adapter?.apply {
             when (this) {
-                is ScheduleAdapter -> submitList(it)
+                is ScheduleAdapter -> addEmptyAndSchedule(it)
             }
         }
     }
@@ -153,6 +152,17 @@ fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?
         recyclerView.adapter?.apply {
             when (this) {
                 is DetailImagesAdapter -> submitList(it)
+            }
+        }
+    }
+}
+
+@BindingAdapter("photoData")
+fun bindRecyclerViewWithPhotoData(recyclerView: RecyclerView, schedulePhotos: List<SchedulePhoto>?) {
+    Logger.i("schedulePhotos:${schedulePhotos?.size}")
+    schedulePhotos?.let {
+        recyclerView.adapter?.apply {
+            when (this) {
                 is DetailEditImagesAdapter -> addPhotoAndBtn(it)
             }
         }
@@ -171,6 +181,34 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
                     .error(R.drawable.ic_placeholder)
             )
             .into(imageView)
+    }
+}
+
+@BindingAdapter("imageData")
+fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
+    schedulePhoto?.let {
+        when {
+            it.url?.isNotEmpty() == true -> {
+                val imgUri = it.url.toUri().buildUpon().scheme("https").build()
+                Glide.with(imageView.context)
+                    .load(imgUri)
+                    .apply(
+                        RequestOptions()
+                            .placeholder(R.drawable.ic_placeholder)
+                            .error(R.drawable.ic_placeholder)
+                    )
+                    .into(imageView)
+            }
+            else -> {
+                imageView.setImageBitmap(
+                    HowYoApplication.instance
+                        .contentResolver
+                        ?.openFileDescriptor(it.uri!!, "r")?.use {
+                        BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+                    }
+                )
+            }
+        }
     }
 }
 

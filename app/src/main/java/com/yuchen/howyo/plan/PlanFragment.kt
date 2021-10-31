@@ -116,7 +116,7 @@ class PlanFragment : Fragment() {
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                             viewModel.delExistDay(day)
                         }
-                        .setNegativeButton(getString(R.string.confirm)) { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                             viewModel.onDeletedDay()
                         }
                         .show()
@@ -169,6 +169,19 @@ class PlanFragment : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToDetailFragment(it))
                 viewModel.onDetailNavigated()
+            }
+        })
+
+        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
+            it?.let {
+
+                findNavController().navigate(
+                    NavigationDirections.navToDetailEditFragment()
+                        .setSchedule(null)
+                        .setPlanId(viewModel.plan.value?.id)
+                        .setDayId(it)
+                )
+                viewModel.onEditScheduleNavigated()
             }
         })
 
@@ -228,6 +241,12 @@ class PlanFragment : Fragment() {
                     NavigationDirections.navToPaymentFragment(it)
                 )
                 viewModel.onPaymentNavigated()
+            }
+        })
+
+        viewModel.leavePlan.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it) findNavController().popBackStack()
             }
         })
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.Schedule
 
 interface HowYoRepository {
 
@@ -25,6 +26,8 @@ interface HowYoRepository {
     suspend fun updateDay(day: Day) : Result<Boolean>
 
     suspend fun deleteDay(day: Day) : Result<Boolean>
+
+    suspend fun createSchedule(schedule: Schedule): Result<Boolean>
 
     fun getLiveDays(planId: String): MutableLiveData<List<Day>>
 

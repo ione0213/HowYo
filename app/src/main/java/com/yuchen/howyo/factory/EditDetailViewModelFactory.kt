@@ -9,18 +9,18 @@ import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
 import com.yuchen.howyo.plan.detail.view.DetailViewModel
 import com.yuchen.howyo.plan.detail.view.map.MapViewModel
 
-class DetailViewModelFactory(
+class EditDetailViewModelFactory(
     private val howYoRepository: HowYoRepository,
-    private val schedule: Schedule?
+    private val schedule: Schedule? = null,
+    private val planId: String?,
+    private val dayId: String?
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {
-                isAssignableFrom(DetailViewModel::class.java) ->
-                    DetailViewModel(howYoRepository, schedule)
-                isAssignableFrom(MapViewModel::class.java) ->
-                    MapViewModel(howYoRepository, schedule)
+                isAssignableFrom(DetailEditViewModel::class.java) ->
+                    DetailEditViewModel(howYoRepository, schedule, planId, dayId)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

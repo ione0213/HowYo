@@ -2,6 +2,7 @@ package com.yuchen.howyo.data
 
 import android.os.Parcelable
 import com.google.firebase.firestore.PropertyName
+import com.yuchen.howyo.plan.PlanPrivacy
 import kotlinx.android.parcel.Parcelize
 
 
@@ -33,5 +34,6 @@ data class Plan(
     var likeList: List<String>? = listOf(),
     @get:PropertyName("plan_collected_list")
     @set:PropertyName("plan_collected_list")
-    var planCollectedList: List<String>? = listOf()
+    var planCollectedList: List<String>? = listOf(),
+    var privacy: String? = PlanPrivacy.PRIVATE.value
 ) : Parcelable

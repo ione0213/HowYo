@@ -21,13 +21,15 @@
     <string name="find_location">尋找景點</string>
     <string name="setting">設定</string>
     <string name="save_setting">儲存</string>
+    <string name="save_uploading">建立中</string>
     <string name="select_capture_image">Please select or capture image</string>
     <string name="file_provider_name" translatable="false">.fileProvider</string>
     <string name="confirm">確定</string>
     <string name="cancel">取消</string>
 
     <!-- Plan-->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="plan_public">public</string>
+    <string name="plan_private">private</string>
     <string name="plan_name">行程名稱</string>
     <string name="plan_date_range">旅程區間</string>
     <string name="plan_save">儲存</string>
@@ -50,6 +52,7 @@
     <string name="day">第%d天\n%S</string>
     <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
     <string name="confirm_delete_plan">您確定要移除行程嗎？</string>
+    <string name="empty_schedule">選擇的日期沒有行程。\n點擊新增按鈕建立！</string>
 
     <!-- Payment-->
     <string name="payment_item">品項名稱</string>

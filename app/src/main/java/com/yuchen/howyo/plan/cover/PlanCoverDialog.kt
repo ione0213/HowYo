@@ -37,8 +37,8 @@ class PlanCoverDialog : AppCompatDialogFragment() {
 
     private lateinit var binding: DialogPlanCoverBinding
     private val viewModel by viewModels<PlanCoverViewModel> { getVmFactory() }
-    private val takePhoto = 1
-    private val fromAlbum = 2
+    private val takePhoto = 0x00
+    private val fromAlbum = 0x01
     lateinit var imageUri: Uri
     lateinit var outputImage: File
 

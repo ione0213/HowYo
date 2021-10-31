@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -101,6 +100,12 @@ class PlanViewModel(
     val navigateToDetail: LiveData<Schedule>
         get() = _navigateToDetail
 
+    // Handle navigation to edit schedule
+    private val _navigateToEditSchedule = MutableLiveData<String>()
+
+    val navigateToEditSchedule: LiveData<String>
+        get() = _navigateToEditSchedule
+
     // Handle navigation to map mode
     private val _navigateToMapMode = MutableLiveData<List<Day>>()
 
@@ -143,6 +148,12 @@ class PlanViewModel(
     val navigateToGroupMsg: LiveData<Plan>
         get() = _navigateToGroupMsg
 
+    // Handle leave plan
+    private val _leavePlan = MutableLiveData<Boolean>()
+
+    val leavePlan: LiveData<Boolean>
+        get() = _leavePlan
+
     private val _status = MutableLiveData<LoadApiStatus>()
 
     val status: LiveData<LoadApiStatus>
@@ -162,6 +173,7 @@ class PlanViewModel(
 
         setDefaultSelectedDay()
         getLiveDaysResult()
+        _schedules.value = listOf()
     }
 
     fun selectDay(position: Int) {
@@ -373,93 +385,67 @@ class PlanViewModel(
 
     fun moveDay(from: Int, to: Int) {
 
-//        _status.postValue(LoadApiStatus.LOADING)
-
-        val daysResult = mutableListOf<Boolean>()
         val newDays = when {
             tempDays.isNotEmpty() -> tempDays.toMutableList()
             else -> days.value?.toMutableList()
         }
 
-        Logger.i("origin days: ${days.value}")
-//        withContext(Dispatchers.IO) {
         when (from > to) {
             true -> {
-                Logger.i("from > to")
                 newDays?.forEachIndexed { index, day ->
                     when {
                         day.position!! < to || day.position!! > from -> {
                         }
                         day.position!! >= to && day.position!! != from -> {
-//                                Logger.i("old day:$day")
                             val newDay = Day(
                                 day.id,
                                 day.planId,
                                 day.position!! + 1
                             )
-                            Logger.i("new day:$newDay")
                             newDays[index] = newDay
-
-//                                updateDay(newDay)
                         }
                         day.position!! == from -> {
-//                                Logger.i("old day:$day")
-
                             val newDay = Day(
                                 day.id,
                                 day.planId,
                                 to
                             )
-                            Logger.i("new day:$newDay")
                             newDays[index] = newDay
-
-//                                updateDay(newDay)
                         }
                     }
                 }
             }
             false -> {
-                Logger.i("to > from")
                 newDays?.forEachIndexed { index, day ->
                     when {
                         day.position!! < from || day.position!! > to -> {
                         }
                         day.position!! > from -> {
-                            Logger.i("old day:$day")
-
                             val newDay = Day(
                                 day.id,
                                 day.planId,
                                 day.position!! - 1
                             )
-                            Logger.i("new day:$newDay")
 
                             newDays[index] = newDay
-
-//                                updateDay(newDay)
                         }
                         day.position!! == from -> {
-                            Logger.i("old day:$day")
 
                             val newDay = Day(
                                 day.id,
                                 day.planId,
                                 to
                             )
-                            Logger.i("new day:$newDay")
+
                             newDays[index] = newDay
-//                                updateDay(newDay)
                         }
                     }
                 }
             }
         }
-//        }
-//        newDays?.sortBy { it.position }
         if (newDays != null) {
             tempDays = newDays.toMutableList()
         }
-        Logger.i("new days: $tempDays")
 
         _status.postValue(LoadApiStatus.DONE)
     }
@@ -508,6 +494,14 @@ class PlanViewModel(
 
     fun onDetailNavigated() {
         _navigateToDetail.value = null
+    }
+
+    fun navigateToEditSchedule() {
+        _navigateToEditSchedule.value = selectedDayPosition.value?.let { days.value?.get(it)?.id }
+    }
+
+    fun onEditScheduleNavigated() {
+        _navigateToEditSchedule.value = null
     }
 
     fun navigateToMapMode() {
@@ -561,5 +555,9 @@ class PlanViewModel(
     fun onNavigatedHome() {
         _status.value = LoadApiStatus.DONE
         _navigateToHomeAfterDeletingPlan.value = null
+    }
+
+    fun leavePlan() {
+        _leavePlan.value = true
     }
 }

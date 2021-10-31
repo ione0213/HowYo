@@ -165,22 +165,4 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
             is DayViewHolder -> holder.onDetach()
         }
     }
-
-    fun moveItem(from: Int, to: Int) {
-
-        val list = currentList.toMutableList()
-        list.removeLast()
-        list.forEach {
-            Logger.i("current days:${(it as DayItem.FullDayItem).day}")
-        }
-        Logger.i("CurrentList: $list")
-//        val fromLocation = list[from]
-//        list.removeAt(from)
-//        if (to < from) {
-//            list.add(to + 1 , fromLocation)
-//        } else {
-//            list.add(to - 1, fromLocation)
-//        }
-//        submitList(list)
-    }
 }

@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.DetailPhotoItem
+import com.yuchen.howyo.data.SchedulePhoto
 import com.yuchen.howyo.databinding.ItemDetailEditImageAddBinding
 import com.yuchen.howyo.databinding.ItemDetailEditImageBinding
-import com.yuchen.howyo.databinding.ItemDetailImageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,10 +21,10 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
 
     class ImageViewHolder(private var binding: ItemDetailEditImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(imageUrl: String) {
+        fun bind(schedulePhoto: SchedulePhoto) {
 
-            imageUrl.let {
-                binding.imageUrl = it
+            schedulePhoto.let {
+                binding.schedulePhoto = it
                 binding.executePendingBindings()
             }
         }
@@ -81,7 +81,7 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
                 holder.bind()
             }
             is ImageViewHolder -> {
-                holder.bind((getItem(position) as DetailPhotoItem.ImageUrl).imgUrl)
+                holder.bind((getItem(position) as DetailPhotoItem.ImageData).schedulePhoto)
             }
         }
     }
@@ -89,15 +89,15 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DetailPhotoItem.AddBtn -> ITEM_VIEW_ADD_BTN
-            is DetailPhotoItem.ImageUrl -> ITEM_VIEW_IMAGE_URL
+            is DetailPhotoItem.ImageData -> ITEM_VIEW_IMAGE_URL
         }
     }
 
-    fun addPhotoAndBtn(list: List<String>) {
+    fun addPhotoAndBtn(list: List<SchedulePhoto>) {
         adapterScope.launch {
             val detailPhotoItems: MutableList<DetailPhotoItem> = mutableListOf()
             list.forEach {
-                detailPhotoItems.add(DetailPhotoItem.ImageUrl(it))
+                detailPhotoItems.add(DetailPhotoItem.ImageData(it))
             }
             when {
                 list.size < 3 -> detailPhotoItems.add(DetailPhotoItem.AddBtn)

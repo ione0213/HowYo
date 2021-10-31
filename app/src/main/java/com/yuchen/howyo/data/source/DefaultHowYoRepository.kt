@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
 
 class DefaultHowYoRepository(
@@ -45,6 +46,10 @@ class DefaultHowYoRepository(
 
     override suspend fun deleteDay(day: Day): Result<Boolean> {
         return remoteDataSource.deleteDay(day)
+    }
+
+    override suspend fun createSchedule(schedule: Schedule): Result<Boolean> {
+        return remoteDataSource.createSchedule(schedule)
     }
 
     override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {

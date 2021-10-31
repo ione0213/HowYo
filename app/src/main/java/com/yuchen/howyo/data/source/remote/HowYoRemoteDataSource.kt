@@ -7,10 +7,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.CheckShoppingList
-import com.yuchen.howyo.data.Day
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoDataSource
 import com.yuchen.howyo.util.Logger
 import java.util.*
@@ -19,9 +16,10 @@ import kotlin.coroutines.suspendCoroutine
 
 object HowYoRemoteDataSource : HowYoDataSource {
 
-    private const val PATH_COVERS = "covers"
+    private const val PATH_COVERS = "images"
     private const val PATH_PLANS = "plans"
     private const val PATH_DAYS = "days"
+    private const val PATH_SCHEDULES = "schedules"
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
     private const val PATH_CHECK_ITEM_LIST = "check_item_lists"
     private const val KEY_POSITION = "position"
@@ -224,6 +222,55 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 continuation.resume(Result.Error(it))
             }
     }
+
+    override suspend fun createSchedule(schedule: Schedule): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_SCHEDULES)
+                .whereEqualTo("day_id", schedule.dayId)
+                .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
+                .get()
+                .addOnCompleteListener { task ->
+                    val lastSchedule: Schedule
+
+                    if (task.isSuccessful) {
+                        when (task.result.size()) {
+                            0 -> {
+                                schedule.position = 0
+                            }
+                            else -> {
+                                lastSchedule = task.result.last().toObject(Schedule::class.java)
+                                schedule.position = lastSchedule.position?.plus(1)
+                            }
+                        }
+
+                        val schedules = FirebaseFirestore.getInstance().collection(PATH_SCHEDULES)
+                        val document = schedules.document()
+
+                        schedule.id = document.id
+
+                        document
+                            .set(schedule)
+                            .addOnCompleteListener { scheduleTask ->
+                                if (scheduleTask.isSuccessful) {
+                                    continuation.resume(Result.Success(true))
+                                } else {
+                                    scheduleTask.exception?.let {
+                                        Logger.w("[${this::class.simpleName}] Error creating schedule. ${it.message}")
+                                        continuation.resume(Result.Error(it))
+                                        return@let
+                                    }
+                                    continuation.resume(
+                                        Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                                    )
+                                }
+                            }
+                    } else {
+                        continuation.resume(Result.Success(false))
+                    }
+                }
+        }
 
     override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
 
