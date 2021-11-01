@@ -35,6 +35,12 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val sharedToolbarTitle: LiveData<String>
         get() = _sharedToolbarTitle
 
+    // Handle navigation to home by bottom nav directly which includes icon change
+    private val _navigateToHomeByBottomNav = MutableLiveData<Boolean>()
+
+    val navigateToHomeByBottomNav: LiveData<Boolean>
+        get() = _navigateToHomeByBottomNav
+
     init {
         _sharedToolbarTitle.value = ""
     }
@@ -46,5 +52,13 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     fun resetSharedToolbarTitle() {
         _sharedToolbarTitle.value = ""
+    }
+
+    fun navigateToHomeByBottomNav() {
+        _navigateToHomeByBottomNav.value = true
+    }
+
+    fun onHomeNavigated() {
+        _navigateToHomeByBottomNav.value = null
     }
 }

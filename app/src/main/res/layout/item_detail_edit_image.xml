@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="imageUrl"
-            type="String" />
+            name="schedulePhoto"
+            type="com.yuchen.howyo.data.SchedulePhoto" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_height="@dimen/height_detail_gallery_small"
             android:background="@drawable/ic_placeholder"
             android:scaleType="centerCrop"
-            app:imageUrl="@{imageUrl}"
+            app:imageData="@{schedulePhoto}"
             app:shapeAppearanceOverlay="@style/circle2"
             tools:src="@drawable/ic_placeholder"
             app:layout_constraintEnd_toEndOf="parent"

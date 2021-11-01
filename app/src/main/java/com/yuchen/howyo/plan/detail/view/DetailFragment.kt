@@ -55,7 +55,12 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(NavigationDirections.navToDetailEditFragment(it))
+                findNavController().navigate(
+                    NavigationDirections.navToDetailEditFragment()
+                        .setSchedule(it)
+                        .setPlanId(null)
+                        .setDayId(null)
+                )
                 viewModel.onEditScheduleNavigated()
             }
         })

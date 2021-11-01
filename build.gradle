@@ -19,6 +19,7 @@ buildscript {
         varsion_map_service = '17.0.1'
         varsion_location_service = '18.0.0'
         version_facebook_login = '11.3.0'
+        version_lottie = '4.2.0'
     }
     repositories {
         google()

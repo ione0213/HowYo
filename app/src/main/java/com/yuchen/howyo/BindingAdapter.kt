@@ -1,11 +1,10 @@
 package com.yuchen.howyo
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -17,6 +16,7 @@ import com.yuchen.howyo.data.*
 import com.yuchen.howyo.discover.DiscoverAdapter
 import com.yuchen.howyo.ext.toDate
 import com.yuchen.howyo.ext.toTime
+import com.yuchen.howyo.ext.toWeekDay
 import com.yuchen.howyo.favorite.FavoriteAdapter
 import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
@@ -43,7 +43,7 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
 @SuppressLint("SetTextI18n")
 @BindingAdapter("time")
 fun TextView.bindMsgTime(time: Long) {
-    text = "${time.toTime()}"
+    text = time.toTime()
 }
 
 @BindingAdapter("currentFragmentType")
@@ -64,7 +64,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
 @BindingAdapter("currentFragmentTypeForToolbar")
 fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
     visibility = when (currentFragmentType) {
-        CurrentFragmentType.PLAN-> {
+        CurrentFragmentType.PLAN -> {
             View.GONE
         }
         else -> View.VISIBLE
@@ -100,47 +100,51 @@ fun bindRecyclerViewWithDays(recyclerView: RecyclerView, days: List<Day>?) {
         recyclerView.adapter?.apply {
             when (this) {
                 is PlanDaysAdapter -> {
-                    Logger.i("PlanDaysAdapter")
-                    submitList(it)
+                    submitDays(it)
                 }
                 is FindLocationDaysAdapter -> {
-                    Logger.i("FindLocationDaysAdapter")
                     submitList(it)
                 }
             }
         }
     }
 }
+
+@BindingAdapter("day", "firstDate")
+fun TextView.bindTextWithDay(day: Int, firstDate: Long?) {
+    val date = firstDate?.plus((1000 * 60 * 60 * 24 * day))
+    text = HowYoApplication.instance.getString(R.string.day, day.plus(1), date?.toWeekDay())
+ }
 
 @BindingAdapter("schedules")
 fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Schedule>?) {
     schedules?.let {
         recyclerView.adapter?.apply {
             when (this) {
-                is ScheduleAdapter -> submitList(it)
+                is ScheduleAdapter -> addEmptyAndSchedule(it)
             }
         }
     }
 }
 
-@BindingAdapter("selected")
-fun drawDaySelected(button: AppCompatButton, isSelected: Boolean?) {
-    button.background = when (isSelected) {
-        true -> AppCompatResources.getDrawable(
-            HowYoApplication.instance,
-            R.drawable.day_corner_selected
-        )
-        else -> AppCompatResources.getDrawable(
-            HowYoApplication.instance,
-            R.drawable.day_corner_normal
-        )
-    }
-}
+//@BindingAdapter("selected")
+//fun drawDaySelected(textView: TextView, isSelected: Boolean?) {
+//    textView.background = when (isSelected) {
+//        true -> AppCompatResources.getDrawable(
+//            HowYoApplication.instance,
+//            R.drawable.day_corner_selected
+//        )
+//        else -> AppCompatResources.getDrawable(
+//            HowYoApplication.instance,
+//            R.drawable.day_corner_normal
+//        )
+//    }
+//}
 
-@BindingAdapter("day", "plan")
-fun bindDayInfo(button: AppCompatButton, day: Day, plan: Plan) {
-//    button.text =
-}
+//@BindingAdapter("day", "plan")
+//fun bindDayInfo(button: AppCompatButton, day: Day, plan: Plan) {
+////    button.text =
+//}
 
 @BindingAdapter("images")
 fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?) {
@@ -148,6 +152,17 @@ fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?
         recyclerView.adapter?.apply {
             when (this) {
                 is DetailImagesAdapter -> submitList(it)
+            }
+        }
+    }
+}
+
+@BindingAdapter("photoData")
+fun bindRecyclerViewWithPhotoData(recyclerView: RecyclerView, schedulePhotos: List<SchedulePhoto>?) {
+    Logger.i("schedulePhotos:${schedulePhotos?.size}")
+    schedulePhotos?.let {
+        recyclerView.adapter?.apply {
+            when (this) {
                 is DetailEditImagesAdapter -> addPhotoAndBtn(it)
             }
         }
@@ -166,6 +181,34 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
                     .error(R.drawable.ic_placeholder)
             )
             .into(imageView)
+    }
+}
+
+@BindingAdapter("imageData")
+fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
+    schedulePhoto?.let {
+        when {
+            it.url?.isNotEmpty() == true -> {
+                val imgUri = it.url.toUri().buildUpon().scheme("https").build()
+                Glide.with(imageView.context)
+                    .load(imgUri)
+                    .apply(
+                        RequestOptions()
+                            .placeholder(R.drawable.ic_placeholder)
+                            .error(R.drawable.ic_placeholder)
+                    )
+                    .into(imageView)
+            }
+            else -> {
+                imageView.setImageBitmap(
+                    HowYoApplication.instance
+                        .contentResolver
+                        ?.openFileDescriptor(it.uri!!, "r")?.use {
+                        BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+                    }
+                )
+            }
+        }
     }
 }
 

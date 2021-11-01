@@ -6,7 +6,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Day(
-    val id: String? = "",
-    @get:PropertyName("plan_id") val planId: String? = "",
-    val position: Int? = -1
+    var id: String = "",
+    @get:PropertyName("plan_id")
+    @set:PropertyName("plan_id")
+    var planId: String? = "",
+    var position: Int? = -1
 ) : Parcelable

@@ -80,7 +80,18 @@
         tools:layout="@layout/fragment_detail_edit">
         <argument
             android:name="schedule"
+            android:defaultValue="@null"
             app:argType="com.yuchen.howyo.data.Schedule"
+            app:nullable="true" />
+        <argument
+            android:name="planId"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+        <argument
+            android:name="dayId"
+            app:argType="string"
+            android:defaultValue="@null"
             app:nullable="true" />
     </fragment>
     <fragment

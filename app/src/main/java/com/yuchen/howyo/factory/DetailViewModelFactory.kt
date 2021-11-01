@@ -11,7 +11,7 @@ import com.yuchen.howyo.plan.detail.view.map.MapViewModel
 
 class DetailViewModelFactory(
     private val howYoRepository: HowYoRepository,
-    private val schedule: Schedule?,
+    private val schedule: Schedule?
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
@@ -19,8 +19,6 @@ class DetailViewModelFactory(
             when {
                 isAssignableFrom(DetailViewModel::class.java) ->
                     DetailViewModel(howYoRepository, schedule)
-                isAssignableFrom(DetailEditViewModel::class.java) ->
-                    DetailEditViewModel(howYoRepository, schedule)
                 isAssignableFrom(MapViewModel::class.java) ->
                     MapViewModel(howYoRepository, schedule)
                 else ->

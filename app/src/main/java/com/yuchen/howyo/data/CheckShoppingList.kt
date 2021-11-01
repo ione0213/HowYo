@@ -4,8 +4,14 @@ import com.google.firebase.firestore.PropertyName
 
 
 data class CheckShoppingList(
-    val id: String? = null,
-    @get:PropertyName("plan_id") val planId: String? = null,
-    @get:PropertyName("main_type")val mainType: String? = null,
-    @get:PropertyName("sub_type")val subType: String? = null
+    var id: String? = null,
+    @get:PropertyName("plan_id")
+    @set:PropertyName("plan_id")
+    var planId: String? = null,
+    @get:PropertyName("main_type")
+    @set:PropertyName("main_type")
+    var mainType: String? = null,
+    @get:PropertyName("sub_type")
+    @set:PropertyName("sub_type")
+    var subType: String? = null
 )

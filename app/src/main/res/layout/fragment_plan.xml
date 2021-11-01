@@ -5,6 +5,12 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.yuchen.howyo.plan.AccessPlanType" />
+
+        <import type="com.yuchen.howyo.network.LoadApiStatus" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.PlanViewModel" />
@@ -14,348 +20,402 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/img_plan_cover"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample_cover"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_plan_close"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginTop="@dimen/standard_padding"
-            android:background="@drawable/icons_44px_back01"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_plan_delete"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginTop="@dimen/standard_padding"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:background="@drawable/delete"
-            android:backgroundTint="@color/gray2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/text_plan_duration"
-            style="@style/TextStyle2_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="2021/10/1 - 2021/10/13"
-            app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/img_plan_cover"
-            tools:text="2021/10/1 - 2021/10/13" />
-
-        <TextView
-            android:id="@+id/text_plan_title"
-            style="@style/TextStyle1_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_padding"
-            android:text="台東三天兩夜"
-            app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_plan_duration"
-            tools:text="台東三天兩夜" />
-
-        <TextView
-            android:id="@+id/text_plan_location"
-            style="@style/TextStyle2_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginTop="@dimen/small_padding"
-            android:text="Japan Osaka"
-            app:layout_constraintEnd_toEndOf="@+id/text_plan_title"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/text_plan_title"
-            app:layout_constraintTop_toBottomOf="@+id/text_plan_title"
-            tools:text="Japan Osaka" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_plan_share"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginTop="@dimen/standard_padding"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/share"
-            android:backgroundTint="@color/gray2"
-            app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
-            app:layout_constraintEnd_toEndOf="@+id/img_plan_cover" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_plan_edit"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginTop="@dimen/standard_padding"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/edit"
-            android:backgroundTint="@color/gray2"
-            app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
-            app:layout_constraintEnd_toStartOf="@+id/button_plan_share" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_plan_avatar"
-            android:layout_width="@dimen/plan_img_btn_big"
-            android:layout_height="@dimen/plan_img_btn_big"
-            android:layout_marginStart="@dimen/middle_padding"
-            android:layout_marginTop="@dimen/small_padding"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_sample"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_plan_cover"
-            app:shapeAppearanceOverlay="@style/circle" />
-
-        <TextView
-            android:id="@+id/text_plan_user_name"
-            style="@style/TextStyle2_black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/small_padding"
-            android:text="traveller"
-            android:textStyle="bold"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/img_plan_avatar"
-            app:layout_constraintTop_toTopOf="@+id/img_plan_avatar"
-            app:layout_goneMarginStart="@dimen/small_padding"
-            tools:text="traveller" />
-
-        <TextView
-            android:id="@+id/text_plan_user_status"
-            style="@style/TextStyle3_black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginTop="@dimen/small_padding"
-            android:text="追蹤中▼"
-            android:textStyle="bold"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/img_plan_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/text_plan_user_name"
-            app:layout_goneMarginStart="@dimen/small_padding"
-            tools:text="追蹤中▼" />
-
-        <ImageButton
-            android:id="@+id/button_plan_companion"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/friends"
-            android:onClick="@{() -> viewModel.navigateToCompanion()}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
-
-        <ImageButton
-            android:id="@+id/button_plan_map_mode"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginEnd="@dimen/small_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/map"
-            android:onClick="@{() -> viewModel.navigateToMapMode()}"
-            app:layout_constraintEnd_toStartOf="@id/button_plan_companion"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
-
-        <ImageButton
-            android:id="@+id/button_plan_payment"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToPayment()}"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/coin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
-
-        <ImageButton
-            android:id="@+id/button_plan_luggage"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginEnd="@dimen/small_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/luggage"
-            android:onClick="@{() -> viewModel.navigateToCheckList(@string/check_list)}"
-            app:layout_constraintEnd_toStartOf="@id/button_plan_payment"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
-
-        <ImageButton
-            android:id="@+id/button_plan_shopping"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginEnd="@dimen/small_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/shopping"
-            android:onClick="@{() -> viewModel.navigateToCheckList(@string/shopping_list)}"
-            app:layout_constraintEnd_toStartOf="@id/button_plan_luggage"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
-
-        <ImageButton
-            android:id="@+id/button_plan_chatting"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginEnd="@dimen/small_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/chat"
-            android:onClick="@{() -> viewModel.navigateToGroupMessage()}"
-            app:layout_constraintEnd_toStartOf="@id/button_plan_shopping"
-            app:layout_constraintTop_toTopOf="@+id/text_plan_user_status" />
-
-        <ImageButton
-            android:id="@+id/button_plan_locate_friend"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginEnd="@dimen/small_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:background="@drawable/map"
-            android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
-            app:layout_constraintEnd_toStartOf="@id/button_plan_chatting"
-            app:layout_constraintTop_toTopOf="@+id/button_plan_chatting" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_plan_days"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/middle_padding"
-            android:layout_marginTop="@dimen/small_padding"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:orientation="horizontal"
-            app:days="@{viewModel.days}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_plan_avatar"
-            tools:listitem="@layout/item_plan_day" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_plan_schedules"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/middle_padding"
-            android:layout_marginTop="@dimen/small_padding"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/layout_plan_bottom"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recycler_plan_days"
-            app:layout_constraintVertical_bias="0.0"
-            app:schedules="@{viewModel.schedules}"
-            tools:listitem="@layout/item_plan_schedule" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_plan_bottom"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/plan_bottom_layout"
-            android:background="@color/white"
-            android:elevation="@dimen/elevation_all"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}">
 
-            <ImageButton
-                android:id="@+id/button_plan_lock"
+            <ImageView
+                android:id="@+id/img_plan_cover"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{viewModel.plan.coverPhotoUrl}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/sample_cover" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_plan_close"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginStart="@dimen/middle_padding"
-                android:background="@drawable/lock"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="@dimen/small_padding"
+                android:layout_marginTop="@dimen/standard_padding"
+                android:background="@drawable/icons_44px_back01"
+                android:onClick="@{() -> viewModel.leavePlan()}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
-                android:id="@+id/button_plan_unlock"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_plan_delete"
                 android:layout_width="@dimen/plan_img_btn_small"
                 android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginStart="@dimen/middle_padding"
-                android:background="@drawable/unlock"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/button_plan_heart"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:background="@drawable/heart_normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/button_plan_heart_selected"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:background="@drawable/heart_selected"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/button_plan_comment"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginEnd="40dp"
-                android:background="@drawable/comment"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/button_plan_star"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:background="@drawable/star_normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/button_plan_star_selected"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:background="@drawable/star_selected"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/button_plan_copy"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
+                android:layout_marginTop="@dimen/standard_padding"
                 android:layout_marginEnd="@dimen/middle_padding"
-                android:background="@drawable/copy"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/delete"
+                android:backgroundTint="@color/gray2"
+                android:onClick="@{() -> viewModel.checkDeletePlan()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_plan_duration"
+                style="@style/TextStyle2_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:endDate="@{viewModel.plan.endDate}"
+                app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/img_plan_cover"
+                app:startDate="@{viewModel.plan.startDate}"
+                tools:text="2021/10/1 - 2021/10/13" />
+
+            <TextView
+                android:id="@+id/text_plan_title"
+                style="@style/TextStyle1_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_padding"
+                android:text="@{viewModel.plan.title}"
+                app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_plan_duration"
+                tools:text="台東三天兩夜" />
+
+            <TextView
+                android:id="@+id/text_plan_location"
+                style="@style/TextStyle2_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:text="@{viewModel.plan.destination}"
+                app:layout_constraintEnd_toEndOf="@+id/text_plan_title"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@+id/text_plan_title"
+                app:layout_constraintTop_toBottomOf="@+id/text_plan_title"
+                tools:text="Japan Osaka" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_plan_share"
+                android:layout_width="@dimen/plan_img_btn_small"
+                android:layout_height="@dimen/plan_img_btn_small"
+                android:layout_marginTop="@dimen/standard_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/share"
+                android:backgroundTint="@color/gray2"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
+                app:layout_constraintEnd_toEndOf="@+id/img_plan_cover" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_plan_edit"
+                android:layout_width="@dimen/plan_img_btn_small"
+                android:layout_height="@dimen/plan_img_btn_small"
+                android:layout_marginTop="@dimen/standard_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/edit"
+                android:backgroundTint="@color/gray2"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
+                app:layout_constraintEnd_toStartOf="@+id/button_plan_share" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_plan_avatar"
+                android:layout_width="@dimen/plan_img_btn_big"
+                android:layout_height="@dimen/plan_img_btn_big"
+                android:layout_marginStart="@dimen/middle_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_sample"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_plan_cover"
+                app:shapeAppearanceOverlay="@style/circle" />
+
+            <TextView
+                android:id="@+id/text_plan_user_name"
+                style="@style/TextStyle2_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_padding"
+                android:text="traveller"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/img_plan_avatar"
+                app:layout_constraintTop_toTopOf="@+id/img_plan_avatar"
+                app:layout_goneMarginStart="@dimen/small_padding"
+                tools:text="traveller" />
+
+            <TextView
+                android:id="@+id/text_plan_user_status"
+                style="@style/TextStyle3_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:text="追蹤中▼"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/img_plan_avatar"
+                app:layout_constraintTop_toBottomOf="@+id/text_plan_user_name"
+                app:layout_goneMarginStart="@dimen/small_padding"
+                tools:text="追蹤中▼" />
+
+            <ImageButton
+                android:id="@+id/button_plan_companion"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/friends"
+                android:onClick="@{() -> viewModel.navigateToCompanion()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
+
+            <ImageButton
+                android:id="@+id/button_plan_map_mode"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/map"
+                android:onClick="@{() -> viewModel.navigateToMapMode()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@id/button_plan_companion"
+                app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
+
+            <ImageButton
+                android:id="@+id/button_plan_payment"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/coin"
+                android:onClick="@{() -> viewModel.navigateToPayment()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
+
+            <ImageButton
+                android:id="@+id/button_plan_luggage"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/luggage"
+                android:onClick="@{() -> viewModel.navigateToCheckList(@string/check_list)}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@id/button_plan_payment"
+                app:layout_constraintTop_toTopOf="@+id/button_plan_payment" />
+
+            <ImageButton
+                android:id="@+id/button_plan_shopping"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/shopping"
+                android:onClick="@{() -> viewModel.navigateToCheckList(@string/shopping_list)}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@id/button_plan_luggage"
+                app:layout_constraintTop_toTopOf="@+id/button_plan_luggage" />
+
+            <ImageButton
+                android:id="@+id/button_plan_chatting"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/chat"
+                android:onClick="@{() -> viewModel.navigateToGroupMessage()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@id/button_plan_shopping"
+                app:layout_constraintTop_toTopOf="@+id/button_plan_shopping" />
+
+            <ImageButton
+                android:id="@+id/button_plan_locate_friend"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:layout_marginBottom="@dimen/middle_padding"
+                android:background="@drawable/map"
+                android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@id/button_plan_chatting"
+                app:layout_constraintTop_toTopOf="@+id/button_plan_chatting" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_plan_days"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/middle_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:orientation="horizontal"
+                android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
+                app:days="@{viewModel.days}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_plan_avatar"
+                tools:listitem="@layout/item_plan_day" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_plan_schedules"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/middle_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/layout_plan_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recycler_plan_days"
+                app:layout_constraintVertical_bias="0.0"
+                app:schedules="@{viewModel.schedules}"
+                tools:listitem="@layout/item_plan_schedule" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_detail_edit_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/middle_padding"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:onClick="@{() -> viewModel.navigateToEditSchedule()}"
+                android:visibility="@{viewModel.status == LoadApiStatus.LOADING || viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                app:backgroundTint="@color/green"
+                app:layout_constraintBottom_toTopOf="@id/layout_plan_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:maxImageSize="36dp"
+                app:srcCompat="@android:drawable/ic_input_add"
+                app:tint="@android:color/white" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_plan_bottom"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/plan_bottom_layout"
+                android:background="@color/white"
+                android:elevation="@dimen/elevation_all"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageButton
+                    android:id="@+id/button_plan_lock"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:background="@drawable/lock"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_unlock"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:background="@drawable/unlock"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_heart"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:background="@drawable/heart_normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_heart_selected"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:background="@drawable/heart_selected"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_comment"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginEnd="40dp"
+                    android:background="@drawable/comment"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_star"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:background="@drawable/star_normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_star_selected"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:background="@drawable/star_selected"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_copy"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:background="@drawable/copy"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/uploading" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

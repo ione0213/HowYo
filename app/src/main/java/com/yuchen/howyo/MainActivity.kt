@@ -105,10 +105,19 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         mContext = this
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        viewModel.navigateToHomeByBottomNav.observe(
+            this,
+            {
+                it?.let {
+                    binding.bottomNavView.selectedItemId = R.id.navigation_home
+                    viewModel.onHomeNavigated()
+                }
+            }
+        )
 
         setupToolbar()
         setupBottomNav()
