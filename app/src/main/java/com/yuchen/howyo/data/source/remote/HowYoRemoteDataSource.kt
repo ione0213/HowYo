@@ -223,6 +223,36 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
     }
 
+    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
+
+        val liveData = MutableLiveData<List<Day>>()
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_DAYS)
+            .whereEqualTo("plan_id", planId)
+            .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting days. ${it.message}")
+                }
+
+                val list = mutableListOf<Day>()
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
+
+                    val day = document.toObject(Day::class.java)
+                    list.add(day)
+                }
+
+                liveData.value = list
+            }
+
+        return liveData
+    }
+
     override suspend fun createSchedule(schedule: Schedule): Result<Boolean> =
         suspendCoroutine { continuation ->
 
@@ -272,28 +302,30 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
+    override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
 
-        val liveData = MutableLiveData<List<Day>>()
+        val liveData = MutableLiveData<List<Schedule>>()
 
         FirebaseFirestore.getInstance()
-            .collection(PATH_DAYS)
+            .collection(PATH_SCHEDULES)
             .whereEqualTo("plan_id", planId)
-            .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
+//            .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, exception ->
 
                 Logger.i("addSnapshotListener detect")
 
                 exception?.let {
-                    Logger.w("[${this::class.simpleName}] Error getting days. ${it.message}")
+                    Logger.w("[${this::class.simpleName}] Error getting schedules. ${it.message}")
                 }
 
-                val list = mutableListOf<Day>()
-                for (document in snapshot!!) {
-                    Logger.d(document.id + " => " + document.data)
+                val list = mutableListOf<Schedule>()
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
 
-                    val day = document.toObject(Day::class.java)
-                    list.add(day)
+                        val schedule = document.toObject(Schedule::class.java)
+                        list.add(schedule)
+                    }
                 }
 
                 liveData.value = list

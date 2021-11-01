@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -29,6 +30,9 @@ class PlanViewModel(
     var days = MutableLiveData<List<Day>>()
 
     var tempDays = mutableListOf<Day>()
+
+    //All Schedules of plan
+    var allSchedules = MutableLiveData<List<Schedule>>()
 
     //Schedule list of days
     private val _schedules = MutableLiveData<List<Schedule>>()
@@ -171,8 +175,9 @@ class PlanViewModel(
 
     init {
 
-        setDefaultSelectedDay()
         getLiveDaysResult()
+        getLiveSchedulesResult()
+        setDefaultSelectedDay()
         _schedules.value = listOf()
     }
 
@@ -200,6 +205,8 @@ class PlanViewModel(
     fun setDefaultSelectedDay() {
         //Select first item of days by default
         selectedDayPosition.value = 0
+        Logger.i("setDefaultSelectedDay")
+        filterSchedule()
     }
 
     fun getLiveDaysResult() {
@@ -300,6 +307,21 @@ class PlanViewModel(
         }
     }
 
+    private fun getLiveSchedulesResult() {
+        Logger.i("getLiveSchedulesResult")
+        allSchedules = howYoRepository.getLiveSchedules(plan.value?.id!!)
+        _status.value = LoadApiStatus.DONE
+    }
+
+    fun filterSchedule() {
+        Logger.i("selectedDayPosition.value:${selectedDayPosition.value}")
+        val currentDayId = selectedDayPosition.value?.let { days.value?.get(it)?.id }
+        Logger.i("days.value:${days.value}")
+        Logger.i("allSchedules.value:${allSchedules.value}")
+        _schedules.value = allSchedules.value?.filter { it.dayId == currentDayId }
+        Logger.i("schedules:${schedules.value}")
+    }
+
     fun delExistPlan(plan: Plan) {
 
         val daysResult = mutableListOf<Boolean>()
@@ -322,7 +344,8 @@ class PlanViewModel(
                 !daysResult.contains(false)
                         && planResult.value == true
                         && mainCheckListResult.value == true
-                        && checkListResult.value == true -> {
+                        && checkListResult.value == true
+                        && photoResult.value == true -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
                 }

@@ -30,7 +30,7 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
         _plans.value = listOf(
             Plan(
-                "1",
+                "VWN61M99rDHJnWcmguvE",
                 "traveller",
                 listOf(),
                 "Go to Osaka",

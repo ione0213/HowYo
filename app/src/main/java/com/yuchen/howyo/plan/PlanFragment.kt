@@ -16,6 +16,7 @@ import com.yuchen.howyo.ext.getVmFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -107,6 +108,18 @@ class PlanFragment : Fragment() {
         cm.setSaturation(0.4F)
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
+
+        viewModel.selectedDayPosition.observe(viewLifecycleOwner, {
+            it?.let {
+                viewModel.filterSchedule()
+            }
+        })
+
+        viewModel.days.observe(viewLifecycleOwner, {
+            it?.let {
+                viewModel.filterSchedule()
+            }
+        })
 
         viewModel.deletingDay.observe(viewLifecycleOwner, {
             it?.let { day ->

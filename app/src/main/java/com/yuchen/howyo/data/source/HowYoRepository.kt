@@ -23,13 +23,15 @@ interface HowYoRepository {
 
     suspend fun createDay(position: Int, planId: String): Result<Boolean>
 
-    suspend fun updateDay(day: Day) : Result<Boolean>
+    suspend fun updateDay(day: Day): Result<Boolean>
 
-    suspend fun deleteDay(day: Day) : Result<Boolean>
+    suspend fun deleteDay(day: Day): Result<Boolean>
+
+    fun getLiveDays(planId: String): MutableLiveData<List<Day>>
 
     suspend fun createSchedule(schedule: Schedule): Result<Boolean>
 
-    fun getLiveDays(planId: String): MutableLiveData<List<Day>>
+    fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>>
 
     suspend fun createMainCheckList(
         planId: String,
@@ -37,7 +39,7 @@ interface HowYoRepository {
         subtype: String?
     ): Result<Boolean>
 
-    suspend fun deleteMainCheckList(planId: String) : Result<Boolean>
+    suspend fun deleteMainCheckList(planId: String): Result<Boolean>
 
-    suspend fun deleteCheckList(planId: String) : Result<Boolean>
+    suspend fun deleteCheckList(planId: String): Result<Boolean>
 }

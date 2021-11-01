@@ -48,12 +48,16 @@ class DefaultHowYoRepository(
         return remoteDataSource.deleteDay(day)
     }
 
+    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
+        return remoteDataSource.getLiveDays(planId)
+    }
+
     override suspend fun createSchedule(schedule: Schedule): Result<Boolean> {
         return remoteDataSource.createSchedule(schedule)
     }
 
-    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
-        return remoteDataSource.getLiveDays(planId)
+    override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
+        return remoteDataSource.getLiveSchedules(planId)
     }
 
     override suspend fun createMainCheckList(
