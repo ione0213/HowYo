@@ -118,6 +118,7 @@ fun TextView.bindTextWithDay(day: Int, firstDate: Long?) {
 
 @BindingAdapter("schedules")
 fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Schedule>?) {
+    Logger.i("Binding schedules: $schedules")
     schedules?.let {
         recyclerView.adapter?.apply {
             when (this) {

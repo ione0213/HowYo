@@ -169,6 +169,7 @@
                             android:hint="@string/detail_edit_schedule_title"
                             android:imeOptions="actionNext"
                             android:maxLines="1"
+                            android:text="@={viewModel.title}"
                             android:singleLine="true"
                             android:textColor="@color/gray_black" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -191,6 +192,7 @@
                             android:layout_height="@dimen/cover_plan_edittext"
                             android:hint="@string/detail_edit_schedule_address"
                             android:imeOptions="actionNext"
+                            android:text="@={viewModel.address}"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/gray_black" />
@@ -259,6 +261,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/cover_plan_edittext"
                             android:hint="@string/detail_edit_schedule_remark"
+                            android:text="@={viewModel.remark}"
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
@@ -282,7 +285,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/cover_plan_edittext"
                             android:hint="@string/detail_edit_schedule_budge"
+                            android:inputType="number"
                             android:imeOptions="actionNext"
+                            android:text="@={viewModel.budge}"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/gray_black" />
@@ -306,6 +311,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/cover_plan_edittext"
                             android:hint="@string/detail_edit_schedule_ref_url"
+                            android:text="@={viewModel.refUrl}"
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"

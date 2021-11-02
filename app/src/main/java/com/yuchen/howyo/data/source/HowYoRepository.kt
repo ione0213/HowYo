@@ -31,6 +31,8 @@ interface HowYoRepository {
 
     suspend fun createSchedule(schedule: Schedule): Result<Boolean>
 
+    suspend fun updateSchedule(schedule: Schedule): Result<Boolean>
+
     fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>>
 
     suspend fun createMainCheckList(

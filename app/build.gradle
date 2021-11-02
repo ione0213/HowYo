@@ -15,8 +15,8 @@ android {
         applicationId "com.yuchen.howyo"
         minSdk 26
         targetSdk 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -118,4 +118,7 @@ dependencies {
 
     //Lottie
     implementation "com.airbnb.android:lottie:$version_lottie"
+
+    //3rd party swipe layout for recyclerView
+    implementation "com.chauthai.swipereveallayout:swipe-reveal-layout:$version_swipereveallayout"
 }

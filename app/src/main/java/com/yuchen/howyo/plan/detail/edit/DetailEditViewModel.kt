@@ -67,7 +67,7 @@ class DetailEditViewModel(
 
     val remark = MutableLiveData<String>()
 
-    val budge = MutableLiveData<Int>()
+    val budge = MutableLiveData<String>()
 
     val refUrl = MutableLiveData<String>()
 
@@ -135,7 +135,7 @@ class DetailEditViewModel(
                 .getStringArray(R.array.schedule_type_list)
                     [selectedScheduleTypePosition.value ?: 0],
             title = title.value,
-            budget = budge.value,
+            budget = budge.value?.toInt(),
             refUrl = refUrl.value,
             address = address.value,
             remark = remark.value

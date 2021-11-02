@@ -40,6 +40,8 @@ class PlanViewModel(
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
+    var tempSchedules = mutableListOf<Schedule>()
+
     //Current user data
     private val _user = MutableLiveData<User>()
 
@@ -97,6 +99,12 @@ class PlanViewModel(
 
     val handleDaySuccess: LiveData<Boolean>
         get() = _handleDaySuccess
+
+    private val _handleScheduleSuccess = MutableLiveData<Boolean>()
+
+    val handleScheduleSuccess: LiveData<Boolean>
+        get() = _handleScheduleSuccess
+
 
     // Handle navigation to detail
     private val _navigateToDetail = MutableLiveData<Schedule>()
@@ -211,7 +219,7 @@ class PlanViewModel(
 
     fun getLiveDaysResult() {
         days = howYoRepository.getLiveDays(plan.value?.id!!)
-        _status.value = LoadApiStatus.DONE
+        setStatusDone()
     }
 
     fun addNewDay() {
@@ -307,19 +315,31 @@ class PlanViewModel(
         }
     }
 
+    private suspend fun updateSchedule(schedule: Schedule): Boolean {
+
+        return when (val result = howYoRepository.updateSchedule(schedule)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
     private fun getLiveSchedulesResult() {
-        Logger.i("getLiveSchedulesResult")
+//        Logger.i("getLiveSchedulesResult")
         allSchedules = howYoRepository.getLiveSchedules(plan.value?.id!!)
-        _status.value = LoadApiStatus.DONE
+        setStatusDone()
     }
 
     fun filterSchedule() {
-        Logger.i("selectedDayPosition.value:${selectedDayPosition.value}")
+//        Logger.i("selectedDayPosition.value:${selectedDayPosition.value}")
         val currentDayId = selectedDayPosition.value?.let { days.value?.get(it)?.id }
-        Logger.i("days.value:${days.value}")
-        Logger.i("allSchedules.value:${allSchedules.value}")
-        _schedules.value = allSchedules.value?.filter { it.dayId == currentDayId }
-        Logger.i("schedules:${schedules.value}")
+//        Logger.i("days.value:${days.value}")
+//        Logger.i("allSchedules.value:${allSchedules.value}")
+        _schedules.value = allSchedules.value?.filter { it.dayId == currentDayId }?.sortedBy { it.position }
+//        Logger.i("schedules:${schedules.value}")
     }
 
     fun delExistPlan(plan: Plan) {
@@ -469,11 +489,9 @@ class PlanViewModel(
         if (newDays != null) {
             tempDays = newDays.toMutableList()
         }
-
-        _status.postValue(LoadApiStatus.DONE)
     }
 
-    suspend fun movedDay() {
+    suspend fun submitMovedDay() {
 
         val daysResult = mutableListOf<Boolean>()
 
@@ -493,6 +511,149 @@ class PlanViewModel(
         }
 
         _handleDaySuccess.value = !daysResult.contains(false)
+    }
+
+    fun moveSchedule(from: Int, to: Int) {
+
+        val newSchedules = when {
+            tempSchedules.isNotEmpty() -> tempSchedules.toMutableList()
+            else -> schedules.value?.toMutableList()
+        }
+
+        when (from > to) {
+            true -> {
+                newSchedules?.forEachIndexed { index, schedule ->
+                    when {
+                        schedule.position!! < to || schedule.position!! > from -> {
+                        }
+                        schedule.position!! >= to && schedule.position!! != from -> {
+                            val newSchedule = Schedule(
+                                schedule.id,
+                                schedule.planId,
+                                schedule.dayId,
+                                schedule.scheduleType,
+                                schedule.title,
+                                schedule.photoUrlList,
+                                schedule.photoFileNameList,
+                                schedule.latitude,
+                                schedule.longitude,
+                                schedule.startTime,
+                                schedule.endTime,
+                                schedule.budget,
+                                schedule.refUrl,
+                                schedule.notification,
+                                schedule.position!! + 1,
+                                schedule.address,
+                                schedule.remark
+                            )
+                            newSchedules[index] = newSchedule
+                        }
+                        schedule.position!! == from -> {
+                            val newSchedule = Schedule(
+                                schedule.id,
+                                schedule.planId,
+                                schedule.dayId,
+                                schedule.scheduleType,
+                                schedule.title,
+                                schedule.photoUrlList,
+                                schedule.photoFileNameList,
+                                schedule.latitude,
+                                schedule.longitude,
+                                schedule.startTime,
+                                schedule.endTime,
+                                schedule.budget,
+                                schedule.refUrl,
+                                schedule.notification,
+                                to,
+                                schedule.address,
+                                schedule.remark
+                            )
+                            newSchedules[index] = newSchedule
+                        }
+                    }
+                }
+            }
+            false -> {
+                newSchedules?.forEachIndexed { index, schedule ->
+                    when {
+                        schedule.position!! < from || schedule.position!! > to -> {
+                        }
+                        schedule.position!! > from -> {
+                            val newSchedule = Schedule(
+                                schedule.id,
+                                schedule.planId,
+                                schedule.dayId,
+                                schedule.scheduleType,
+                                schedule.title,
+                                schedule.photoUrlList,
+                                schedule.photoFileNameList,
+                                schedule.latitude,
+                                schedule.longitude,
+                                schedule.startTime,
+                                schedule.endTime,
+                                schedule.budget,
+                                schedule.refUrl,
+                                schedule.notification,
+                                schedule.position!! - 1,
+                                schedule.address,
+                                schedule.remark
+                            )
+
+                            newSchedules[index] = newSchedule
+                        }
+                        schedule.position!! == from -> {
+
+                            val newSchedule = Schedule(
+                                schedule.id,
+                                schedule.planId,
+                                schedule.dayId,
+                                schedule.scheduleType,
+                                schedule.title,
+                                schedule.photoUrlList,
+                                schedule.photoFileNameList,
+                                schedule.latitude,
+                                schedule.longitude,
+                                schedule.startTime,
+                                schedule.endTime,
+                                schedule.budget,
+                                schedule.refUrl,
+                                schedule.notification,
+                                to,
+                                schedule.address,
+                                schedule.remark
+                            )
+
+                            newSchedules[index] = newSchedule
+                        }
+                    }
+                }
+            }
+        }
+        if (newSchedules != null) {
+            tempSchedules = newSchedules.toMutableList()
+        }
+    }
+
+    suspend fun submitMoveSchedule() {
+
+        val schedulesResult = mutableListOf<Boolean>()
+
+        _status.value = LoadApiStatus.LOADING
+
+        withContext(Dispatchers.IO) {
+
+            tempSchedules.forEach { tempSchedule ->
+                schedules.value?.forEach { schedule ->
+                    when {
+                        tempSchedule.position != schedule.position -> {
+                            schedulesResult.add(updateSchedule(tempSchedule))
+                        }
+                    }
+                }
+            }
+        }
+
+        _handleScheduleSuccess.value = !schedulesResult.contains(false)
     }
 
     fun checkDeletePlan() {
@@ -576,8 +737,12 @@ class PlanViewModel(
     }
 
     fun onNavigatedHome() {
-        _status.value = LoadApiStatus.DONE
+        setStatusDone()
         _navigateToHomeAfterDeletingPlan.value = null
+    }
+
+    fun setStatusDone() {
+        _status.value = LoadApiStatus.DONE
     }
 
     fun leavePlan() {

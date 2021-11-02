@@ -302,6 +302,23 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
+    override suspend fun updateSchedule(schedule: Schedule): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_SCHEDULES)
+                .document(schedule.id)
+                .set(schedule)
+                .addOnSuccessListener {
+                    Logger.i("Update: $schedule")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error updating schedule. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
 
         val liveData = MutableLiveData<List<Schedule>>()

@@ -56,6 +56,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.createSchedule(schedule)
     }
 
+    override suspend fun updateSchedule(schedule: Schedule): Result<Boolean> {
+        return remoteDataSource.updateSchedule(schedule)
+    }
+
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
         return remoteDataSource.getLiveSchedules(planId)
     }

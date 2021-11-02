@@ -20,6 +20,7 @@ buildscript {
         varsion_location_service = '18.0.0'
         version_facebook_login = '11.3.0'
         version_lottie = '4.2.0'
+        version_swipereveallayout = '1.4.1'
     }
     repositories {
         google()
