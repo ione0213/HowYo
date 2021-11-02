@@ -108,9 +108,10 @@ class PlanFragment : Fragment() {
                 val adapter = recyclerView.adapter as ScheduleAdapter
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
-
+                Logger.i("From:$from, To:$to")
+                Logger.i("viewModel.schedules.value?.size:${viewModel.schedules.value?.size}")
                 return when {
-                    //Prevent moving to the position which is out of days range
+                    //Prevent moving to the position which is out of schedules range
                     from != to && to <= viewModel.schedules.value?.size!!.minus(1) -> {
                         viewModel.moveSchedule(from, to)
                         adapter.notifyItemMoved(from, to)
@@ -179,7 +180,24 @@ class PlanFragment : Fragment() {
 
         viewModel.selectedDayPosition.observe(viewLifecycleOwner, {
             it?.let {
+                Logger.i("selectedDayPosition")
                 viewModel.filterSchedule()
+            }
+        })
+
+        viewModel.deletingPlan.observe(viewLifecycleOwner, {
+            it?.let { plan ->
+                context?.let { context ->
+                    AlertDialog.Builder(context)
+                        .setMessage(getString(R.string.confirm_delete_plan, plan.title))
+                        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.delExistPlan(plan)
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                            viewModel.onDeletedPlan()
+                        }
+                        .show()
+                }
             }
         })
 
@@ -199,16 +217,16 @@ class PlanFragment : Fragment() {
             }
         })
 
-        viewModel.deletingPlan.observe(viewLifecycleOwner, {
-            it?.let { plan ->
+        viewModel.deletingSchedule.observe(viewLifecycleOwner, {
+            it?.let { schedule ->
                 context?.let { context ->
                     AlertDialog.Builder(context)
-                        .setMessage(getString(R.string.confirm_delete_plan))
+                        .setMessage(getString(R.string.confirm_delete_schedule))
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                            viewModel.delExistPlan(plan)
+                            viewModel.delExistSchedule(schedule)
                         }
                         .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-                            viewModel.onDeletedPlan()
+                            viewModel.onDeletedSchedule()
                         }
                         .show()
                 }
@@ -231,9 +249,14 @@ class PlanFragment : Fragment() {
             it?.let {
                 when {
                     it -> {
-                        viewModel.getPlanResult()
-                        viewModel.getLiveDaysResult()
-                        viewModel.setDefaultSelectedDay()
+                        viewModel.apply {
+
+                            getPlanResult()
+                            getLiveDaysResult()
+                            setDefaultSelectedDay()
+                            onDeletedDay()
+                        }
+
                         binding.recyclerPlanDays.layoutManager?.scrollToPosition(0)
                     }
                 }
@@ -242,7 +265,12 @@ class PlanFragment : Fragment() {
 
         viewModel.allSchedules.observe(viewLifecycleOwner, {
             it?.let {
-                viewModel.filterSchedule()
+                Logger.i("allSchedules")
+                when (viewModel.deletingPlan.value) {
+                    null -> {
+                        viewModel.filterSchedule()
+                    }
+                }
             }
         })
 
@@ -250,7 +278,14 @@ class PlanFragment : Fragment() {
             it?.let {
                 when {
                     it -> {
-                        viewModel.setStatusDone()
+                        viewModel.apply {
+//                            getLiveSchedulesResult()
+                            Logger.i("handleScheduleSuccess")
+
+                            filterSchedule()
+                            onDeletedSchedule()
+                            setStatusDone()
+                        }
                     }
                 }
             }

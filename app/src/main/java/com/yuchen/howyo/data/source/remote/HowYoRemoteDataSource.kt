@@ -33,7 +33,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
             storageRef.putFile(imgUri)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        task.result.storage.downloadUrl.addOnCompleteListener { it ->
+                        task.result.storage.downloadUrl.addOnCompleteListener {
                             if (it.isSuccessful) {
                                 continuation.resume(Result.Success(it.result.toString()))
                             } else {
@@ -319,6 +319,23 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
+    override suspend fun deleteSchedule(schedule: Schedule): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_SCHEDULES)
+                .document(schedule.id)
+                .delete()
+                .addOnSuccessListener {
+                    Logger.i("Delete: $schedule")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error deleting schedule. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
 
         val liveData = MutableLiveData<List<Schedule>>()
@@ -326,7 +343,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         FirebaseFirestore.getInstance()
             .collection(PATH_SCHEDULES)
             .whereEqualTo("plan_id", planId)
-//            .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, exception ->
 
                 Logger.i("addSnapshotListener detect")
@@ -338,7 +354,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 val list = mutableListOf<Schedule>()
                 if (snapshot != null) {
                     for (document in snapshot) {
-                        Logger.d(document.id + " => " + document.data)
+                        Logger.d(document.id + " AAAA=> " + document.data)
 
                         val schedule = document.toObject(Schedule::class.java)
                         list.add(schedule)
@@ -400,7 +416,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        task.result.forEach { it ->
+                        task.result.forEach {
                             collectionRef.document(it.id).delete()
                                 .addOnCompleteListener { subTask ->
                                     if (subTask.isSuccessful) {
@@ -441,7 +457,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        task.result.forEach { it ->
+                        task.result.forEach {
                             collectionRef.document(it.id).delete()
                                 .addOnCompleteListener { subTask ->
                                     if (subTask.isSuccessful) {

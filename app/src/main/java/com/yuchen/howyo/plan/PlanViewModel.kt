@@ -50,15 +50,20 @@ class PlanViewModel(
 
     var selectedDayPosition = MutableLiveData<Int>()
 
+    private val _deletingPlan = MutableLiveData<Plan>()
+
+    val deletingPlan: LiveData<Plan>
+        get() = _deletingPlan
+
     private val _deletingDay = MutableLiveData<Day>()
 
     val deletingDay: LiveData<Day>
         get() = _deletingDay
 
-    private val _deletingPlan = MutableLiveData<Plan>()
+    private val _deletingSchedule = MutableLiveData<Schedule>()
 
-    val deletingPlan: LiveData<Plan>
-        get() = _deletingPlan
+    val deletingSchedule: LiveData<Schedule>
+        get() = _deletingSchedule
 
     private val _planResult = MutableLiveData<Boolean>()
 
@@ -184,9 +189,9 @@ class PlanViewModel(
     init {
 
         getLiveDaysResult()
-        getLiveSchedulesResult()
         setDefaultSelectedDay()
-        _schedules.value = listOf()
+        getLiveSchedulesResult()
+//        _schedules.value = listOf()
     }
 
     fun selectDay(position: Int) {
@@ -210,10 +215,79 @@ class PlanViewModel(
         }
     }
 
+    fun delExistPlan(plan: Plan) {
+
+        val daysResult = mutableListOf<Boolean>()
+        val scheduleResult = mutableListOf<Boolean>()
+        val scheduleImgResult = mutableListOf<Boolean>()
+
+        coroutineScope.launch {
+            _status.value = LoadApiStatus.LOADING
+
+            withContext(Dispatchers.IO) {
+                days.value?.forEach {
+                    daysResult.add(deleteDay(it))
+                }
+                allSchedules.value?.forEach { schedule ->
+                    scheduleResult.add(deleteSchedule(schedule))
+                    schedule.photoFileNameList?.forEach {
+                        deletePhoto(it)?.let { result -> scheduleImgResult.add(result) }
+                    }
+                }
+                _mainCheckListResult.postValue(deleteMainCheckList(plan.id))
+                _checkListResult.postValue(deleteCheckList(plan.id))
+                _planResult.postValue(deletePlan(plan)!!)
+                _photoResult.postValue(deletePhoto(plan.coverFileName))
+            }
+
+            when {
+                !daysResult.contains(false)
+                        && !scheduleResult.contains(false)
+                        && planResult.value == true
+                        && mainCheckListResult.value == true
+                        && checkListResult.value == true
+                        && photoResult.value == true -> {
+                    onDeletedPlan()
+                    _navigateToHomeAfterDeletingPlan.value = true
+                }
+            }
+        }
+    }
+
+    private suspend fun deletePlan(plan: Plan): Boolean? =
+        when (val result = howYoRepository.deletePlan(plan)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> null
+        }
+
+    private suspend fun updatePlan(type: HandleDayType): Boolean {
+
+        _plan.value?.endDate = when (type) {
+            HandleDayType.NEW -> {
+                _plan.value?.endDate?.plus(60 * 60 * 24 * 1000)
+            }
+            HandleDayType.DELETE -> {
+                _plan.value?.endDate?.minus(60 * 60 * 24 * 1000)
+            }
+        }
+
+        return when (val result = _plan.value?.let { howYoRepository.updatePlan(it) }) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
     fun setDefaultSelectedDay() {
         //Select first item of days by default
         selectedDayPosition.value = 0
         Logger.i("setDefaultSelectedDay")
+
         filterSchedule()
     }
 
@@ -244,6 +318,7 @@ class PlanViewModel(
     fun delExistDay(day: Day) {
 
         val daysResult = mutableListOf<Boolean>()
+        val scheduleResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
@@ -265,11 +340,17 @@ class PlanViewModel(
                         }
                     }
                 }
+
+                allSchedules.value?.filter { it.dayId == day.id }?.forEach { schedule ->
+                    scheduleResult.add(deleteSchedule(schedule))
+                }
                 _updatePlanResult.postValue(updatePlan(HandleDayType.DELETE)!!)
             }
 
             when {
-                !daysResult.contains(false) && updatePlanResult.value == true -> {
+                !daysResult.contains(false)
+                        && !scheduleResult.contains(false)
+                        && updatePlanResult.value == true -> {
                     _handleDaySuccess.value = true
                 }
             }
@@ -327,72 +408,9 @@ class PlanViewModel(
         }
     }
 
-    private fun getLiveSchedulesResult() {
-//        Logger.i("getLiveSchedulesResult")
-        allSchedules = howYoRepository.getLiveSchedules(plan.value?.id!!)
-        setStatusDone()
-    }
+    private suspend fun deleteSchedule(schedule: Schedule): Boolean {
 
-    fun filterSchedule() {
-//        Logger.i("selectedDayPosition.value:${selectedDayPosition.value}")
-        val currentDayId = selectedDayPosition.value?.let { days.value?.get(it)?.id }
-//        Logger.i("days.value:${days.value}")
-//        Logger.i("allSchedules.value:${allSchedules.value}")
-        _schedules.value = allSchedules.value?.filter { it.dayId == currentDayId }?.sortedBy { it.position }
-//        Logger.i("schedules:${schedules.value}")
-    }
-
-    fun delExistPlan(plan: Plan) {
-
-        val daysResult = mutableListOf<Boolean>()
-
-        coroutineScope.launch {
-            _status.value = LoadApiStatus.LOADING
-
-            withContext(Dispatchers.IO) {
-                days.value?.forEach {
-
-                    daysResult.add(deleteDay(it))
-                }
-                _mainCheckListResult.postValue(deleteMainCheckList(plan.id))
-                _checkListResult.postValue(deleteCheckList(plan.id))
-                _planResult.postValue(deletePlan(plan)!!)
-                _photoResult.postValue(deletePhoto(plan.coverFileName))
-            }
-
-            when {
-                !daysResult.contains(false)
-                        && planResult.value == true
-                        && mainCheckListResult.value == true
-                        && checkListResult.value == true
-                        && photoResult.value == true -> {
-                    onDeletedPlan()
-                    _navigateToHomeAfterDeletingPlan.value = true
-                }
-            }
-        }
-    }
-
-    private suspend fun deletePlan(plan: Plan): Boolean? =
-        when (val result = howYoRepository.deletePlan(plan)) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> null
-        }
-
-    private suspend fun updatePlan(type: HandleDayType): Boolean {
-
-        _plan.value?.endDate = when (type) {
-            HandleDayType.NEW -> {
-                _plan.value?.endDate?.plus(60 * 60 * 24 * 1000)
-            }
-            HandleDayType.DELETE -> {
-                _plan.value?.endDate?.minus(60 * 60 * 24 * 1000)
-            }
-        }
-
-        return when (val result = _plan.value?.let { howYoRepository.updatePlan(it) }) {
+        return when (val result = howYoRepository.deleteSchedule(schedule)) {
             is Result.Success -> {
                 result.data
             }
@@ -400,6 +418,72 @@ class PlanViewModel(
                 false
             }
         }
+    }
+
+    fun delExistSchedule(schedule: Schedule) {
+
+        val schedulesResult = mutableListOf<Boolean>()
+        val scheduleList = schedules.value?.toList()
+        coroutineScope.launch {
+            _status.value = LoadApiStatus.LOADING
+
+            withContext(Dispatchers.IO) {
+                scheduleList?.forEach {
+
+                    when {
+                        it.position!! > schedule.position!! -> {
+                            Logger.i("schedule.position-1:${schedule.position}")
+                            val newSchedule = Schedule(
+                                it.id,
+                                it.planId,
+                                it.dayId,
+                                it.scheduleType,
+                                it.title,
+                                it.photoUrlList,
+                                it.photoFileNameList,
+                                it.latitude,
+                                it.longitude,
+                                it.startTime,
+                                it.endTime,
+                                it.budget,
+                                it.refUrl,
+                                it.notification,
+                                it.position!! - 1,
+                                it.address,
+                                it.remark
+                            )
+                            schedulesResult.add(updateSchedule(newSchedule))
+                            Logger.i("schedulesResult:$schedulesResult")
+                        }
+                        it.position!! == schedule.position!! -> {
+                            Logger.i("schedule.position-del:${schedule.position}")
+                            schedulesResult.add(deleteSchedule(it))
+                            Logger.i("schedulesResult:$schedulesResult")
+                        }
+                    }
+                }
+            }
+
+            when {
+                !schedulesResult.contains(false) -> {
+                    _handleScheduleSuccess.value = true
+                }
+            }
+        }
+    }
+
+    fun getLiveSchedulesResult() {
+        allSchedules = howYoRepository.getLiveSchedules(plan.value?.id!!)
+        Logger.i("allSchedules:${allSchedules.value}")
+        setStatusDone()
+    }
+
+    fun filterSchedule() {
+        val currentDayId = selectedDayPosition.value?.let { days.value?.get(it)?.id ?: "" }
+        _schedules.value =
+            allSchedules.value
+                ?.filter { it.dayId == currentDayId }?.sortedBy { it.position } ?: listOf()
+        Logger.i("schedules:${schedules.value}")
     }
 
     private suspend fun deleteMainCheckList(planId: String): Boolean =
@@ -670,6 +754,14 @@ class PlanViewModel(
 
     fun onDeletedDay() {
         _deletingDay.value = null
+    }
+
+    fun checkDeleteSchedule(schedule: Schedule) {
+        _deletingSchedule.value = schedule
+    }
+
+    fun onDeletedSchedule() {
+        _deletingSchedule.value = null
     }
 
     fun navigateToDetail(schedule: Schedule) {

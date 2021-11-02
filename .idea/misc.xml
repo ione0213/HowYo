@@ -69,7 +69,7 @@
         <entry key="app/src/main/res/layout/item_plan_day.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_plan_day_add.xml" value="0.625" />
         <entry key="app/src/main/res/layout/item_plan_days.xml" value="0.26358695652173914" />
-        <entry key="app/src/main/res/layout/item_plan_schedule.xml" value="0.27812113720642767" />
+        <entry key="app/src/main/res/layout/item_plan_schedule.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_plans_discover.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_plans_favorite.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_plans_home.xml" value="0.375" />

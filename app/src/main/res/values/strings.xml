@@ -50,8 +50,9 @@
     <string name="place">景點</string>
     <string name="insert_keywords">Insert keywords</string>
     <string name="day">第%d天\n%S</string>
+    <string name="confirm_delete_plan">您確定要移除 %s 嗎？</string>
     <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
-    <string name="confirm_delete_plan">您確定要移除行程嗎？</string>
+    <string name="confirm_delete_schedule">您確定要移除行程嗎？</string>
     <string name="empty_schedule">選擇的日期沒有行程。\n點擊新增按鈕建立！</string>
 
     <!-- Payment-->
