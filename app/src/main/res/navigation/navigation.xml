@@ -84,15 +84,37 @@
             app:argType="com.yuchen.howyo.data.Schedule"
             app:nullable="true" />
         <argument
-            android:name="planId"
-            app:argType="string"
+            android:name="plan"
             android:defaultValue="@null"
+            app:argType="com.yuchen.howyo.data.Plan"
             app:nullable="true" />
         <argument
-            android:name="dayId"
-            app:argType="string"
+            android:name="day"
             android:defaultValue="@null"
+            app:argType="com.yuchen.howyo.data.Day"
             app:nullable="true" />
+        <argument
+            android:name="schedulePhoto"
+            android:defaultValue="@null"
+            app:argType="com.yuchen.howyo.data.SchedulePhoto"
+            app:nullable="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/detailEditImageFragment"
+        android:name="com.yuchen.howyo.plan.detail.edit.image.DetailEditImageFragment"
+        android:label="DetailEditImageFragment"
+        tools:layout="@layout/fragment_detail_edit_image">
+        <argument
+            android:name="schedulePhoto"
+            app:argType="com.yuchen.howyo.data.SchedulePhoto" />
+        <argument
+            android:name="schedulePhotos"
+            app:argType="com.yuchen.howyo.data.SchedulePhotos" />
+        <action
+            android:id="@+id/navigate_to_detail_edit_fragment"
+            app:destination="@id/detailEditFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/detailEditFragment"/>
     </fragment>
     <fragment
         android:id="@+id/groupMessageFragment"
@@ -155,8 +177,8 @@
         android:label="FindLocationFragment"
         tools:layout="@layout/fragment_find_location">
         <!--        <argument-->
-        <!--            android:name="days"-->
-        <!--            app:argType="com.yuchen.howyo.data.Day[]" />-->
+        <!--            android:name="plan"-->
+        <!--            app:argType="com.yuchen.howyo.data.Plan" />-->
     </fragment>
     <dialog
         android:id="@+id/planCoverDialog"
@@ -217,6 +239,9 @@
     <action
         android:id="@+id/nav_to_detail_edit_fragment"
         app:destination="@+id/detailEditFragment" />
+    <action
+        android:id="@+id/nav_to_detail_edit_image_fragment"
+        app:destination="@+id/detailEditImageFragment" />
     <action
         android:id="@+id/nav_to_group_message_fragment"
         app:destination="@id/groupMessageFragment" />

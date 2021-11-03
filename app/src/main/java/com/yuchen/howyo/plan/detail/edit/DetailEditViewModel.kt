@@ -1,18 +1,18 @@
 package com.yuchen.howyo.plan.detail.edit
 
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.Result
-import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.data.SchedulePhoto
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.util.Util.getString
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,24 +20,24 @@ import java.util.*
 class DetailEditViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentSchedule: Schedule?,
-    private val argumentPlanId: String?,
-    private val argumentDayId: String?
+    private val argumentPlan: Plan?,
+    private val argumentDay: Day?
 ) : ViewModel() {
 
     // Detail data from arguments
     private val _schedule = MutableLiveData<Schedule>().apply {
-        value = argumentSchedule ?: Schedule(dayId = argumentDayId)
+        value = argumentSchedule
     }
 
     val schedule: LiveData<Schedule>
         get() = _schedule
 
-    private val planId = MutableLiveData<String>().apply {
-        value = argumentPlanId ?: ""
+    val plan = MutableLiveData<Plan>().apply {
+        value = argumentPlan
     }
 
-    private val dayId = MutableLiveData<String>().apply {
-        value = argumentDayId ?: ""
+    val day = MutableLiveData<Day>().apply {
+        value = argumentDay
     }
 
     private val _photoDataList = MutableLiveData<MutableList<SchedulePhoto>>().apply {
@@ -57,7 +57,7 @@ class DetailEditViewModel(
 
     val notification = MutableLiveData<Boolean>()
 
-    val title = MutableLiveData<String>()
+    var title = MutableLiveData<String>()
 
     val address = MutableLiveData<String>()
 
@@ -67,7 +67,7 @@ class DetailEditViewModel(
 
     val remark = MutableLiveData<String>()
 
-    val budge = MutableLiveData<String>()
+    val budget = MutableLiveData<String>()
 
     val refUrl = MutableLiveData<String>()
 
@@ -87,10 +87,22 @@ class DetailEditViewModel(
     val selectPhoto: LiveData<Boolean>
         get() = _selectPhoto
 
+    // Handle setting time
+    private val _setTime = MutableLiveData<String>()
+
+    val setTime: LiveData<String>
+        get() = _setTime
+
     private val _scheduleResult = MutableLiveData<Boolean>()
 
     val scheduleResult: LiveData<Boolean>
         get() = _scheduleResult
+
+    // Handle navigation to edit single image
+    private val _navigateToEditImage = MutableLiveData<SchedulePhoto>()
+
+    val navigateToEditImage: LiveData<SchedulePhoto>
+        get() = _navigateToEditImage
 
     private val _status = MutableLiveData<LoadApiStatus>()
 
@@ -109,8 +121,27 @@ class DetailEditViewModel(
 
     init {
         Logger.i("schedule:${schedule.value}")
-        Logger.i("planId:${planId.value}")
-        Logger.i("dayId:${dayId.value}")
+        Logger.i("planId:${plan.value}")
+        Logger.i("dayId:${day.value}")
+        setData()
+    }
+
+    private fun setData() {
+        when {
+            schedule.value != null -> {
+                schedule.value.apply {
+                    type.value = this?.scheduleType ?: ""
+                    notification.value = this?.notification ?: false
+                    title.value = this?.title ?: ""
+                    address.value = this?.address ?: ""
+                    startTime.value = this?.startTime ?: 0L
+                    endTime.value = this?.endTime ?: 0L
+                    remark.value = this?.remark ?: ""
+                    budget.value = this?.budget.toString()
+                    refUrl.value = this?.refUrl ?: ""
+                }
+            }
+        }
     }
 
     fun setBitmap(uri: Uri) {
@@ -121,25 +152,38 @@ class DetailEditViewModel(
         Logger.i("_photoDataList:${photoDataList.value}")
     }
 
-    fun createSchedule() {
+    fun saveSchedule() {
 
         val imageUrlList = mutableListOf<String>()
         val fileNameList = mutableListOf<String>()
-        val schedule = Schedule(
-            planId = planId.value,
-            dayId = dayId.value,
-            scheduleType =
-            HowYoApplication
-                .instance
-                .resources
-                .getStringArray(R.array.schedule_type_list)
-                    [selectedScheduleTypePosition.value ?: 0],
-            title = title.value,
-            budget = budge.value?.toInt(),
-            refUrl = refUrl.value,
-            address = address.value,
-            remark = remark.value
+        val location = when (address.value?.isNotEmpty()) {
+            true -> {
+                getLatitudeAndLongitude()
+            }
+            else -> null
+        }
+
+        val newSchedule = schedule.value ?: Schedule(
+            planId = plan.value?.id ?: "",
+            dayId = day.value?.id ?: "",
         )
+
+        newSchedule.apply {
+            scheduleType =
+                HowYoApplication
+                    .instance
+                    .resources
+                    .getStringArray(R.array.schedule_type_list)[selectedScheduleTypePosition.value ?: 0]
+            title = this@DetailEditViewModel.title.value
+            latitude = location?.first
+            longitude = location?.second
+            startTime = this@DetailEditViewModel.startTime.value
+            endTime = this@DetailEditViewModel.endTime.value
+            budget = this@DetailEditViewModel.budget.value?.toInt()
+            refUrl = this@DetailEditViewModel.refUrl.value
+            address = this@DetailEditViewModel.address.value
+            remark = this@DetailEditViewModel.remark.value
+        }
 
         coroutineScope.launch {
 
@@ -148,37 +192,90 @@ class DetailEditViewModel(
             withContext(Dispatchers.IO) {
                 photoDataList.value?.forEach {
 
-                    val uri = it.uri
-                    val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
-                    val fileName = "userIdFromSharePreference_${formatter.format(Date())}"
+                    when (it.uri) {
+                        null -> {
+                            Logger.i("No uri:$it")
+                            when (it.isDeleted) {
+                                true -> {
+                                    Logger.i("delete image: ${it.fileName}")
+                                    it.fileName?.let { fileName ->
+                                        howYoRepository.deletePhoto(fileName)
+                                    }
+                                }
+                                false -> {
+                                    fileNameList.add(it.fileName ?: "")
+                                    imageUrlList.add(it.url ?: "")
+                                }
+                            }
+                        }
+                        else -> {
+                            Logger.i("Has uri:$it")
+                            when (it.isDeleted) {
+                                false -> {
+                                    val uri = it.uri
+                                    val formatter =
+                                        SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
+                                    val fileName =
+                                        "userIdFromSharePreference_${formatter.format(Date())}"
 
-                    fileNameList.add(fileName)
+                                    fileNameList.add(fileName)
+                                    Logger.i("upload file :$fileName")
 
-                    when (val result =
-                        uri?.let { imgUri -> howYoRepository.uploadPhoto(imgUri, fileName) }) {
-                        is Result.Success -> {
-                            imageUrlList.add(result.data)
+                                    when (val result =
+                                        uri.let { imgUri ->
+                                            howYoRepository.uploadPhoto(imgUri, fileName)
+                                        }) {
+                                        is Result.Success -> {
+                                            imageUrlList.add(result.data)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
 
-            schedule.apply {
+            newSchedule.apply {
+                Logger.i("imageUrlList:$imageUrlList")
+                Logger.i("fileNameList:$fileNameList")
                 photoUrlList = imageUrlList
                 photoFileNameList = fileNameList
             }
 
-            withContext(Dispatchers.Main) {
-                _scheduleResult.setValue(
-                    when (val result = howYoRepository.createSchedule(schedule)) {
-                        is Result.Success -> {
-                            result.data
+            withContext(Dispatchers.IO) {
+                _scheduleResult.postValue(
+                    when {
+                        newSchedule.id.isNullOrEmpty() -> {
+                            when (val result = howYoRepository.createSchedule(newSchedule)) {
+                                is Result.Success -> {
+                                    result.data
+                                }
+                                else -> false
+                            }
                         }
-                        else -> false
+                        else -> {
+                            when (val result = howYoRepository.updateSchedule(newSchedule)) {
+                                is Result.Success -> {
+                                    result.data
+                                }
+                                else -> false
+                            }
+                        }
                     }
                 )
             }
         }
+    }
+
+    private fun getLatitudeAndLongitude(): Pair<Double, Double> {
+
+        val geocoder = Geocoder(HowYoApplication.instance)
+
+        val list: List<Address> =
+            geocoder.getFromLocationName(address.value ?: "", 1)
+
+        return Pair(list.first().latitude, list.first().longitude)
     }
 
     fun leaveEditDetail() {
@@ -193,8 +290,35 @@ class DetailEditViewModel(
         _selectPhoto.value = null
     }
 
+    fun setTime(type: String) {
+        _setTime.value = type
+    }
+
+    fun onSetTime() {
+        _setTime.value = null
+    }
+
+    fun setTimeValue(type: String, data: Long) {
+        when (type) {
+            getString(R.string.detail_edit_schedule_start_time) -> {
+                startTime.value = data
+            }
+            else -> {
+                endTime.value = data
+            }
+        }
+    }
+
     fun onBackToPlanPortal() {
         _status.value = LoadApiStatus.DONE
         _scheduleResult.value = null
+    }
+
+    fun navigateToEditImage(schedulePhoto: SchedulePhoto) {
+        _navigateToEditImage.value = schedulePhoto
+    }
+
+    fun onEditImageNavigated() {
+        _navigateToEditImage.value = null
     }
 }

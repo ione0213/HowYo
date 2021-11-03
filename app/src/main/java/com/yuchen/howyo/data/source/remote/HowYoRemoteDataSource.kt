@@ -307,7 +307,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)
-                .document(schedule.id)
+                .document(schedule.id!!)
                 .set(schedule)
                 .addOnSuccessListener {
                     Logger.i("Update: $schedule")
@@ -324,7 +324,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)
-                .document(schedule.id)
+                .document(schedule.id!!)
                 .delete()
                 .addOnSuccessListener {
                     Logger.i("Delete: $schedule")

@@ -10,16 +10,19 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.yuchen.howyo.HowYoApplication
+import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentFindLocationBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.PlanViewModel
+import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
 import com.yuchen.howyo.util.Logger
 
 class FindLocationFragment : Fragment(), OnMapReadyCallback {
@@ -77,5 +80,7 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
 
         val list: List<Address> =
             geocoder.getFromLocationName(binding.edittextFindLocationSearch.text.toString(), 1)
+
+        Logger.i("information: ${list.first()}")
     }
 }

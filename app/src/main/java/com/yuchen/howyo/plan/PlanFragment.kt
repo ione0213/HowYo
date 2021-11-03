@@ -19,7 +19,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.R
-import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.launch
 
@@ -293,21 +292,33 @@ class PlanFragment : Fragment() {
 
         viewModel.navigateToDetail.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(NavigationDirections.navToDetailFragment(it))
+                findNavController().navigate(
+                    when (viewModel.accessType) {
+                        AccessPlanType.VIEW -> NavigationDirections.navToDetailFragment(it)
+                        AccessPlanType.EDIT -> {
+                            NavigationDirections.navToDetailEditFragment()
+                                .setPlan(viewModel.plan.value)
+                                .setDay(viewModel.selectedDayPosition.value?.let { position ->
+                                    viewModel.days.value?.get(position)
+                                })
+                                .setSchedule(it)
+                        }
+                    }
+                )
                 viewModel.onDetailNavigated()
             }
         })
 
-        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
+        viewModel.navigateToAddSchedule.observe(viewLifecycleOwner, {
             it?.let {
 
                 findNavController().navigate(
                     NavigationDirections.navToDetailEditFragment()
                         .setSchedule(null)
-                        .setPlanId(viewModel.plan.value?.id)
-                        .setDayId(it)
+                        .setPlan(viewModel.plan.value)
+                        .setDay(it)
                 )
-                viewModel.onEditScheduleNavigated()
+                viewModel.onAddScheduleNavigated()
             }
         })
 

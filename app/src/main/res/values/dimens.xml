@@ -28,8 +28,8 @@
 
     <!-- Schedule Detail-->
     <dimen name="height_detail_gallery">400dp</dimen>
-    <dimen name="height_detail_gallery_small">130dp</dimen>
-    <dimen name="width_detail_gallery_small">150dp</dimen>
+    <dimen name="height_detail_gallery_small">80dp</dimen>
+    <dimen name="width_detail_gallery_small">100dp</dimen>
 
     <!-- Schedule Detail Edit-->
     <dimen name="height_detail_edit">56dp</dimen>

@@ -2,10 +2,7 @@ package com.yuchen.howyo.ext
 
 import androidx.fragment.app.Fragment
 import com.yuchen.howyo.HowYoApplication
-import com.yuchen.howyo.data.Payment
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.data.User
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.factory.*
 import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.profile.friends.FriendFilter
@@ -20,9 +17,13 @@ fun Fragment.getVmFactory(schedule: Schedule?): DetailViewModelFactory {
     return DetailViewModelFactory(repository, schedule)
 }
 
-fun Fragment.getVmFactory(schedule: Schedule?, planId: String?, dayId: String?): EditDetailViewModelFactory {
+fun Fragment.getVmFactory(
+    schedule: Schedule?,
+    plan: Plan?,
+    day: Day?
+): EditDetailViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return EditDetailViewModelFactory(repository, schedule, planId, dayId)
+    return EditDetailViewModelFactory(repository, schedule, plan, day)
 }
 
 //fun Fragment.getVmFactory(days: List<Day>): FindLocationViewModelFactory {
@@ -61,4 +62,12 @@ fun Fragment.getVmFactory(payment: Payment?, plan: Plan): PaymentDetailViewModel
 fun Fragment.getVmFactory(friendType: FriendFilter): FriendItemViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return FriendItemViewModelFactory(repository, friendType)
+}
+
+fun Fragment.getVmFactory(
+    schedulePhoto: SchedulePhoto,
+    schedulePhotos: SchedulePhotos
+): DetailEditImageViewModelFactory {
+    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
+    return DetailEditImageViewModelFactory(repository, schedulePhoto, schedulePhotos)
 }

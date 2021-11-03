@@ -43,7 +43,10 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
 @SuppressLint("SetTextI18n")
 @BindingAdapter("time")
 fun TextView.bindMsgTime(time: Long) {
-    text = time.toTime()
+
+    when {
+        time != 0L -> text = time.toTime()
+    }
 }
 
 @BindingAdapter("currentFragmentType")
@@ -160,8 +163,8 @@ fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?
 
 @BindingAdapter("photoData")
 fun bindRecyclerViewWithPhotoData(recyclerView: RecyclerView, schedulePhotos: List<SchedulePhoto>?) {
-    Logger.i("schedulePhotos:${schedulePhotos?.size}")
-    schedulePhotos?.let {
+    val schedulePhotosDisplay = schedulePhotos?.filter { it.isDeleted != true }
+    schedulePhotosDisplay?.let {
         recyclerView.adapter?.apply {
             when (this) {
                 is DetailEditImagesAdapter -> addPhotoAndBtn(it)
@@ -187,7 +190,7 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
 
 @BindingAdapter("imageData")
 fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
-    schedulePhoto?.let {
+    schedulePhoto?.let { it ->
         when {
             it.url?.isNotEmpty() == true -> {
                 val imgUri = it.url.toUri().buildUpon().scheme("https").build()

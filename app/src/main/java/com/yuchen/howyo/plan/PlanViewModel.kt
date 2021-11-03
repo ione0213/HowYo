@@ -117,11 +117,11 @@ class PlanViewModel(
     val navigateToDetail: LiveData<Schedule>
         get() = _navigateToDetail
 
-    // Handle navigation to edit schedule
-    private val _navigateToEditSchedule = MutableLiveData<String>()
+    // Handle navigation to add schedule
+    private val _navigateToAddSchedule = MutableLiveData<Day>()
 
-    val navigateToEditSchedule: LiveData<String>
-        get() = _navigateToEditSchedule
+    val navigateToAddSchedule: LiveData<Day>
+        get() = _navigateToAddSchedule
 
     // Handle navigation to map mode
     private val _navigateToMapMode = MutableLiveData<List<Day>>()
@@ -772,12 +772,12 @@ class PlanViewModel(
         _navigateToDetail.value = null
     }
 
-    fun navigateToEditSchedule() {
-        _navigateToEditSchedule.value = selectedDayPosition.value?.let { days.value?.get(it)?.id }
+    fun navigateToAddSchedule() {
+        _navigateToAddSchedule.value = selectedDayPosition.value?.let { days.value?.get(it) }
     }
 
-    fun onEditScheduleNavigated() {
-        _navigateToEditSchedule.value = null
+    fun onAddScheduleNavigated() {
+        _navigateToAddSchedule.value = null
     }
 
     fun navigateToMapMode() {

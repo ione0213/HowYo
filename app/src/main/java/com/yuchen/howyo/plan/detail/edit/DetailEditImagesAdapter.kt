@@ -31,12 +31,10 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
     }
 
     class AddViewHolder(
-        private var binding: ItemDetailEditImageAddBinding,
-        private val viewModel: DetailEditViewModel
+        private var binding: ItemDetailEditImageAddBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind() {
-            binding.viewModel = viewModel
             binding.executePendingBindings()
         }
     }
@@ -62,13 +60,16 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
             ITEM_VIEW_ADD_BTN -> AddViewHolder(
                 ItemDetailEditImageAddBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                ),
-                viewModel
+                ).apply {
+                    viewModel = this@DetailEditImagesAdapter.viewModel
+                }
             )
             ITEM_VIEW_IMAGE_URL -> ImageViewHolder(
                 ItemDetailEditImageBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                )
+                ).apply {
+                    viewModel = this@DetailEditImagesAdapter.viewModel
+                }
             )
             else -> throw ClassCastException("Unknown viewType $viewType")
         }

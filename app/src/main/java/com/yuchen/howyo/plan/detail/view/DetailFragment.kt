@@ -58,8 +58,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 findNavController().navigate(
                     NavigationDirections.navToDetailEditFragment()
                         .setSchedule(it)
-                        .setPlanId(null)
-                        .setDayId(null)
+                        .setPlan(null)
+                        .setDay(null)
                 )
                 viewModel.onEditScheduleNavigated()
             }

@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.detail.edit.DetailEditViewModel" />
+
+        <variable
             name="schedulePhoto"
             type="com.yuchen.howyo.data.SchedulePhoto" />
     </data>
@@ -21,15 +25,16 @@
             android:background="@drawable/ic_placeholder"
             android:scaleType="centerCrop"
             app:imageData="@{schedulePhoto}"
+            android:onClick="@{() -> viewModel.navigateToEditImage(schedulePhoto)}"
             app:shapeAppearanceOverlay="@style/circle2"
             tools:src="@drawable/ic_placeholder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="@dimen/middle_padding"
-            android:layout_marginBottom="@dimen/middle_padding"
-            android:layout_marginStart="@dimen/middle_padding"
-            android:layout_marginEnd="@dimen/middle_padding"/>
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -29,22 +29,21 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/button_plan_day_normal"
-            android:layout_width="90dp"
             style="@style/TextStyle2_green"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginEnd="@dimen/small_padding"
+            android:background="@drawable/day_corner_normal"
+            android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}"
             android:textAlignment="center"
             android:visibility="@{(viewHolder.isSelected || isSelectedOnBind) &amp;&amp; viewModel.selectedDayPosition == viewHolder.adapterPosition ? View.GONE : View.VISIBLE}"
             app:day="@{day.position}"
-            android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}"
             app:firstDate="@{viewModel.plan.startDate}"
-            android:background="@drawable/day_corner_normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_plan_day_delete"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,13 +51,13 @@
 
         <TextView
             android:id="@+id/button_plan_day_selected"
-            android:layout_width="90dp"
             style="@style/TextStyle2_white"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginEnd="@dimen/small_padding"
-            android:textAlignment="center"
             android:background="@drawable/day_corner_selected"
+            android:textAlignment="center"
             android:visibility="@{(viewHolder.isSelected || isSelectedOnBind) &amp;&amp; viewModel.selectedDayPosition == viewHolder.adapterPosition ? View.VISIBLE : View.GONE}"
             app:day="@{day.position}"
             app:firstDate="@{viewModel.plan.startDate}"
@@ -71,10 +70,10 @@
             android:id="@+id/button_plan_day_delete"
             android:layout_width="@dimen/plan_img_btn_smallest"
             android:layout_height="@dimen/plan_img_btn_small"
-            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT &amp;&amp; viewModel.days.size > 1 ? View.VISIBLE : View.GONE}"
-            android:onClick="@{() -> viewModel.checkDeleteDay(day)}"
             android:background="@drawable/delete"
             android:backgroundTint="@color/gray_black"
+            android:onClick="@{() -> viewModel.checkDeleteDay(day)}"
+            android:visibility="@{viewModel.accessType == AccessPlanType.EDIT &amp;&amp; viewModel.days.size > 1 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

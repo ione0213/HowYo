@@ -42,7 +42,7 @@ class ScheduleAdapter(
             viewModel: PlanViewModel
         ) {
 
-            binding.root.setOnClickListener { onClickListener.onClick(schedule) }
+            binding.layoutPlanScheduleContent.setOnClickListener { onClickListener.onClick(schedule) }
             binding.buttonPlanScheduleDelete.setOnClickListener {
                 viewModel.checkDeleteSchedule(schedule)
                 swipeRevealLayout.close(true)
