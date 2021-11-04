@@ -14,17 +14,16 @@ import com.yuchen.howyo.plan.detail.view.image.DetailViewImageViewModel
 import com.yuchen.howyo.plan.groupmessage.GroupMessageViewModel
 import com.yuchen.howyo.plan.payment.PaymentViewModel
 
-class DetailEditImageViewModelFactory(
+class DetailViewImageViewModelFactory(
     private val howYoRepository: HowYoRepository,
-    private val schedulePhoto: SchedulePhoto,
-    private val schedulePhotos: SchedulePhotos
+    private val imageUrl: String
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {
-                isAssignableFrom(DetailEditImageViewModel::class.java) ->
-                    DetailEditImageViewModel(howYoRepository, schedulePhoto, schedulePhotos)
+                isAssignableFrom(DetailViewImageViewModel::class.java) ->
+                    DetailViewImageViewModel(howYoRepository, imageUrl)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

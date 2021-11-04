@@ -142,7 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/small_padding"
-                        android:checked="true"
+                        android:checked="@={viewModel.notification}"
                         android:switchMinWidth="56dp"
                         android:textOff="OFF"
                         android:textOn="ON"

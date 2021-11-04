@@ -9,6 +9,7 @@
     <dimen name="standard_padding">24dp</dimen>
     <dimen name="middle_padding">16dp</dimen>
     <dimen name="small_padding">8dp</dimen>
+    <dimen name="smallest_padding">4dp</dimen>
 
     <!-- Cover-->
     <dimen name="cover_plan_edittext">70dp</dimen>

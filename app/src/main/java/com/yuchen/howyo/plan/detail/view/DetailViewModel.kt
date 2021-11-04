@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Schedule
+import com.yuchen.howyo.data.SchedulePhoto
 import com.yuchen.howyo.data.source.HowYoRepository
 
 class DetailViewModel(
@@ -31,6 +32,18 @@ class DetailViewModel(
     val navigateToViewMap: LiveData<Schedule>
         get() = _navigateToViewMap
 
+    // Handle navigation to view single image
+    private val _navigateToViewImage = MutableLiveData<String>()
+
+    val navigateToViewImage: LiveData<String>
+        get() = _navigateToViewImage
+
+    // Handle navigation to open url
+    private val _navigateToUrl = MutableLiveData<String>()
+
+    val navigateToUrl: LiveData<String>
+        get() = _navigateToUrl
+
     fun navigateToEditSchedule() {
         _navigateToEditSchedule.value = schedule.value
     }
@@ -45,5 +58,21 @@ class DetailViewModel(
 
     fun onViewMapNavigated() {
         _navigateToViewMap.value = null
+    }
+
+    fun navigateToViewImage(imageUrl: String) {
+        _navigateToViewImage.value = imageUrl
+    }
+
+    fun onViewImageNavigated() {
+        _navigateToViewImage.value = null
+    }
+
+    fun navigateToUrl(url: String) {
+        _navigateToUrl.value = url
+    }
+
+    fun onUrlNavigated() {
+        _navigateToUrl.value = null
     }
 }

@@ -35,7 +35,7 @@ data class Schedule(
     @get:PropertyName("ref_rul")
     @set:PropertyName("ref_rul")
     var refUrl: String? = "",
-    val notification: Boolean? = null,
+    var notification: Boolean? = null,
     var position: Int? = -1,
     var address: String? = "",
     var remark: String? = ""

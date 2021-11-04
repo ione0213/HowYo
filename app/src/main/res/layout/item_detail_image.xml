@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.detail.view.DetailViewModel" />
+        
+        <variable
             name="imageUrl"
             type="String" />
     </data>
@@ -20,6 +24,7 @@
             android:layout_height="@dimen/height_detail_gallery"
             android:background="@drawable/ic_placeholder"
             android:scaleType="centerCrop"
+            android:onClick="@{() -> viewModel.navigateToViewImage(imageUrl)}"
             app:imageUrl="@{imageUrl}"
             tools:src="@drawable/ic_placeholder"
             app:layout_constraintEnd_toEndOf="parent"

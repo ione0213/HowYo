@@ -5,14 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.network.LoadApiStatus
 
 class ProfileViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
 
     //Plan data
-    private val _plans = MutableLiveData<List<Plan>>()
-
-    val plans: LiveData<List<Plan>>
-        get() = _plans
+    var plans = MutableLiveData<List<Plan>>()
 
     // Handle navigation to plan
     private val _navigateToPlan = MutableLiveData<Plan>()
@@ -32,49 +30,18 @@ class ProfileViewModel(private val howYoRepository: HowYoRepository) : ViewModel
     val navigateToFriends: LiveData<Boolean>
         get() = _navigateToFriends
 
-    init {
+    private val _status = MutableLiveData<LoadApiStatus>()
 
-        _plans.value = listOf(
-            Plan(
-                "1",
-                "traveller",
-                listOf(),
-                "Go to Osaka",
-                null,
-                "",
-                1634601600000,
-                1634688000000,
-                "Japan",
-                listOf("Jack", "Mary"),
-                listOf()
-            ),
-            Plan(
-                "2",
-                "traveller",
-                listOf(),
-                "Go to Nagoya",
-                null,
-                "",
-                1634601600000,
-                1634688000000,
-                "Japan",
-                listOf("Jack", "Mary", "Mark"),
-                listOf()
-            ),
-            Plan(
-                "3",
-                "traveller",
-                listOf(),
-                "Go to Tokyo",
-                "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/%E4%B8%8B%E8%BC%89%20(1).jpeg?alt=media&token=f5731312-ac2c-4a38-8e5e-4774ad32057a",
-                "",
-                1634601600000,
-                1634688000000,
-                "Japan",
-                listOf("Jack", "Mary"),
-                listOf()
-            ),
-        )
+    val status: LiveData<LoadApiStatus>
+        get() = _status
+
+    init {
+        getLiveDaysResult()
+    }
+
+    fun getLiveDaysResult() {
+        plans = howYoRepository.getLivePlans(listOf("userIdFromSharePreference"))
+        setStatusDone()
     }
 
     fun navigateToPlan(plan: Plan) {
@@ -99,5 +66,9 @@ class ProfileViewModel(private val howYoRepository: HowYoRepository) : ViewModel
 
     fun onFriendNavigated() {
         _navigateToFriends.value = null
+    }
+
+    fun setStatusDone() {
+        _status.value = LoadApiStatus.DONE
     }
 }

@@ -120,9 +120,7 @@ class DetailEditViewModel(
     }
 
     init {
-        Logger.i("schedule:${schedule.value}")
-        Logger.i("planId:${plan.value}")
-        Logger.i("dayId:${day.value}")
+
         setData()
     }
 
@@ -146,10 +144,8 @@ class DetailEditViewModel(
 
     fun setBitmap(uri: Uri) {
         val photoData = photoDataList.value?.toMutableList()
-        Logger.i("_photoDataList:${photoDataList.value}")
         photoData?.add(SchedulePhoto(uri = uri))
         _photoDataList.value = photoData
-        Logger.i("_photoDataList:${photoDataList.value}")
     }
 
     fun saveSchedule() {
@@ -169,14 +165,22 @@ class DetailEditViewModel(
         )
 
         newSchedule.apply {
+            notification = this@DetailEditViewModel.notification.value
             scheduleType =
                 HowYoApplication
                     .instance
                     .resources
                     .getStringArray(R.array.schedule_type_list)[selectedScheduleTypePosition.value ?: 0]
             title = this@DetailEditViewModel.title.value
-            latitude = location?.first
-            longitude = location?.second
+            when {
+                location?.first != 0.0 && location?.second != 0.0 -> {
+                    latitude = location?.first
+                    longitude = location?.second
+                }
+                else -> {
+
+                }
+            }
             startTime = this@DetailEditViewModel.startTime.value
             endTime = this@DetailEditViewModel.endTime.value
             budget = this@DetailEditViewModel.budget.value?.toInt()
@@ -194,10 +198,8 @@ class DetailEditViewModel(
 
                     when (it.uri) {
                         null -> {
-                            Logger.i("No uri:$it")
                             when (it.isDeleted) {
                                 true -> {
-                                    Logger.i("delete image: ${it.fileName}")
                                     it.fileName?.let { fileName ->
                                         howYoRepository.deletePhoto(fileName)
                                     }
@@ -209,7 +211,6 @@ class DetailEditViewModel(
                             }
                         }
                         else -> {
-                            Logger.i("Has uri:$it")
                             when (it.isDeleted) {
                                 false -> {
                                     val uri = it.uri
@@ -219,7 +220,6 @@ class DetailEditViewModel(
                                         "userIdFromSharePreference_${formatter.format(Date())}"
 
                                     fileNameList.add(fileName)
-                                    Logger.i("upload file :$fileName")
 
                                     when (val result =
                                         uri.let { imgUri ->
@@ -237,8 +237,6 @@ class DetailEditViewModel(
             }
 
             newSchedule.apply {
-                Logger.i("imageUrlList:$imageUrlList")
-                Logger.i("fileNameList:$fileNameList")
                 photoUrlList = imageUrlList
                 photoFileNameList = fileNameList
             }
@@ -274,8 +272,14 @@ class DetailEditViewModel(
 
         val list: List<Address> =
             geocoder.getFromLocationName(address.value ?: "", 1)
-
-        return Pair(list.first().latitude, list.first().longitude)
+        return when (list.isEmpty()) {
+            true -> {
+                Pair(0.0, 0.0)
+            }
+            else -> {
+                Pair(list.first().latitude, list.first().longitude)
+            }
+        }
     }
 
     fun leaveEditDetail() {

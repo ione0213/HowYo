@@ -170,7 +170,16 @@
             app:argType="com.yuchen.howyo.data.Plan"
             app:nullable="false" />
     </fragment>
+    <fragment
+        android:id="@+id/detailViewImageFragment"
+        android:name="com.yuchen.howyo.plan.detail.view.image.DetailViewImageFragment"
+        android:label="DetailViewImageFragment"
+        tools:layout="@layout/fragment_detail_edit_image">
 
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/findLocationFragment"
         android:name="com.yuchen.howyo.plan.findlocation.FindLocationFragment"
@@ -233,6 +242,9 @@
     <action
         android:id="@+id/nav_to_detail_fragment"
         app:destination="@id/detailFragment" />
+    <action
+        android:id="@+id/nav_to_detail_view_image_fragment"
+        app:destination="@+id/detailViewImageFragment" />
     <action
         android:id="@+id/nav_to_map_fragment"
         app:destination="@id/mapFragment" />

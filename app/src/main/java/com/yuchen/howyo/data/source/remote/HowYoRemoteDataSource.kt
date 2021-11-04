@@ -23,6 +23,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
     private const val PATH_CHECK_ITEM_LIST = "check_item_lists"
     private const val KEY_POSITION = "position"
+    private const val KEY_CREATED_TIME = "created_time"
 
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> =
         suspendCoroutine { continuation ->
@@ -133,40 +134,38 @@ object HowYoRemoteDataSource : HowYoDataSource {
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
 
         val liveData = MutableLiveData<List<Plan>>()
-//
-//        var plans = FirebaseFirestore.getInstance().collection(PATH_PLANS)
-//
-//        authorList.forEach {
-//            plans.whereEqualTo("author_id", it)
-//        }
-//
-//        plans.or
-//
-//        plans = plans.whereEqualTo("id", "123")
-//
-//        FirebaseFirestore.getInstance()
-//            .collection(PATH_PLANS)
-//            .whereEqualTo("plan_id", planId)
-//            .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
-//            .addSnapshotListener { snapshot, exception ->
-//
-//                Logger.i("addSnapshotListener detect")
-//
-//                exception?.let {
-//                    Logger.w("[${this::class.simpleName}] Error getting days. ${it.message}")
-//                }
-//
-//                val list = mutableListOf<Day>()
-//                for (document in snapshot!!) {
-//                    Logger.d(document.id + " => " + document.data)
-//
-//                    val day = document.toObject(Day::class.java)
-//                    list.add(day)
-//                }
-//
-//                liveData.value = list
-//            }
-//
+
+        val plans = FirebaseFirestore.getInstance().collection(PATH_PLANS)
+
+        authorList.forEach {
+            Logger.i("Author_ID: $it")
+            plans.whereEqualTo("author_id", it)
+        }
+        Logger.i("Start")
+        plans.orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting plans. ${it.message}")
+                }
+
+                val list = mutableListOf<Plan>()
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val plan = document.toObject(Plan::class.java)
+                        list.add(plan)
+                    }
+                }
+
+                liveData.value = list
+            }
+        Logger.i("End")
+
+
         return liveData
     }
 

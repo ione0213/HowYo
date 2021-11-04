@@ -1,5 +1,7 @@
 package com.yuchen.howyo.plan.detail.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,7 @@ import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentDetailBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.util.Logger
 
 
 class DetailFragment : Fragment(), OnMapReadyCallback {
@@ -44,13 +47,15 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.recyclerDetailImages.adapter = DetailImagesAdapter()
+        binding.recyclerDetailImages.adapter = DetailImagesAdapter(viewModel)
 
         LinearSnapHelper().attachToRecyclerView(binding.recyclerDetailImages)
 
         //Map
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(HowYoApplication.instance)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_detail_destination) as SupportMapFragment
+        mFusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(HowYoApplication.instance)
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.map_detail_destination) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
@@ -72,23 +77,47 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             }
         })
 
+        viewModel.navigateToViewImage.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToDetailViewImageFragment(it))
+                viewModel.onViewImageNavigated()
+            }
+        })
+
+        viewModel.navigateToUrl.observe(viewLifecycleOwner, {
+            it?.let {
+
+                val openURL = Intent(Intent.ACTION_VIEW)
+                openURL.data = Uri.parse(it)
+                startActivity(openURL)
+                viewModel.onUrlNavigated()
+            }
+        })
+
         return binding.root
     }
 
     override fun onMapReady(map: GoogleMap) {
+        Logger.i("onMapReady")
         this.googleMap = map
         setDestination()
     }
 
     private fun setDestination() {
 
+
         val currentLocation =
             LatLng(
-                viewModel.schedule.value?.longitude ?: 0.0,
-                viewModel.schedule.value?.latitude ?: 0.0
+                viewModel.schedule.value?.latitude ?: 0.0,
+                viewModel.schedule.value?.longitude ?: 0.0
             )
 
-        googleMap?.addMarker(MarkerOptions().position(currentLocation).title("現在位置"))
+        Logger.i("currentLocation:$currentLocation")
+
+        googleMap?.addMarker(
+            MarkerOptions().position(currentLocation).title(viewModel.schedule.value?.title)
+        )?.showInfoWindow()
+
         googleMap?.moveCamera(
             CameraUpdateFactory.newLatLngZoom(currentLocation, 16F)
         )

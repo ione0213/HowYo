@@ -39,7 +39,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentMapBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
@@ -66,14 +66,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         val currentLocation =
             LatLng(
-                viewModel.schedule.value?.longitude ?: 0.0,
-                viewModel.schedule.value?.latitude ?: 0.0
+                viewModel.schedule.value?.latitude ?: 0.0,
+                viewModel.schedule.value?.longitude ?: 0.0
             )
 
-        googleMap?.addMarker(MarkerOptions().position(currentLocation).title("現在位置"))
+        val marker = googleMap?.addMarker(
+            MarkerOptions().position(currentLocation).title(viewModel.schedule.value?.title)
+        )
+
         googleMap?.moveCamera(
             CameraUpdateFactory.newLatLngZoom(currentLocation, 16F)
         )
+
+        marker?.showInfoWindow()
 
         //Disable touch in scrollView
         googleMap?.uiSettings?.isScrollGesturesEnabled = false

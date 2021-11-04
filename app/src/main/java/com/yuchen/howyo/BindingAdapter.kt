@@ -33,6 +33,7 @@ import com.yuchen.howyo.profile.PlanAdapter
 import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.util.Util.getString
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")
@@ -46,6 +47,15 @@ fun TextView.bindMsgTime(time: Long) {
 
     when {
         time != 0L -> text = time.toTime()
+    }
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("fromTime", "toTime")
+fun TextView.bindTimeToTime(fromTime: Long, toTime: Long) {
+
+    when {
+        fromTime != 0L || toTime != 0L -> text = "${fromTime.toTime()} - ${toTime.toTime()}"
     }
 }
 
@@ -117,7 +127,7 @@ fun bindRecyclerViewWithDays(recyclerView: RecyclerView, days: List<Day>?) {
 fun TextView.bindTextWithDay(day: Int, firstDate: Long?) {
     val date = firstDate?.plus((1000 * 60 * 60 * 24 * day))
     text = HowYoApplication.instance.getString(R.string.day, day.plus(1), date?.toWeekDay())
- }
+}
 
 @BindingAdapter("schedules")
 fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Schedule>?) {
@@ -131,25 +141,6 @@ fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Sc
     }
 }
 
-//@BindingAdapter("selected")
-//fun drawDaySelected(textView: TextView, isSelected: Boolean?) {
-//    textView.background = when (isSelected) {
-//        true -> AppCompatResources.getDrawable(
-//            HowYoApplication.instance,
-//            R.drawable.day_corner_selected
-//        )
-//        else -> AppCompatResources.getDrawable(
-//            HowYoApplication.instance,
-//            R.drawable.day_corner_normal
-//        )
-//    }
-//}
-
-//@BindingAdapter("day", "plan")
-//fun bindDayInfo(button: AppCompatButton, day: Day, plan: Plan) {
-////    button.text =
-//}
-
 @BindingAdapter("images")
 fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?) {
     images?.let {
@@ -162,7 +153,10 @@ fun bindRecyclerViewWithImages(recyclerView: RecyclerView, images: List<String>?
 }
 
 @BindingAdapter("photoData")
-fun bindRecyclerViewWithPhotoData(recyclerView: RecyclerView, schedulePhotos: List<SchedulePhoto>?) {
+fun bindRecyclerViewWithPhotoData(
+    recyclerView: RecyclerView,
+    schedulePhotos: List<SchedulePhoto>?
+) {
     val schedulePhotosDisplay = schedulePhotos?.filter { it.isDeleted != true }
     schedulePhotosDisplay?.let {
         recyclerView.adapter?.apply {
@@ -208,12 +202,30 @@ fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
                     HowYoApplication.instance
                         .contentResolver
                         ?.openFileDescriptor(it.uri!!, "r")?.use {
-                        BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
-                    }
+                            BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+                        }
                 )
             }
         }
     }
+}
+
+@BindingAdapter("scheduleType")
+fun bindImageWithScheduleType(imageView: ImageView, scheduleType: String?) {
+
+    scheduleType?.let { type ->
+        Logger.i("scheduleType:$scheduleType")
+        imageView.setImageResource(
+            when (type) {
+                getString(R.string.air_flight) -> R.drawable.plane
+                getString(R.string.traffic) -> R.drawable.train
+                getString(R.string.hotel) -> R.drawable.hotel
+                getString(R.string.place) -> R.drawable.place
+                else -> 0
+            }
+        )
+    }
+
 }
 
 @BindingAdapter("user")
@@ -264,9 +276,9 @@ fun bindRecyclerViewWithPayments(
 @BindingAdapter("plans")
 fun bindRecyclerViewWithPlans(
     recyclerView: RecyclerView,
-    plans: List<Plan>
+    plans: List<Plan>?
 ) {
-    plans.let {
+    plans?.let {
         recyclerView.adapter?.apply {
             when (this) {
                 is PlanAdapter -> {
