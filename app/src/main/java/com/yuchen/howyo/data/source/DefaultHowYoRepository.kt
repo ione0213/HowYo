@@ -28,6 +28,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.getPlan(planId)
     }
 
+    override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+        return remoteDataSource.getLivePlans(authorList)
+    }
+
     override suspend fun updatePlan(plan: Plan): Result<Boolean> {
         return remoteDataSource.updatePlan(plan)
     }

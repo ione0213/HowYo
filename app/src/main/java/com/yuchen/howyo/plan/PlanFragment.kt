@@ -74,6 +74,7 @@ class PlanFragment : Fragment() {
                         !(viewModel.days.value === viewModel.tempDays) -> {
                             lifecycleScope.launch {
                                 viewModel.submitMovedDay()
+                                viewModel.submitMoveSchedule(HandleScheduleType.TIME)
                             }
                         }
                     }
@@ -134,7 +135,7 @@ class PlanFragment : Fragment() {
                     when {
                         !(viewModel.schedules.value === viewModel.tempSchedules) -> {
                             lifecycleScope.launch {
-                                viewModel.submitMoveSchedule()
+                                viewModel.submitMoveSchedule(HandleScheduleType.POSITION)
                             }
                         }
                     }
@@ -254,6 +255,7 @@ class PlanFragment : Fragment() {
                             getLiveDaysResult()
                             setDefaultSelectedDay()
                             onDeletedDay()
+                            onSubmitMoveDay()
                         }
 
                         binding.recyclerPlanDays.layoutManager?.scrollToPosition(0)
@@ -278,12 +280,10 @@ class PlanFragment : Fragment() {
                 when {
                     it -> {
                         viewModel.apply {
-//                            getLiveSchedulesResult()
-                            Logger.i("handleScheduleSuccess")
-
                             filterSchedule()
                             onDeletedSchedule()
                             setStatusDone()
+                            onSubmitMoveSchedule()
                         }
                     }
                 }

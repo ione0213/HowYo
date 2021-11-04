@@ -28,7 +28,8 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
             authorId = "userIdFromSharePreference",
             coverFileName = "",
             startDate = today.timeInMillis,
-            endDate = tomorrow.timeInMillis
+            endDate = tomorrow.timeInMillis,
+            createdTime = Calendar.getInstance().timeInMillis
         )
     }
 

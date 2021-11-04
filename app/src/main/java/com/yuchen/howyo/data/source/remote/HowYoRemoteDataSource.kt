@@ -130,6 +130,46 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
     }
 
+    override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+
+        val liveData = MutableLiveData<List<Plan>>()
+//
+//        var plans = FirebaseFirestore.getInstance().collection(PATH_PLANS)
+//
+//        authorList.forEach {
+//            plans.whereEqualTo("author_id", it)
+//        }
+//
+//        plans.or
+//
+//        plans = plans.whereEqualTo("id", "123")
+//
+//        FirebaseFirestore.getInstance()
+//            .collection(PATH_PLANS)
+//            .whereEqualTo("plan_id", planId)
+//            .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
+//            .addSnapshotListener { snapshot, exception ->
+//
+//                Logger.i("addSnapshotListener detect")
+//
+//                exception?.let {
+//                    Logger.w("[${this::class.simpleName}] Error getting days. ${it.message}")
+//                }
+//
+//                val list = mutableListOf<Day>()
+//                for (document in snapshot!!) {
+//                    Logger.d(document.id + " => " + document.data)
+//
+//                    val day = document.toObject(Day::class.java)
+//                    list.add(day)
+//                }
+//
+//                liveData.value = list
+//            }
+//
+        return liveData
+    }
+
     override suspend fun updatePlan(plan: Plan): Result<Boolean> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
@@ -354,7 +394,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 val list = mutableListOf<Schedule>()
                 if (snapshot != null) {
                     for (document in snapshot) {
-                        Logger.d(document.id + " AAAA=> " + document.data)
 
                         val schedule = document.toObject(Schedule::class.java)
                         list.add(schedule)

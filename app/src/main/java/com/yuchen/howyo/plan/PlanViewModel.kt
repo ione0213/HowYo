@@ -517,6 +517,11 @@ class PlanViewModel(
             else -> days.value?.toMutableList()
         }
 
+        val fullSchedules = when {
+            tempSchedules.isNotEmpty() -> tempSchedules.toMutableList()
+            else -> allSchedules.value?.toMutableList()
+        }
+
         when (from > to) {
             true -> {
                 newDays?.forEachIndexed { index, day ->
@@ -530,6 +535,48 @@ class PlanViewModel(
                                 day.position!! + 1
                             )
                             newDays[index] = newDay
+
+                            fullSchedules?.forEachIndexed { index, schedule ->
+                                when (schedule.dayId) {
+                                    day.id -> {
+                                        val newSchedule = Schedule(
+                                            schedule.id,
+                                            schedule.planId,
+                                            schedule.dayId,
+                                            schedule.scheduleType,
+                                            schedule.title,
+                                            schedule.photoUrlList,
+                                            schedule.photoFileNameList,
+                                            schedule.latitude,
+                                            schedule.longitude,
+                                            schedule.startTime,
+                                            schedule.endTime,
+                                            schedule.budget,
+                                            schedule.refUrl,
+                                            schedule.notification,
+                                            schedule.position!!,
+                                            schedule.address,
+                                            schedule.remark
+                                        )
+
+                                        when {
+                                            schedule.startTime != 0L -> {
+                                                newSchedule.startTime =
+                                                    schedule.startTime?.plus(1000 * 60 * 60 * 24)
+                                            }
+                                        }
+
+                                        when {
+                                            schedule.endTime != 0L -> {
+                                                newSchedule.endTime =
+                                                    schedule.endTime?.plus(1000 * 60 * 60 * 24)
+                                            }
+                                        }
+
+                                        fullSchedules[index] = newSchedule
+                                    }
+                                }
+                            }
                         }
                         day.position!! == from -> {
                             val newDay = Day(
@@ -538,6 +585,50 @@ class PlanViewModel(
                                 to
                             )
                             newDays[index] = newDay
+
+                            fullSchedules?.forEachIndexed { index, schedule ->
+                                when (schedule.dayId) {
+                                    day.id -> {
+                                        val newSchedule = Schedule(
+                                            schedule.id,
+                                            schedule.planId,
+                                            schedule.dayId,
+                                            schedule.scheduleType,
+                                            schedule.title,
+                                            schedule.photoUrlList,
+                                            schedule.photoFileNameList,
+                                            schedule.latitude,
+                                            schedule.longitude,
+                                            schedule.startTime,
+                                            schedule.endTime,
+                                            schedule.budget,
+                                            schedule.refUrl,
+                                            schedule.notification,
+                                            schedule.position!!,
+                                            schedule.address,
+                                            schedule.remark
+                                        )
+
+                                        when {
+                                            schedule.startTime != 0L -> {
+                                                newSchedule.startTime = schedule.startTime?.plus(
+                                                    (1000 * 60 * 60 * 24) * to.minus(from)
+                                                )
+                                            }
+                                        }
+
+                                        when {
+                                            schedule.endTime != 0L -> {
+                                                newSchedule.endTime = schedule.endTime?.plus(
+                                                    (1000 * 60 * 60 * 24) * to.minus(from)
+                                                )
+                                            }
+                                        }
+
+                                        fullSchedules[index] = newSchedule
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -555,6 +646,50 @@ class PlanViewModel(
                             )
 
                             newDays[index] = newDay
+
+                            fullSchedules?.forEachIndexed { index, schedule ->
+                                when (schedule.dayId) {
+                                    day.id -> {
+                                        val newSchedule = Schedule(
+                                            schedule.id,
+                                            schedule.planId,
+                                            schedule.dayId,
+                                            schedule.scheduleType,
+                                            schedule.title,
+                                            schedule.photoUrlList,
+                                            schedule.photoFileNameList,
+                                            schedule.latitude,
+                                            schedule.longitude,
+                                            schedule.startTime,
+                                            schedule.endTime,
+                                            schedule.budget,
+                                            schedule.refUrl,
+                                            schedule.notification,
+                                            schedule.position!!,
+                                            schedule.address,
+                                            schedule.remark
+                                        )
+
+                                        when {
+                                            schedule.startTime != 0L -> {
+                                                newSchedule.startTime = schedule.startTime?.minus(
+                                                    1000 * 60 * 60 * 24
+                                                )
+                                            }
+                                        }
+
+                                        when {
+                                            schedule.endTime != 0L -> {
+                                                newSchedule.endTime = schedule.endTime?.minus(
+                                                    1000 * 60 * 60 * 24
+                                                )
+                                            }
+                                        }
+
+                                        fullSchedules[index] = newSchedule
+                                    }
+                                }
+                            }
                         }
                         day.position!! == from -> {
 
@@ -565,13 +700,62 @@ class PlanViewModel(
                             )
 
                             newDays[index] = newDay
+
+                            fullSchedules?.forEachIndexed { index, schedule ->
+                                when (schedule.dayId) {
+                                    day.id -> {
+                                        val newSchedule = Schedule(
+                                            schedule.id,
+                                            schedule.planId,
+                                            schedule.dayId,
+                                            schedule.scheduleType,
+                                            schedule.title,
+                                            schedule.photoUrlList,
+                                            schedule.photoFileNameList,
+                                            schedule.latitude,
+                                            schedule.longitude,
+                                            schedule.startTime,
+                                            schedule.endTime,
+                                            schedule.budget,
+                                            schedule.refUrl,
+                                            schedule.notification,
+                                            schedule.position!!,
+                                            schedule.address,
+                                            schedule.remark
+                                        )
+
+                                        when {
+                                            schedule.startTime != 0L -> {
+                                                newSchedule.startTime = schedule.startTime?.plus(
+                                                    (1000 * 60 * 60 * 24) * to.minus(from)
+                                                )
+                                            }
+                                        }
+
+                                        when {
+                                            schedule.endTime != 0L -> {
+                                                newSchedule.endTime = schedule.endTime?.plus(
+                                                    (1000 * 60 * 60 * 24) * to.minus(from)
+                                                )
+                                            }
+                                        }
+
+                                        fullSchedules[index] = newSchedule
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
         if (newDays != null) {
             tempDays = newDays.toMutableList()
+        }
+
+        if (fullSchedules != null) {
+            tempSchedules = fullSchedules.toMutableList()
         }
     }
 
@@ -582,7 +766,6 @@ class PlanViewModel(
         _status.value = LoadApiStatus.LOADING
 
         withContext(Dispatchers.IO) {
-
             tempDays.forEach { tempDay ->
                 days.value?.forEach { day ->
                     when {
@@ -595,6 +778,10 @@ class PlanViewModel(
         }
 
         _handleDaySuccess.value = !daysResult.contains(false)
+    }
+
+    fun onSubmitMoveDay() {
+        tempDays = mutableListOf()
     }
 
     fun moveSchedule(from: Int, to: Int) {
@@ -718,19 +905,33 @@ class PlanViewModel(
         }
     }
 
-    suspend fun submitMoveSchedule() {
+    suspend fun submitMoveSchedule(type: HandleScheduleType) {
 
         val schedulesResult = mutableListOf<Boolean>()
 
         _status.value = LoadApiStatus.LOADING
-
+        Logger.i("tempSchedules:$tempSchedules")
         withContext(Dispatchers.IO) {
 
+
             tempSchedules.forEach { tempSchedule ->
-                schedules.value?.forEach { schedule ->
-                    when {
-                        tempSchedule.position != schedule.position -> {
-                            schedulesResult.add(updateSchedule(tempSchedule))
+                when (type) {
+                    HandleScheduleType.POSITION -> {
+                        schedules.value?.forEach { schedule ->
+                            when {
+                                tempSchedule.position != schedule.position -> {
+                                    schedulesResult.add(updateSchedule(tempSchedule))
+                                }
+                            }
+                        }
+                    }
+                    HandleScheduleType.TIME -> {
+                        allSchedules.value?.forEach { schedule ->
+                            when {
+                                !(tempSchedule === schedule) -> {
+                                    schedulesResult.add(updateSchedule(tempSchedule))
+                                }
+                            }
                         }
                     }
                 }
@@ -738,6 +939,10 @@ class PlanViewModel(
         }
 
         _handleScheduleSuccess.value = !schedulesResult.contains(false)
+    }
+
+    fun onSubmitMoveSchedule() {
+        tempSchedules = mutableListOf()
     }
 
     fun checkDeletePlan() {
