@@ -161,7 +161,7 @@ class PlanFragment : Fragment() {
     ): View {
 
         binding = FragmentPlanBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         dayItemTouchHelper.attachToRecyclerView(binding.recyclerPlanDays)
@@ -251,11 +251,11 @@ class PlanFragment : Fragment() {
                     it -> {
                         viewModel.apply {
 
-                            getPlanResult()
-                            getLiveDaysResult()
+//                            getPlanResult()
                             setDefaultSelectedDay()
                             onDeletedDay()
                             onSubmitMoveDay()
+                            setStatusDone()
                         }
 
                         binding.recyclerPlanDays.layoutManager?.scrollToPosition(0)
@@ -319,6 +319,27 @@ class PlanFragment : Fragment() {
                         .setDay(it)
                 )
                 viewModel.onAddScheduleNavigated()
+            }
+        })
+
+        viewModel.navigateToEditPlan.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToPlanFragment(
+                        it,
+                        AccessPlanType.EDIT
+                    )
+                )
+                viewModel.onEditPlanNavigated()
+            }
+        })
+
+        viewModel.navigateToEditCover.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToPlanCoverDialog().setPlan(it)
+                )
+                viewModel.onEditCoverNavigated()
             }
         })
 

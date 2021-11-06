@@ -8,6 +8,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
+import okhttp3.internal.wait
 
 class PlanViewModel(
     private val howYoRepository: HowYoRepository,
@@ -16,7 +17,7 @@ class PlanViewModel(
 ) : ViewModel() {
 
     //Plan data
-    private val _plan = MutableLiveData<Plan>().apply {
+    private var _plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
     }
 
@@ -165,6 +166,18 @@ class PlanViewModel(
     val navigateToGroupMsg: LiveData<Plan>
         get() = _navigateToGroupMsg
 
+    // Handle navigation to edit mode
+    private val _navigateToEditPlan = MutableLiveData<Plan>()
+
+    val navigateToEditPlan: LiveData<Plan>
+        get() = _navigateToEditPlan
+
+    // Handle navigation to edit cover
+    private val _navigateToEditCover = MutableLiveData<Plan>()
+
+    val navigateToEditCover: LiveData<Plan>
+        get() = _navigateToEditCover
+
     // Handle leave plan
     private val _leavePlan = MutableLiveData<Boolean>()
 
@@ -188,10 +201,15 @@ class PlanViewModel(
 
     init {
 
-        getLiveDaysResult()
-        setDefaultSelectedDay()
-        getLiveSchedulesResult()
-//        _schedules.value = listOf()
+//        coroutineScope.launch {
+//            withContext(Dispatchers.IO) {
+                getLivePlanResult()
+//            }
+            getLiveDaysResult()
+            setDefaultSelectedDay()
+            getLiveSchedulesResult()
+//        }
+
     }
 
     fun selectDay(position: Int) {
@@ -211,6 +229,15 @@ class PlanViewModel(
                 else -> {
                     _plan.value
                 }
+            }
+        }
+    }
+
+    private fun getLivePlanResult() {
+        Logger.i("getLivePlanResult")
+        when (argumentPlan.id.isNotEmpty()) {
+            true -> {
+                _plan = howYoRepository.getLivePlan(plan.value?.id!!)
             }
         }
     }
@@ -288,12 +315,12 @@ class PlanViewModel(
         selectedDayPosition.value = 0
         Logger.i("setDefaultSelectedDay")
 
-        filterSchedule()
+//        filterSchedule()
     }
 
     fun getLiveDaysResult() {
-        days = howYoRepository.getLiveDays(plan.value?.id!!)
-        setStatusDone()
+        days = howYoRepository.getLiveDays(argumentPlan.id)
+//        setStatusDone()
     }
 
     fun addNewDay() {
@@ -473,13 +500,22 @@ class PlanViewModel(
     }
 
     fun getLiveSchedulesResult() {
-        allSchedules = howYoRepository.getLiveSchedules(plan.value?.id!!)
+        allSchedules = howYoRepository.getLiveSchedules(argumentPlan.id)
         Logger.i("allSchedules:${allSchedules.value}")
         setStatusDone()
     }
 
     fun filterSchedule() {
-        val currentDayId = selectedDayPosition.value?.let { days.value?.get(it)?.id ?: "" }
+        val currentDayId = selectedDayPosition.value?.let {
+            when (it < days.value?.size ?: 0) {
+                true -> {
+                    days.value?.get(it)?.id ?: ""
+                }
+                false -> {
+                    days.value?.get(it.minus(1))?.id ?: ""
+                }
+            }
+        }
         _schedules.value =
             allSchedules.value
                 ?.filter { it.dayId == currentDayId }?.sortedBy { it.position } ?: listOf()
@@ -983,6 +1019,27 @@ class PlanViewModel(
 
     fun onAddScheduleNavigated() {
         _navigateToAddSchedule.value = null
+    }
+
+    fun navigateToEditPlan() {
+        _navigateToEditPlan.value = plan.value
+    }
+
+    fun onEditPlanNavigated() {
+        _navigateToEditPlan.value = null
+    }
+
+    fun navigateToEditCover() {
+        when (accessType) {
+            AccessPlanType.EDIT -> _navigateToEditCover.value = _plan.value
+            else -> {
+
+            }
+        }
+    }
+
+    fun onEditCoverNavigated() {
+        _navigateToEditCover.value = null
     }
 
     fun navigateToMapMode() {

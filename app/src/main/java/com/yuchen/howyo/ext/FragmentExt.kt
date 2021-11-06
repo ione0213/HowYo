@@ -39,7 +39,7 @@ fun Fragment.getVmFactory(
     return CompanionViewModelFactory(repository, user)
 }
 
-fun Fragment.getVmFactory(plan: Plan): PlanContentViewModelFactory {
+fun Fragment.getVmFactory(plan: Plan?): PlanContentViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PlanContentViewModelFactory(repository, plan)
 }

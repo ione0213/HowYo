@@ -36,6 +36,7 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/standard_padding"
+                    android:onClick="@{() -> viewModel.leaveViewDetail()}"
                     android:background="@drawable/icons_44px_back01"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

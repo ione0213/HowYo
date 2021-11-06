@@ -42,12 +42,6 @@ class DetailEditImageViewModel(
     val schedulePhotos: LiveData<SchedulePhotos>
         get() = _schedulePhotos
 
-    // Handle navigation to delete single image
-    private val _deleteImage = MutableLiveData<SchedulePhoto>()
-
-    val deleteImage: LiveData<SchedulePhoto>
-        get() = _deleteImage
-
     // Handle leave edit image
     private val _leaveEditImage = MutableLiveData<Boolean>()
 
@@ -63,12 +57,6 @@ class DetailEditImageViewModel(
                 }
             }
         }
-//        _schedulePhoto.value?.isDeleted = true
-//        _deleteImage.value = schedulePhoto.value
-    }
-
-    fun onDeletedImage() {
-        _deleteImage.value = null
     }
 
     fun leaveEditImage() {

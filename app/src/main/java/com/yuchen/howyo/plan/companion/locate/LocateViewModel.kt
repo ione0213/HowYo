@@ -9,7 +9,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 
 class LocateViewModel(
     private val howYoRepository: HowYoRepository,
-    private val argumentPlan: Plan
+    private val argumentPlan: Plan?
 ) : ViewModel() {
 
     // Plan data from arguments, get companion list here

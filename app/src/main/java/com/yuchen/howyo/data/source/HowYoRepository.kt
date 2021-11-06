@@ -17,6 +17,8 @@ interface HowYoRepository {
 
     suspend fun getPlan(planId: String): Result<Plan>
 
+    fun getLivePlan(planId: String): MutableLiveData<Plan>
+
     fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>>
 
     suspend fun updatePlan(plan: Plan): Result<Boolean>
@@ -31,6 +33,8 @@ interface HowYoRepository {
 
     fun getLiveDays(planId: String): MutableLiveData<List<Day>>
 
+    suspend fun getDays(planId: String): Result<List<Day>>
+
     suspend fun createSchedule(schedule: Schedule): Result<Boolean>
 
     suspend fun updateSchedule(schedule: Schedule): Result<Boolean>
@@ -38,6 +42,8 @@ interface HowYoRepository {
     suspend fun deleteSchedule(schedule: Schedule): Result<Boolean>
 
     fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>>
+
+    suspend fun getSchedules(planId: String): Result<List<Schedule>>
 
     suspend fun createMainCheckList(
         planId: String,

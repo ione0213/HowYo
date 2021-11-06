@@ -32,7 +32,7 @@ class DetailEditViewModel(
     val schedule: LiveData<Schedule>
         get() = _schedule
 
-    val plan = MutableLiveData<Plan>().apply {
+    var plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
     }
 
@@ -123,7 +123,6 @@ class DetailEditViewModel(
 
         setData()
     }
-
     private fun setData() {
         when {
             schedule.value != null -> {
@@ -135,7 +134,7 @@ class DetailEditViewModel(
                     startTime.value = this?.startTime ?: 0L
                     endTime.value = this?.endTime ?: 0L
                     remark.value = this?.remark ?: ""
-                    budget.value = this?.budget.toString()
+                    budget.value = this?.budget?.toString()
                     refUrl.value = this?.refUrl ?: ""
                 }
             }
@@ -170,7 +169,8 @@ class DetailEditViewModel(
                 HowYoApplication
                     .instance
                     .resources
-                    .getStringArray(R.array.schedule_type_list)[selectedScheduleTypePosition.value ?: 0]
+                    .getStringArray(R.array.schedule_type_list)[selectedScheduleTypePosition.value
+                    ?: 0]
             title = this@DetailEditViewModel.title.value
             when {
                 location?.first != 0.0 && location?.second != 0.0 -> {
@@ -183,7 +183,11 @@ class DetailEditViewModel(
             }
             startTime = this@DetailEditViewModel.startTime.value
             endTime = this@DetailEditViewModel.endTime.value
-            budget = this@DetailEditViewModel.budget.value?.toInt()
+            when {
+                this@DetailEditViewModel.budget.value?.isNullOrEmpty() == false -> {
+                    budget = this@DetailEditViewModel.budget.value?.toInt()
+                }
+            }
             refUrl = this@DetailEditViewModel.refUrl.value
             address = this@DetailEditViewModel.address.value
             remark = this@DetailEditViewModel.remark.value
@@ -222,7 +226,7 @@ class DetailEditViewModel(
                                     fileNameList.add(fileName)
 
                                     when (val result =
-                                        uri.let { imgUri ->
+                                        uri?.let { imgUri ->
                                             howYoRepository.uploadPhoto(imgUri, fileName)
                                         }) {
                                         is Result.Success -> {
@@ -286,6 +290,10 @@ class DetailEditViewModel(
         _leaveEditDetail.value = true
     }
 
+    fun onLeaveEditDetail() {
+        _leaveEditDetail.value = null
+    }
+
     fun selectPhoto() {
         _selectPhoto.value = true
     }
@@ -313,7 +321,7 @@ class DetailEditViewModel(
         }
     }
 
-    fun onBackToPlanPortal() {
+    fun onBackToPreviousPage() {
         _status.value = LoadApiStatus.DONE
         _scheduleResult.value = null
     }

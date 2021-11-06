@@ -10,5 +10,5 @@ data class Day(
     @get:PropertyName("plan_id")
     @set:PropertyName("plan_id")
     var planId: String? = "",
-    var position: Int? = -1
+    var position: Int = -1
 ) : Parcelable

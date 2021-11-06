@@ -33,17 +33,6 @@ class DetailEditImageFragment : Fragment() {
         binding = FragmentDetailEditImageBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
-        viewModel.deleteImage.observe(viewLifecycleOwner, {
-            it?.let {
-                this.findNavController()
-                    .navigate(
-                        DetailEditImageFragmentDirections.navigateToDetailEditFragment()
-                            .setSchedulePhoto(it)
-                    )
-                viewModel.onDeletedImage()
-            }
-        })
-
         viewModel.leaveEditImage.observe(viewLifecycleOwner, {
             it?.let {
                 if (it) {

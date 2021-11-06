@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.text.TextUtils"/>
 
         <import type="android.view.View" />
 
@@ -64,10 +65,24 @@
                     android:src="@drawable/sample_cover"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:imageData="@{viewModel.planPhoto}"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_plan_cover_delete"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginTop="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:background="@drawable/delete"
+                    android:onClick="@{() -> viewModel.resetCoverImg()}"
+                    android:backgroundTint="@color/gray2"
+                    app:planPhoto="@{viewModel.planPhoto}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.AppCompatButton
@@ -108,7 +123,9 @@
                 android:theme="@style/InputTextColorTheme"
                 app:layout_constraintBottom_toTopOf="@id/layout_plan_date"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:boxStrokeColor="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
+                app:boxBackgroundColor="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -117,8 +134,10 @@
                     android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="@={viewModel.plan.title}"
-                    android:textColor="@color/gray_black" />
+                    android:text="@={viewModel._plan.title}"
+                    android:textColor="@color/gray_black"
+                    android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title}) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
+                    android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title}) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -158,7 +177,7 @@
                 android:layout_marginBottom="@dimen/middle_padding"
                 android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:gravity="center"
-                android:onClick="@{() -> viewModel.uploadCoverImg()}"
+                android:onClick="@{() -> viewModel.prepareSubmitPlan()}"
                 android:text="@{viewModel.status != LoadApiStatus.LOADING ? @string/plan_save : null}"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

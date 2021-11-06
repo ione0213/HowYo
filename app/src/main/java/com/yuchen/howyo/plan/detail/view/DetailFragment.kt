@@ -94,6 +94,13 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             }
         })
 
+        viewModel.leaveViewDetail.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it) findNavController().popBackStack()
+                viewModel.onLeaveViewDetail()
+            }
+        })
+
         return binding.root
     }
 

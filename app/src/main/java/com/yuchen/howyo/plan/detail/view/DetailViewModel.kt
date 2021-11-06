@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.data.SchedulePhoto
 import com.yuchen.howyo.data.source.HowYoRepository
 
 class DetailViewModel(
@@ -44,6 +43,12 @@ class DetailViewModel(
     val navigateToUrl: LiveData<String>
         get() = _navigateToUrl
 
+    // Handle leave view detail
+    private val _leaveViewDetail = MutableLiveData<Boolean>()
+
+    val leaveViewDetail: LiveData<Boolean>
+        get() = _leaveViewDetail
+
     fun navigateToEditSchedule() {
         _navigateToEditSchedule.value = schedule.value
     }
@@ -74,5 +79,13 @@ class DetailViewModel(
 
     fun onUrlNavigated() {
         _navigateToUrl.value = null
+    }
+
+    fun leaveViewDetail() {
+        _leaveViewDetail.value = true
+    }
+
+    fun onLeaveViewDetail() {
+        _leaveViewDetail.value = null
     }
 }

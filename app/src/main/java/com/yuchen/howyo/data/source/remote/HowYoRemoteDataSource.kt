@@ -131,6 +131,29 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
     }
 
+    override fun getLivePlan(planId: String): MutableLiveData<Plan> {
+
+        val liveData = MutableLiveData<Plan>()
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_PLANS)
+            .whereEqualTo("id", planId)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener live plan detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting plan. ${it.message}")
+                }
+
+                if (snapshot != null) {
+                    liveData.value = snapshot.first().toObject(Plan::class.java)
+                }
+            }
+
+        return liveData
+    }
+
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
 
         val liveData = MutableLiveData<List<Plan>>()
@@ -292,6 +315,35 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
+    override suspend fun getDays(planId: String): Result<List<Day>> =
+        suspendCoroutine { continuation ->
+            FirebaseFirestore.getInstance()
+                .collection(PATH_DAYS)
+                .whereEqualTo("plan_id", planId)
+                .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val list = mutableListOf<Day>()
+                        for (document in task.result!!) {
+                            Logger.d(document.id + " => " + document.data)
+
+                            val day = document.toObject(Day::class.java)
+                            list.add(day)
+                        }
+                        continuation.resume(Result.Success(list))
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error getting days. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
+
     override suspend fun createSchedule(schedule: Schedule): Result<Boolean> =
         suspendCoroutine { continuation ->
 
@@ -404,6 +456,34 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         return liveData
     }
+
+    override suspend fun getSchedules(planId: String): Result<List<Schedule>>  =
+        suspendCoroutine { continuation ->
+            FirebaseFirestore.getInstance()
+                .collection(PATH_SCHEDULES)
+                .whereEqualTo("plan_id", planId)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val list = mutableListOf<Schedule>()
+                        for (document in task.result!!) {
+                            Logger.d(document.id + " => " + document.data)
+
+                            val schedule = document.toObject(Schedule::class.java)
+                            list.add(schedule)
+                        }
+                        continuation.resume(Result.Success(list))
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error getting schedules. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
 
     override suspend fun createMainCheckList(
         planId: String,

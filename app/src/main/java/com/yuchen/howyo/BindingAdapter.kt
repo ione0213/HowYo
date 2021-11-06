@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -184,10 +185,11 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
 
 @BindingAdapter("imageData")
 fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
-    schedulePhoto?.let { it ->
+    Logger.i("schedulePhoto: $schedulePhoto")
+    schedulePhoto?.let { photoData ->
         when {
-            it.url?.isNotEmpty() == true -> {
-                val imgUri = it.url.toUri().buildUpon().scheme("https").build()
+            photoData.url?.isNotEmpty() == true -> {
+                val imgUri = photoData.url.toUri().buildUpon().scheme("https").build()
                 Glide.with(imageView.context)
                     .load(imgUri)
                     .apply(
@@ -198,13 +200,47 @@ fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
                     .into(imageView)
             }
             else -> {
-                imageView.setImageBitmap(
-                    HowYoApplication.instance
-                        .contentResolver
-                        ?.openFileDescriptor(it.uri!!, "r")?.use {
-                            BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
-                        }
-                )
+                when {
+                    !photoData.uri.toString().contains("drawable") -> {
+                        Logger.i("SELECT")
+                        imageView.setImageBitmap(
+                            HowYoApplication.instance
+                                .contentResolver
+                                ?.openFileDescriptor(photoData.uri!!, "r")?.use {
+                                    BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+                                }
+                        )
+                    }
+                    else -> {
+                        imageView.setImageResource(R.drawable.sample_cover)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("planPhoto")
+fun AppCompatButton.bindBtnWithPlanPhoto(planPhoto: SchedulePhoto?) {
+
+    planPhoto?.let {
+        visibility = when (planPhoto.url.isNullOrEmpty()) {
+            true -> {
+                when {
+                    planPhoto.uri.toString() == getString(R.string.default_cover) -> {
+                        View.GONE
+                    }
+                    else -> View.VISIBLE
+                }
+            }
+            false -> {
+                when {
+                    planPhoto.uri.toString() == getString(R.string.default_cover) &&
+                            planPhoto.isDeleted == true -> {
+                        View.GONE
+                    }
+                    else -> View.VISIBLE
+                }
             }
         }
     }

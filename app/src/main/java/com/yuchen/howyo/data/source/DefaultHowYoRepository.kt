@@ -28,6 +28,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.getPlan(planId)
     }
 
+    override fun getLivePlan(planId: String): MutableLiveData<Plan> {
+        return remoteDataSource.getLivePlan(planId)
+    }
+
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
         return remoteDataSource.getLivePlans(authorList)
     }
@@ -56,6 +60,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.getLiveDays(planId)
     }
 
+    override suspend fun getDays(planId: String): Result<List<Day>> {
+        return remoteDataSource.getDays(planId)
+    }
+
     override suspend fun createSchedule(schedule: Schedule): Result<Boolean> {
         return remoteDataSource.createSchedule(schedule)
     }
@@ -70,6 +78,10 @@ class DefaultHowYoRepository(
 
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
         return remoteDataSource.getLiveSchedules(planId)
+    }
+
+    override suspend fun getSchedules(planId: String): Result<List<Schedule>> {
+        return remoteDataSource.getSchedules(planId)
     }
 
     override suspend fun createMainCheckList(

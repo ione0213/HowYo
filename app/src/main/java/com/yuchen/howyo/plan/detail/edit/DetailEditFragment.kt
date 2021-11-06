@@ -17,9 +17,6 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.SchedulePhotos
 import com.yuchen.howyo.databinding.FragmentDetailEditBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.ext.toDate
-import com.yuchen.howyo.ext.toDateTime
-import com.yuchen.howyo.util.Logger
 import java.util.*
 
 
@@ -56,6 +53,7 @@ class DetailEditFragment : Fragment() {
         viewModel.leaveEditDetail.observe(viewLifecycleOwner, {
             it?.let {
                 if (it) findNavController().popBackStack()
+                viewModel.onLeaveEditDetail()
             }
         })
 
@@ -85,9 +83,6 @@ class DetailEditFragment : Fragment() {
 
                         when (it) {
                             getString(R.string.detail_edit_schedule_start_time) -> {
-//                                Logger.i("start date:${viewModel.plan.value?.startDate?.toDateTime()}")
-//                                Logger.i("第 ${viewModel.day.value?.position?.plus(1)} 天")
-//                                Logger.i("TIME:${c.timeInMillis}")
                                 viewModel.setTimeValue(it, c.timeInMillis)
                             }
                             getString(R.string.detail_edit_schedule_end_time) -> {
@@ -126,7 +121,7 @@ class DetailEditFragment : Fragment() {
                 when {
                     it -> {
                         findNavController().popBackStack()
-                        viewModel.onBackToPlanPortal()
+                        viewModel.onBackToPreviousPage()
                     }
                 }
             }
