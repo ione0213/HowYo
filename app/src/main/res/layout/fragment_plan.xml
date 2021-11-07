@@ -7,6 +7,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.yuchen.howyo.plan.PlanPrivacy" />
+
         <import type="com.yuchen.howyo.plan.AccessPlanType" />
 
         <import type="com.yuchen.howyo.network.LoadApiStatus" />
@@ -29,9 +31,9 @@
                 android:id="@+id/img_plan_cover"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:onClick="@{() -> viewModel.navigateToEditCover()}"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{viewModel.plan.coverPhotoUrl}"
-                android:onClick="@{() -> viewModel.navigateToEditCover()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -127,8 +129,8 @@
                 android:layout_marginEnd="@dimen/middle_padding"
                 android:layout_marginBottom="@dimen/middle_padding"
                 android:background="@drawable/edit"
-                android:onClick="@{() -> viewModel.navigateToEditPlan()}"
                 android:backgroundTint="@color/gray2"
+                android:onClick="@{() -> viewModel.navigateToEditPlan()}"
                 android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
                 app:layout_constraintEnd_toStartOf="@+id/button_plan_share" />
@@ -323,26 +325,54 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <ImageButton
-                    android:id="@+id/button_plan_lock"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginStart="@dimen/middle_padding"
-                    android:background="@drawable/lock"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_plan_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageButton
-                    android:id="@+id/button_plan_unlock"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginStart="@dimen/middle_padding"
-                    android:background="@drawable/unlock"
+                    <ImageButton
+                        android:id="@+id/button_plan_lock"
+                        android:layout_width="@dimen/plan_img_btn_small"
+                        android:layout_height="@dimen/plan_img_btn_small"
+                        android:layout_marginStart="@dimen/middle_padding"
+                        android:background="@drawable/lock"
+                        android:onClick="@{() -> viewModel.updatePrivacy(PlanPrivacy.PUBLIC)}"
+                        app:accessType="@{viewModel.accessType}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:lockBtn="@{viewModel.plan.privacy}" />
 
+                    <ImageButton
+                        android:id="@+id/button_plan_unlock"
+                        android:layout_width="@dimen/plan_img_btn_small"
+                        android:layout_height="@dimen/plan_img_btn_small"
+                        android:layout_marginStart="@dimen/middle_padding"
+                        android:background="@drawable/unlock"
+                        android:onClick="@{() -> viewModel.updatePrivacy(PlanPrivacy.PRIVATE)}"
+                        app:accessType="@{viewModel.accessType}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:unlockBtn="@{viewModel.plan.privacy}" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <TextView
+                    android:id="@+id/text_plan_status"
+                    style="@style/TextStyle3_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toEndOf="@id/layout_plan_status"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                    app:privacy="@{viewModel.plan.privacy}"
+                    tools:text="@string/public_plan" />
 
                 <ImageButton
                     android:id="@+id/button_plan_heart"

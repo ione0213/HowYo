@@ -3,6 +3,7 @@ package com.yuchen.howyo
 import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -21,7 +22,9 @@ import com.yuchen.howyo.ext.toWeekDay
 import com.yuchen.howyo.favorite.FavoriteAdapter
 import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
+import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.plan.PlanDaysAdapter
+import com.yuchen.howyo.plan.PlanPrivacy
 import com.yuchen.howyo.plan.ScheduleAdapter
 import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
 import com.yuchen.howyo.plan.companion.CompanionAdapter
@@ -379,5 +382,44 @@ fun bindRecyclerViewWithMessages(
                 }
             }
         }
+    }
+}
+
+@BindingAdapter("privacy")
+fun TextView.bindPrivacyStatus(privacy: String?) {
+    Logger.i("privacy: $privacy")
+    text = when (privacy) {
+        PlanPrivacy.PRIVATE.value -> getString(R.string.private_plan)
+        PlanPrivacy.PUBLIC.value -> getString(R.string.public_plan)
+        else -> ""
+    }
+}
+
+@BindingAdapter("lockBtn", "accessType")
+fun ImageButton.bindLockBtn(privacy: String?, accessType: AccessPlanType?) {
+
+    visibility = when (accessType) {
+        AccessPlanType.EDIT -> {
+            when (privacy) {
+                PlanPrivacy.PRIVATE.value -> View.VISIBLE
+                PlanPrivacy.PUBLIC.value -> View.GONE
+                else -> View.GONE
+            }
+        }
+        else -> View.GONE
+    }
+}
+
+@BindingAdapter("unlockBtn", "accessType")
+fun ImageButton.bindUnlockBtn(privacy: String?, accessType: AccessPlanType?) {
+    visibility = when (accessType) {
+        AccessPlanType.EDIT -> {
+            when (privacy) {
+                PlanPrivacy.PRIVATE.value -> View.GONE
+                PlanPrivacy.PUBLIC.value -> View.VISIBLE
+                else -> View.GONE
+            }
+        }
+        else -> View.GONE
     }
 }

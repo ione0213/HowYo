@@ -66,6 +66,16 @@ class PlanViewModel(
     val deletingSchedule: LiveData<Schedule>
         get() = _deletingSchedule
 
+    private val _updatePrivacy = MutableLiveData<PlanPrivacy>()
+
+    val updatePrivacy: LiveData<PlanPrivacy>
+        get() = _updatePrivacy
+
+    private val _updatePrivacyResult = MutableLiveData<Boolean>()
+
+    val updatePrivacyResult: LiveData<Boolean>
+        get() = _updatePrivacyResult
+
     private val _planResult = MutableLiveData<Boolean>()
 
     private val planResult: LiveData<Boolean>
@@ -203,11 +213,11 @@ class PlanViewModel(
 
 //        coroutineScope.launch {
 //            withContext(Dispatchers.IO) {
-                getLivePlanResult()
+        getLivePlanResult()
 //            }
-            getLiveDaysResult()
-            setDefaultSelectedDay()
-            getLiveSchedulesResult()
+        getLiveDaysResult()
+        setDefaultSelectedDay()
+        getLiveSchedulesResult()
 //        }
 
     }
@@ -310,17 +320,44 @@ class PlanViewModel(
         }
     }
 
+    fun updatePrivacy(type: PlanPrivacy) {
+        _updatePrivacy.value = type
+    }
+
+    fun onUpdatedPrivacy() {
+        _updatePrivacy.value = null
+    }
+
+    fun setPrivacy(type: PlanPrivacy) {
+
+        var setPrivacyResult = false
+
+        coroutineScope.launch {
+
+            withContext(Dispatchers.IO) {
+
+                val newPlan = plan.value?.copy(privacy = type.value)
+
+                setPrivacyResult = when (val result =
+                    newPlan?.let { howYoRepository.updatePlan(it) }) {
+                    is Result.Success -> {
+                        result.data
+                    }
+                    else -> false
+                }
+            }
+
+            _updatePrivacyResult.postValue(setPrivacyResult)
+        }
+    }
+
     fun setDefaultSelectedDay() {
         //Select first item of days by default
         selectedDayPosition.value = 0
-        Logger.i("setDefaultSelectedDay")
-
-//        filterSchedule()
     }
 
-    fun getLiveDaysResult() {
+    private fun getLiveDaysResult() {
         days = howYoRepository.getLiveDays(argumentPlan.id)
-//        setStatusDone()
     }
 
     fun addNewDay() {

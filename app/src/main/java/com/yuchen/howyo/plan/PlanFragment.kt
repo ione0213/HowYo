@@ -233,6 +233,35 @@ class PlanFragment : Fragment() {
             }
         })
 
+        viewModel.updatePrivacy.observe(viewLifecycleOwner, {
+            it?.let {
+                context?.let { context ->
+                    AlertDialog.Builder(context)
+                        .setMessage(
+                            getString(
+                                R.string.confirm_update_privacy,
+                                when(it) {
+                                    PlanPrivacy.PRIVATE -> getString(R.string.set_private)
+                                    PlanPrivacy.PUBLIC -> getString(R.string.set_public)
+                                }
+                            ))
+                        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.setPrivacy(it)
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                            viewModel.onUpdatedPrivacy()
+                        }
+                        .show()
+                }
+            }
+        })
+
+        viewModel.updatePrivacyResult.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it) viewModel.onUpdatedPrivacy()
+            }
+        })
+
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         viewModel.navigateToHomeAfterDeletingPlan.observe(viewLifecycleOwner, {
             it?.let {

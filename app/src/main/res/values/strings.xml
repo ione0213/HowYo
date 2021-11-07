@@ -55,6 +55,12 @@
     <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
     <string name="confirm_delete_schedule">您確定要移除行程嗎？</string>
     <string name="empty_schedule">選擇的日期沒有行程。\n點擊新增按鈕建立！</string>
+    <string name="public_plan">公開旅遊計畫</string>
+    <string name="set_public">公開</string>
+    <string name="private_plan">私人旅遊計畫</string>
+    <string name="set_private">隱藏</string>
+    <string name="confirm_update_privacy">您確定要 %s 行程嗎？</string>
+
 
     <!-- Payment-->
     <string name="payment_item">品項名稱</string>
