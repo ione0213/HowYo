@@ -17,9 +17,7 @@ class PlanViewModel(
 ) : ViewModel() {
 
     //Plan data
-    private var _plan = MutableLiveData<Plan>().apply {
-        value = argumentPlan
-    }
+    private var _plan = MutableLiveData<Plan>()
 
     val plan: LiveData<Plan>
         get() = _plan
@@ -244,7 +242,6 @@ class PlanViewModel(
     }
 
     private fun getLivePlanResult() {
-        Logger.i("getLivePlanResult")
         when (argumentPlan.id.isNotEmpty()) {
             true -> {
                 _plan = howYoRepository.getLivePlan(plan.value?.id!!)
@@ -496,7 +493,6 @@ class PlanViewModel(
 
                     when {
                         it.position!! > schedule.position!! -> {
-                            Logger.i("schedule.position-1:${schedule.position}")
                             val newSchedule = Schedule(
                                 it.id,
                                 it.planId,
@@ -517,12 +513,9 @@ class PlanViewModel(
                                 it.remark
                             )
                             schedulesResult.add(updateSchedule(newSchedule))
-                            Logger.i("schedulesResult:$schedulesResult")
                         }
                         it.position!! == schedule.position!! -> {
-                            Logger.i("schedule.position-del:${schedule.position}")
                             schedulesResult.add(deleteSchedule(it))
-                            Logger.i("schedulesResult:$schedulesResult")
                         }
                     }
                 }
@@ -538,7 +531,6 @@ class PlanViewModel(
 
     fun getLiveSchedulesResult() {
         allSchedules = howYoRepository.getLiveSchedules(argumentPlan.id)
-        Logger.i("allSchedules:${allSchedules.value}")
         setStatusDone()
     }
 
@@ -556,7 +548,6 @@ class PlanViewModel(
         _schedules.value =
             allSchedules.value
                 ?.filter { it.dayId == currentDayId }?.sortedBy { it.position } ?: listOf()
-        Logger.i("schedules:${schedules.value}")
     }
 
     private suspend fun deleteMainCheckList(planId: String): Boolean =
@@ -983,7 +974,6 @@ class PlanViewModel(
         val schedulesResult = mutableListOf<Boolean>()
 
         _status.value = LoadApiStatus.LOADING
-        Logger.i("tempSchedules:$tempSchedules")
         withContext(Dispatchers.IO) {
 
 

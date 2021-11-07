@@ -2,12 +2,14 @@ package com.yuchen.howyo.data.source
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.yuchen.howyo.data.Day
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Result
-import com.yuchen.howyo.data.Schedule
+import com.google.firebase.auth.FirebaseUser
+import com.yuchen.howyo.data.*
 
 interface HowYoRepository {
+
+    suspend fun createUser(user: User): Result<Boolean>
+
+    fun getLiveUser(email: String): MutableLiveData<User>
 
     suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String>
 

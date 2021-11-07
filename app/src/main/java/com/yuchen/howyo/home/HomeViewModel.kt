@@ -3,6 +3,7 @@ package com.yuchen.howyo.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseUser
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository
 

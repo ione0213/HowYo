@@ -4,10 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Plan
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.signin.UserManager
 
 class ProfileViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
+
+    private var _user = MutableLiveData<User>()
+
+    val user: LiveData<User>
+        get() = _user
 
     //Plan data
     var plans = MutableLiveData<List<Plan>>()
@@ -36,10 +43,17 @@ class ProfileViewModel(private val howYoRepository: HowYoRepository) : ViewModel
         get() = _status
 
     init {
+
+        getLiveUserResult()
         getLiveDaysResult()
     }
 
-    fun getLiveDaysResult() {
+    private fun getLiveUserResult() {
+
+        _user = howYoRepository.getLiveUser(UserManager.currentUserEmail ?: "")
+    }
+
+    private fun getLiveDaysResult() {
         plans = howYoRepository.getLivePlans(listOf("userIdFromSharePreference"))
         setStatusDone()
     }

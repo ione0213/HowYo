@@ -17,6 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 object HowYoRemoteDataSource : HowYoDataSource {
 
     private const val PATH_COVERS = "images"
+    private const val PATH_USERS = "users"
     private const val PATH_PLANS = "plans"
     private const val PATH_DAYS = "days"
     private const val PATH_SCHEDULES = "schedules"
@@ -24,6 +25,81 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_CHECK_ITEM_LIST = "check_item_lists"
     private const val KEY_POSITION = "position"
     private const val KEY_CREATED_TIME = "created_time"
+    private const val KEY_EMAIL = "email"
+
+    override suspend fun createUser(user: User): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_USERS)
+                .whereEqualTo(KEY_EMAIL, user.email)
+                .get()
+                .addOnCompleteListener { task ->
+
+                    if (task.isSuccessful) {
+
+                        when {
+                            task.result.size() == 0 -> {
+                                val users = FirebaseFirestore.getInstance().collection(PATH_USERS)
+                                val document = users.document()
+
+                                user.id = document.id
+
+                                document
+                                    .set(user)
+                                    .addOnCompleteListener { createUserTask ->
+                                        if (createUserTask.isSuccessful) {
+                                            continuation.resume(Result.Success(true))
+                                        } else {
+                                            createUserTask.exception?.let {
+                                                Logger.w("[${this::class.simpleName}] Error creating user. ${it.message}")
+                                                continuation.resume(Result.Error(it))
+                                                return@let
+                                            }
+                                            continuation.resume(
+                                                Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                                            )
+                                        }
+                                    }
+                            }
+                            task.result.size() > 0 -> {
+                                continuation.resume(Result.Success(true))
+                            }
+                        }
+                    } else {
+                        task.exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error creating user. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
+
+    override fun getLiveUser(email: String): MutableLiveData<User> {
+
+        val liveData = MutableLiveData<User>()
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_USERS)
+            .whereEqualTo(KEY_EMAIL, email)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener live plan detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting plan. ${it.message}")
+                }
+
+                if (snapshot != null) {
+                    liveData.value = snapshot.first().toObject(User::class.java)
+                }
+            }
+
+        return liveData
+    }
 
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> =
         suspendCoroutine { continuation ->
@@ -60,7 +136,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                         )
                     }
                 }
-
         }
 
     override suspend fun deletePhoto(fileName: String): Result<Boolean> =
@@ -457,7 +532,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
-    override suspend fun getSchedules(planId: String): Result<List<Schedule>>  =
+    override suspend fun getSchedules(planId: String): Result<List<Schedule>> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)

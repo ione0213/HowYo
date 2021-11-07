@@ -17,5 +17,6 @@ enum class CurrentFragmentType(val value: String) {
     FIND_LOCATION(getString(R.string.find_location)),
     PROFILE("User id(tmp)"),
     FRIENDS("User id(tmp)"),
-    SETTING(getString(R.string.setting))
+    SETTING(getString(R.string.setting)),
+    SIGNIN("")
 }

@@ -108,8 +108,6 @@ class PlanFragment : Fragment() {
                 val adapter = recyclerView.adapter as ScheduleAdapter
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
-                Logger.i("From:$from, To:$to")
-                Logger.i("viewModel.schedules.value?.size:${viewModel.schedules.value?.size}")
                 return when {
                     //Prevent moving to the position which is out of schedules range
                     from != to && to <= viewModel.schedules.value?.size!!.minus(1) -> {
@@ -180,7 +178,6 @@ class PlanFragment : Fragment() {
 
         viewModel.selectedDayPosition.observe(viewLifecycleOwner, {
             it?.let {
-                Logger.i("selectedDayPosition")
                 viewModel.filterSchedule()
             }
         })
@@ -295,7 +292,6 @@ class PlanFragment : Fragment() {
 
         viewModel.allSchedules.observe(viewLifecycleOwner, {
             it?.let {
-                Logger.i("allSchedules")
                 when (viewModel.deletingPlan.value) {
                     null -> {
                         viewModel.filterSchedule()

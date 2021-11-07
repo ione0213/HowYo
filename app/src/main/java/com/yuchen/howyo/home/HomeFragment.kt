@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentHomeBinding
@@ -25,6 +26,8 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this

@@ -178,9 +178,6 @@ class PlanCoverViewModel(
         startDateFromUser.value = plan.value?.startDate ?: calendar.timeInMillis
         previousStartDate.value = startDateFromUser.value!!.toLong()
 
-        Logger.i("init:startDateFromUser.value${startDateFromUser.value}")
-        Logger.i("init: previousStartDate.value${ previousStartDate.value}")
-
         calendar.add(Calendar.DAY_OF_YEAR, 1)
 
         endDateFromUser.value = plan.value?.endDate ?: calendar.timeInMillis
@@ -226,7 +223,6 @@ class PlanCoverViewModel(
                         coverPhotoResult.add(uploadCoverImg())
                     }
                     false -> {
-                        Logger.i("planPhoto.value?.isDeleted:${planPhoto.value}")
                         when (planPhoto.value?.isDeleted) {
                             true -> {
 
@@ -385,14 +381,10 @@ class PlanCoverViewModel(
 
                     when {
                         plan.value?.startDate != previousStartDate.value -> {
-                            Logger.i("plan.value?.startDate != previousStartDate.value")
                             val days = dayList?.sortedBy { it.position }
-                            Logger.i("days~~~: $days")
                             days?.forEach { day ->
-                                Logger.i("scheduleList.value?.filter { it.dayId == day.id }:${scheduleList?.filter { it.dayId == day.id }}")
                                 scheduleList?.filter { it.dayId == day.id }
                                     ?.forEach { schedule ->
-                                        Logger.i("it.dayId == day.id")
                                         val newSchedule = Schedule(
                                             schedule.id,
                                             schedule.planId,
@@ -667,7 +659,6 @@ class PlanCoverViewModel(
         )
 
         _planPhoto.value = newPlanPhoto
-        Logger.i("setCoverBitmap:${planPhoto.value}")
 //        _photoUri.value = photoUri!!
     }
 

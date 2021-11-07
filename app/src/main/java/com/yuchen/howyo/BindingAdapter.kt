@@ -71,7 +71,8 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
         CurrentFragmentType.PAYMENT,
         CurrentFragmentType.PAYMENT_DETAIL,
         CurrentFragmentType.SETTING,
-        CurrentFragmentType.GROUP_MESSAGE -> {
+        CurrentFragmentType.GROUP_MESSAGE,
+        CurrentFragmentType.SIGNIN -> {
             View.GONE
         }
         else -> View.VISIBLE
@@ -81,7 +82,8 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
 @BindingAdapter("currentFragmentTypeForToolbar")
 fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
     visibility = when (currentFragmentType) {
-        CurrentFragmentType.PLAN -> {
+        CurrentFragmentType.PLAN,
+        CurrentFragmentType.SIGNIN -> {
             View.GONE
         }
         else -> View.VISIBLE
@@ -104,7 +106,8 @@ fun TextView.bindToolbarTitle(
     sharedFragmentTitle: String
 ) {
     text = when (currentFragmentTypeForText) {
-        CurrentFragmentType.CHECK_OR_SHOPPING_LIST -> {
+        CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
+        CurrentFragmentType.PROFILE -> {
             sharedFragmentTitle
         }
         else -> currentFragmentTypeForText.value
@@ -135,7 +138,6 @@ fun TextView.bindTextWithDay(day: Int, firstDate: Long?) {
 
 @BindingAdapter("schedules")
 fun bindRecyclerViewWithSchedules(recyclerView: RecyclerView, schedules: List<Schedule>?) {
-    Logger.i("Binding schedules: $schedules")
     schedules?.let {
         recyclerView.adapter?.apply {
             when (this) {
@@ -188,7 +190,6 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
 
 @BindingAdapter("imageData")
 fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
-    Logger.i("schedulePhoto: $schedulePhoto")
     schedulePhoto?.let { photoData ->
         when {
             photoData.url?.isNotEmpty() == true -> {
@@ -205,7 +206,6 @@ fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
             else -> {
                 when {
                     !photoData.uri.toString().contains("drawable") -> {
-                        Logger.i("SELECT")
                         imageView.setImageBitmap(
                             HowYoApplication.instance
                                 .contentResolver
@@ -253,7 +253,6 @@ fun AppCompatButton.bindBtnWithPlanPhoto(planPhoto: SchedulePhoto?) {
 fun bindImageWithScheduleType(imageView: ImageView, scheduleType: String?) {
 
     scheduleType?.let { type ->
-        Logger.i("scheduleType:$scheduleType")
         imageView.setImageResource(
             when (type) {
                 getString(R.string.air_flight) -> R.drawable.plane
@@ -387,7 +386,6 @@ fun bindRecyclerViewWithMessages(
 
 @BindingAdapter("privacy")
 fun TextView.bindPrivacyStatus(privacy: String?) {
-    Logger.i("privacy: $privacy")
     text = when (privacy) {
         PlanPrivacy.PRIVATE.value -> getString(R.string.private_plan)
         PlanPrivacy.PUBLIC.value -> getString(R.string.public_plan)

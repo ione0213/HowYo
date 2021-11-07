@@ -81,6 +81,5 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
         val list: List<Address> =
             geocoder.getFromLocationName(binding.edittextFindLocationSearch.text.toString(), 1)
 
-        Logger.i("information: ${list.first()}")
     }
 }

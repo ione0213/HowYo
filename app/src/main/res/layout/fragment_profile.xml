@@ -20,7 +20,7 @@
             android:layout_width="@dimen/profile_avatar"
             android:layout_height="@dimen/profile_avatar"
             android:layout_marginStart="@dimen/standard_padding"
-            android:layout_marginTop="@dimen/standard_padding"
+            android:layout_marginTop="@dimen/middle_padding"
             android:scaleType="centerCrop"
             android:src="@drawable/avatar_sample"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,6 @@
             style="@style/TextStyle2_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/large_padding"
             android:layout_marginEnd="@dimen/standard_padding"
             android:onClick="@{() -> viewModel.navigateToFriend()}"
             android:text="@{String.format(@string/profile_following, 0)}"
@@ -40,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
             tools:text="@string/profile_following" />
 
         <TextView
@@ -48,7 +47,6 @@
             style="@style/TextStyle2_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/large_padding"
             android:layout_marginEnd="@dimen/standard_padding"
             android:onClick="@{() -> viewModel.navigateToFriend()}"
             android:text="@{String.format(@string/profile_fans, 0)}"
@@ -56,7 +54,7 @@
             app:layout_constraintEnd_toStartOf="@+id/text_profile_following"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
             tools:text="@string/profile_fans" />
 
         <TextView
@@ -64,7 +62,7 @@
             style="@style/TextStyle2_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/large_padding"
+            android:layout_marginTop="@dimen/standard_padding"
             android:layout_marginEnd="@dimen/standard_padding"
             android:text="@{String.format(@string/profile_plans, viewModel.plans.size)}"
             android:textStyle="bold"
@@ -80,7 +78,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
-            android:text="traveller"
+            android:text="@{viewModel.user.id}"
+            android:singleLine="true"
+            android:maxWidth="@dimen/profile_text_width_small"
+            android:ellipsize="end"
             android:textStyle="bold"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -108,7 +109,7 @@
             android:id="@+id/view_profile_separation"
             style="@style/SeparationHorizontal"
             android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/small_padding"
             android:layout_marginEnd="@dimen/small_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

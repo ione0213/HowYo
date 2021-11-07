@@ -105,7 +105,6 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(map: GoogleMap) {
-        Logger.i("onMapReady")
         this.googleMap = map
         setDestination()
     }
@@ -119,7 +118,6 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 viewModel.schedule.value?.longitude ?: 0.0
             )
 
-        Logger.i("currentLocation:$currentLocation")
 
         googleMap?.addMarker(
             MarkerOptions().position(currentLocation).title(viewModel.schedule.value?.title)

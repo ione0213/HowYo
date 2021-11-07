@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentProfileBinding
@@ -36,6 +38,13 @@ class ProfileFragment : Fragment() {
                 viewModel.navigateToPlan(it)
             }
         )
+
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        viewModel.user.observe(viewLifecycleOwner, {
+            it?.let {
+                mainViewModel.setSharedToolbarTitle(it.id ?: "")
+            }
+        })
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {
             it?.let {

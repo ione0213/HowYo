@@ -53,6 +53,7 @@
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_shopping_list.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_signin.xml" value="0.2767210144927536" />
         <entry key="app/src/main/res/layout/item_chat.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_check_list_add.xml" value="0.18645833333333334" />
         <entry key="app/src/main/res/layout/item_check_list_item.xml" value="0.375" />

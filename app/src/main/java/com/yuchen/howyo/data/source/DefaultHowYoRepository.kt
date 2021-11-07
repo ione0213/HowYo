@@ -2,15 +2,19 @@ package com.yuchen.howyo.data.source
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.yuchen.howyo.data.Day
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Result
-import com.yuchen.howyo.data.Schedule
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
 
 class DefaultHowYoRepository(
     private val remoteDataSource: HowYoRemoteDataSource
 ) : HowYoRepository {
+    override suspend fun createUser(user: User): Result<Boolean> {
+        return remoteDataSource.createUser(user)
+    }
+
+    override fun getLiveUser(email: String): MutableLiveData<User> {
+        return remoteDataSource.getLiveUser(email)
+    }
 
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> {
         return remoteDataSource.uploadPhoto(imgUri, fileName)
