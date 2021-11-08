@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
 
 class PlanViewModel(
     private val howYoRepository: HowYoRepository,
@@ -187,6 +186,12 @@ class PlanViewModel(
 
     val navigateToEditCover: LiveData<Plan>
         get() = _navigateToEditCover
+
+    // Handle navigation to copy plan
+    private val _navigateToCopyPlan = MutableLiveData<Plan>()
+
+    val navigateToCopyPlan: LiveData<Plan>
+        get() = _navigateToCopyPlan
 
     // Handle leave plan
     private val _leavePlan = MutableLiveData<Boolean>()
@@ -429,9 +434,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -441,9 +444,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -453,9 +454,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -465,9 +464,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -477,9 +474,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -1071,6 +1066,14 @@ class PlanViewModel(
         _navigateToEditCover.value = null
     }
 
+    fun navigateToCopyPlan() {
+        _navigateToCopyPlan.value = plan.value
+    }
+
+    fun onCopyPlanNavigated() {
+        _navigateToCopyPlan.value = null
+    }
+
     fun navigateToMapMode() {
         _navigateToMapMode.value = days.value
     }
@@ -1130,5 +1133,76 @@ class PlanViewModel(
 
     fun leavePlan() {
         _leavePlan.value = true
+    }
+
+    fun setLike(type: LikeType) {
+
+        val newPlan = plan.value
+        val likeList = newPlan?.likeList?.toMutableList()
+        val currentUserId = UserManager.userId
+
+        when (type) {
+            LikeType.LIKE -> {
+                when {
+                    newPlan?.likeList?.contains(currentUserId) != true -> {
+                        if (currentUserId != null) {
+                            likeList?.add(currentUserId)
+                        }
+                    }
+                }
+            }
+            LikeType.UNLIKE -> {
+                when {
+                    newPlan?.likeList?.contains(currentUserId) == true -> {
+                        if (currentUserId != null) {
+                            likeList?.removeAt(likeList.indexOf(currentUserId))
+                        }
+                    }
+                }
+            }
+        }
+
+        newPlan?.likeList = likeList
+
+        _plan.value = newPlan
+
+        coroutineScope.launch {
+            _plan.value?.let { howYoRepository.updatePlan(it) }
+        }
+    }
+
+    fun setFavorite(type: FavoriteType) {
+        val newPlan = plan.value
+        val planCollectedList = newPlan?.planCollectedList?.toMutableList()
+        val currentUserId = UserManager.userId
+
+        when (type) {
+            FavoriteType.COLLECT -> {
+                when {
+                    newPlan?.planCollectedList?.contains(currentUserId) != true -> {
+                        if (currentUserId != null) {
+                            planCollectedList?.add(currentUserId)
+                        }
+                    }
+                }
+            }
+            FavoriteType.REMOVE -> {
+                when {
+                    newPlan?.planCollectedList?.contains(currentUserId) == true -> {
+                        if (currentUserId != null) {
+                            planCollectedList?.removeAt(planCollectedList.indexOf(currentUserId))
+                        }
+                    }
+                }
+            }
+        }
+
+        newPlan?.planCollectedList = planCollectedList
+
+        _plan.value = newPlan
+
+        coroutineScope.launch {
+            _plan.value?.let { howYoRepository.updatePlan(it) }
+        }
     }
 }

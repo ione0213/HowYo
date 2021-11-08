@@ -376,6 +376,15 @@ class PlanFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToCopyPlan.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToCopyPlanDialog(it)
+                )
+                viewModel.onCopyPlanNavigated()
+            }
+        })
+
         viewModel.navigateToMapMode.observe(viewLifecycleOwner, {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToFindLocationFragment())

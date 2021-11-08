@@ -22,10 +22,7 @@ import com.yuchen.howyo.ext.toWeekDay
 import com.yuchen.howyo.favorite.FavoriteAdapter
 import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
-import com.yuchen.howyo.plan.AccessPlanType
-import com.yuchen.howyo.plan.PlanDaysAdapter
-import com.yuchen.howyo.plan.PlanPrivacy
-import com.yuchen.howyo.plan.ScheduleAdapter
+import com.yuchen.howyo.plan.*
 import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
 import com.yuchen.howyo.plan.companion.CompanionAdapter
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
@@ -35,6 +32,7 @@ import com.yuchen.howyo.plan.groupmessage.GroupMessageAdapter
 import com.yuchen.howyo.plan.payment.PaymentAdapter
 import com.yuchen.howyo.profile.PlanAdapter
 import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getString
@@ -416,6 +414,44 @@ fun ImageButton.bindUnlockBtn(privacy: String?, accessType: AccessPlanType?) {
                 PlanPrivacy.PRIVATE.value -> View.GONE
                 PlanPrivacy.PUBLIC.value -> View.VISIBLE
                 else -> View.GONE
+            }
+        }
+        else -> View.GONE
+    }
+}
+
+@BindingAdapter("heartButton", "likeType")
+fun ImageButton.bindHeartBtn(plan: Plan?, type: LikeType?) {
+    visibility = when (type) {
+        LikeType.LIKE -> {
+            when {
+                plan?.likeList?.contains(UserManager.userId) == true -> View.VISIBLE
+                else -> View.GONE
+            }
+        }
+        LikeType.UNLIKE -> {
+            when {
+                plan?.likeList?.contains(UserManager.userId) == true -> View.GONE
+                else -> View.VISIBLE
+            }
+        }
+        else -> View.GONE
+    }
+}
+
+@BindingAdapter("favoriteButton", "favoriteType")
+fun ImageButton.bindFavoriteBtn(plan: Plan?, type: FavoriteType?) {
+    visibility = when (type) {
+        FavoriteType.COLLECT -> {
+            when {
+                plan?.planCollectedList?.contains(UserManager.userId) == true -> View.VISIBLE
+                else -> View.GONE
+            }
+        }
+        FavoriteType.REMOVE -> {
+            when {
+                plan?.planCollectedList?.contains(UserManager.userId) == true -> View.GONE
+                else -> View.VISIBLE
             }
         }
         else -> View.GONE

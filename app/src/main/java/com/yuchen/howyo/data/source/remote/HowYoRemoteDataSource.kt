@@ -27,7 +27,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val KEY_CREATED_TIME = "created_time"
     private const val KEY_EMAIL = "email"
 
-    override suspend fun createUser(user: User): Result<Boolean> =
+    override suspend fun createUser(user: User): Result<String> =
         suspendCoroutine { continuation ->
 
             FirebaseFirestore.getInstance()
@@ -49,7 +49,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                                     .set(user)
                                     .addOnCompleteListener { createUserTask ->
                                         if (createUserTask.isSuccessful) {
-                                            continuation.resume(Result.Success(true))
+                                            continuation.resume(Result.Success(user.id!!))
                                         } else {
                                             createUserTask.exception?.let {
                                                 Logger.w("[${this::class.simpleName}] Error creating user. ${it.message}")
@@ -63,7 +63,8 @@ object HowYoRemoteDataSource : HowYoDataSource {
                                     }
                             }
                             task.result.size() > 0 -> {
-                                continuation.resume(Result.Success(true))
+                                Logger.i("exist user: ${task.result.first().id}")
+                                continuation.resume(Result.Success(task.result.first().id))
                             }
                         }
                     } else {
@@ -265,7 +266,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
             plans.whereEqualTo("author_id", it)
         }
         Logger.i("Start")
-        plans.orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
+        plans.orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->
 
                 Logger.i("addSnapshotListener detect")
@@ -466,6 +467,8 @@ object HowYoRemoteDataSource : HowYoDataSource {
                             }
                         }
 
+
+                        Logger.i("CREATE SCHEDULE1:${schedule}")
                         val schedules = FirebaseFirestore.getInstance().collection(PATH_SCHEDULES)
                         val document = schedules.document()
 
@@ -475,6 +478,8 @@ object HowYoRemoteDataSource : HowYoDataSource {
                             .set(schedule)
                             .addOnCompleteListener { scheduleTask ->
                                 if (scheduleTask.isSuccessful) {
+                                    Logger.i("CREATE SCHEDULE2:$schedule")
+
                                     continuation.resume(Result.Success(true))
                                 } else {
                                     scheduleTask.exception?.let {

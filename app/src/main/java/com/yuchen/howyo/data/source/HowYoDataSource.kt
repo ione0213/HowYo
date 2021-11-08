@@ -7,7 +7,7 @@ import com.yuchen.howyo.data.*
 
 interface HowYoDataSource {
 
-    suspend fun createUser(user: User): Result<Boolean>
+    suspend fun createUser(user: User): Result<String>
 
     suspend fun getUser(email: String): Result<User>
 

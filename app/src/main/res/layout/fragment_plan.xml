@@ -11,6 +11,10 @@
 
         <import type="com.yuchen.howyo.plan.AccessPlanType" />
 
+        <import type="com.yuchen.howyo.plan.LikeType" />
+
+        <import type="com.yuchen.howyo.plan.FavoriteType" />
+
         <import type="com.yuchen.howyo.network.LoadApiStatus" />
 
         <variable
@@ -383,9 +387,12 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginEnd="@dimen/small_padding"
                     android:background="@drawable/heart_normal"
+                    android:onClick="@{() -> viewModel.setLike(LikeType.LIKE)}"
+                    app:heartButton="@{viewModel.plan}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:likeType="@{LikeType.UNLIKE}" />
 
                 <ImageButton
                     android:id="@+id/button_plan_heart_selected"
@@ -393,9 +400,12 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginEnd="@dimen/small_padding"
                     android:background="@drawable/heart_selected"
+                    android:onClick="@{() -> viewModel.setLike(LikeType.UNLIKE)}"
+                    app:heartButton="@{viewModel.plan}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:likeType="@{LikeType.LIKE}" />
 
                 <ImageButton
                     android:id="@+id/button_plan_comment"
@@ -413,6 +423,9 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginEnd="@dimen/small_padding"
                     android:background="@drawable/star_normal"
+                    android:onClick="@{() -> viewModel.setFavorite(FavoriteType.COLLECT)}"
+                    app:favoriteButton="@{viewModel.plan}"
+                    app:favoriteType="@{FavoriteType.REMOVE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -423,6 +436,9 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginEnd="@dimen/small_padding"
                     android:background="@drawable/star_selected"
+                    android:onClick="@{() -> viewModel.setFavorite(FavoriteType.REMOVE)}"
+                    app:favoriteButton="@{viewModel.plan}"
+                    app:favoriteType="@{FavoriteType.COLLECT}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -433,6 +449,7 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:background="@drawable/copy"
+                    android:onClick="@{() -> viewModel.navigateToCopyPlan()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

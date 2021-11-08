@@ -13,7 +13,7 @@
 
         <variable
             name="viewModel"
-            type="com.yuchen.howyo.plan.cover.PlanCoverViewModel" />
+            type="com.yuchen.howyo.copyplan.CopyPlanViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +23,7 @@
         android:onClick="@{() -> viewModel.leave()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_plan_cover"
+            android:id="@+id/layout_copy_plan_cover"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_dialog_corner"
@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/middle_padding"
                 android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toTopOf="@id/fab_plan_cover_add">
+                app:layout_constraintBottom_toTopOf="@id/fab_copy_plan_cover_add">
 
                 <TextView
                     android:id="@+id/text_plan_title"
@@ -47,11 +47,11 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="@{viewModel.isNewPlan == true ? @string/plan_new : @string/plan_edit}"
-                    app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_close" />
+                    android:text="@string/plan_copy"
+                    app:layout_constraintTop_toTopOf="@+id/btn_copy_plan_cover_close" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_plan_cover_close"
+                    android:id="@+id/btn_copy_plan_cover_close"
                     android:layout_width="@dimen/plan_img_btn_middle"
                     android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_marginTop="@dimen/middle_padding"
@@ -60,24 +60,24 @@
                     android:background="@drawable/icons_24px_close"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.leave()}"
-                    app:layout_constraintBottom_toTopOf="@+id/layout_dialog_plan_cover_empty_image"
+                    app:layout_constraintBottom_toTopOf="@+id/layout_dialog_copy_plan_cover_empty_image"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_dialog_plan_cover_empty_image"
+                    android:id="@+id/layout_dialog_copy_plan_cover_empty_image"
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_marginTop="@dimen/middle_padding"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginEnd="@dimen/middle_padding"
-                    app:layout_constraintBottom_toTopOf="@id/btn_plan_cover_take_photo"
+                    app:layout_constraintBottom_toTopOf="@id/btn_copy_plan_cover_take_photo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_plan_cover_close">
+                    app:layout_constraintTop_toBottomOf="@+id/btn_copy_plan_cover_close">
 
                     <ImageView
-                        android:id="@+id/img_plan_cover"
+                        android:id="@+id/img_copy_plan_cover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
@@ -91,7 +91,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/button_plan_cover_delete"
+                        android:id="@+id/button_copy_plan_cover_delete"
                         android:layout_width="@dimen/plan_img_btn_small"
                         android:layout_height="@dimen/plan_img_btn_small"
                         android:layout_marginTop="@dimen/small_padding"
@@ -105,7 +105,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_plan_cover_take_photo"
+                    android:id="@+id/btn_copy_plan_cover_take_photo"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="@dimen/small_padding"
@@ -114,12 +114,12 @@
                     android:background="@drawable/camera"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.takePhoto()}"
-                    app:layout_constraintBottom_toTopOf="@+id/layout_plan_title"
+                    app:layout_constraintBottom_toTopOf="@+id/layout_copy_plan_title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout_dialog_plan_cover_empty_image" />
+                    app:layout_constraintTop_toBottomOf="@+id/layout_dialog_copy_plan_cover_empty_image" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_plan_cover_select_photo"
+                    android:id="@+id/btn_copy_plan_cover_select_photo"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="@dimen/small_padding"
@@ -128,12 +128,12 @@
                     android:background="@drawable/image"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.selectPhoto()}"
-                    app:layout_constraintBottom_toBottomOf="@+id/btn_plan_cover_take_photo"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_plan_cover_take_photo"
-                    app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_take_photo" />
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_copy_plan_cover_take_photo"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_copy_plan_cover_take_photo"
+                    app:layout_constraintTop_toTopOf="@+id/btn_copy_plan_cover_take_photo" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layout_plan_title"
+                    android:id="@+id/layout_copy_plan_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/middle_padding"
@@ -142,7 +142,7 @@
                     android:theme="@style/InputTextColorTheme"
                     app:boxBackgroundColor="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                     app:boxStrokeColor="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
-                    app:layout_constraintBottom_toTopOf="@id/layout_plan_date"
+                    app:layout_constraintBottom_toTopOf="@id/layout_copy_plan_date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
@@ -160,7 +160,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layout_plan_date"
+                    android:id="@+id/layout_copy_plan_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/middle_padding"
@@ -179,7 +179,6 @@
                         android:hint="@string/plan_date_range"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
-                        android:onClick="@{()-> viewModel.selectDate()}"
                         android:singleLine="true"
                         android:textColor="@color/gray_black"
                         app:endDate="@{viewModel.endDateFromUser}"
@@ -188,7 +187,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/fab_plan_cover_add"
+                android:id="@+id/fab_copy_plan_cover_add"
                 style="@style/TextStyle2_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

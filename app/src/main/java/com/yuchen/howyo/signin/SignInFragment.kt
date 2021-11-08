@@ -43,7 +43,9 @@ class SignInFragment : Fragment() {
         viewModel.createUserResult.observe(viewLifecycleOwner, {
             it?.let {
                 when {
-                    it -> {
+                    it.isNotEmpty() -> {
+                        viewModel.setUser()
+                        Logger.i("UserManager.isLoggedIn:${UserManager.isLoggedIn}")
                         when (UserManager.isLoggedIn) {
                             true -> {
                                 findNavController().navigate(NavigationDirections.navToHomeFragment())
@@ -93,8 +95,8 @@ class SignInFragment : Fragment() {
                             email = currentUser.email,
                             avatar = currentUser.photoUrl.toString()
                         )
-
-                        viewModel.setUser(user)
+                        Logger.i("fragment User:$user")
+                        viewModel.createUser(user)
                     }
                 }
             } else {

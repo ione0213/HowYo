@@ -206,6 +206,15 @@
             app:nullable="true" />
     </dialog>
     <dialog
+        android:id="@+id/copyPlanDialog"
+        android:name="com.yuchen.howyo.copyplan.CopyPlanDialog"
+        android:label="CopyPlanDialog"
+        tools:layout="@layout/dialog_copy_plan">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
+    </dialog>
+    <dialog
         android:id="@+id/companionDialog"
         android:name="com.yuchen.howyo.plan.companion.CompanionDialog"
         android:label="CompanionDialog"
@@ -294,9 +303,11 @@
         android:id="@+id/nav_to_plan_cover_dialog"
         app:destination="@id/planCoverDialog"
         app:popUpTo="@navigation/navigation"
-        app:popUpToInclusive="true"/>
+        app:popUpToInclusive="true" />
     <action
         android:id="@+id/nav_to_companion_dialog"
         app:destination="@id/companionDialog" />
-
+    <action
+        android:id="@+id/nav_to_copy_plan_dialog"
+        app:destination="@id/copyPlanDialog" />
 </navigation>

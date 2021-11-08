@@ -28,6 +28,9 @@
     <string name="cancel">取消</string>
 
     <!-- Plan-->
+    <string name="plan_new">新增行程</string>
+    <string name="plan_edit">編輯行程</string>
+    <string name="plan_copy">複製行程</string>
     <string name="default_cover">android.resource://com.yuchen.howyo/drawable/sample_cover</string>
     <string name="plan_public">public</string>
     <string name="plan_private">private</string>

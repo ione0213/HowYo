@@ -2,6 +2,8 @@ package com.yuchen.howyo.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.yuchen.howyo.copyplan.CopyPlanDialog
+import com.yuchen.howyo.copyplan.CopyPlanViewModel
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.plan.companion.locate.LocateViewModel
@@ -25,6 +27,8 @@ class PlanContentViewModelFactory(
                     GroupMessageViewModel(howYoRepository, plan)
                 isAssignableFrom(PlanCoverViewModel::class.java) ->
                     PlanCoverViewModel(howYoRepository, plan)
+                isAssignableFrom(CopyPlanViewModel::class.java) ->
+                    CopyPlanViewModel(howYoRepository, plan)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

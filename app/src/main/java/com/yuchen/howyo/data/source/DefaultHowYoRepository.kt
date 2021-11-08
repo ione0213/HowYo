@@ -8,7 +8,7 @@ import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
 class DefaultHowYoRepository(
     private val remoteDataSource: HowYoRemoteDataSource
 ) : HowYoRepository {
-    override suspend fun createUser(user: User): Result<Boolean> {
+    override suspend fun createUser(user: User): Result<String> {
         return remoteDataSource.createUser(user)
     }
 
