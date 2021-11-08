@@ -2,15 +2,23 @@ package com.yuchen.howyo.data.source
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.yuchen.howyo.data.Day
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Result
-import com.yuchen.howyo.data.Schedule
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
 
 class DefaultHowYoRepository(
     private val remoteDataSource: HowYoRemoteDataSource
 ) : HowYoRepository {
+    override suspend fun createUser(user: User): Result<Boolean> {
+        return remoteDataSource.createUser(user)
+    }
+
+    override suspend fun getUser(email: String): Result<User> {
+        return remoteDataSource.getUser(email)
+    }
+
+    override fun getLiveUser(email: String): MutableLiveData<User> {
+        return remoteDataSource.getLiveUser(email)
+    }
 
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> {
         return remoteDataSource.uploadPhoto(imgUri, fileName)
@@ -26,6 +34,14 @@ class DefaultHowYoRepository(
 
     override suspend fun getPlan(planId: String): Result<Plan> {
         return remoteDataSource.getPlan(planId)
+    }
+
+    override fun getLivePlan(planId: String): MutableLiveData<Plan> {
+        return remoteDataSource.getLivePlan(planId)
+    }
+
+    override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+        return remoteDataSource.getLivePlans(authorList)
     }
 
     override suspend fun updatePlan(plan: Plan): Result<Boolean> {
@@ -48,12 +64,32 @@ class DefaultHowYoRepository(
         return remoteDataSource.deleteDay(day)
     }
 
+    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
+        return remoteDataSource.getLiveDays(planId)
+    }
+
+    override suspend fun getDays(planId: String): Result<List<Day>> {
+        return remoteDataSource.getDays(planId)
+    }
+
     override suspend fun createSchedule(schedule: Schedule): Result<Boolean> {
         return remoteDataSource.createSchedule(schedule)
     }
 
-    override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
-        return remoteDataSource.getLiveDays(planId)
+    override suspend fun updateSchedule(schedule: Schedule): Result<Boolean> {
+        return remoteDataSource.updateSchedule(schedule)
+    }
+
+    override suspend fun deleteSchedule(schedule: Schedule): Result<Boolean> {
+        return remoteDataSource.deleteSchedule(schedule)
+    }
+
+    override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
+        return remoteDataSource.getLiveSchedules(planId)
+    }
+
+    override suspend fun getSchedules(planId: String): Result<List<Schedule>> {
+        return remoteDataSource.getSchedules(planId)
     }
 
     override suspend fun createMainCheckList(

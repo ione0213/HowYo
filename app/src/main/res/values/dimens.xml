@@ -9,6 +9,7 @@
     <dimen name="standard_padding">24dp</dimen>
     <dimen name="middle_padding">16dp</dimen>
     <dimen name="small_padding">8dp</dimen>
+    <dimen name="smallest_padding">4dp</dimen>
 
     <!-- Cover-->
     <dimen name="cover_plan_edittext">70dp</dimen>
@@ -28,8 +29,8 @@
 
     <!-- Schedule Detail-->
     <dimen name="height_detail_gallery">400dp</dimen>
-    <dimen name="height_detail_gallery_small">130dp</dimen>
-    <dimen name="width_detail_gallery_small">150dp</dimen>
+    <dimen name="height_detail_gallery_small">80dp</dimen>
+    <dimen name="width_detail_gallery_small">100dp</dimen>
 
     <!-- Schedule Detail Edit-->
     <dimen name="height_detail_edit">56dp</dimen>
@@ -38,6 +39,8 @@
     <dimen name="profile_avatar">70dp</dimen>
     <dimen name="profile_avatar_setting">100dp</dimen>
     <dimen name="profile_friend_tab">48dp</dimen>
+    <dimen name="profile_text_width_big">200dp</dimen>
+    <dimen name="profile_text_width_small">100dp</dimen>
 
 
     <!-- Home-->

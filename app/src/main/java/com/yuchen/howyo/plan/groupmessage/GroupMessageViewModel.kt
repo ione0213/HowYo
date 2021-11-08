@@ -9,7 +9,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 
 class GroupMessageViewModel(
     private val howYoRepository: HowYoRepository,
-    private val plan: Plan
+    private val plan: Plan?
 ) : ViewModel() {
 
     private val _groupMessages = MutableLiveData<List<GroupMessage>>()

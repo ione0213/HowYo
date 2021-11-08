@@ -29,9 +29,21 @@ fun Long.toDate(): String {
 }
 
 fun Long.toTime(): String {
-    return SimpleDateFormat("HH:mm a").format(this)
+    return SimpleDateFormat("HH:mm").format(this)
+}
+
+fun Long.toDateTime(): String {
+    return SimpleDateFormat("yyyy/MM/dd HH:mm a").format(this)
 }
 
 fun Long.toWeekDay(): String {
     return SimpleDateFormat("EE").format(this)
+}
+
+fun Long.toHour(): Int {
+    return SimpleDateFormat("HH").format(this).toInt()
+}
+
+fun Long.toMinute(): Int {
+    return SimpleDateFormat("mm").format(this).toInt()
 }

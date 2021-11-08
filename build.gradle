@@ -18,8 +18,15 @@ buildscript {
         version_fragment = '1.3.6'
         varsion_map_service = '17.0.1'
         varsion_location_service = '18.0.0'
+        version_facebook_sdk = '5.15.3'
         version_facebook_login = '11.3.0'
         version_lottie = '4.2.0'
+        version_swipereveallayout = '1.4.1'
+        version_firestore = '23.0.4'
+        version_firebase_bom = '28.4.2'
+        version_firebase_auth = '21.0.1'
+        verison_firebase_storage = '20.0.0'
+        version_firebase_auth_ui = '5.0.0'
     }
     repositories {
         google()

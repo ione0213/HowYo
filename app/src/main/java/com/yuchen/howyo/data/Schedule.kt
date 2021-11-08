@@ -16,27 +16,27 @@ data class Schedule(
     @get:PropertyName("schedule_type")
     @set:PropertyName("schedule_type")
     var scheduleType: String? = "",
-    val title: String? = "",
+    var title: String? = "",
     @get:PropertyName("photo_url_list")
     @set:PropertyName("photo_url_list")
     var photoUrlList: List<String>? = listOf(),
     @get:PropertyName("photo_file_name_list")
     @set:PropertyName("photo_file_name_list")
     var photoFileNameList: List<String>? = listOf(),
-    val latitude: Double? = null,
-    val longitude: Double? = null,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
     @get:PropertyName("start_time")
     @set:PropertyName("start_time")
     var startTime: Long? = 0L,
     @get:PropertyName("end_time")
     @set:PropertyName("end_time")
     var endTime: Long? = 0L,
-    val budget: Int? = 0,
+    var budget: Int? = 0,
     @get:PropertyName("ref_rul")
     @set:PropertyName("ref_rul")
     var refUrl: String? = "",
-    val notification: Boolean? = null,
+    var notification: Boolean? = null,
     var position: Int? = -1,
-    val address: String? = "",
-    val remark: String? = ""
+    var address: String? = "",
+    var remark: String? = ""
 ) : Parcelable

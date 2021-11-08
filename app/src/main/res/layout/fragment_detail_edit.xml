@@ -99,7 +99,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/middle_padding"
-                        android:layout_marginTop="135dp"
+                        android:layout_marginTop="90dp"
                         android:layout_marginEnd="@dimen/small_padding"
                         android:text="@string/detail_edit_schedule_type"
                         android:textAlignment="viewStart"
@@ -142,7 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/small_padding"
-                        android:checked="true"
+                        android:checked="@={viewModel.notification}"
                         android:switchMinWidth="56dp"
                         android:textOff="OFF"
                         android:textOn="ON"
@@ -170,6 +170,7 @@
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:text="@={viewModel.title}"
                             android:textColor="@color/gray_black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -193,6 +194,7 @@
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:text="@={viewModel.address}"
                             android:textColor="@color/gray_black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -212,7 +214,10 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/cover_plan_edittext"
+                            android:focusable="false"
+                            app:time="@{viewModel.startTime}"
                             android:hint="@string/detail_edit_schedule_start_time"
+                            android:onClick="@{() -> viewModel.setTime(@string/detail_edit_schedule_start_time)}"
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
@@ -235,7 +240,10 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/cover_plan_edittext"
+                            android:focusable="false"
                             android:hint="@string/detail_edit_schedule_end_time"
+                            app:time="@{viewModel.endTime}"
+                            android:onClick="@{() -> viewModel.setTime(@string/detail_edit_schedule_end_time)}"
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
@@ -250,6 +258,7 @@
                         android:layout_marginTop="@dimen/middle_padding"
                         android:layout_marginEnd="@dimen/middle_padding"
                         android:layout_marginBottom="@dimen/middle_padding"
+                        android:focusable="true"
                         android:theme="@style/InputTextColorTheme"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -262,6 +271,7 @@
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:text="@={viewModel.remark}"
                             android:textColor="@color/gray_black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -283,8 +293,10 @@
                             android:layout_height="@dimen/cover_plan_edittext"
                             android:hint="@string/detail_edit_schedule_budge"
                             android:imeOptions="actionNext"
+                            android:inputType="number"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:text="@={viewModel.budget}"
                             android:textColor="@color/gray_black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -309,6 +321,7 @@
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:text="@={viewModel.refUrl}"
                             android:textColor="@color/gray_black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -329,6 +342,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}">
 
             <com.airbnb.lottie.LottieAnimationView
@@ -343,9 +360,8 @@
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/uploading" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fab_detail_edit_save"
+            android:id="@+id/fab_detail_edit_add"
             style="@style/TextStyle2_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -353,7 +369,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
-            android:onClick="@{() -> viewModel.createSchedule()}"
+            android:onClick="@{() -> viewModel.saveSchedule()}"
             android:text="@{viewModel.status != LoadApiStatus.LOADING ? @string/save_setting : @string/save_uploading}"
             android:textAlignment="center"
             app:backgroundTint="@color/green"

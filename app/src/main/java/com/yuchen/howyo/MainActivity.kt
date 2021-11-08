@@ -25,6 +25,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yuchen.howyo.databinding.ActivityMainBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.signin.UserManager
+import com.yuchen.howyo.signin.UserManager.isLoggedIn
 import com.yuchen.howyo.util.*
 import kotlinx.coroutines.launch
 
@@ -65,20 +67,6 @@ class MainActivity : BaseActivity() {
 
                     findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navToProfileFragment())
                     return@OnNavigationItemSelectedListener true
-//                    when (viewModel.isLoggedIn) {
-//                        true -> {
-//                            findNavController(R.id.myNavHostFragment).navigate(
-//                                NavigationDirections.navigateToProfileFragment(
-//                                    viewModel.user.value
-//                                )
-//                            )
-//                        }
-//                        false -> {
-//                            findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToLoginDialog())
-//                            return@OnNavigationItemSelectedListener false
-//                        }
-//                    }
-//                    return@OnNavigationItemSelectedListener true
                 }
             }
             false
@@ -94,16 +82,9 @@ class MainActivity : BaseActivity() {
             }
         }
 
-//    private val onNavigationViewListener =
-//        NavigationView.OnNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.
-//            }
-//        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mContext = this
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -118,6 +99,18 @@ class MainActivity : BaseActivity() {
                 }
             }
         )
+
+        viewModel.currentFragmentType.observe(this, {
+            Logger.i("isLoggedIn:${isLoggedIn}")
+            it?.let {
+                when {
+                    it != CurrentFragmentType.SIGNIN && !isLoggedIn
+                    -> {
+                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navToSignInFragment())
+                    }
+                }
+            }
+        })
 
         setupToolbar()
         setupBottomNav()
@@ -146,6 +139,7 @@ class MainActivity : BaseActivity() {
 //                R.id.findLocationFragment -> CurrentFragmentType.FIND_LOCATION
                 R.id.friendsFragment -> CurrentFragmentType.FRIENDS
                 R.id.settingFragment -> CurrentFragmentType.SETTING
+                R.id.signInFragment -> CurrentFragmentType.SIGNIN
                 else -> viewModel.currentFragmentType.value
             }
         }
@@ -215,35 +209,7 @@ class MainActivity : BaseActivity() {
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         ) {
-//            override fun onDrawerOpened(drawerView: View) {
-//                super.onDrawerOpened(drawerView)
-//
-//                when (UserManager.isLoggedIn) { // check user login status when open drawer
-//                    true -> {
-//                        viewModel.checkUser()
-//                    }
-//                    else -> {
-//                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToLoginDialog())
-//                        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//                            binding.drawerLayout.closeDrawer(GravityCompat.START)
-//                        }
-//                    }
-//                }
-//            }
         }
-//            .apply {
-//            binding.drawerLayout.addDrawerListener(this)
-//            syncState()
-//        }
-
-//        // Set up header of drawer ui using data binding
-//        val bindingNavHeader = NavHeaderDrawerBinding.inflate(
-//            LayoutInflater.from(this), binding.drawerNavView, false
-//        )
-//
-//        bindingNavHeader.lifecycleOwner = this
-//        bindingNavHeader.viewModel = viewModel
-//        binding.drawerNavView.addHeaderView(bindingNavHeader.root)
 
         // Observe current drawer toggle to set the navigation icon and behavior
         viewModel.currentDrawerToggleType.observe(
@@ -284,7 +250,7 @@ class MainActivity : BaseActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(this, "Get Permission", Toast.LENGTH_LONG).show()
+//            Toast.makeText(this, "Get Permission", Toast.LENGTH_LONG).show()
             locationPermissionGranted = true
             checkGPSState()
         } else {
@@ -335,7 +301,7 @@ class MainActivity : BaseActivity() {
                             )
                         ) {
                             //權限被永久拒絕
-                            Toast.makeText(this, "位置權限已被關閉，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(this, "位置權限已被關閉，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
 
                             //Navigate to setting page
 //                            AlertDialog.Builder(this)
@@ -349,7 +315,7 @@ class MainActivity : BaseActivity() {
 //                                .show()
                         } else {
                             //權限被拒絕
-                            Toast.makeText(this, "位置權限被拒絕，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(this, "位置權限被拒絕，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
 //                            requestLocationPermission()
                         }
                     }
@@ -386,7 +352,7 @@ class MainActivity : BaseActivity() {
                 .show()
         } else {
             //todo getDeviceLocation()
-            Toast.makeText(this, "已獲取到位置權限且GPS已開啟，可以準備開始獲取經緯度", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "已獲取到位置權限且GPS已開啟，可以準備開始獲取經緯度", Toast.LENGTH_SHORT).show()
         }
     }
 }

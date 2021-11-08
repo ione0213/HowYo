@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.databinding.ItemDetailImageBinding
 
-class DetailImagesAdapter : ListAdapter<String, DetailImagesAdapter.ImageViewHolder>(DiffCallback) {
+class DetailImagesAdapter(private val viewModel: DetailViewModel) :
+    ListAdapter<String, DetailImagesAdapter.ImageViewHolder>(DiffCallback) {
 
     class ImageViewHolder(private var binding: ItemDetailImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageUrl: String) {
-
             imageUrl.let {
                 binding.imageUrl = it
                 binding.executePendingBindings()
@@ -32,7 +32,11 @@ class DetailImagesAdapter : ListAdapter<String, DetailImagesAdapter.ImageViewHol
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         return ImageViewHolder(
-            ItemDetailImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemDetailImageBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            ).apply {
+                viewModel = this@DetailImagesAdapter.viewModel
+            }
         )
     }
 

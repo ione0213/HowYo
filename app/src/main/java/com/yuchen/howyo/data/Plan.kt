@@ -35,5 +35,8 @@ data class Plan(
     @get:PropertyName("plan_collected_list")
     @set:PropertyName("plan_collected_list")
     var planCollectedList: List<String>? = listOf(),
-    var privacy: String? = PlanPrivacy.PRIVATE.value
+    var privacy: String? = PlanPrivacy.PRIVATE.value,
+    @get:PropertyName("created_time")
+    @set:PropertyName("created_time")
+    var createdTime: Long? = 0L
 ) : Parcelable

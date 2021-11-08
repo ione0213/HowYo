@@ -1,6 +1,7 @@
 package com.yuchen.howyo.plan.detail.edit
 
 import android.app.Activity
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +12,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.yuchen.howyo.HowYoApplication
+import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
+import com.yuchen.howyo.data.SchedulePhotos
 import com.yuchen.howyo.databinding.FragmentDetailEditBinding
 import com.yuchen.howyo.ext.getVmFactory
+import java.util.*
+
 
 class DetailEditFragment : Fragment() {
 
@@ -21,8 +26,8 @@ class DetailEditFragment : Fragment() {
     private val viewModel by viewModels<DetailEditViewModel> {
         getVmFactory(
             DetailEditFragmentArgs.fromBundle(requireArguments()).schedule,
-            DetailEditFragmentArgs.fromBundle(requireArguments()).planId,
-            DetailEditFragmentArgs.fromBundle(requireArguments()).dayId
+            DetailEditFragmentArgs.fromBundle(requireArguments()).plan,
+            DetailEditFragmentArgs.fromBundle(requireArguments()).day
         )
     }
     private val fromAlbum = 0x00
@@ -33,7 +38,7 @@ class DetailEditFragment : Fragment() {
     ): View {
 
         binding = FragmentDetailEditBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         val adapter = DetailEditImagesAdapter(viewModel)
@@ -48,6 +53,7 @@ class DetailEditFragment : Fragment() {
         viewModel.leaveEditDetail.observe(viewLifecycleOwner, {
             it?.let {
                 if (it) findNavController().popBackStack()
+                viewModel.onLeaveEditDetail()
             }
         })
 
@@ -58,12 +64,64 @@ class DetailEditFragment : Fragment() {
             }
         })
 
+        viewModel.setTime.observe(viewLifecycleOwner, {
+            it?.let {
+                val c = Calendar.getInstance()
+                val hour = c.get(Calendar.HOUR_OF_DAY)
+                val minute = c.get(Calendar.MINUTE)
+                c.timeInMillis = viewModel.plan.value?.startDate!!.plus(
+                    (1000 * 60 * 60 * 24 * (viewModel.day.value?.position ?: 0))
+                )
+
+                val picker = TimePickerDialog(
+                    context,
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth,
+                    { tp, sHour, sMinute ->
+
+                        c.set(Calendar.HOUR_OF_DAY, sHour)
+                        c.set(Calendar.MINUTE, sMinute)
+
+                        when (it) {
+                            getString(R.string.detail_edit_schedule_start_time) -> {
+                                viewModel.setTimeValue(it, c.timeInMillis)
+                            }
+                            getString(R.string.detail_edit_schedule_end_time) -> {
+                                viewModel.setTimeValue(it, c.timeInMillis)
+                            }
+                        }
+                    },
+                    hour,
+                    minute,
+                    true
+                )
+                picker.show()
+                viewModel.onSetTime()
+            }
+        })
+
+        viewModel.navigateToEditImage.observe(viewLifecycleOwner, {
+            it?.let {
+                val schedulePhotos = SchedulePhotos()
+                viewModel.photoDataList.value?.forEach { schedulePhoto ->
+                    schedulePhotos.add(schedulePhoto)
+                }
+
+                findNavController().navigate(
+                    NavigationDirections.navToDetailEditImageFragment(
+                        it,
+                        schedulePhotos
+                    )
+                )
+                viewModel.onEditImageNavigated()
+            }
+        })
+
         viewModel.scheduleResult.observe(viewLifecycleOwner, {
             it?.let {
                 when {
                     it -> {
                         findNavController().popBackStack()
-                        viewModel.onBackToPlanPortal()
+                        viewModel.onBackToPreviousPage()
                     }
                 }
             }

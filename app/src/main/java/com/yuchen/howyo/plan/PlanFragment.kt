@@ -1,6 +1,5 @@
 package com.yuchen.howyo.plan
 
-import android.content.ClipData
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +33,7 @@ class PlanFragment : Fragment() {
         )
     }
 
-    private val itemTouchHelper by lazy {
+    private val dayItemTouchHelper by lazy {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
             0
@@ -48,10 +47,18 @@ class PlanFragment : Fragment() {
                 val adapter = recyclerView.adapter as PlanDaysAdapter
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
-                Logger.i("FROM:$from, TO:$to")
-                viewModel.moveDay(from, to)
-                adapter.notifyItemMoved(from, to)
-                return true
+
+                return when {
+                    //Prevent moving to the position which is out of days range
+                    from != to && to <= viewModel.days.value?.size!!.minus(1) -> {
+                        viewModel.moveDay(from, to)
+                        adapter.notifyItemMoved(from, to)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -66,7 +73,67 @@ class PlanFragment : Fragment() {
                     when {
                         !(viewModel.days.value === viewModel.tempDays) -> {
                             lifecycleScope.launch {
-                                viewModel.movedDay()
+                                viewModel.submitMovedDay()
+                                viewModel.submitMoveSchedule(HandleScheduleType.TIME)
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                super.clearView(recyclerView, viewHolder)
+
+                viewHolder.itemView.alpha = 1.0f
+            }
+        }
+
+        ItemTouchHelper(simpleItemTouchCallback)
+    }
+
+    private val scheduleItemTouchHelper by lazy {
+        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+            0
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val adapter = recyclerView.adapter as ScheduleAdapter
+                val from = viewHolder.adapterPosition
+                val to = target.adapterPosition
+                return when {
+                    //Prevent moving to the position which is out of schedules range
+                    from != to && to <= viewModel.schedules.value?.size!!.minus(1) -> {
+                        viewModel.moveSchedule(from, to)
+                        adapter.notifyItemMoved(from, to)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    viewHolder?.itemView?.alpha = 0.5f
+                } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+                    when {
+                        !(viewModel.schedules.value === viewModel.tempSchedules) -> {
+                            lifecycleScope.launch {
+                                viewModel.submitMoveSchedule(HandleScheduleType.POSITION)
                             }
                         }
                     }
@@ -92,10 +159,18 @@ class PlanFragment : Fragment() {
     ): View {
 
         binding = FragmentPlanBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        itemTouchHelper.attachToRecyclerView(binding.recyclerPlanDays)
+        when (viewModel.accessType) {
+            AccessPlanType.EDIT -> {
+                dayItemTouchHelper.attachToRecyclerView(binding.recyclerPlanDays)
+                scheduleItemTouchHelper.attachToRecyclerView(binding.recyclerPlanSchedules)
+            }
+            else -> {
+
+            }
+        }
         binding.recyclerPlanDays.adapter = PlanDaysAdapter(viewModel)
         binding.recyclerPlanSchedules.adapter =
             ScheduleAdapter(viewModel, ScheduleAdapter.OnClickListener {
@@ -107,6 +182,28 @@ class PlanFragment : Fragment() {
         cm.setSaturation(0.4F)
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
+
+        viewModel.selectedDayPosition.observe(viewLifecycleOwner, {
+            it?.let {
+                viewModel.filterSchedule()
+            }
+        })
+
+        viewModel.deletingPlan.observe(viewLifecycleOwner, {
+            it?.let { plan ->
+                context?.let { context ->
+                    AlertDialog.Builder(context)
+                        .setMessage(getString(R.string.confirm_delete_plan, plan.title))
+                        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.delExistPlan(plan)
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                            viewModel.onDeletedPlan()
+                        }
+                        .show()
+                }
+            }
+        })
 
         viewModel.deletingDay.observe(viewLifecycleOwner, {
             it?.let { day ->
@@ -124,19 +221,49 @@ class PlanFragment : Fragment() {
             }
         })
 
-        viewModel.deletingPlan.observe(viewLifecycleOwner, {
-            it?.let { plan ->
+        viewModel.deletingSchedule.observe(viewLifecycleOwner, {
+            it?.let { schedule ->
                 context?.let { context ->
                     AlertDialog.Builder(context)
-                        .setMessage(getString(R.string.confirm_delete_plan))
+                        .setMessage(getString(R.string.confirm_delete_schedule))
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                            viewModel.delExistPlan(plan)
+                            viewModel.delExistSchedule(schedule)
                         }
                         .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-                            viewModel.onDeletedPlan()
+                            viewModel.onDeletedSchedule()
                         }
                         .show()
                 }
+            }
+        })
+
+        viewModel.updatePrivacy.observe(viewLifecycleOwner, {
+            it?.let {
+                context?.let { context ->
+                    AlertDialog.Builder(context)
+                        .setMessage(
+                            getString(
+                                R.string.confirm_update_privacy,
+                                when (it) {
+                                    PlanPrivacy.PRIVATE -> getString(R.string.set_private)
+                                    PlanPrivacy.PUBLIC -> getString(R.string.set_public)
+                                }
+                            )
+                        )
+                        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.setPrivacy(it)
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                            viewModel.onUpdatedPrivacy()
+                        }
+                        .show()
+                }
+            }
+        })
+
+        viewModel.updatePrivacyResult.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it) viewModel.onUpdatedPrivacy()
             }
         })
 
@@ -156,10 +283,41 @@ class PlanFragment : Fragment() {
             it?.let {
                 when {
                     it -> {
-                        viewModel.getPlanResult()
-                        viewModel.getLiveDaysResult()
-                        viewModel.setDefaultSelectedDay()
+                        viewModel.apply {
+
+//                            getPlanResult()
+                            setDefaultSelectedDay()
+                            onDeletedDay()
+                            onSubmitMoveDay()
+                            setStatusDone()
+                        }
+
                         binding.recyclerPlanDays.layoutManager?.scrollToPosition(0)
+                    }
+                }
+            }
+        })
+
+        viewModel.allSchedules.observe(viewLifecycleOwner, {
+            it?.let {
+                when (viewModel.deletingPlan.value) {
+                    null -> {
+                        viewModel.filterSchedule()
+                    }
+                }
+            }
+        })
+
+        viewModel.handleScheduleSuccess.observe(viewLifecycleOwner, {
+            it?.let {
+                when {
+                    it -> {
+                        viewModel.apply {
+                            filterSchedule()
+                            onDeletedSchedule()
+                            setStatusDone()
+                            onSubmitMoveSchedule()
+                        }
                     }
                 }
             }
@@ -167,21 +325,54 @@ class PlanFragment : Fragment() {
 
         viewModel.navigateToDetail.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(NavigationDirections.navToDetailFragment(it))
+                findNavController().navigate(
+                    when (viewModel.accessType) {
+                        AccessPlanType.VIEW -> NavigationDirections.navToDetailFragment(it)
+                        AccessPlanType.EDIT -> {
+                            NavigationDirections.navToDetailEditFragment()
+                                .setPlan(viewModel.plan.value)
+                                .setDay(viewModel.selectedDayPosition.value?.let { position ->
+                                    viewModel.days.value?.get(position)
+                                })
+                                .setSchedule(it)
+                        }
+                    }
+                )
                 viewModel.onDetailNavigated()
             }
         })
 
-        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
+        viewModel.navigateToAddSchedule.observe(viewLifecycleOwner, {
             it?.let {
 
                 findNavController().navigate(
                     NavigationDirections.navToDetailEditFragment()
                         .setSchedule(null)
-                        .setPlanId(viewModel.plan.value?.id)
-                        .setDayId(it)
+                        .setPlan(viewModel.plan.value)
+                        .setDay(it)
                 )
-                viewModel.onEditScheduleNavigated()
+                viewModel.onAddScheduleNavigated()
+            }
+        })
+
+        viewModel.navigateToEditPlan.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToPlanFragment(
+                        it,
+                        AccessPlanType.EDIT
+                    )
+                )
+                viewModel.onEditPlanNavigated()
+            }
+        })
+
+        viewModel.navigateToEditCover.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToPlanCoverDialog().setPlan(it)
+                )
+                viewModel.onEditCoverNavigated()
             }
         })
 

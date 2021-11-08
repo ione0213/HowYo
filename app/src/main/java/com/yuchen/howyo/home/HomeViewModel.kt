@@ -3,6 +3,7 @@ package com.yuchen.howyo.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseUser
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository
 
@@ -30,7 +31,7 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
         _plans.value = listOf(
             Plan(
-                "1",
+                "VWN61M99rDHJnWcmguvE",
                 "traveller",
                 listOf(),
                 "Go to Osaka",

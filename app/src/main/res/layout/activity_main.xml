@@ -39,8 +39,11 @@
                 <TextView
                     android:id="@+id/text_toolbar_title"
                     android:layout_width="wrap_content"
+                    android:maxWidth="@dimen/profile_text_width_big"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:fontFamily="@font/noto_sans"
                     android:letterSpacing="0.15"
                     app:currentFragmentTypeForText="@{viewModel.currentFragmentType}"

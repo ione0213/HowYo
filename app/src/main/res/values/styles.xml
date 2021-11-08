@@ -21,7 +21,7 @@
 
     <style name="circle2" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20%</item>
+        <item name="cornerSize">10%</item>
     </style>
 
     <style name="SeparationVertical">
@@ -47,4 +47,23 @@
     <style name="Button" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/button_ripple</item>
     </style>
+
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/gray_black</item>
+        <item name="colorPrimaryDark">@color/gray_black</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@drawable/sign_in_background</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorHint">@android:color/white</item>
+    </style>
+
+
 </resources>

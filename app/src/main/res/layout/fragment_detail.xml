@@ -36,6 +36,7 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/standard_padding"
+                    android:onClick="@{() -> viewModel.leaveViewDetail()}"
                     android:background="@drawable/icons_44px_back01"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -73,10 +74,10 @@
                     android:layout_height="@dimen/plan_img_btn"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:src="@drawable/train"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_detail_images"
-                    app:layout_goneMarginTop="@dimen/largest_padding" />
+                    app:layout_goneMarginTop="@dimen/largest_padding"
+                    app:scheduleType="@{viewModel.schedule.scheduleType}" />
 
                 <TextView
                     android:id="@+id/text_detail_title"
@@ -85,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
-                    android:text="APA Hotel Nagoya-Sakae"
+                    android:text="@{viewModel.schedule.title}"
                     android:textAlignment="viewStart"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_type"
@@ -126,8 +127,8 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/small_padding"
-                    android:onClick="@{() -> viewModel.navigateToViewMap()}"
                     android:background="@drawable/resize_arrow"
+                    android:onClick="@{() -> viewModel.navigateToViewMap()}"
                     android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="@+id/layout_detail_destination"
                     app:layout_constraintTop_toTopOf="@id/layout_detail_destination" />
@@ -149,14 +150,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
-                    android:text="09:00 to 12:00"
                     android:textAlignment="viewStart"
+                    app:fromTime="@{viewModel.schedule.startTime}"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_time"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/img_detail_time"
-                    app:layout_constraintTop_toTopOf="@+id/img_detail_time" />
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_time"
+                    app:toTime="@{viewModel.schedule.endTime}" />
 
                 <ImageView
                     android:id="@+id/img_detail_address"
@@ -175,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
-                    android:text="愛知県名古屋市中区栄4丁目10-16愛知県名古屋市中区栄4丁目10-16"
+                    android:text="@{viewModel.schedule.address}"
                     android:textAlignment="viewStart"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_address"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -201,7 +203,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
-                    android:text="地鐵站出來走約五分鐘 全家對面"
+                    android:text="@{viewModel.schedule.remark}"
                     android:textAlignment="viewStart"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_note"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -227,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
-                    android:text="4000"
+                    android:text="@{String.valueOf(viewModel.schedule.budget)}"
                     android:textAlignment="viewStart"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_budge"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -248,12 +250,13 @@
 
                 <TextView
                     android:id="@+id/text_detail_url"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_url_blue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
-                    android:text="https://google.com"
+                    android:onClick="@{() -> viewModel.navigateToUrl(viewModel.schedule.refUrl)}"
+                    android:text="@{viewModel.schedule.refUrl}"
                     android:textAlignment="viewStart"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_url"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -278,7 +281,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
-                    android:checked="true"
+                    android:checked="@{viewModel.schedule.notification}"
                     android:clickable="false"
                     android:switchMinWidth="56dp"
                     android:textOff="OFF"

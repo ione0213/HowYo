@@ -28,7 +28,6 @@ import com.yuchen.howyo.databinding.DialogPlanCoverBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 import com.yuchen.howyo.plan.AccessPlanType
-import com.yuchen.howyo.util.Logger
 import java.io.File
 
 const val TAG = "DATE_PICKER"
@@ -36,7 +35,11 @@ const val TAG = "DATE_PICKER"
 class PlanCoverDialog : AppCompatDialogFragment() {
 
     private lateinit var binding: DialogPlanCoverBinding
-    private val viewModel by viewModels<PlanCoverViewModel> { getVmFactory() }
+    private val viewModel by viewModels<PlanCoverViewModel> {
+        getVmFactory(
+            PlanCoverDialogArgs.fromBundle(requireArguments()).plan
+        )
+    }
     private val takePhoto = 0x00
     private val fromAlbum = 0x01
     lateinit var imageUri: Uri
@@ -92,7 +95,14 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             it?.let {
                 when {
                     it -> {
-                        viewModel.createPlan()
+                        when (viewModel.plan.value?.id.isNullOrEmpty()) {
+                            true -> {
+                                viewModel.createPlan()
+                            }
+                            false -> {
+                                viewModel.updatePlan()
+                            }
+                        }
                     }
                 }
             }
@@ -101,7 +111,17 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         viewModel.planId.observe(viewLifecycleOwner, {
             it?.let {
                 when {
-                    it.isNotEmpty() -> viewModel.setRelatedCollection()
+                    it.isNotEmpty() -> viewModel.createRelatedCollection()
+                }
+            }
+        })
+
+        viewModel.isPlanUpdated.observe(viewLifecycleOwner, {
+            it?.let {
+                when (it) {
+                    true -> {
+                        viewModel.updateRelatedCollection()
+                    }
                 }
             }
         })
@@ -110,12 +130,20 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             it?.let {
                 when {
                     it -> {
-                        findNavController().navigate(
-                            NavigationDirections.navToPlanFragment(
-                                viewModel.plan.value,
-                                AccessPlanType.EDIT
-                            )
-                        )
+                        when (viewModel.isNewPlan.value) {
+                            true -> {
+                                findNavController().navigate(
+                                    NavigationDirections.navToPlanFragment(
+                                        viewModel.plan.value,
+                                        AccessPlanType.EDIT
+                                    )
+                                )
+                            }
+                            false -> {
+                                findNavController().popBackStack()
+                            }
+                        }
+
                     }
                 }
             }

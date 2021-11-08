@@ -26,17 +26,19 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/dialog_add_new_plan.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/dialog_companion.xml" value="0.2833333333333333" />
-        <entry key="app/src/main/res/layout/dialog_plan_cover.xml" value="0.3733133433283358" />
+        <entry key="app/src/main/res/layout/dialog_plan_cover.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add_new_plan_dialog.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_check_list.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_companion.xml" value="0.26197916666666665" />
-        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_detail_edit.xml" value="0.1385390428211587" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.75" />
+        <entry key="app/src/main/res/layout/fragment_detail_edit.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_detail_edit_image.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_detail_view_image.xml" value="0.265625" />
         <entry key="app/src/main/res/layout/fragment_discover.xml" value="0.18115942028985507" />
         <entry key="app/src/main/res/layout/fragment_edit_payment.xml" value="0.2546875" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.2418478260869565" />
-        <entry key="app/src/main/res/layout/fragment_find_location.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_find_location.xml" value="0.375287797390637" />
         <entry key="app/src/main/res/layout/fragment_friend_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_group_message.xml" value="0.20833333333333334" />
@@ -47,10 +49,11 @@
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment_detail.xml" value="0.20833333333333334" />
-        <entry key="app/src/main/res/layout/fragment_plan.xml" value="0.13580246913580246" />
+        <entry key="app/src/main/res/layout/fragment_plan.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_shopping_list.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_signin.xml" value="0.2767210144927536" />
         <entry key="app/src/main/res/layout/item_chat.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_check_list_add.xml" value="0.18645833333333334" />
         <entry key="app/src/main/res/layout/item_check_list_item.xml" value="0.375" />
@@ -60,8 +63,9 @@
         <entry key="app/src/main/res/layout/item_detail_edit_image_add.xml" value="0.16" />
         <entry key="app/src/main/res/layout/item_detail_edit_spinner.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_detail_image.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/item_detail_view_delete_image.xml" value="0.335" />
         <entry key="app/src/main/res/layout/item_empty_schedule.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/item_find_location_day.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/item_find_location_day.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_friend.xml" value="0.335" />
         <entry key="app/src/main/res/layout/item_notify_follow.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_notify_like.xml" value="0.25" />
@@ -69,7 +73,7 @@
         <entry key="app/src/main/res/layout/item_plan_day.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_plan_day_add.xml" value="0.625" />
         <entry key="app/src/main/res/layout/item_plan_days.xml" value="0.26358695652173914" />
-        <entry key="app/src/main/res/layout/item_plan_schedule.xml" value="0.27812113720642767" />
+        <entry key="app/src/main/res/layout/item_plan_schedule.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_plans_discover.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_plans_favorite.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_plans_home.xml" value="0.375" />

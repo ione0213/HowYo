@@ -7,13 +7,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.databinding.ItemPlanScheduleBinding
 import androidx.recyclerview.widget.ListAdapter
-import com.yuchen.howyo.data.DayItem
 import com.yuchen.howyo.data.ScheduleDataItem
 import com.yuchen.howyo.databinding.ItemEmptyScheduleBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.chauthai.swipereveallayout.ViewBinderHelper
+import com.chauthai.swipereveallayout.SwipeRevealLayout
+
+
+
+
 
 class ScheduleAdapter(
     val viewModel: PlanViewModel,
@@ -22,6 +27,7 @@ class ScheduleAdapter(
     ListAdapter<ScheduleDataItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
+    private val viewBinderHelper = ViewBinderHelper()
 
     class OnClickListener(val clickListener: (schedule: Schedule) -> Unit) {
         fun onClick(schedule: Schedule) = clickListener(schedule)
@@ -29,12 +35,23 @@ class ScheduleAdapter(
 
     class ScheduleViewHolder(private var binding: ItemPlanScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(schedule: Schedule, onClickListener: OnClickListener) {
-            binding.root.setOnClickListener { onClickListener.onClick(schedule) }
+        var swipeRevealLayout: SwipeRevealLayout = binding.swipeLayout
+        fun bind(
+            schedule: Schedule,
+            onClickListener: OnClickListener,
+            viewModel: PlanViewModel
+        ) {
+
+            binding.layoutPlanScheduleContent.setOnClickListener { onClickListener.onClick(schedule) }
+            binding.buttonPlanScheduleDelete.setOnClickListener {
+                viewModel.checkDeleteSchedule(schedule)
+                swipeRevealLayout.close(true)
+            }
             schedule.let {
                 binding.schedule = it
                 binding.executePendingBindings()
             }
+            swipeRevealLayout = binding.swipeLayout
         }
     }
 
@@ -90,9 +107,14 @@ class ScheduleAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ScheduleViewHolder -> {
+                viewBinderHelper.closeLayout(position.toString())
+                viewBinderHelper.setOpenOnlyOne(true)
+                viewBinderHelper.bind(holder.swipeRevealLayout, position.toString())
+
                 holder.bind(
                     (getItem(position) as ScheduleDataItem.ScheduleItem).schedule,
-                    onClickListener
+                    onClickListener,
+                    viewModel
                 )
             }
         }

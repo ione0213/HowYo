@@ -14,123 +14,152 @@
             type="com.yuchen.howyo.data.Schedule" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.chauthai.swipereveallayout.SwipeRevealLayout
+        android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:dragEdge="right"
+        app:mode="same_level">
 
-        <androidx.cardview.widget.CardView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/plan_img_btn_big"
+            android:layout_height="100dp"
+            android:background="@color/green">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_plan_schedule_delete"
+                android:layout_width="@dimen/plan_img_btn_small"
+                android:layout_height="@dimen/plan_img_btn_small"
+                android:background="@drawable/delete"
+                android:backgroundTint="@color/white"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_plan_schedule_content"
             android:layout_width="match_parent"
-            app:cardBackgroundColor="@color/gray_f5f5f5"
-            android:background="@color/gray"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginTop="@dimen/small_padding"
-            android:layout_marginBottom="@dimen/small_padding"
-            android:elevation="10dp"
-            app:cardCornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_marginBottom="@dimen/small_padding"
+                android:background="@color/gray"
+                android:elevation="10dp"
+                app:cardBackgroundColor="@color/gray_f5f5f5"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/text_plan_schedule_from_time"
-                    style="@style/TextStyle3_gray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/standard_padding"
-                    android:layout_marginTop="@dimen/small_padding"
-                    android:text="09:00"
-                    android:textStyle="bold"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_goneMarginStart="@dimen/small_padding"
-                    tools:text="09:00" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/img_plan_schedule_type"
-                    android:layout_width="@dimen/plan_img_btn"
-                    android:layout_height="@dimen/plan_img_btn"
-                    android:layout_marginTop="@dimen/small_padding"
-                    android:layout_marginBottom="@dimen/middle_padding"
-                    android:src="@drawable/train"
-                    app:layout_constraintEnd_toEndOf="@+id/text_plan_schedule_from_time"
-                    app:layout_constraintStart_toStartOf="@+id/text_plan_schedule_from_time"
-                    app:layout_constraintTop_toBottomOf="@+id/text_plan_schedule_from_time" />
-
-                <TextView
-                    android:id="@+id/text_plan_schedule_to_time"
-                    style="@style/TextStyle3_gray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_padding"
-                    app:layout_goneMarginBottom="@dimen/small_padding"
-                    android:layout_marginBottom="@dimen/small_padding"
-                    android:text="11:00"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="@+id/text_plan_schedule_from_time"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/img_plan_schedule_type"
-                    app:layout_constraintTop_toBottomOf="@+id/img_plan_schedule_type"
-                    tools:text="09:00" />
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardview_plan_schedule"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/small_padding"
-                    android:layout_marginEnd="@dimen/middle_padding"
-                    android:elevation="5dp"
-                    app:cardBackgroundColor="@color/gray_f0f0f0"
-                    app:cardCornerRadius="20dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_plan_schedule_to_time"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/img_plan_schedule_type"
-                    app:layout_constraintTop_toTopOf="@+id/text_plan_schedule_from_time">
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/text_plan_schedule_from_time"
+                        style="@style/TextStyle3_gray"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_marginTop="@dimen/smallest_padding"
+                        app:time="@{schedule.startTime}"
+                        android:textStyle="bold"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/cardview_plan_schedule"
+                        app:layout_goneMarginStart="@dimen/small_padding"
+                        tools:text="09:00" />
 
-                        <TextView
-                            android:id="@+id/text_plan_schedule_time_duration"
-                            style="@style/TextStyle3_red"
-                            android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/img_plan_schedule_type"
+                        android:layout_width="@dimen/plan_img_btn"
+                        android:layout_height="@dimen/plan_img_btn"
+                        android:layout_marginTop="@dimen/smallest_padding"
+                        app:layout_goneMarginTop="0dp"
+                        app:scheduleType="@{schedule.scheduleType}"
+                        tools:src="@drawable/train"
+                        app:layout_constraintEnd_toEndOf="@+id/text_plan_schedule_from_time"
+                        app:layout_constraintStart_toStartOf="@+id/text_plan_schedule_from_time"
+                        app:layout_constraintBottom_toTopOf="@+id/text_plan_schedule_to_time"
+                        app:layout_constraintTop_toBottomOf="@+id/text_plan_schedule_from_time" />
+
+                    <TextView
+                        android:id="@+id/text_plan_schedule_to_time"
+                        style="@style/TextStyle3_gray"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/smallest_padding"
+                        android:layout_marginBottom="@dimen/smallest_padding"
+                        app:time="@{schedule.endTime}"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/text_plan_schedule_from_time"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="@+id/text_plan_schedule_from_time"
+                        app:layout_constraintTop_toBottomOf="@+id/img_plan_schedule_type"
+                        app:layout_goneMarginBottom="@dimen/small_padding"
+                        tools:text="09:00" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardview_plan_schedule"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/standard_padding"
+                        android:layout_marginEnd="@dimen/middle_padding"
+                        android:elevation="5dp"
+                        app:cardBackgroundColor="@color/gray_f0f0f0"
+                        app:cardCornerRadius="10dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/text_plan_schedule_to_time"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/img_plan_schedule_type"
+                        app:layout_constraintTop_toTopOf="@+id/text_plan_schedule_from_time">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/middle_padding"
-                            android:layout_marginStart="@dimen/middle_padding"
-                            android:text="1時35分"
-                            android:textStyle="bold"
-                            app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintHorizontal_chainStyle="packed"
-                            tools:text="1時35分" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/text_plan_schedule_title"
-                            style="@style/TextStyle2_black"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/middle_padding"
-                            android:layout_marginTop="@dimen/middle_padding"
-                            android:layout_marginBottom="@dimen/middle_padding"
-                            android:text="@{schedule.title}"
-                            android:textStyle="bold"
-                            app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintHorizontal_chainStyle="packed"
-                            tools:text="Check in" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-                </androidx.cardview.widget.CardView>
+                            <TextView
+                                android:id="@+id/text_plan_schedule_time_duration"
+                                style="@style/TextStyle3_red"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/middle_padding"
+                                android:layout_marginTop="@dimen/small_padding"
+                                android:text="1時35分"
+                                android:textStyle="bold"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintHorizontal_chainStyle="packed"
+                                tools:text="1時35分" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                            <TextView
+                                android:id="@+id/text_plan_schedule_title"
+                                style="@style/TextStyle2_black"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/middle_padding"
+                                android:layout_marginTop="@dimen/small_padding"
+                                android:layout_marginBottom="@dimen/small_padding"
+                                android:text="@{schedule.title}"
+                                android:textStyle="bold"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintHorizontal_chainStyle="packed"
+                                tools:text="Check in" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </androidx.cardview.widget.CardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.chauthai.swipereveallayout.SwipeRevealLayout>
 </layout>

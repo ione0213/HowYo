@@ -6,11 +6,17 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class User(
-    val id: String? = null,
-    val avatar: String? = null,
-    val introduction: String? = null,
-    val latitude: Double? = null,
-    val longitude: Double? = null,
-    @get:PropertyName("fans_list") val fansList: List<String>? = null,
-    @get:PropertyName("following_list") val followingList: List<String>? = null
+    var id: String? = null,
+    var name: String? = null,
+    var email: String? = null,
+    var avatar: String? = null,
+    var introduction: String? = null,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
+    @get:PropertyName("fans_list")
+    @set:PropertyName("fans_list")
+    var fansList: List<String>? = listOf(),
+    @get:PropertyName("following_list")
+    @set:PropertyName("following_list")
+    var followingList: List<String>? = listOf()
 ) : Parcelable

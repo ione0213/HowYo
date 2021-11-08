@@ -1,5 +1,7 @@
 package com.yuchen.howyo.plan.detail.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,7 @@ import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentDetailBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.util.Logger
 
 
 class DetailFragment : Fragment(), OnMapReadyCallback {
@@ -44,13 +47,15 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.recyclerDetailImages.adapter = DetailImagesAdapter()
+        binding.recyclerDetailImages.adapter = DetailImagesAdapter(viewModel)
 
         LinearSnapHelper().attachToRecyclerView(binding.recyclerDetailImages)
 
         //Map
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(HowYoApplication.instance)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_detail_destination) as SupportMapFragment
+        mFusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(HowYoApplication.instance)
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.map_detail_destination) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
@@ -58,8 +63,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 findNavController().navigate(
                     NavigationDirections.navToDetailEditFragment()
                         .setSchedule(it)
-                        .setPlanId(null)
-                        .setDayId(null)
+                        .setPlan(null)
+                        .setDay(null)
                 )
                 viewModel.onEditScheduleNavigated()
             }
@@ -69,6 +74,30 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToMapFragment(it))
                 viewModel.onViewMapNavigated()
+            }
+        })
+
+        viewModel.navigateToViewImage.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToDetailViewImageFragment(it))
+                viewModel.onViewImageNavigated()
+            }
+        })
+
+        viewModel.navigateToUrl.observe(viewLifecycleOwner, {
+            it?.let {
+
+                val openURL = Intent(Intent.ACTION_VIEW)
+                openURL.data = Uri.parse(it)
+                startActivity(openURL)
+                viewModel.onUrlNavigated()
+            }
+        })
+
+        viewModel.leaveViewDetail.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it) findNavController().popBackStack()
+                viewModel.onLeaveViewDetail()
             }
         })
 
@@ -82,13 +111,18 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     private fun setDestination() {
 
+
         val currentLocation =
             LatLng(
-                viewModel.schedule.value?.longitude ?: 0.0,
-                viewModel.schedule.value?.latitude ?: 0.0
+                viewModel.schedule.value?.latitude ?: 0.0,
+                viewModel.schedule.value?.longitude ?: 0.0
             )
 
-        googleMap?.addMarker(MarkerOptions().position(currentLocation).title("現在位置"))
+
+        googleMap?.addMarker(
+            MarkerOptions().position(currentLocation).title(viewModel.schedule.value?.title)
+        )?.showInfoWindow()
+
         googleMap?.moveCamera(
             CameraUpdateFactory.newLatLngZoom(currentLocation, 16F)
         )

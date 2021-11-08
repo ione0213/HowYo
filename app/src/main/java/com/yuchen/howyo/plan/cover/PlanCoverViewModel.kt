@@ -6,30 +6,52 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
-import com.yuchen.howyo.ext.toDate
+import com.yuchen.howyo.ext.toHour
+import com.yuchen.howyo.ext.toMinute
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.util.Util.getString
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.absoluteValue
 
-class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
+class PlanCoverViewModel(
+    private val howYoRepository: HowYoRepository,
+    private val argumentPlan: Plan?
+) : ViewModel() {
 
-    private val _plan = MutableLiveData<Plan>().apply {
+    private var _user = MutableLiveData<User>()
 
-        val today = Calendar.getInstance()
-        val tomorrow = Calendar.getInstance()
-        tomorrow.add(Calendar.DAY_OF_YEAR, 1)
+    val user: LiveData<User>
+        get() = _user
 
-        value = Plan(
-            authorId = "userIdFromSharePreference",
-            coverFileName = "",
-            startDate = today.timeInMillis,
-            endDate = tomorrow.timeInMillis
-        )
+    private val _isNewPlan = MutableLiveData<Boolean>()
+
+    val isNewPlan: LiveData<Boolean>
+        get() = _isNewPlan
+
+     val _plan = MutableLiveData<Plan>().apply {
+        when (argumentPlan) {
+            null -> {
+                val today = Calendar.getInstance()
+                val tomorrow = Calendar.getInstance()
+                tomorrow.add(Calendar.DAY_OF_YEAR, 1)
+
+                value = Plan(
+                    coverFileName = "",
+                    startDate = today.timeInMillis,
+                    endDate = tomorrow.timeInMillis,
+                    createdTime = Calendar.getInstance().timeInMillis
+                )
+            }
+            else -> {
+                value = argumentPlan
+            }
+        }
     }
 
     val plan: LiveData<Plan>
@@ -40,21 +62,39 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
     val planId: LiveData<String>
         get() = _planId
 
+    private val _planPhoto = MutableLiveData<SchedulePhoto>()
+
+    val planPhoto: LiveData<SchedulePhoto>
+        get() = _planPhoto
+
     val startDateFromUser = MutableLiveData<Long>()
+
+    private val previousStartDate = MutableLiveData<Long>()
 
     val endDateFromUser = MutableLiveData<Long>()
 
-    //Cover photo bitmap
-    private val _photoUri = MutableLiveData<Uri>()
+    //Days list for updating days and schedules when plan is updated
+    private val _days = MutableLiveData<List<Day>>()
 
-    private val photoUri: LiveData<Uri>
-        get() = _photoUri
+    val days: LiveData<List<Day>>
+        get() = _days
+
+    //Schedules list for updating when plan is updated
+    private val _schedules = MutableLiveData<List<Schedule>>()
+
+    val schedules: LiveData<List<Schedule>>
+        get() = _schedules
 
     // Handle the plan data is ready or not
     private val _isCoverPhotoReady = MutableLiveData<Boolean>()
 
     val isCoverPhotoReady: LiveData<Boolean>
         get() = _isCoverPhotoReady
+
+    private val _isPlanUpdated = MutableLiveData<Boolean>()
+
+    val isPlanUpdated: LiveData<Boolean>
+        get() = _isPlanUpdated
 
     // Handle the days data is ready or not
     private val _isDaysReady = MutableLiveData<Boolean>()
@@ -104,6 +144,12 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
     val status: LiveData<LoadApiStatus>
         get() = _status
 
+    // Handle the error for submit plan
+    private val _invalidPlan = MutableLiveData<Int>()
+
+    val invalidPlan: LiveData<Int>
+        get() = _invalidPlan
+
     private var viewModelJob = Job()
 
     // the Coroutine runs using the Main (UI) dispatcher
@@ -116,53 +162,156 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
 
     init {
 
-        //set the default value for duration of the plan
-        val calendar = Calendar.getInstance()
-        startDateFromUser.value = calendar.timeInMillis
-        calendar.add(Calendar.DAY_OF_YEAR, 1)
-        endDateFromUser.value = calendar.timeInMillis
-
-        _photoUri.value = Uri.parse("android.resource://com.yuchen.howyo/drawable/sample_cover")
+        setInitData()
+        plan.value?.id?.let {
+            getDaysResult()
+            getSchedulesResult()
+        }
+        getLiveUserResult()
     }
 
-    fun uploadCoverImg() {
+//    fun getUserResult() {
+//
+//        val planId = plan.value?.id
+//
+//        coroutineScope.launch {
+//
+//            _plan.value = when (val result = planId?.let { howYoRepository.getPlan(it) }) {
+//                is Result.Success -> {
+//                    result.data
+//                }
+//                else -> {
+//                    _plan.value
+//                }
+//            }
+//        }
+//    }
 
-        val uri = photoUri.value!!
-        val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
-        val fileName = "userIdFromSharePreference_${formatter.format(Date())}"
+    private fun getLiveUserResult() {
 
-        Logger.i("Plan old:${plan.value}")
-        _plan.value?.coverFileName = fileName
-        Logger.i("Plan new:${plan.value}")
+        val email = UserManager.currentUserEmail
 
+        Logger.i("email: $email")
+
+        _user = howYoRepository.getLiveUser(email ?: "")
+
+        Logger.i("user :${user.value}")
+    }
+
+    private fun setInitData() {
+
+        //set the default value for duration of the plan
+        val calendar = Calendar.getInstance()
+
+        startDateFromUser.value = plan.value?.startDate ?: calendar.timeInMillis
+        previousStartDate.value = startDateFromUser.value!!.toLong()
+
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+
+        endDateFromUser.value = plan.value?.endDate ?: calendar.timeInMillis
+
+        _planPhoto.value = SchedulePhoto(
+            Uri.parse(getString(R.string.default_cover)),
+            plan.value?.coverPhotoUrl,
+            plan.value?.coverFileName
+        )
+
+        _isNewPlan.value = when (argumentPlan) {
+            null -> {
+                true
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    fun prepareSubmitPlan() {
+
+        when {
+            plan.value?.title.isNullOrEmpty() -> _invalidPlan.value = INVALID_FORMAT_TITLE_EMPTY
+            else -> {
+                handlePlanCover()
+            }
+        }
+    }
+
+    private fun handlePlanCover() {
+
+        val coverPhotoResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
-
             _status.value = LoadApiStatus.LOADING
 
-            when (val result = howYoRepository.uploadPhoto(uri, fileName)) {
-                is Result.Success -> {
-                    _plan.value?.coverPhotoUrl = result.data
+            withContext(Dispatchers.IO) {
+                when (plan.value?.id.isNullOrEmpty()) {
+                    true -> {
+                        coverPhotoResult.add(uploadCoverImg())
+                    }
+                    false -> {
+                        when (planPhoto.value?.isDeleted) {
+                            true -> {
+
+                                when {
+                                    planPhoto.value!!.fileName?.isNotEmpty() == true -> {
+                                        coverPhotoResult.add(deletePhoto(planPhoto.value!!.fileName!!))
+                                    }
+                                    else -> {
+
+                                    }
+                                }
+
+                                coverPhotoResult.add(uploadCoverImg())
+                            }
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+            }
+            when {
+                !coverPhotoResult.contains(false) -> {
                     _isCoverPhotoReady.value = true
-                }
-                is Result.Fail -> {
-                    _isCoverPhotoReady.value = false
-                }
-                is Result.Error -> {
-                    _isCoverPhotoReady.value = false
-                }
-                else -> {
-                    _isCoverPhotoReady.value = false
                 }
             }
         }
-
-        _photoUri.value = null
     }
+
+    private suspend fun uploadCoverImg(): Boolean {
+
+        val uri = planPhoto.value?.uri
+        val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
+        val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
+        var uploadResult = false
+
+        _plan.value?.coverFileName = fileName
+
+        when (val result = uri?.let { howYoRepository.uploadPhoto(it, fileName) }) {
+            is Result.Success -> {
+                _plan.value?.coverPhotoUrl = result.data
+                uploadResult = true
+            }
+            else -> {
+                uploadResult = true
+            }
+        }
+        return uploadResult
+    }
+
+    private suspend fun deletePhoto(fileName: String): Boolean =
+        when (val result = howYoRepository.deletePhoto(fileName)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> false
+        }
 
     fun createPlan() {
 
         val plan = plan.value!!
+
+        plan.authorId = user.value?.id
 
         coroutineScope.launch {
 
@@ -186,7 +335,36 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
         }
     }
 
-    fun setRelatedCollection() {
+    fun updatePlan() {
+
+        coroutineScope.launch {
+
+            val result = _plan.value?.let { howYoRepository.updatePlan(it) }
+
+            _isPlanUpdated.value = when (result) {
+                is Result.Success -> {
+                    result.data
+                }
+                else -> {
+                    false
+                }
+            }
+        }
+    }
+
+    private suspend fun updateSchedule(schedule: Schedule): Boolean {
+
+        return when (val result = howYoRepository.updateSchedule(schedule)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    fun createRelatedCollection() {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
 
@@ -198,6 +376,145 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
                 isDaysReady.value == true && isChkListReady.value == true -> {
                     _isAllDataReady.value = true
                     _status.value = LoadApiStatus.DONE
+                }
+            }
+        }
+    }
+
+    fun updateRelatedCollection() {
+
+        val dayList = days.value?.toList()
+        val scheduleList = schedules.value?.toList()
+
+        val newDayCount =
+            (endDateFromUser.value?.minus(startDateFromUser.value!!)
+                ?.div((60 * 60 * 24 * 1000)))?.toInt()?.plus(1)
+
+        val differenceInDayCount = newDayCount?.minus(dayList?.size ?: 0)
+
+        val scheduleResults = mutableListOf<Boolean>()
+        val dayResults = mutableListOf<Boolean>()
+
+        if (differenceInDayCount != null) {
+
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+
+                    when {
+                        plan.value?.startDate != previousStartDate.value -> {
+                            val days = dayList?.sortedBy { it.position }
+                            days?.forEach { day ->
+                                scheduleList?.filter { it.dayId == day.id }
+                                    ?.forEach { schedule ->
+                                        val newSchedule = Schedule(
+                                            schedule.id,
+                                            schedule.planId,
+                                            schedule.dayId,
+                                            schedule.scheduleType,
+                                            schedule.title,
+                                            schedule.photoUrlList,
+                                            schedule.photoFileNameList,
+                                            schedule.latitude,
+                                            schedule.longitude,
+                                            schedule.startTime,
+                                            schedule.endTime,
+                                            schedule.budget,
+                                            schedule.refUrl,
+                                            schedule.notification,
+                                            schedule.position!!,
+                                            schedule.address,
+                                            schedule.remark
+                                        )
+
+                                        val date = Calendar.getInstance()
+                                        date.timeInMillis = plan.value?.startDate!!.plus(
+                                            (1000 * 60 * 60 * 24 * day.position)
+                                        )
+
+                                        when {
+                                            schedule.startTime != 0L -> {
+
+                                                val hour = schedule.startTime?.toHour() ?: 0
+                                                val minute = schedule.startTime?.toMinute() ?: 0
+
+                                                date.set(Calendar.HOUR_OF_DAY, hour)
+                                                date.set(Calendar.MINUTE, minute)
+
+                                                newSchedule.startTime =
+                                                    date.timeInMillis
+                                            }
+                                        }
+
+                                        when {
+                                            schedule.endTime != 0L -> {
+
+                                                val hour = schedule.endTime?.toHour() ?: 0
+                                                val minute = schedule.endTime?.toMinute() ?: 0
+
+                                                date.set(Calendar.HOUR_OF_DAY, hour)
+                                                date.set(Calendar.MINUTE, minute)
+
+                                                newSchedule.endTime =
+                                                    date.timeInMillis
+                                            }
+                                        }
+
+                                        scheduleResults.add(updateSchedule(newSchedule))
+                                    }
+                            }
+                        }
+                        else -> {
+
+                        }
+                    }
+
+                    when {
+                        differenceInDayCount > 0 -> {
+                            val lastPosition =
+                                dayList?.maxByOrNull { it.position }!!.position
+
+                            for (position in 1..differenceInDayCount) {
+
+                                val result =
+                                    plan.value?.id?.let {
+                                        howYoRepository.createDay(
+                                            lastPosition.plus(position), it
+                                        )
+                                    }
+
+                                if (result is Result.Success) {
+                                    dayResults.add(result.data)
+                                } else {
+                                    dayResults.add(false)
+                                }
+                            }
+                        }
+                        differenceInDayCount < 0 -> {
+                            val days = dayList?.sortedByDescending { it.position }
+
+                            for (position in 0 until differenceInDayCount.absoluteValue) {
+                                days?.get(position)?.let { day ->
+                                    deleteDay(day)
+                                }?.let { deleteResult ->
+                                    dayResults.add(deleteResult)
+                                }
+
+                                days?.get(position)?.let { day ->
+                                    scheduleList?.filter { it.dayId == day.id }
+                                        ?.forEach { schedule ->
+                                            scheduleResults.add(deleteSchedule(schedule))
+                                        }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                when {
+                    !dayResults.contains(false) && !scheduleResults.contains(false) -> {
+                        _isAllDataReady.value = true
+                        _status.value = LoadApiStatus.DONE
+                    }
                 }
             }
         }
@@ -222,6 +539,30 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
             }
         }
         return !dayResults.contains(false)
+    }
+
+    private suspend fun deleteDay(day: Day): Boolean {
+
+        return when (val result = howYoRepository.deleteDay(day)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private suspend fun deleteSchedule(schedule: Schedule): Boolean {
+
+        return when (val result = howYoRepository.deleteSchedule(schedule)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> {
+                false
+            }
+        }
     }
 
     private suspend fun createMainCheckList(): Boolean {
@@ -267,6 +608,30 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
         return !mainCheckListResults.contains(false)
     }
 
+    private fun getDaysResult() {
+
+        coroutineScope.launch {
+
+            val result = howYoRepository.getDays(plan.value?.id!!)
+            _days.value = when (result) {
+                is Result.Success -> result.data
+                else -> null
+            }
+        }
+    }
+
+    private fun getSchedulesResult() {
+
+        coroutineScope.launch {
+
+            val result = howYoRepository.getSchedules(plan.value?.id!!)
+            _schedules.value = when (result) {
+                is Result.Success -> result.data
+                else -> null
+            }
+        }
+    }
+
     fun leave() {
         _leave.value = true
     }
@@ -306,6 +671,31 @@ class PlanCoverViewModel(private val howYoRepository: HowYoRepository) : ViewMod
     }
 
     fun setCoverBitmap(photoUri: Uri?) {
-        _photoUri.value = photoUri!!
+
+        val newPlanPhoto = SchedulePhoto(
+            photoUri,
+            null,
+            planPhoto.value?.fileName,
+            true
+        )
+
+        _planPhoto.value = newPlanPhoto
+//        _photoUri.value = photoUri!!
+    }
+
+    fun resetCoverImg() {
+        val newPlanPhoto = SchedulePhoto(
+            Uri.parse(getString(R.string.default_cover)),
+            null,
+            planPhoto.value?.fileName,
+            true
+        )
+
+        _planPhoto.value = newPlanPhoto
+    }
+
+    companion object {
+
+        const val INVALID_FORMAT_TITLE_EMPTY = 0x11
     }
 }

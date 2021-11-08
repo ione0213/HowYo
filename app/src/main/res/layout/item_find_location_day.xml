@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.findlocation.FindLocationViewModel" />
@@ -16,27 +18,52 @@
         <variable
             name="viewHolder"
             type="com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter.DayViewHolder" />
+
+        <variable
+            name="isSelectedOnBind"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="84dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <!--        android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}"-->
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_plan_day"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/button_plan_day_normal"
+            android:layout_width="90dp"
+            style="@style/TextStyle2_green"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginEnd="@dimen/small_padding"
-            android:text="第一天\n10/1 週五"
-            android:textColor="@drawable/day_text_color_selector"
-            app:selected="@{viewHolder.isSelected}"
-            android:textSize="12sp"
+            android:textAlignment="center"
+            android:visibility="@{(viewHolder.isSelected || isSelectedOnBind) &amp;&amp; viewModel.selectedDayPosition == viewHolder.adapterPosition ? View.GONE : View.VISIBLE}"
+
+
+            android:background="@drawable/day_corner_normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
+<!--        app:day="@{day.position}"-->
+<!--        android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}"-->
+<!--        app:firstDate="@{viewModel.plan.startDate}"-->
+        <TextView
+            android:id="@+id/button_plan_day_selected"
+            android:layout_width="90dp"
+            style="@style/TextStyle2_white"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:textAlignment="center"
+            android:background="@drawable/day_corner_selected"
+            android:visibility="@{(viewHolder.isSelected || isSelectedOnBind) &amp;&amp; viewModel.selectedDayPosition == viewHolder.adapterPosition ? View.VISIBLE : View.GONE}"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+<!--        app:day="@{day.position}"-->
+<!--        app:firstDate="@{viewModel.plan.startDate}"-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

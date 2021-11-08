@@ -9,7 +9,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 
 class PaymentViewModel(
     private val howYoRepository: HowYoRepository,
-    private val argumentPlan: Plan
+    private val argumentPlan: Plan?
 ) : ViewModel(){
 
     private val _plan = MutableLiveData<Plan>().apply {
