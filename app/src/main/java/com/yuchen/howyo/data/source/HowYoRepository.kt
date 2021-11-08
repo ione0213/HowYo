@@ -9,6 +9,8 @@ interface HowYoRepository {
 
     suspend fun createUser(user: User): Result<Boolean>
 
+    suspend fun getUser(email: String): Result<User>
+
     fun getLiveUser(email: String): MutableLiveData<User>
 
     suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String>

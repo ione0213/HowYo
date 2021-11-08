@@ -78,6 +78,29 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
+    override suspend fun getUser(email: String): Result<User> = suspendCoroutine { continuation ->
+        FirebaseFirestore.getInstance()
+            .collection(PATH_USERS)
+            .whereEqualTo(KEY_EMAIL, email)
+            .get()
+            .addOnCompleteListener { task ->
+                val user: User
+
+                if (task.isSuccessful) {
+                    user = task.result.first().toObject(User::class.java)
+                    continuation.resume(Result.Success(user))
+                } else {
+                    task.exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error getting user. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
+                    }
+
+                    continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                }
+            }
+    }
+
     override fun getLiveUser(email: String): MutableLiveData<User> {
 
         val liveData = MutableLiveData<User>()
@@ -87,15 +110,17 @@ object HowYoRemoteDataSource : HowYoDataSource {
             .whereEqualTo(KEY_EMAIL, email)
             .addSnapshotListener { snapshot, exception ->
 
-                Logger.i("addSnapshotListener live plan detect")
+                Logger.i("addSnapshotListener live user detect")
 
                 exception?.let {
-                    Logger.w("[${this::class.simpleName}] Error getting plan. ${it.message}")
+                    Logger.w("[${this::class.simpleName}] Error getting user. ${it.message}")
                 }
-
+                Logger.i("snapshot: ${snapshot?.size()}")
                 if (snapshot != null) {
                     liveData.value = snapshot.first().toObject(User::class.java)
                 }
+                Logger.i("liveData: ${liveData.value}")
+
             }
 
         return liveData

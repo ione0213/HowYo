@@ -31,6 +31,7 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
     fun setUser(user: User) {
 
         UserManager.currentUserEmail = user.email
+        UserManager.userId = user.id
 
         coroutineScope.launch {
             _createUserResult.value = when (val result = howYoRepository.createUser(user)) {

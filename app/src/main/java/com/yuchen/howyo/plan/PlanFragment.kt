@@ -162,8 +162,15 @@ class PlanFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        dayItemTouchHelper.attachToRecyclerView(binding.recyclerPlanDays)
-        scheduleItemTouchHelper.attachToRecyclerView(binding.recyclerPlanSchedules)
+        when (viewModel.accessType) {
+            AccessPlanType.EDIT -> {
+                dayItemTouchHelper.attachToRecyclerView(binding.recyclerPlanDays)
+                scheduleItemTouchHelper.attachToRecyclerView(binding.recyclerPlanSchedules)
+            }
+            else -> {
+
+            }
+        }
         binding.recyclerPlanDays.adapter = PlanDaysAdapter(viewModel)
         binding.recyclerPlanSchedules.adapter =
             ScheduleAdapter(viewModel, ScheduleAdapter.OnClickListener {
@@ -237,11 +244,12 @@ class PlanFragment : Fragment() {
                         .setMessage(
                             getString(
                                 R.string.confirm_update_privacy,
-                                when(it) {
+                                when (it) {
                                     PlanPrivacy.PRIVATE -> getString(R.string.set_private)
                                     PlanPrivacy.PUBLIC -> getString(R.string.set_public)
                                 }
-                            ))
+                            )
+                        )
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                             viewModel.setPrivacy(it)
                         }

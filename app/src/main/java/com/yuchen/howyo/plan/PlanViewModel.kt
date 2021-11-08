@@ -17,7 +17,9 @@ class PlanViewModel(
 ) : ViewModel() {
 
     //Plan data
-    private var _plan = MutableLiveData<Plan>()
+    private var _plan = MutableLiveData<Plan>().apply {
+        value = argumentPlan
+    }
 
     val plan: LiveData<Plan>
         get() = _plan

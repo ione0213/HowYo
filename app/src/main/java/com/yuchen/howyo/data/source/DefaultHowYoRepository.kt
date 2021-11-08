@@ -12,6 +12,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.createUser(user)
     }
 
+    override suspend fun getUser(email: String): Result<User> {
+        return remoteDataSource.getUser(email)
+    }
+
     override fun getLiveUser(email: String): MutableLiveData<User> {
         return remoteDataSource.getLiveUser(email)
     }

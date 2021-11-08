@@ -11,6 +11,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.ext.toHour
 import com.yuchen.howyo.ext.toMinute
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getString
 import kotlinx.coroutines.*
@@ -22,6 +23,11 @@ class PlanCoverViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
+
+    private var _user = MutableLiveData<User>()
+
+    val user: LiveData<User>
+        get() = _user
 
     private val _isNewPlan = MutableLiveData<Boolean>()
 
@@ -36,7 +42,6 @@ class PlanCoverViewModel(
                 tomorrow.add(Calendar.DAY_OF_YEAR, 1)
 
                 value = Plan(
-                    authorId = "userIdFromSharePreference",
                     coverFileName = "",
                     startDate = today.timeInMillis,
                     endDate = tomorrow.timeInMillis,
@@ -67,12 +72,6 @@ class PlanCoverViewModel(
     private val previousStartDate = MutableLiveData<Long>()
 
     val endDateFromUser = MutableLiveData<Long>()
-//
-//    //Cover photo bitmap
-//    private val _photoUri = MutableLiveData<Uri>()
-//
-//    private val photoUri: LiveData<Uri>
-//        get() = _photoUri
 
     //Days list for updating days and schedules when plan is updated
     private val _days = MutableLiveData<List<Day>>()
@@ -168,6 +167,35 @@ class PlanCoverViewModel(
             getDaysResult()
             getSchedulesResult()
         }
+        getLiveUserResult()
+    }
+
+//    fun getUserResult() {
+//
+//        val planId = plan.value?.id
+//
+//        coroutineScope.launch {
+//
+//            _plan.value = when (val result = planId?.let { howYoRepository.getPlan(it) }) {
+//                is Result.Success -> {
+//                    result.data
+//                }
+//                else -> {
+//                    _plan.value
+//                }
+//            }
+//        }
+//    }
+
+    private fun getLiveUserResult() {
+
+        val email = UserManager.currentUserEmail
+
+        Logger.i("email: $email")
+
+        _user = howYoRepository.getLiveUser(email ?: "")
+
+        Logger.i("user :${user.value}")
     }
 
     private fun setInitData() {
@@ -196,8 +224,6 @@ class PlanCoverViewModel(
                 false
             }
         }
-
-//        _photoUri.value = Uri.parse(getString(R.string.default_cover))
     }
 
     fun prepareSubmitPlan() {
@@ -256,14 +282,10 @@ class PlanCoverViewModel(
 
         val uri = planPhoto.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
-        val fileName = "userIdFromSharePreference_${formatter.format(Date())}"
+        val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
         var uploadResult = false
 
         _plan.value?.coverFileName = fileName
-
-//        coroutineScope.launch {
-
-//            _status.value = LoadApiStatus.LOADING
 
         when (val result = uri?.let { howYoRepository.uploadPhoto(it, fileName) }) {
             is Result.Success -> {
@@ -275,9 +297,6 @@ class PlanCoverViewModel(
             }
         }
         return uploadResult
-//        }
-
-//        _photoUri.value = null
     }
 
     private suspend fun deletePhoto(fileName: String): Boolean =
@@ -291,6 +310,8 @@ class PlanCoverViewModel(
     fun createPlan() {
 
         val plan = plan.value!!
+
+        plan.authorId = user.value?.id
 
         coroutineScope.launch {
 

@@ -144,7 +144,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/avatar_sample"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_plan_cover"
+                app:layout_constraintTop_toBottomOf="@id/img_plan_cover"
                 app:shapeAppearanceOverlay="@style/circle" />
 
             <TextView
@@ -153,7 +153,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_padding"
-                android:text="traveller"
+                android:ellipsize="end"
+                android:maxWidth="100dp"
+                android:maxLines="1"
+                android:text="@{viewModel.plan.authorId}"
                 android:textStyle="bold"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -367,10 +370,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/layout_plan_status"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
                     app:privacy="@{viewModel.plan.privacy}"
                     tools:text="@string/public_plan" />
 

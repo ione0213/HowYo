@@ -250,7 +250,7 @@ class MainActivity : BaseActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(this, "Get Permission", Toast.LENGTH_LONG).show()
+//            Toast.makeText(this, "Get Permission", Toast.LENGTH_LONG).show()
             locationPermissionGranted = true
             checkGPSState()
         } else {
@@ -301,7 +301,7 @@ class MainActivity : BaseActivity() {
                             )
                         ) {
                             //權限被永久拒絕
-                            Toast.makeText(this, "位置權限已被關閉，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(this, "位置權限已被關閉，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
 
                             //Navigate to setting page
 //                            AlertDialog.Builder(this)
@@ -315,7 +315,7 @@ class MainActivity : BaseActivity() {
 //                                .show()
                         } else {
                             //權限被拒絕
-                            Toast.makeText(this, "位置權限被拒絕，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(this, "位置權限被拒絕，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
 //                            requestLocationPermission()
                         }
                     }
@@ -352,7 +352,7 @@ class MainActivity : BaseActivity() {
                 .show()
         } else {
             //todo getDeviceLocation()
-            Toast.makeText(this, "已獲取到位置權限且GPS已開啟，可以準備開始獲取經緯度", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "已獲取到位置權限且GPS已開啟，可以準備開始獲取經緯度", Toast.LENGTH_SHORT).show()
         }
     }
 }
