@@ -50,4 +50,7 @@
     <!-- Favorite-->
     <dimen name="favorite_avatar">36dp</dimen>
 
+    <!-- Comment-->
+    <dimen name="comment_avatar">56dp</dimen>
+
 </resources>

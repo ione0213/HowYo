@@ -9,7 +9,7 @@ interface HowYoDataSource {
 
     suspend fun createUser(user: User): Result<String>
 
-    suspend fun getUser(email: String): Result<User>
+    suspend fun getUser(userId: String): Result<User>
 
     fun getLiveUser(email: String): MutableLiveData<User>
 
@@ -58,4 +58,12 @@ interface HowYoDataSource {
     suspend fun deleteMainCheckList(planId: String): Result<Boolean>
 
     suspend fun deleteCheckList(planId: String): Result<Boolean>
+
+    suspend fun createComment(comment: Comment): Result<Boolean>
+
+    suspend fun deleteComment(comment: Comment): Result<Boolean>
+
+    suspend fun getComments(planId: String): Result<List<Comment>>
+
+    fun getLiveComments(planId: String): MutableLiveData<List<Comment>>
 }

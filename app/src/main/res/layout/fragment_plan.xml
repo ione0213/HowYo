@@ -52,21 +52,7 @@
                     android:layout_height="wrap_content"
                     app:layout_collapseMode="parallax">
 
-                    <ImageView
-                        android:id="@+id/img_plan_cover"
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:onClick="@{() -> viewModel.navigateToEditCover()}"
-                        android:scaleType="centerCrop"
-                        app:imageUrl="@{viewModel.plan.coverPhotoUrl}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@drawable/sample_cover" />
-
-<!--                    <androidx.appcompat.widget.AppCompatButton-->
+                    <!--                    <androidx.appcompat.widget.AppCompatButton-->
 <!--                        android:id="@+id/button_plan_close"-->
 <!--                        android:layout_width="@dimen/plan_img_btn_small"-->
 <!--                        android:layout_height="@dimen/plan_img_btn_small"-->
@@ -89,6 +75,21 @@
 <!--                        android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"-->
 <!--                        app:layout_constraintEnd_toEndOf="parent"-->
 <!--                        app:layout_constraintTop_toTopOf="parent" />-->
+
+                    <ImageView
+                        android:id="@+id/img_plan_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:onClick="@{() -> viewModel.navigateToEditCover()}"
+                        android:scaleType="centerCrop"
+                        app:imageUrl="@{viewModel.plan.coverPhotoUrl}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:src="@drawable/sample_cover" />
 
                     <TextView
                         android:id="@+id/text_plan_duration"
@@ -169,9 +170,10 @@
                     android:layout_height="@dimen/plan_img_btn_biggest"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="@dimen/standard_padding"
+                    tools:src="@mipmap/ic_launcher"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
-                    android:src="@drawable/avatar_sample"
+                    app:imageUrl="@{viewModel.author.avatar}"
                     app:shapeAppearanceOverlay="@style/circle" />
 
                 <TextView
@@ -269,7 +271,7 @@
                     android:layout_gravity="start|bottom"/>
 
                 <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
+                    android:id="@+id/plan_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_marginTop="@dimen/standard_padding"
@@ -438,7 +440,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_plan_days"
                     app:layout_constraintVertical_bias="0.0"
@@ -563,6 +565,7 @@
                 android:layout_height="@dimen/plan_img_btn_small"
                 android:layout_marginEnd="40dp"
                 android:background="@drawable/comment"
+                android:onClick="@{() -> viewModel.navigateToComment()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -190,7 +190,7 @@ class PlanFragment : Fragment() {
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
 
-        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.toolbar)
+        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.planToolbar)
         (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         var isShow = true
@@ -445,6 +445,15 @@ class PlanFragment : Fragment() {
                     NavigationDirections.navToLocateCompanionFragment(it)
                 )
                 viewModel.onLocateCompanionNavigated()
+            }
+        })
+
+        viewModel.navigateToComment.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToComment(it)
+                )
+                viewModel.onCommentNavigated()
             }
         })
 

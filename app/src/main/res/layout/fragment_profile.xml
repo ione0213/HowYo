@@ -20,9 +20,10 @@
             android:layout_width="@dimen/profile_avatar"
             android:layout_height="@dimen/profile_avatar"
             android:layout_marginStart="@dimen/standard_padding"
+            app:imageUrl="@{viewModel.user.avatar}"
+            tools:src="@mipmap/ic_launcher"
             android:layout_marginTop="@dimen/middle_padding"
             android:scaleType="centerCrop"
-            android:src="@drawable/avatar_sample"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/circle" />

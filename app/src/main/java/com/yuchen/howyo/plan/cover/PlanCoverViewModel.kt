@@ -44,8 +44,7 @@ class PlanCoverViewModel(
                 value = Plan(
                     coverFileName = "",
                     startDate = today.timeInMillis,
-                    endDate = tomorrow.timeInMillis,
-                    createdTime = Calendar.getInstance().timeInMillis
+                    endDate = tomorrow.timeInMillis
                 )
             }
             else -> {

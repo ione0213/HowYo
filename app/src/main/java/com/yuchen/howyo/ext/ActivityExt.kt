@@ -2,9 +2,11 @@ package com.yuchen.howyo.ext
 
 import android.app.Activity
 import android.view.Gravity
+import android.view.WindowManager
 import android.widget.Toast
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.factory.ViewModelFactory
+import com.yuchen.howyo.util.Logger
 
 fun Activity.getVmFactory(): ViewModelFactory {
     val repository = (applicationContext as HowYoApplication).howYoRepository
@@ -16,4 +18,9 @@ fun Activity?.showToast(message: String) {
         setGravity(Gravity.CENTER, 0, 0)
         show()
     }
+}
+
+fun Activity.closeKeyBoard() {
+    Logger.i("close key board")
+    this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 }

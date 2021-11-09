@@ -151,6 +151,7 @@
                         android:layout_height="@dimen/cover_plan_edittext"
                         android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:hint="@string/plan_name"
+                        android:id="@+id/edittext_plan_title"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"

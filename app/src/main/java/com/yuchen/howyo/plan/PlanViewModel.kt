@@ -7,6 +7,7 @@ import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
+import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -40,13 +41,16 @@ class PlanViewModel(
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
+    //Comments list for deleting plan
+    var comments = MutableLiveData<List<Comment>>()
+
     var tempSchedules = mutableListOf<Schedule>()
 
-    //Current user data
-    private val _user = MutableLiveData<User>()
+    //Author data
+    private val _author = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val author: LiveData<User>
+        get() = _author
 
     var selectedDayPosition = MutableLiveData<Int>()
 
@@ -157,6 +161,12 @@ class PlanViewModel(
     val navigateToLocateCompanion: LiveData<Plan>
         get() = _navigateToLocateCompanion
 
+    // Handle navigation to comment
+    private val _navigateToComment = MutableLiveData<Plan>()
+
+    val navigateToComment: LiveData<Plan>
+        get() = _navigateToComment
+
     // Handle navigation to check or shopping list
     private val _navigateToCheckOrShoppingList = MutableLiveData<String>()
 
@@ -216,19 +226,42 @@ class PlanViewModel(
 
     init {
 
-//        coroutineScope.launch {
-//            withContext(Dispatchers.IO) {
         getLivePlanResult()
-//            }
         getLiveDaysResult()
         setDefaultSelectedDay()
         getLiveSchedulesResult()
-//        }
-
+        getAuthorResult()
+        getLiveCommentsResult()
+//        getCommentsResult()
     }
 
     fun selectDay(position: Int) {
         selectedDayPosition.value = position
+    }
+
+    private fun getAuthorResult() {
+
+        val authorId = when (argumentPlan.id.isNotEmpty()) {
+            true -> {
+                argumentPlan.authorId
+            }
+            else -> null
+        }
+
+        when {
+            authorId?.isNotEmpty() == true -> {
+                coroutineScope.launch {
+
+                    _author.value =
+                        when (val result = authorId.let { howYoRepository.getUser(it) }) {
+                            is Result.Success -> {
+                                result.data
+                            }
+                            else -> null
+                        }
+                }
+            }
+        }
     }
 
     fun getPlanResult() {
@@ -262,6 +295,9 @@ class PlanViewModel(
         val scheduleResult = mutableListOf<Boolean>()
         val scheduleImgResult = mutableListOf<Boolean>()
 
+//        getCommentsResult()
+        val commentResult = mutableListOf<Boolean>()
+
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
 
@@ -269,12 +305,18 @@ class PlanViewModel(
                 days.value?.forEach {
                     daysResult.add(deleteDay(it))
                 }
+
                 allSchedules.value?.forEach { schedule ->
                     scheduleResult.add(deleteSchedule(schedule))
                     schedule.photoFileNameList?.forEach {
                         deletePhoto(it)?.let { result -> scheduleImgResult.add(result) }
                     }
                 }
+                Logger.i("comments:${comments.value}")
+                comments.value?.forEach { comment ->
+                    deleteComment(comment)?.let { commentResult.add(it) }
+                }
+
                 _mainCheckListResult.postValue(deleteMainCheckList(plan.id))
                 _checkListResult.postValue(deleteCheckList(plan.id))
                 _planResult.postValue(deletePlan(plan)!!)
@@ -284,6 +326,7 @@ class PlanViewModel(
             when {
                 !daysResult.contains(false)
                         && !scheduleResult.contains(false)
+                        && !commentResult.contains(false)
                         && planResult.value == true
                         && mainCheckListResult.value == true
                         && checkListResult.value == true
@@ -565,6 +608,14 @@ class PlanViewModel(
 
     private suspend fun deletePhoto(fileName: String): Boolean? =
         when (val result = howYoRepository.deletePhoto(fileName)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> null
+        }
+
+    private suspend fun deleteComment(comment: Comment): Boolean? =
+        when (val result = howYoRepository.deleteComment(comment)) {
             is Result.Success -> {
                 result.data
             }
@@ -1083,7 +1134,7 @@ class PlanViewModel(
     }
 
     fun navigateToCompanion() {
-        _navigateToCompanion.value = user.value
+        _navigateToCompanion.value = author.value
     }
 
     fun onCompanionNavigated() {
@@ -1104,6 +1155,14 @@ class PlanViewModel(
 
     fun onLocateCompanionNavigated() {
         _navigateToLocateCompanion.value = null
+    }
+
+    fun navigateToComment() {
+        _navigateToComment.value = plan.value
+    }
+
+    fun onCommentNavigated() {
+        _navigateToComment.value = null
     }
 
     fun navigateToCheckList(listType: String) {
@@ -1205,4 +1264,20 @@ class PlanViewModel(
             _plan.value?.let { howYoRepository.updatePlan(it) }
         }
     }
+
+    private fun getLiveCommentsResult() {
+        comments = argumentPlan.id.let { howYoRepository.getLiveComments(it) }
+    }
+
+//    private fun getCommentsResult() {
+//
+//        coroutineScope.launch {
+//
+//            val result = howYoRepository.getComments(plan.value?.id!!)
+//            _comments.value = when (result) {
+//                is Result.Success -> result.data
+//                else -> null
+//            }
+//        }
+//    }
 }

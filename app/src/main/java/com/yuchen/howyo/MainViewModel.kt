@@ -25,7 +25,8 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 CurrentFragmentType.PAYMENT_DETAIL,
                 CurrentFragmentType.FIND_LOCATION,
                 CurrentFragmentType.FRIENDS,
-                CurrentFragmentType.SETTING -> DrawerToggleType.BACK
+                CurrentFragmentType.SETTING,
+                CurrentFragmentType.COMMENT -> DrawerToggleType.BACK
                 else -> DrawerToggleType.NORMAL
             }
         }

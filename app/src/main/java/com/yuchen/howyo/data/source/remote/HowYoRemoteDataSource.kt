@@ -23,9 +23,11 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_SCHEDULES = "schedules"
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
     private const val PATH_CHECK_ITEM_LIST = "check_item_lists"
+    private const val PATH_COMMENTS = "comments"
     private const val KEY_POSITION = "position"
     private const val KEY_CREATED_TIME = "created_time"
     private const val KEY_EMAIL = "email"
+    private const val KEY_ID = "id"
 
     override suspend fun createUser(user: User): Result<String> =
         suspendCoroutine { continuation ->
@@ -79,10 +81,10 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override suspend fun getUser(email: String): Result<User> = suspendCoroutine { continuation ->
+    override suspend fun getUser(userId: String): Result<User> = suspendCoroutine { continuation ->
         FirebaseFirestore.getInstance()
             .collection(PATH_USERS)
-            .whereEqualTo(KEY_EMAIL, email)
+            .whereEqualTo(KEY_ID, userId)
             .get()
             .addOnCompleteListener { task ->
                 val user: User
@@ -710,4 +712,106 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     }
                 }
         }
+
+    override suspend fun createComment(comment: Comment): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val comments = FirebaseFirestore.getInstance().collection(PATH_COMMENTS)
+            val document = comments.document()
+
+            comment.id = document.id
+
+            document
+                .set(comment)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        continuation.resume(Result.Success(true))
+                    } else {
+                        task.exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error creating comment. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                        )
+                    }
+                }
+        }
+
+    override suspend fun deleteComment(comment: Comment): Result<Boolean>  =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_COMMENTS)
+                .document(comment.id)
+                .delete()
+                .addOnSuccessListener {
+                    Logger.i("Delete: $comment")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error deleting comment. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
+    override suspend fun getComments(planId: String): Result<List<Comment>>  =
+        suspendCoroutine { continuation ->
+            FirebaseFirestore.getInstance()
+                .collection(PATH_COMMENTS)
+                .whereEqualTo("plan_id", planId)
+                .orderBy(KEY_POSITION, Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val list = mutableListOf<Comment>()
+                        for (document in task.result!!) {
+                            Logger.d(document.id + " => " + document.data)
+
+                            val comment = document.toObject(Comment::class.java)
+                            list.add(comment)
+                        }
+                        continuation.resume(Result.Success(list))
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error getting days. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
+
+    override fun getLiveComments(planId: String): MutableLiveData<List<Comment>> {
+        val liveData = MutableLiveData<List<Comment>>()
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_COMMENTS)
+            .whereEqualTo("plan_id", planId)
+            .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting comments. ${it.message}")
+                }
+
+                val list = mutableListOf<Comment>()
+
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val comment = document.toObject(Comment::class.java)
+                        list.add(comment)
+                    }
+                }
+                liveData.value = list
+            }
+
+        return liveData
+    }
 }

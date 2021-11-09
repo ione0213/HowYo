@@ -18,5 +18,6 @@ enum class CurrentFragmentType(val value: String) {
     PROFILE("User id(tmp)"),
     FRIENDS("User id(tmp)"),
     SETTING(getString(R.string.setting)),
+    COMMENT(getString(R.string.comment)),
     SIGNIN("")
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="commentData"
+            type="com.yuchen.howyo.data.CommentData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_comment_avatar"
+            android:layout_width="@dimen/comment_avatar"
+            android:layout_height="@dimen/comment_avatar"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{commentData.avatar}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circle"
+            tools:src="@drawable/avatar_sample" />
+
+        <TextView
+            android:id="@+id/textview_comment__name"
+            style="@style/TextStyle3_black_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:text="@{commentData.userId}"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxWidth="100dp"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/img_comment_avatar"
+            app:layout_constraintTop_toTopOf="@+id/img_comment_avatar"
+            tools:text="Mark" />
+
+        <TextView
+            android:id="@+id/textview_comment_time"
+            style="@style/TextStyle3_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:textColor="@android:color/black"
+            app:dateTime="@{commentData.createdTime}"
+            app:layout_constraintStart_toEndOf="@+id/textview_comment__name"
+            app:layout_constraintTop_toTopOf="@+id/textview_comment__name"
+            tools:text="06:30 下午" />
+
+        <TextView
+            android:id="@+id/textview_comment_msg"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="300dp"
+            android:textAlignment="textStart"
+            android:paddingBottom="@dimen/small_padding"
+            android:text="@{commentData.comment}"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textview_comment__name"
+            app:layout_constraintTop_toBottomOf="@+id/textview_comment__name"
+            tools:text="This is a sent message keep the text going so we can see" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

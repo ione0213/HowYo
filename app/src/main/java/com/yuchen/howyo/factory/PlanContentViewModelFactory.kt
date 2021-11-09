@@ -6,6 +6,7 @@ import com.yuchen.howyo.copyplan.CopyPlanDialog
 import com.yuchen.howyo.copyplan.CopyPlanViewModel
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.plan.comment.CommentViewModel
 import com.yuchen.howyo.plan.companion.locate.LocateViewModel
 import com.yuchen.howyo.plan.cover.PlanCoverViewModel
 import com.yuchen.howyo.plan.groupmessage.GroupMessageViewModel
@@ -29,6 +30,8 @@ class PlanContentViewModelFactory(
                     PlanCoverViewModel(howYoRepository, plan)
                 isAssignableFrom(CopyPlanViewModel::class.java) ->
                     CopyPlanViewModel(howYoRepository, plan)
+                isAssignableFrom(CommentViewModel::class.java) ->
+                    CommentViewModel(howYoRepository, plan)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

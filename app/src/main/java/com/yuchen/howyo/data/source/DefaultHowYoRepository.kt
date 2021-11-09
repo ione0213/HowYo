@@ -12,8 +12,8 @@ class DefaultHowYoRepository(
         return remoteDataSource.createUser(user)
     }
 
-    override suspend fun getUser(email: String): Result<User> {
-        return remoteDataSource.getUser(email)
+    override suspend fun getUser(userId: String): Result<User> {
+        return remoteDataSource.getUser(userId)
     }
 
     override fun getLiveUser(email: String): MutableLiveData<User> {
@@ -106,5 +106,21 @@ class DefaultHowYoRepository(
 
     override suspend fun deleteCheckList(planId: String): Result<Boolean> {
         return remoteDataSource.deleteCheckList(planId)
+    }
+
+    override suspend fun createComment(comment: Comment): Result<Boolean> {
+        return remoteDataSource.createComment(comment)
+    }
+
+    override suspend fun deleteComment(comment: Comment): Result<Boolean> {
+        return remoteDataSource.deleteComment(comment)
+    }
+
+    override suspend fun getComments(planId: String): Result<List<Comment>> {
+        return remoteDataSource.getComments(planId)
+    }
+
+    override fun getLiveComments(planId: String): MutableLiveData<List<Comment>> {
+        return remoteDataSource.getLiveComments(planId)
     }
 }

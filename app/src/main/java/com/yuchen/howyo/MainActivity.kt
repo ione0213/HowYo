@@ -142,6 +142,7 @@ class MainActivity : BaseActivity() {
                 R.id.friendsFragment -> CurrentFragmentType.FRIENDS
                 R.id.settingFragment -> CurrentFragmentType.SETTING
                 R.id.signInFragment -> CurrentFragmentType.SIGNIN
+                R.id.commentFragment -> CurrentFragmentType.COMMENT
                 else -> viewModel.currentFragmentType.value
             }
         }

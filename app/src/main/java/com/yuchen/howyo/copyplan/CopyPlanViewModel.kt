@@ -36,8 +36,7 @@ class CopyPlanViewModel(
                 value = Plan(
                     coverFileName = "",
                     startDate = today.timeInMillis,
-                    endDate = tomorrow.timeInMillis,
-                    createdTime = Calendar.getInstance().timeInMillis
+                    endDate = tomorrow.timeInMillis
                 )
             }
             else -> {
@@ -236,8 +235,7 @@ class CopyPlanViewModel(
             companionList = listOf(),
             likeList = listOf(),
             planCollectedList = listOf(),
-            privacy = getString(R.string.plan_private),
-            createdTime = Calendar.getInstance().timeInMillis
+            privacy = getString(R.string.plan_private)
         )
 
         Logger.i("plan:$plan")

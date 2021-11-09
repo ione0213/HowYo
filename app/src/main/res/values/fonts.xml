@@ -100,6 +100,16 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="TextStyle3_black_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/gray_black</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="TextStyle3_gray">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">@font/noto_sans</item>

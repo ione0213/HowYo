@@ -25,6 +25,7 @@ import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.DialogPlanCoverBinding
+import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 import com.yuchen.howyo.plan.AccessPlanType
@@ -95,6 +96,7 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             it?.let {
                 when {
                     it -> {
+                        binding.edittextPlanTitle.closeKeyBoard()
                         when (viewModel.plan.value?.id.isNullOrEmpty()) {
                             true -> {
                                 viewModel.createPlan()

@@ -14,11 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.imageview.ShapeableImageView
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.discover.DiscoverAdapter
-import com.yuchen.howyo.ext.toDate
-import com.yuchen.howyo.ext.toTime
-import com.yuchen.howyo.ext.toWeekDay
+import com.yuchen.howyo.ext.*
 import com.yuchen.howyo.favorite.FavoriteAdapter
 import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
@@ -54,6 +53,15 @@ fun TextView.bindMsgTime(time: Long) {
 }
 
 @SuppressLint("SetTextI18n")
+@BindingAdapter("dateTime")
+fun TextView.bindCommentTime(time: Long) {
+
+    when {
+        time != 0L -> text = time.displayTime()
+    }
+}
+
+@SuppressLint("SetTextI18n")
 @BindingAdapter("fromTime", "toTime")
 fun TextView.bindTimeToTime(fromTime: Long, toTime: Long) {
 
@@ -71,6 +79,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
         CurrentFragmentType.PAYMENT_DETAIL,
         CurrentFragmentType.SETTING,
         CurrentFragmentType.GROUP_MESSAGE,
+        CurrentFragmentType.COMMENT,
         CurrentFragmentType.SIGNIN -> {
             View.GONE
         }
@@ -164,6 +173,21 @@ fun bindRecyclerViewWithPhotoData(
 
 @BindingAdapter("imageUrl")
 fun bindImage(imageView: ImageView, imgUrl: String?) {
+    imgUrl?.let {
+        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+        Glide.with(imageView.context)
+            .load(imgUri)
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
+            )
+            .into(imageView)
+    }
+}
+
+@BindingAdapter("imageUrl")
+fun bindImage(imageView: ShapeableImageView, imgUrl: String?) {
     imgUrl?.let {
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
         Glide.with(imageView.context)
