@@ -53,7 +53,7 @@
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="177dp"
                     tools:layout_editor_absoluteY="18dp"
-                    tools:text="Stylish"
+                    tools:text="HowYo"
                     tools:visibility="visible" />
 
             </androidx.appcompat.widget.Toolbar>

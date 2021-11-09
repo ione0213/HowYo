@@ -12,6 +12,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentProfileBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.util.Logger
 
 class ProfileFragment : Fragment() {
 
@@ -85,6 +86,8 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
+        menu.clear()
+        Logger.i("PROFILE onCreateOptionsMenu")
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
         menu.findItem(R.id.setting).isVisible = true
         super.onCreateOptionsMenu(menu, inflater)

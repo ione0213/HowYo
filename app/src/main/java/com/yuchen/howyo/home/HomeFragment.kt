@@ -11,6 +11,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentHomeBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.util.Logger
 
 class HomeFragment : Fragment() {
 
@@ -74,6 +75,7 @@ class HomeFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
+        Logger.i("HOME onCreateOptionsMenu")
         menu.findItem(R.id.notification).isVisible = true
         super.onCreateOptionsMenu(menu, inflater)
     }

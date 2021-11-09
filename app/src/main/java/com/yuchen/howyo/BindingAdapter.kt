@@ -35,6 +35,7 @@ import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.util.Util.getColor
 import com.yuchen.howyo.util.Util.getString
 
 @SuppressLint("SetTextI18n")
@@ -87,16 +88,6 @@ fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
         else -> View.VISIBLE
     }
 }
-//@BindingAdapter("currentFragmentTypeForToolbar")
-//fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
-//    visibility = when (currentFragmentType) {
-//        CurrentFragmentType.PLAN,
-//        CurrentFragmentType.NOTIFICATION -> {
-//            View.GONE
-//        }
-//        else -> View.VISIBLE
-//    }
-//}
 
 @BindingAdapter("currentFragmentTypeForText", "sharedFragmentTitle")
 fun TextView.bindToolbarTitle(

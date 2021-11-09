@@ -248,7 +248,9 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
 
                 if (snapshot != null) {
-                    liveData.value = snapshot.first().toObject(Plan::class.java)
+                    if (snapshot.size() != 0) {
+                        liveData.value = snapshot.first().toObject(Plan::class.java)
+                    }
                 }
             }
 

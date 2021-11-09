@@ -1,9 +1,8 @@
 package com.yuchen.howyo.plan
 
+import android.graphics.*
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -12,15 +11,18 @@ import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
+import android.view.*
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.yuchen.howyo.R
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.launch
+import androidx.appcompat.app.AppCompatActivity
+import com.yuchen.howyo.util.Util.getColor
 
 
 class PlanFragment : Fragment() {
@@ -153,6 +155,11 @@ class PlanFragment : Fragment() {
         ItemTouchHelper(simpleItemTouchCallback)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -183,6 +190,25 @@ class PlanFragment : Fragment() {
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
 
+        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.toolbar)
+        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        var isShow = true
+        var scrollRange = -1
+        binding.appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { barLayout, verticalOffset ->
+            if (scrollRange == -1) {
+                scrollRange = barLayout?.totalScrollRange!!
+            }
+            if (scrollRange + verticalOffset == 0) {
+                binding.collapsingToolbar.title = " "
+                isShow = true
+            } else if (isShow) {
+                binding.collapsingToolbar.title = " "
+                isShow = false
+            }
+        })
+
+
         viewModel.selectedDayPosition.observe(viewLifecycleOwner, {
             it?.let {
                 viewModel.filterSchedule()
@@ -209,7 +235,7 @@ class PlanFragment : Fragment() {
             it?.let { day ->
                 context?.let { context ->
                     AlertDialog.Builder(context)
-                        .setMessage(getString(R.string.confirm_delete_day, day.position?.plus(1)))
+                        .setMessage(getString(R.string.confirm_delete_day, day.position.plus(1)))
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                             viewModel.delExistDay(day)
                         }
@@ -451,5 +477,38 @@ class PlanFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
+        inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
+        menu.findItem(R.id.delete).apply {
+
+            if (viewModel.accessType == AccessPlanType.EDIT) isVisible = true
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                icon.colorFilter = BlendModeColorFilter(
+//                    Color.WHITE, BlendMode.SRC_IN
+//                )
+//            } else {
+//                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+//            }
+
+
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.delete -> {
+                viewModel.checkDeletePlan()
+            }
+            android.R.id.home -> {
+                findNavController().popBackStack()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

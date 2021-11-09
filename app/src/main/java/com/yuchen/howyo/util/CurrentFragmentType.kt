@@ -4,7 +4,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.util.Util.getString
 
 enum class CurrentFragmentType(val value: String) {
-    HOME(getString(R.string.home)),
+    HOME(getString(R.string.app_name)),
     DISCOVER(getString(R.string.discover)),
     FAVORITE(getString(R.string.favorite)),
     PLAN(""),

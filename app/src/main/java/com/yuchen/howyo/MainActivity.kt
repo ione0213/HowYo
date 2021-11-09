@@ -102,6 +102,7 @@ class MainActivity : BaseActivity() {
 
         viewModel.currentFragmentType.observe(this, {
             Logger.i("isLoggedIn:${isLoggedIn}")
+            Logger.i("currentFragmentType:${it.value}")
             it?.let {
                 when {
                     it != CurrentFragmentType.SIGNIN && !isLoggedIn
@@ -125,6 +126,7 @@ class MainActivity : BaseActivity() {
 
     private fun setupNavController() {
         findNavController(R.id.myNavHostFragment).addOnDestinationChangedListener { navController: NavController, _: NavDestination, _: Bundle? ->
+            Logger.i("navController.currentDestination?.id:${navController.currentDestination}")
             viewModel.currentFragmentType.value = when (navController.currentDestination?.id) {
                 R.id.homeFragment -> CurrentFragmentType.HOME
                 R.id.discoverFragment -> CurrentFragmentType.DISCOVER
@@ -219,8 +221,11 @@ class MainActivity : BaseActivity() {
                 actionBarDrawerToggle?.isDrawerIndicatorEnabled = type.indicatorEnabled
                 supportActionBar?.setDisplayHomeAsUpEnabled(!type.indicatorEnabled)
 
+                Logger.i("type: $type")
                 when (type) {
-                    DrawerToggleType.BACK -> binding.toolbar.setNavigationIcon(R.drawable.toolbar_back)
+                    DrawerToggleType.BACK -> {
+                        binding.toolbar.setNavigationIcon(R.drawable.toolbar_back)
+                    }
                     else -> {
 
                     }

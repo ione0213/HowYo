@@ -19,6 +19,7 @@
     <dimen name="height_status_bar_origin">24dp</dimen>
 
     <!-- Plan-->
+    <dimen name="plan_img_btn_biggest">64dp</dimen>
     <dimen name="plan_img_btn_big">56dp</dimen>
     <dimen name="plan_img_btn">36dp</dimen>
     <dimen name="plan_img_btn_middle">30dp</dimen>

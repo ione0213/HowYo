@@ -265,7 +265,7 @@
         android:id="@+id/nav_to_plan_fragment"
         app:destination="@id/planFragment"
         app:popUpTo="@navigation/navigation"
-        app:popUpToInclusive="false" />
+        app:popUpToInclusive="true" />
     <action
         android:id="@+id/nav_to_detail_fragment"
         app:destination="@id/detailFragment" />
