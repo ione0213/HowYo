@@ -48,7 +48,7 @@ class ProfileViewModel(
     init {
 
         getLiveUserResult()
-        getLiveDaysResult()
+        getLivePlansResult()
     }
 
     private fun getLiveUserResult() {
@@ -56,8 +56,8 @@ class ProfileViewModel(
         _user = howYoRepository.getLiveUser(argumentUserId ?: "")
     }
 
-    private fun getLiveDaysResult() {
-        plans = howYoRepository.getLivePlans(listOf("userIdFromSharePreference"))
+    private fun getLivePlansResult() {
+        plans = howYoRepository.getLivePlans(listOf(UserManager.userId ?: ""))
         setStatusDone()
     }
 

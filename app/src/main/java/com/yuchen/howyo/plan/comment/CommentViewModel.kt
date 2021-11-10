@@ -92,7 +92,6 @@ class CommentViewModel(
             comment = message.value
         )
 
-        Logger.i("comment: $comment")
         coroutineScope.launch {
 
             val result = howYoRepository.createComment(comment)

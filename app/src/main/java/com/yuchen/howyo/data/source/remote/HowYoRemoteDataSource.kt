@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.okhttp.internal.Internal.logger
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
 import com.yuchen.howyo.data.*
@@ -28,6 +29,8 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val KEY_CREATED_TIME = "created_time"
     private const val KEY_EMAIL = "email"
     private const val KEY_ID = "id"
+    private const val KEY_AUTHOR_ID = "author_id"
+    private const val KEY_PRIVACY = "privacy"
 
     override suspend fun createUser(user: User): Result<String> =
         suspendCoroutine { continuation ->
@@ -65,7 +68,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                                     }
                             }
                             task.result.size() > 0 -> {
-                                Logger.i("exist user: ${task.result.first().id}")
                                 continuation.resume(Result.Success(task.result.first().id))
                             }
                         }
@@ -118,7 +120,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 exception?.let {
                     Logger.w("[${this::class.simpleName}] Error getting user. ${it.message}")
                 }
-                Logger.i("snapshot: ${snapshot?.size()}")
+
                 if (snapshot != null) {
                     when {
                         snapshot.size() > 0 -> {
@@ -126,14 +128,12 @@ object HowYoRemoteDataSource : HowYoDataSource {
                         }
                     }
                 }
-                Logger.i("liveData: ${liveData.value}")
-
             }
 
         return liveData
     }
 
-    override suspend fun updateUser(user: User): Result<Boolean>  =
+    override suspend fun updateUser(user: User): Result<Boolean> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
                 .collection(PATH_USERS)
@@ -279,40 +279,126 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
+    override suspend fun getPlans(authorList: List<String>): Result<List<Plan>> =
+        suspendCoroutine { continuation ->
+            when (authorList.size) {
+                0 -> {
+                    continuation.resume(Result.Success(listOf()))
+                }
+                else -> {
+                    FirebaseFirestore.getInstance()
+                        .collection(PATH_PLANS)
+                        .whereIn(KEY_AUTHOR_ID, authorList)
+                        .whereEqualTo(KEY_PRIVACY, "public")
+                        .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+                        .get()
+                        .addOnCompleteListener { task ->
+
+                            if (task.isSuccessful) {
+                                val list = mutableListOf<Plan>()
+
+                                if (task.result != null) {
+                                    for (document in task.result!!) {
+                                        Logger.d(document.id + " => " + document.data)
+
+                                        val plan = document.toObject(Plan::class.java)
+                                        list.add(plan)
+                                    }
+                                    continuation.resume(Result.Success(list))
+                                }
+                            } else {
+                                task.exception?.let {
+
+                                    Logger.w("[${this::class.simpleName}] Error getting schedules. ${it.message}")
+                                    continuation.resume(Result.Error(it))
+                                    return@addOnCompleteListener
+                                }
+                                continuation.resume(
+                                    Result.Fail(
+                                        HowYoApplication.instance.getString(
+                                            R.string.nothing
+                                        )
+                                    )
+                                )
+                            }
+                        }
+                }
+            }
+        }
+
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
 
         val liveData = MutableLiveData<List<Plan>>()
+        when (authorList.size) {
+            0 -> {
 
-        val plans = FirebaseFirestore.getInstance().collection(PATH_PLANS)
-
-        authorList.forEach {
-            Logger.i("Author_ID: $it")
-            plans.whereEqualTo("author_id", it)
-        }
-        Logger.i("Start")
-        plans.orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, exception ->
-
-                Logger.i("addSnapshotListener detect")
-
-                exception?.let {
-                    Logger.w("[${this::class.simpleName}] Error getting plans. ${it.message}")
-                }
-
-                val list = mutableListOf<Plan>()
-                if (snapshot != null) {
-                    for (document in snapshot) {
-                        Logger.d(document.id + " => " + document.data)
-
-                        val plan = document.toObject(Plan::class.java)
-                        list.add(plan)
-                    }
-                }
-
-                liveData.value = list
             }
-        Logger.i("End")
+            else -> {
+                FirebaseFirestore.getInstance()
+                    .collection(PATH_PLANS)
+                    .whereIn(KEY_AUTHOR_ID, authorList)
+                    .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+                    .addSnapshotListener { snapshot, exception ->
 
+                        Logger.i("addSnapshotListener detect")
+
+                        exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error getting plans. ${it.message}")
+                        }
+
+                        val list = mutableListOf<Plan>()
+                        if (snapshot != null) {
+                            for (document in snapshot) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val plan = document.toObject(Plan::class.java)
+                                list.add(plan)
+                            }
+                        }
+
+                        liveData.value = list
+                    }
+            }
+        }
+
+        return liveData
+    }
+
+    override fun getLivePublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+
+        val liveData = MutableLiveData<List<Plan>>()
+        when (authorList.size) {
+            0 -> {
+
+            }
+            else -> {
+                FirebaseFirestore.getInstance()
+                    .collection(PATH_PLANS)
+                    .whereIn(KEY_AUTHOR_ID, authorList)
+                    .whereEqualTo(KEY_PRIVACY, "public")
+                    .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+                    .addSnapshotListener { snapshot, exception ->
+
+                        Logger.i("addSnapshotListener detect")
+
+                        exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error getting plans. ${it.message}")
+                        }
+
+                        val list = mutableListOf<Plan>()
+                        if (snapshot != null) {
+                            for (document in snapshot) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val plan = document.toObject(Plan::class.java)
+                                list.add(plan)
+                            }
+                        }
+
+                        liveData.value = list
+                    }
+            }
+        }
 
         return liveData
     }
@@ -758,7 +844,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override suspend fun deleteComment(comment: Comment): Result<Boolean>  =
+    override suspend fun deleteComment(comment: Comment): Result<Boolean> =
         suspendCoroutine { continuation ->
 
             FirebaseFirestore.getInstance()
@@ -775,7 +861,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override suspend fun getComments(planId: String): Result<List<Comment>>  =
+    override suspend fun getComments(planId: String): Result<List<Comment>> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
                 .collection(PATH_COMMENTS)

@@ -318,7 +318,7 @@ class PlanViewModel(
                         deletePhoto(it)?.let { result -> scheduleImgResult.add(result) }
                     }
                 }
-                Logger.i("comments:${comments.value}")
+
                 comments.value?.forEach { comment ->
                     deleteComment(comment)?.let { commentResult.add(it) }
                 }

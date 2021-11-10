@@ -88,7 +88,6 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
-        Logger.i("PROFILE onCreateOptionsMenu")
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
         menu.findItem(R.id.setting).isVisible = true
         super.onCreateOptionsMenu(menu, inflater)

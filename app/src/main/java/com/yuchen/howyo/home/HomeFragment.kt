@@ -29,7 +29,6 @@ class HomeFragment : Fragment() {
     ): View {
 
 
-
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
@@ -40,6 +39,29 @@ class HomeFragment : Fragment() {
                 viewModel.navigateToPlan(it)
             }
         )
+
+        binding.layoutSwipeRefreshHome.setOnRefreshListener {
+            viewModel.getPlansResult()
+        }
+        viewModel.refreshStatus.observe(
+            viewLifecycleOwner, {
+                it?.let {
+                    binding.layoutSwipeRefreshHome.isRefreshing = it
+                }
+            }
+        )
+
+        viewModel.plans.observe(viewLifecycleOwner, {
+            it?.let {
+                viewModel.setStatusDone()
+            }
+        })
+
+        viewModel.followingList.observe(viewLifecycleOwner, {
+            it?.let {
+                viewModel.getPlansResult()
+            }
+        })
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {
 
@@ -75,7 +97,6 @@ class HomeFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
-        Logger.i("HOME onCreateOptionsMenu")
         menu.findItem(R.id.notification).isVisible = true
         super.onCreateOptionsMenu(menu, inflater)
     }

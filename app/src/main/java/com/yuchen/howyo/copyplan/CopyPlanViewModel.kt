@@ -238,9 +238,6 @@ class CopyPlanViewModel(
             privacy = getString(R.string.plan_private)
         )
 
-        Logger.i("plan:$plan")
-        Logger.i("newPlan:$newPlan")
-
         coroutineScope.launch {
 
             val result = newPlan?.let { howYoRepository.createPlan(it) }
@@ -261,8 +258,6 @@ class CopyPlanViewModel(
             }
             _isCoverPhotoReady.value = null
         }
-        Logger.i("plan2:$plan")
-        Logger.i("Plan id: ${planId.value}")
     }
 
     private suspend fun createDays(): Boolean {
@@ -364,14 +359,11 @@ class CopyPlanViewModel(
                             photoFileNameList = listOf()
                         )
 
-                        Logger.i("newSchedule:${newSchedule}")
-
                         schedulesResult.add(createSchedule(newSchedule))
                     }
                 }
             }
 
-            Logger.i("schedulesResult:${schedulesResult}")
             when {
                 !schedulesResult.contains(false) -> _isCopyFinished.value = true
             }

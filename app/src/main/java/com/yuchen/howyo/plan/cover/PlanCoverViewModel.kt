@@ -190,11 +190,7 @@ class PlanCoverViewModel(
 
         val userId = UserManager.userId
 
-        Logger.i("email: $userId")
-
         _user = howYoRepository.getLiveUser(userId ?: "")
-
-        Logger.i("user :${user.value}")
     }
 
     private fun setInitData() {

@@ -7,7 +7,6 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.plan.LikeType
 import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +61,7 @@ class AuthorProfileViewModel(
     init {
 
         getLiveUserResult()
-        getLiveDaysResult()
+        getLivePlansResult()
     }
 
     private fun getLiveUserResult() {
@@ -71,8 +70,17 @@ class AuthorProfileViewModel(
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
-    private fun getLiveDaysResult() {
-        plans = howYoRepository.getLivePlans(listOf("userIdFromSharePreference"))
+    private fun getLivePlansResult() {
+
+        plans = when (argumentUserId) {
+            UserManager.userId -> {
+                howYoRepository.getLivePlans(listOf(argumentUserId))
+            }
+            else -> {
+                howYoRepository.getLivePublicPlans(listOf(argumentUserId))
+            }
+        }
+
         setStatusDone()
     }
 

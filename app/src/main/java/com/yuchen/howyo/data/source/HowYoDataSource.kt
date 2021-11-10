@@ -24,7 +24,11 @@ interface HowYoDataSource {
 
     fun getLivePlan(planId: String): MutableLiveData<Plan>
 
+    suspend fun getPlans(authorList: List<String>): Result<List<Plan>>
+
     fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>>
+
+    fun getLivePublicPlans(authorList: List<String>): MutableLiveData<List<Plan>>
 
     suspend fun updatePlan(plan: Plan): Result<Boolean>
 

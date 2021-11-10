@@ -45,7 +45,6 @@ class SignInFragment : Fragment() {
                 when {
                     it.isNotEmpty() -> {
                         viewModel.setUser()
-                        Logger.i("UserManager.isLoggedIn:${UserManager.isLoggedIn}")
                         when (UserManager.isLoggedIn) {
                             true -> {
                                 findNavController().navigate(NavigationDirections.navToHomeFragment())

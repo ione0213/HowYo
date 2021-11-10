@@ -21,6 +21,5 @@ fun Activity?.showToast(message: String) {
 }
 
 fun Activity.closeKeyBoard() {
-    Logger.i("close key board")
     this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 }

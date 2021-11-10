@@ -332,6 +332,7 @@ fun bindRecyclerViewWithPlans(
     recyclerView: RecyclerView,
     plans: List<Plan>?
 ) {
+    Logger.i("BindingAdapter: $plans")
     plans?.let {
         recyclerView.adapter?.apply {
             when (this) {

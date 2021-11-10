@@ -54,8 +54,6 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
     fun setUser() {
 
         UserManager.apply {
-            Logger.i("_user.value:${user.value!!.id}")
-            Logger.i("_user.value:${user.value!!.email}")
             userId = user.value?.id
             currentUserEmail = user.value?.email
         }

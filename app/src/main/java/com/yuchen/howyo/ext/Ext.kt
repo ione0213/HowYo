@@ -52,9 +52,6 @@ fun Long.toMinute(): Int {
 
 fun Long.displayTime(): String {
     val sec = (Calendar.getInstance().timeInMillis - this) / 1000
-    Logger.i("${Calendar.getInstance().timeInMillis}")
-    Logger.i("$this")
-    Logger.i("sec: $sec")
     return when {
         sec < 60 -> sec.toString() + "秒前"
 
