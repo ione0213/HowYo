@@ -6,7 +6,7 @@
         <entry key="../../../../../layout/custom_preview.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable-xxxhdpi/add_image_background.xml" value="0.184375" />
         <entry key="app/src/main/res/drawable-xxxhdpi/add_image_ripple.xml" value="0.25" />
-        <entry key="app/src/main/res/drawable-xxxhdpi/button_ripple.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/button_ripple.xml" value="0.75" />
         <entry key="app/src/main/res/drawable-xxxhdpi/day_selector.xml" value="0.21302083333333333" />
         <entry key="app/src/main/res/drawable-xxxhdpi/day_text_color_selector.xml" value="0.29468845760980594" />
         <entry key="app/src/main/res/drawable-xxxhdpi/edit_image_background.xml" value="0.25" />
@@ -17,6 +17,9 @@
         <entry key="app/src/main/res/drawable/check_item_normal.xml" value="0.20572916666666666" />
         <entry key="app/src/main/res/drawable/day_corner_normal.xml" value="0.29468845760980594" />
         <entry key="app/src/main/res/drawable/day_corner_selected.xml" value="0.29468845760980594" />
+        <entry key="app/src/main/res/drawable/follow_corner_normal.xml" value="0.11851851851851852" />
+        <entry key="app/src/main/res/drawable/follow_corner_selected.xml" value="0.11851851851851852" />
+        <entry key="app/src/main/res/drawable/follow_selector.xml" value="0.31971399387129723" />
         <entry key="app/src/main/res/drawable/ic_nav_home_selector.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/ic_nav_plus_selector.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/ic_nav_profile_selector.xml" value="0.2537037037037037" />
@@ -29,7 +32,7 @@
         <entry key="app/src/main/res/layout/dialog_copy_plan.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_plan_cover.xml" value="0.3744207599629286" />
         <entry key="app/src/main/res/layout/fragment_add_new_plan_dialog.xml" value="0.26979166666666665" />
-        <entry key="app/src/main/res/layout/fragment_author_profile.xml" value="0.2848731884057971" />
+        <entry key="app/src/main/res/layout/fragment_author_profile.xml" value="0.67" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_check_list.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.67" />
@@ -52,7 +55,7 @@
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment_detail.xml" value="0.20833333333333334" />
-        <entry key="app/src/main/res/layout/fragment_plan.xml" value="0.41479099678456594" />
+        <entry key="app/src/main/res/layout/fragment_plan.xml" value="0.40315512708150747" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_shopping_list.xml" value="0.20833333333333334" />

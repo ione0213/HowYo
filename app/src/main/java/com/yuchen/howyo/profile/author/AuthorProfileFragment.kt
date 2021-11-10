@@ -43,7 +43,7 @@ class AuthorProfileFragment : Fragment() {
         )
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        viewModel.user.observe(viewLifecycleOwner, {
+        viewModel.author.observe(viewLifecycleOwner, {
             it?.let {
                 mainViewModel.setSharedToolbarTitle(it.id ?: "")
             }
@@ -58,17 +58,6 @@ class AuthorProfileFragment : Fragment() {
                     )
                 )
                 viewModel.onPlanNavigated()
-            }
-        })
-
-        viewModel.navigateToSetting.observe(viewLifecycleOwner, {
-            it?.let {
-                when {
-                    it -> {
-                        findNavController().navigate(NavigationDirections.navToSettingFragment())
-                    }
-                }
-                viewModel.onSettingNavigated()
             }
         })
 

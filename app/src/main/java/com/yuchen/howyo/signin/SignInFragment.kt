@@ -95,7 +95,7 @@ class SignInFragment : Fragment() {
                             email = currentUser.email,
                             avatar = currentUser.photoUrl.toString()
                         )
-                        Logger.i("fragment User:$user")
+
                         viewModel.createUser(user)
                     }
                 }
@@ -112,7 +112,6 @@ class SignInFragment : Fragment() {
                         Toast.LENGTH_LONG
                     )
                         .show()
-                    Log.d("ERRORCODE", response.error?.errorCode.toString())
                     return
                 }
             }

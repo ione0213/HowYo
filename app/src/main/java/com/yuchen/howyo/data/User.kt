@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class User(
-    var id: String? = null,
+    var id: String = "",
     var name: String? = null,
     var email: String? = null,
     var avatar: String? = null,

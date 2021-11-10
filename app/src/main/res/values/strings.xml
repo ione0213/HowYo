@@ -79,6 +79,10 @@
     <string name="profile_modify_id">ID</string>
     <string name="profile_modify_info">個人簡介</string>
 
+    <!-- Author Profile-->
+    <string name="author_profile_follow">追蹤</string>
+    <string name="author_profile_following">追蹤中</string>
+
     <!-- Notification-->
     <string name="notification_like_msg">說你的行程讚</string>
     <string name="notification_like_type">like</string>
@@ -103,7 +107,5 @@
         <item>health</item>
         <item>other</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -20,6 +20,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.getLiveUser(userId)
     }
 
+    override suspend fun updateUser(user: User): Result<Boolean> {
+        return remoteDataSource.updateUser(user)
+    }
+
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> {
         return remoteDataSource.uploadPhoto(imgUri, fileName)
     }

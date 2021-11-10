@@ -31,6 +31,7 @@ import com.yuchen.howyo.plan.groupmessage.GroupMessageAdapter
 import com.yuchen.howyo.plan.payment.PaymentAdapter
 import com.yuchen.howyo.profile.PlanAdapter
 import com.yuchen.howyo.profile.author.AuthorProfilePlanAdapter
+import com.yuchen.howyo.profile.author.FollowType
 import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
@@ -475,5 +476,31 @@ fun ImageButton.bindFavoriteBtn(plan: Plan?, type: FavoriteType?) {
             }
         }
         else -> View.GONE
+    }
+}
+
+@BindingAdapter("followButton", "followType")
+fun AppCompatButton.bindHeartBtn(user: User?, type: FollowType?) {
+    visibility = when (user?.id) {
+        UserManager.userId -> {
+            View.GONE
+        }
+        else -> {
+            when (type) {
+                FollowType.FOLLOW -> {
+                    when {
+                        user?.fansList?.contains(UserManager.userId) == true -> View.VISIBLE
+                        else -> View.GONE
+                    }
+                }
+                FollowType.UNFOLLOW -> {
+                    when {
+                        user?.fansList?.contains(UserManager.userId) == true -> View.GONE
+                        else -> View.VISIBLE
+                    }
+                }
+                else -> View.GONE
+            }
+        }
     }
 }

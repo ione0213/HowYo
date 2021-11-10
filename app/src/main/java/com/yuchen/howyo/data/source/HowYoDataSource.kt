@@ -2,7 +2,6 @@ package com.yuchen.howyo.data.source
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseUser
 import com.yuchen.howyo.data.*
 
 interface HowYoDataSource {
@@ -12,6 +11,8 @@ interface HowYoDataSource {
     suspend fun getUser(userId: String): Result<User>
 
     fun getLiveUser(userId: String): MutableLiveData<User>
+
+    suspend fun updateUser(user: User): Result<Boolean>
 
     suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String>
 

@@ -133,6 +133,22 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
+    override suspend fun updateUser(user: User): Result<Boolean>  =
+        suspendCoroutine { continuation ->
+            FirebaseFirestore.getInstance()
+                .collection(PATH_USERS)
+                .document(user.id)
+                .set(user)
+                .addOnSuccessListener {
+                    Logger.i("Update: $user")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error updating user. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> =
         suspendCoroutine { continuation ->
 

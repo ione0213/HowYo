@@ -1284,16 +1284,4 @@ class PlanViewModel(
     private fun getLiveCommentsResult() {
         comments = argumentPlan.id.let { howYoRepository.getLiveComments(it) }
     }
-
-//    private fun getCommentsResult() {
-//
-//        coroutineScope.launch {
-//
-//            val result = howYoRepository.getComments(plan.value?.id!!)
-//            _comments.value = when (result) {
-//                is Result.Success -> result.data
-//                else -> null
-//            }
-//        }
-//    }
 }

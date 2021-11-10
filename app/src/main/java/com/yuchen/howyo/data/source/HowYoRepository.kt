@@ -13,6 +13,8 @@ interface HowYoRepository {
 
     fun getLiveUser(userId: String): MutableLiveData<User>
 
+    suspend fun updateUser(user: User): Result<Boolean>
+
     suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String>
 
     suspend fun deletePhoto(fileName: String): Result<Boolean>

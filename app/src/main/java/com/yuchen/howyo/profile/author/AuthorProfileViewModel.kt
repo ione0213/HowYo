@@ -7,16 +7,27 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.plan.LikeType
+import com.yuchen.howyo.signin.UserManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class AuthorProfileViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentUserId: String
 ) : ViewModel() {
 
-    private var _user = MutableLiveData<User>()
+    private var _author = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val author: LiveData<User>
+        get() = _author
+
+    private var _currentUser = MutableLiveData<User>()
+
+    val currentUser: LiveData<User>
+        get() = _currentUser
 
     //Plan data
     var plans = MutableLiveData<List<Plan>>()
@@ -26,12 +37,6 @@ class AuthorProfileViewModel(
 
     val navigateToPlan: LiveData<Plan>
         get() = _navigateToPlan
-
-    // Handle navigation to setting
-    private val _navigateToSetting = MutableLiveData<Boolean>()
-
-    val navigateToSetting: LiveData<Boolean>
-        get() = _navigateToSetting
 
     // Handle navigation to friends
     private val _navigateToFriends = MutableLiveData<Boolean>()
@@ -44,6 +49,16 @@ class AuthorProfileViewModel(
     val status: LiveData<LoadApiStatus>
         get() = _status
 
+    private var viewModelJob = Job()
+
+    // the Coroutine runs using the Main (UI) dispatcher
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
     init {
 
         getLiveUserResult()
@@ -52,7 +67,8 @@ class AuthorProfileViewModel(
 
     private fun getLiveUserResult() {
 
-        _user = howYoRepository.getLiveUser(argumentUserId ?: "")
+        _author = howYoRepository.getLiveUser(argumentUserId ?: "")
+        _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
     private fun getLiveDaysResult() {
@@ -68,14 +84,6 @@ class AuthorProfileViewModel(
         _navigateToPlan.value = null
     }
 
-    fun navigateToSetting() {
-        _navigateToSetting.value = true
-    }
-
-    fun onSettingNavigated() {
-        _navigateToSetting.value = null
-    }
-
     fun navigateToFriend() {
         _navigateToFriends.value = true
     }
@@ -86,5 +94,101 @@ class AuthorProfileViewModel(
 
     fun setStatusDone() {
         _status.value = LoadApiStatus.DONE
+    }
+
+    fun setFollow(type: FollowType) {
+
+        val newAuthor = author.value
+        val fansList = newAuthor?.fansList?.toMutableList()
+
+        val newCurrentUser = currentUser.value
+        val followingList = newCurrentUser?.followingList?.toMutableList()
+
+        val currentUserId = UserManager.userId
+
+        when (type) {
+            FollowType.FOLLOW -> {
+                when {
+                    newAuthor?.fansList?.contains(currentUserId) != true -> {
+                        if (currentUserId != null) {
+                            fansList?.add(currentUserId)
+                        }
+                    }
+                }
+
+                when {
+                    newCurrentUser?.followingList?.contains(newAuthor?.id) != true -> {
+                        if (newAuthor?.id != null) {
+                            followingList?.add(newAuthor.id)
+                        }
+                    }
+                }
+            }
+            FollowType.UNFOLLOW -> {
+                when {
+                    newAuthor?.fansList?.contains(currentUserId) == true -> {
+                        if (currentUserId != null) {
+                            fansList?.removeAt(fansList.indexOf(currentUserId))
+                        }
+                    }
+                }
+
+                when {
+                    newCurrentUser?.followingList?.contains(newAuthor?.id) == true -> {
+                        if (newAuthor?.id != null) {
+                            followingList?.removeAt(followingList.indexOf(newAuthor.id))
+                        }
+                    }
+                }
+            }
+        }
+
+        newAuthor?.fansList = fansList
+        newCurrentUser?.followingList = followingList
+
+        _author.value = newAuthor!!
+        _currentUser.value = newCurrentUser!!
+
+        coroutineScope.launch {
+            _author.value?.let { howYoRepository.updateUser(it) }
+            _currentUser.value?.let { howYoRepository.updateUser(it) }
+        }
+    }
+
+    fun unfollow() {
+        val newAuthor = author.value
+        val fansList = newAuthor?.fansList?.toMutableList()
+
+        val newCurrentUser = currentUser.value
+        val followingList = newCurrentUser?.followingList?.toMutableList()
+
+        val currentUserId = UserManager.userId
+
+        when {
+            newAuthor?.fansList?.contains(currentUserId) == true -> {
+                if (currentUserId != null) {
+                    fansList?.removeAt(fansList.indexOf(currentUserId))
+                }
+            }
+        }
+
+        when {
+            newCurrentUser?.followingList?.contains(newAuthor?.id) == true -> {
+                if (newAuthor?.id != null) {
+                    followingList?.removeAt(followingList.indexOf(newAuthor.id))
+                }
+            }
+        }
+
+        newAuthor?.fansList = fansList
+        newCurrentUser?.followingList = followingList
+
+        _author.value = newAuthor!!
+        _currentUser.value = newCurrentUser!!
+
+        coroutineScope.launch {
+            _author.value?.let { howYoRepository.updateUser(it) }
+            _currentUser.value?.let { howYoRepository.updateUser(it) }
+        }
     }
 }
