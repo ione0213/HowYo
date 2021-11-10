@@ -16,8 +16,8 @@ class DefaultHowYoRepository(
         return remoteDataSource.getUser(userId)
     }
 
-    override fun getLiveUser(email: String): MutableLiveData<User> {
-        return remoteDataSource.getLiveUser(email)
+    override fun getLiveUser(userId: String): MutableLiveData<User> {
+        return remoteDataSource.getLiveUser(userId)
     }
 
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> {

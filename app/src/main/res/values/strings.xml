@@ -16,7 +16,7 @@
     <string name="new_item">新增項目</string>
     <string name="payment">款項清單</string>
     <string name="add_payment">新增款項</string>
-    <string name="delete_payment">刪除款項</string>
+    <string name="delete">刪除</string>
     <string name="payment_detail">款項資訊</string>
     <string name="find_location">尋找景點</string>
     <string name="setting">設定</string>

@@ -4,32 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.yuchen.howyo.profile.ProfileViewModel" />
+            type="com.yuchen.howyo.profile.author.AuthorProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".profile.ProfileFragment">
+        tools:context=".profile.author.AuthorProfileFragment">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_profile_avatar"
+            android:id="@+id/img_author_profile_avatar"
             android:layout_width="@dimen/profile_avatar"
             android:layout_height="@dimen/profile_avatar"
             android:layout_marginStart="@dimen/standard_padding"
-            app:imageUrl="@{viewModel.user.avatar}"
-            tools:src="@mipmap/ic_launcher"
             android:layout_marginTop="@dimen/middle_padding"
             android:scaleType="centerCrop"
+            app:imageUrl="@{viewModel.user.avatar}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/circle" />
+            app:shapeAppearanceOverlay="@style/circle"
+            tools:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/text_profile_following"
+            android:id="@+id/text_author_profile_following"
             style="@style/TextStyle2_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,11 +42,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
+            app:layout_constraintTop_toTopOf="@+id/text_author_profile_plans"
             tools:text="@string/profile_following" />
 
         <TextView
-            android:id="@+id/text_profile_fans"
+            android:id="@+id/text_author_profile_fans"
             style="@style/TextStyle2_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,14 +54,14 @@
             android:onClick="@{() -> viewModel.navigateToFriend()}"
             android:text="@{String.format(@string/profile_fans, 0)}"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/text_profile_following"
+            app:layout_constraintEnd_toStartOf="@+id/text_author_profile_following"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
+            app:layout_constraintTop_toTopOf="@+id/text_author_profile_plans"
             tools:text="@string/profile_fans" />
 
         <TextView
-            android:id="@+id/text_profile_plans"
+            android:id="@+id/text_author_profile_plans"
             style="@style/TextStyle2_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,31 +69,31 @@
             android:layout_marginEnd="@dimen/standard_padding"
             android:text="@{String.format(@string/profile_plans, viewModel.plans.size)}"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/text_profile_fans"
+            app:layout_constraintEnd_toStartOf="@+id/text_author_profile_fans"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/profile_plans" />
 
         <TextView
-            android:id="@+id/text_profile_user_name"
+            android:id="@+id/text_author_profile_user_name"
             style="@style/TextStyle2_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
-            android:text="@{viewModel.user.id}"
-            android:singleLine="true"
-            android:maxWidth="@dimen/profile_text_width_small"
             android:ellipsize="end"
+            android:maxWidth="@dimen/profile_text_width_small"
+            android:singleLine="true"
+            android:text="@{viewModel.user.id}"
             android:textStyle="bold"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/img_profile_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/img_profile_avatar"
+            app:layout_constraintStart_toStartOf="@+id/img_author_profile_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/img_author_profile_avatar"
             tools:text="traveller" />
 
         <TextView
-            android:id="@+id/text_profile_information"
+            android:id="@+id/text_author_profile_information"
             style="@style/TextStyle3_black"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -99,29 +101,29 @@
             android:ellipsize="end"
             android:maxLines="3"
             android:text="@{viewModel.user.introduction}"
-            android:visibility="@{viewModel.user.introduction == null ? View.GONE : View.VISIBLE}"
             android:textAlignment="viewStart"
             android:textStyle="bold"
+            android:visibility="@{viewModel.user.introduction == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/text_profile_user_name"
-            app:layout_constraintTop_toBottomOf="@+id/text_profile_user_name"
+            app:layout_constraintStart_toStartOf="@+id/text_author_profile_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_author_profile_user_name"
             tools:text="traveller" />
 
         <View
-            android:id="@+id/view_profile_separation"
+            android:id="@+id/view_author_profile_separation"
             style="@style/SeparationHorizontal"
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/small_padding"
             android:layout_marginEnd="@dimen/small_padding"
-            app:layout_goneMarginTop="@dimen/small_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_profile_information" />
+            app:layout_constraintTop_toBottomOf="@+id/text_author_profile_information"
+            app:layout_goneMarginTop="@dimen/small_padding" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_profile_plans"
+            android:id="@+id/recycler_author_profile_plans"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/small_padding"
@@ -131,7 +133,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_profile_separation"
+            app:layout_constraintTop_toBottomOf="@id/view_author_profile_separation"
             app:layout_constraintVertical_bias="1.0"
             app:plans="@{viewModel.plans}"
             app:spanCount="3"

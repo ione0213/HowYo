@@ -34,7 +34,20 @@
         android:id="@+id/profileFragment"
         android:name="com.yuchen.howyo.profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/authorProfileFragment"
+        android:name="com.yuchen.howyo.profile.author.AuthorProfileFragment"
+        android:label="AuthorProfileFragment"
+        tools:layout="@layout/fragment_author_profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/friendsFragment"
         android:name="com.yuchen.howyo.profile.friends.FriendsFragment"
@@ -264,6 +277,9 @@
         app:destination="@id/profileFragment"
         app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/nav_to_author_profile_fragment"
+        app:destination="@id/authorProfileFragment" />
     <action
         android:id="@+id/nav_to_friends_fragment"
         app:destination="@id/friendsFragment" />

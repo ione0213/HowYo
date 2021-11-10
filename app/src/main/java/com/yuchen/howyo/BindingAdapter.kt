@@ -30,6 +30,7 @@ import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
 import com.yuchen.howyo.plan.groupmessage.GroupMessageAdapter
 import com.yuchen.howyo.plan.payment.PaymentAdapter
 import com.yuchen.howyo.profile.PlanAdapter
+import com.yuchen.howyo.profile.author.AuthorProfilePlanAdapter
 import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
@@ -105,7 +106,8 @@ fun TextView.bindToolbarTitle(
 ) {
     text = when (currentFragmentTypeForText) {
         CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
-        CurrentFragmentType.PROFILE -> {
+        CurrentFragmentType.PROFILE,
+        CurrentFragmentType.AUTHOR_PROFILE -> {
             sharedFragmentTitle
         }
         else -> currentFragmentTypeForText.value
@@ -342,6 +344,9 @@ fun bindRecyclerViewWithPlans(
                     submitList(it)
                 }
                 is FavoriteAdapter -> {
+                    submitList(it)
+                }
+                is AuthorProfilePlanAdapter -> {
                     submitList(it)
                 }
             }

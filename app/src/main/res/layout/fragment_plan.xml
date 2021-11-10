@@ -40,6 +40,7 @@
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsingToolbar"
                 android:layout_width="match_parent"
+                app:collapsedTitleGravity="center"
                 android:layout_height="220dp"
                 android:background="@color/white"
                 android:fitsSystemWindows="true"
@@ -173,6 +174,7 @@
                     tools:src="@mipmap/ic_launcher"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
+                    android:onClick="@{() -> viewModel.navigateToAuthorProfile()}"
                     app:imageUrl="@{viewModel.author.avatar}"
                     app:shapeAppearanceOverlay="@style/circle" />
 
@@ -187,6 +189,7 @@
                     app:layout_collapseMode="parallax"
                     android:maxLines="1"
                     android:text="@{viewModel.plan.authorId}"
+                    android:onClick="@{() -> viewModel.navigateToAuthorProfile()}"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"

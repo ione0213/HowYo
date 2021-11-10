@@ -11,7 +11,7 @@ interface HowYoRepository {
 
     suspend fun getUser(userId: String): Result<User>
 
-    fun getLiveUser(email: String): MutableLiveData<User>
+    fun getLiveUser(userId: String): MutableLiveData<User>
 
     suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String>
 

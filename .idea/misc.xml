@@ -29,6 +29,7 @@
         <entry key="app/src/main/res/layout/dialog_copy_plan.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_plan_cover.xml" value="0.3744207599629286" />
         <entry key="app/src/main/res/layout/fragment_add_new_plan_dialog.xml" value="0.26979166666666665" />
+        <entry key="app/src/main/res/layout/fragment_author_profile.xml" value="0.2848731884057971" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_check_list.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.67" />
@@ -52,7 +53,7 @@
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment_detail.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_plan.xml" value="0.41479099678456594" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_shopping_list.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_signin.xml" value="0.2767210144927536" />

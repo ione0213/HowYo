@@ -104,23 +104,27 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
     }
 
-    override fun getLiveUser(email: String): MutableLiveData<User> {
+    override fun getLiveUser(userId: String): MutableLiveData<User> {
 
         val liveData = MutableLiveData<User>()
 
         FirebaseFirestore.getInstance()
             .collection(PATH_USERS)
-            .whereEqualTo(KEY_EMAIL, email)
+            .whereEqualTo(KEY_ID, userId)
             .addSnapshotListener { snapshot, exception ->
 
-                Logger.i("addSnapshotListener live user detect")
+                Logger.i("addSnapshotListener live user detect:$userId")
 
                 exception?.let {
                     Logger.w("[${this::class.simpleName}] Error getting user. ${it.message}")
                 }
                 Logger.i("snapshot: ${snapshot?.size()}")
                 if (snapshot != null) {
-                    liveData.value = snapshot.first().toObject(User::class.java)
+                    when {
+                        snapshot.size() > 0 -> {
+                            liveData.value = snapshot.first().toObject(User::class.java)
+                        }
+                    }
                 }
                 Logger.i("liveData: ${liveData.value}")
 

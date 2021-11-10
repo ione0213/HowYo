@@ -188,11 +188,11 @@ class PlanCoverViewModel(
 
     private fun getLiveUserResult() {
 
-        val email = UserManager.currentUserEmail
+        val userId = UserManager.userId
 
-        Logger.i("email: $email")
+        Logger.i("email: $userId")
 
-        _user = howYoRepository.getLiveUser(email ?: "")
+        _user = howYoRepository.getLiveUser(userId ?: "")
 
         Logger.i("user :${user.value}")
     }

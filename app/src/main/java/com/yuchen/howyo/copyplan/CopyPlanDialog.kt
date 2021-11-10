@@ -28,6 +28,7 @@ import com.yuchen.howyo.databinding.DialogCopyPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.signin.UserManager
 import java.io.File
 
 class CopyPlanDialog : AppCompatDialogFragment() {
@@ -115,7 +116,7 @@ class CopyPlanDialog : AppCompatDialogFragment() {
 //                        when (viewModel.isNewPlan.value) {
 //                            true -> {
                                 findNavController().navigate(
-                                    NavigationDirections.navToProfileFragment()
+                                    NavigationDirections.navToProfileFragment(UserManager.userId!!)
                                 )
 //                            }
 //                            false -> {

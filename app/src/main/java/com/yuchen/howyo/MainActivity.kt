@@ -65,7 +65,7 @@ class MainActivity : BaseActivity() {
                 }
                 R.id.navigation_profile -> {
 
-                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navToProfileFragment())
+                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navToProfileFragment(UserManager.userId!!))
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -113,6 +113,18 @@ class MainActivity : BaseActivity() {
             }
         })
 
+        viewModel.resetToolbar.observe(this, {
+            it?.let {
+
+                if (it) {
+                    setupToolbar()
+                    setupDrawer()
+                    setupNavController()
+                    viewModel.onResetToolbar()
+                }
+            }
+        })
+
         setupToolbar()
         setupBottomNav()
         setupDrawer()
@@ -132,6 +144,7 @@ class MainActivity : BaseActivity() {
                 R.id.discoverFragment -> CurrentFragmentType.DISCOVER
                 R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
                 R.id.profileFragment -> CurrentFragmentType.PROFILE
+                R.id.authorProfileFragment -> CurrentFragmentType.AUTHOR_PROFILE
                 R.id.notificationFragment -> CurrentFragmentType.NOTIFICATION
                 R.id.planFragment -> CurrentFragmentType.PLAN
                 R.id.groupMessageFragment -> CurrentFragmentType.GROUP_MESSAGE
@@ -246,6 +259,7 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
 
         viewModel.resetSharedToolbarTitle()
+        viewModel.resetToolbar()
         super.onBackPressed()
     }
 

@@ -203,6 +203,12 @@ class PlanViewModel(
     val navigateToCopyPlan: LiveData<Plan>
         get() = _navigateToCopyPlan
 
+    // Handle navigation to author profile
+    private val _navigateToAuthorProfile = MutableLiveData<String>()
+
+    val navigateToAuthorProfile: LiveData<String>
+        get() = _navigateToAuthorProfile
+
     // Handle leave plan
     private val _leavePlan = MutableLiveData<Boolean>()
 
@@ -1123,6 +1129,16 @@ class PlanViewModel(
 
     fun onCopyPlanNavigated() {
         _navigateToCopyPlan.value = null
+    }
+
+    fun navigateToAuthorProfile() {
+        if (accessType == AccessPlanType.VIEW) {
+            _navigateToAuthorProfile.value = plan.value?.authorId ?: ""
+        }
+    }
+
+    fun onAuthorProfileNavigated() {
+        _navigateToAuthorProfile.value = null
     }
 
     fun navigateToMapMode() {

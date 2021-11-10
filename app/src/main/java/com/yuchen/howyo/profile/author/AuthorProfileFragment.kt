@@ -1,24 +1,24 @@
-package com.yuchen.howyo.profile
+package com.yuchen.howyo.profile.author
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.R
-import com.yuchen.howyo.databinding.FragmentProfileBinding
+import com.yuchen.howyo.databinding.FragmentAuthorProfileBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
-import com.yuchen.howyo.util.Logger
 
-class ProfileFragment : Fragment() {
+class AuthorProfileFragment : Fragment() {
 
-    private lateinit var binding: FragmentProfileBinding
-    val viewModel by viewModels<ProfileViewModel> { getVmFactory(
-        ProfileFragmentArgs.fromBundle(requireArguments()).userId
+    private lateinit var binding: FragmentAuthorProfileBinding
+    val viewModel by viewModels<AuthorProfileViewModel> { getVmFactory(
+        AuthorProfileFragmentArgs.fromBundle(requireArguments()).userId
     ) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,13 +31,13 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentAuthorProfileBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
 
-        binding.recyclerProfilePlans.adapter = PlanAdapter(
-            PlanAdapter.OnClickListener {
+        binding.recyclerAuthorProfilePlans.adapter = AuthorProfilePlanAdapter(
+            AuthorProfilePlanAdapter.OnClickListener {
                 viewModel.navigateToPlan(it)
             }
         )
@@ -84,23 +84,5 @@ class ProfileFragment : Fragment() {
         })
 
         return binding.root
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
-        Logger.i("PROFILE onCreateOptionsMenu")
-        inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
-        menu.findItem(R.id.setting).isVisible = true
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.setting -> {
-                viewModel.navigateToSetting()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

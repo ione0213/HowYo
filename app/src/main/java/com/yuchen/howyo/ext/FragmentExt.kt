@@ -73,8 +73,8 @@ fun Fragment.getVmFactory(
 }
 
 fun Fragment.getVmFactory(
-    imageUrl: String
-): DetailViewImageViewModelFactory {
+    stringData: String
+): StringViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return DetailViewImageViewModelFactory(repository, imageUrl)
+    return StringViewModelFactory(repository, stringData)
 }

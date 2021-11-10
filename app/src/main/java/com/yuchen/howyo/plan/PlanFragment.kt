@@ -200,7 +200,7 @@ class PlanFragment : Fragment() {
                 scrollRange = barLayout?.totalScrollRange!!
             }
             if (scrollRange + verticalOffset == 0) {
-                binding.collapsingToolbar.title = " "
+                binding.collapsingToolbar.title = viewModel.plan.value?.title
                 isShow = true
             } else if (isShow) {
                 binding.collapsingToolbar.title = " "
@@ -485,6 +485,14 @@ class PlanFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToAuthorProfile.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToAuthorProfileFragment(it))
+                mainViewModel.resetToolbar()
+                viewModel.onAuthorProfileNavigated()
+            }
+        })
+
         return binding.root
     }
 
@@ -494,17 +502,22 @@ class PlanFragment : Fragment() {
         menu.findItem(R.id.delete).apply {
 
             if (viewModel.accessType == AccessPlanType.EDIT) isVisible = true
-
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                icon.colorFilter = BlendModeColorFilter(
-//                    Color.WHITE, BlendMode.SRC_IN
-//                )
-//            } else {
-//                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
-//            }
-
-
         }
+
+        //For collapsed title align
+        menu.findItem(R.id.nothing).apply {
+
+            if (viewModel.accessType == AccessPlanType.VIEW) isVisible = true
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                icon.colorFilter = BlendModeColorFilter(
+                    Color.TRANSPARENT, BlendMode.SRC_IN
+                )
+            } else {
+                icon.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+            }
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -515,6 +528,11 @@ class PlanFragment : Fragment() {
                 viewModel.checkDeletePlan()
             }
             android.R.id.home -> {
+
+                val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+                mainViewModel.resetToolbar()
+
+                activity?.invalidateOptionsMenu()
                 findNavController().popBackStack()
             }
         }

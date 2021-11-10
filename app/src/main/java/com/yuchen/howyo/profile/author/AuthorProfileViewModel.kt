@@ -1,4 +1,4 @@
-package com.yuchen.howyo.profile
+package com.yuchen.howyo.profile.author
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +7,8 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.signin.UserManager
 
-class ProfileViewModel(
+class AuthorProfileViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentUserId: String
 ) : ViewModel() {
