@@ -25,6 +25,7 @@ import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.DialogCopyPlanBinding
+import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 import com.yuchen.howyo.plan.AccessPlanType
@@ -81,6 +82,16 @@ class CopyPlanDialog : AppCompatDialogFragment() {
                 viewModel.onSelectedPhoto()
             }
         })
+
+        viewModel.isSavePlan.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    binding.edittextCopyPlanTitle.closeKeyBoard()
+                    viewModel.handlePlanCover()
+                    viewModel.onSavedPlan()
+                }
+            }
+        }
 
         viewModel.isCoverPhotoReady.observe(viewLifecycleOwner, {
             it?.let {

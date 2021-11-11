@@ -3,6 +3,7 @@ package com.yuchen.howyo.data.source
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.*
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
 interface HowYoDataSource {
 
@@ -28,7 +29,11 @@ interface HowYoDataSource {
 
     fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>>
 
+    fun getAllLivePublicPlans(): MutableLiveData<List<Plan>>
+
     fun getLivePublicPlans(authorList: List<String>): MutableLiveData<List<Plan>>
+
+    fun getLiveCollectedPublicPlans(authorList: List<String>): MutableLiveData<List<Plan>>
 
     suspend fun updatePlan(plan: Plan): Result<Boolean>
 
@@ -54,15 +59,15 @@ interface HowYoDataSource {
 
     suspend fun getSchedules(planId: String): Result<List<Schedule>>
 
-    suspend fun createMainCheckList(
-        planId: String,
-        mainType: String,
-        subtype: String?
-    ): Result<Boolean>
+    suspend fun createCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean>
 
-    suspend fun deleteMainCheckList(planId: String): Result<Boolean>
+    suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean>
 
-    suspend fun deleteCheckList(planId: String): Result<Boolean>
+    suspend fun deleteCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean>
+
+    suspend fun deleteCheckShopListWithPlanID(planId: String): Result<Boolean>
+
+    fun getLiveCheckShopList(planId: String, mainType: MainItemType): MutableLiveData<List<CheckShoppingList>>
 
     suspend fun createComment(comment: Comment): Result<Boolean>
 

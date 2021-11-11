@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.okhttp.internal.Internal.logger
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoDataSource
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.util.Logger
 import java.util.*
 import kotlin.coroutines.resume
@@ -23,7 +23,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_DAYS = "days"
     private const val PATH_SCHEDULES = "schedules"
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
-    private const val PATH_CHECK_ITEM_LIST = "check_item_lists"
     private const val PATH_COMMENTS = "comments"
     private const val KEY_POSITION = "position"
     private const val KEY_CREATED_TIME = "created_time"
@@ -31,6 +30,9 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val KEY_ID = "id"
     private const val KEY_AUTHOR_ID = "author_id"
     private const val KEY_PRIVACY = "privacy"
+    private const val KEY_COLLECTED = "plan_collected_list"
+    private const val KEY_PLAN_ID = "plan_id"
+    private const val KEY_MAIN_TYPE = "main_type"
 
     override suspend fun createUser(user: User): Result<String> =
         suspendCoroutine { continuation ->
@@ -92,8 +94,10 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 val user: User
 
                 if (task.isSuccessful) {
-                    user = task.result.first().toObject(User::class.java)
-                    continuation.resume(Result.Success(user))
+                    if (task.result != null) {
+                        user = task.result.first().toObject(User::class.java)
+                        continuation.resume(Result.Success(user))
+                    }
                 } else {
                     task.exception?.let {
                         Logger.w("[${this::class.simpleName}] Error getting user. ${it.message}")
@@ -364,6 +368,37 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
+    override fun getAllLivePublicPlans(): MutableLiveData<List<Plan>> {
+
+        val liveData = MutableLiveData<List<Plan>>()
+        FirebaseFirestore.getInstance()
+            .collection(PATH_PLANS)
+            .whereEqualTo(KEY_PRIVACY, "public")
+            .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting plans. ${it.message}")
+                }
+
+                val list = mutableListOf<Plan>()
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val plan = document.toObject(Plan::class.java)
+                        list.add(plan)
+                    }
+                }
+
+                liveData.value = list
+            }
+
+        return liveData
+    }
+
     override fun getLivePublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
 
         val liveData = MutableLiveData<List<Plan>>()
@@ -375,6 +410,45 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 FirebaseFirestore.getInstance()
                     .collection(PATH_PLANS)
                     .whereIn(KEY_AUTHOR_ID, authorList)
+                    .whereEqualTo(KEY_PRIVACY, "public")
+                    .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+                    .addSnapshotListener { snapshot, exception ->
+
+                        Logger.i("addSnapshotListener detect")
+
+                        exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error getting plans. ${it.message}")
+                        }
+
+                        val list = mutableListOf<Plan>()
+                        if (snapshot != null) {
+                            for (document in snapshot) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val plan = document.toObject(Plan::class.java)
+                                list.add(plan)
+                            }
+                        }
+
+                        liveData.value = list
+                    }
+            }
+        }
+
+        return liveData
+    }
+
+    override fun getLiveCollectedPublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+
+        val liveData = MutableLiveData<List<Plan>>()
+        when (authorList.size) {
+            0 -> {
+
+            }
+            else -> {
+                FirebaseFirestore.getInstance()
+                    .collection(PATH_PLANS)
+                    .whereArrayContainsAny(KEY_COLLECTED, authorList)
                     .whereEqualTo(KEY_PRIVACY, "public")
                     .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
                     .addSnapshotListener { snapshot, exception ->
@@ -502,7 +576,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         FirebaseFirestore.getInstance()
             .collection(PATH_DAYS)
-            .whereEqualTo("plan_id", planId)
+            .whereEqualTo(KEY_PLAN_ID, planId)
             .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, exception ->
 
@@ -530,7 +604,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
                 .collection(PATH_DAYS)
-                .whereEqualTo("plan_id", planId)
+                .whereEqualTo(KEY_PLAN_ID, planId)
                 .orderBy(KEY_POSITION, Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener { task ->
@@ -577,8 +651,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                             }
                         }
 
-
-                        Logger.i("CREATE SCHEDULE1:${schedule}")
                         val schedules = FirebaseFirestore.getInstance().collection(PATH_SCHEDULES)
                         val document = schedules.document()
 
@@ -588,7 +660,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                             .set(schedule)
                             .addOnCompleteListener { scheduleTask ->
                                 if (scheduleTask.isSuccessful) {
-                                    Logger.i("CREATE SCHEDULE2:$schedule")
 
                                     continuation.resume(Result.Success(true))
                                 } else {
@@ -648,7 +719,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         FirebaseFirestore.getInstance()
             .collection(PATH_SCHEDULES)
-            .whereEqualTo("plan_id", planId)
+            .whereEqualTo(KEY_PLAN_ID, planId)
             .addSnapshotListener { snapshot, exception ->
 
                 Logger.i("addSnapshotListener detect")
@@ -676,7 +747,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)
-                .whereEqualTo("plan_id", planId)
+                .whereEqualTo(KEY_PLAN_ID, planId)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -700,11 +771,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override suspend fun createMainCheckList(
-        planId: String,
-        mainType: String,
-        subtype: String?
-    ): Result<Boolean> =
+    override suspend fun createCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> =
         suspendCoroutine { continuation ->
             val mainCheckListRef = FirebaseFirestore.getInstance().collection(
                 PATH_CHECK_SHOPPING_LIST
@@ -712,15 +779,10 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             val document = mainCheckListRef.document()
 
-            val mainCheckList = CheckShoppingList(
-                id = document.id,
-                planId = planId,
-                mainType = mainType,
-                subType = subtype
-            )
+            checkShoppingList.id = document.id
 
             document
-                .set(mainCheckList)
+                .set(checkShoppingList)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         continuation.resume(Result.Success(true))
@@ -737,7 +799,41 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         }
 
-    override suspend fun deleteMainCheckList(planId: String): Result<Boolean> =
+    override suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_CHECK_SHOPPING_LIST)
+                .document(checkShoppingList.id)
+                .set(checkShoppingList)
+                .addOnSuccessListener {
+                    Logger.i("Update: $checkShoppingList")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error updating schedule. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
+    override suspend fun deleteCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_CHECK_SHOPPING_LIST)
+                .document(checkShoppingList.id)
+                .delete()
+                .addOnSuccessListener {
+                    Logger.i("Delete: $checkShoppingList")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error deleting checkShoppingList. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
+    override suspend fun deleteCheckShopListWithPlanID(planId: String): Result<Boolean> =
         suspendCoroutine { continuation ->
 
             val firebaseRef = FirebaseFirestore.getInstance()
@@ -745,7 +841,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             val deleteResults = mutableListOf<Boolean>()
 
-            collectionRef.whereEqualTo("plan_id", planId)
+            collectionRef.whereEqualTo(KEY_PLAN_ID, planId)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -778,46 +874,41 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override suspend fun deleteCheckList(planId: String): Result<Boolean> =
-        suspendCoroutine { continuation ->
+    override fun getLiveCheckShopList(
+        planId: String,
+        mainType: MainItemType
+    ): MutableLiveData<List<CheckShoppingList>> {
 
-            val firebaseRef = FirebaseFirestore.getInstance()
-            val collectionRef = firebaseRef.collection(PATH_CHECK_ITEM_LIST)
+        val liveData = MutableLiveData<List<CheckShoppingList>>()
 
-            val deleteResults = mutableListOf<Boolean>()
+        FirebaseFirestore.getInstance()
+            .collection(PATH_CHECK_SHOPPING_LIST)
+            .whereEqualTo(KEY_PLAN_ID, planId)
+            .whereEqualTo(KEY_MAIN_TYPE, mainType.value)
+            .orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, exception ->
 
-            collectionRef.whereEqualTo("plan_id", planId)
-                .get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        task.result.forEach {
-                            collectionRef.document(it.id).delete()
-                                .addOnCompleteListener { subTask ->
-                                    if (subTask.isSuccessful) {
-                                        deleteResults.add(true)
-                                    } else {
-                                        deleteResults.add(false)
-                                    }
-                                }
-                        }
+                Logger.i("addSnapshotListener detect")
 
-                        continuation.resume(
-                            when (!deleteResults.contains(false)) {
-                                true -> Result.Success(true)
-                                false -> Result.Success(false)
-                            }
-                        )
-                    } else {
-                        task.exception?.let {
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting comments. ${it.message}")
+                }
 
-                            Logger.w("[${this::class.simpleName}] Error deleting check list. ${it.message}")
-                            continuation.resume(Result.Error(it))
-                            return@addOnCompleteListener
-                        }
-                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                val list = mutableListOf<CheckShoppingList>()
+
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val checkShoppingList = document.toObject(CheckShoppingList::class.java)
+                        list.add(checkShoppingList)
                     }
                 }
-        }
+                liveData.value = list
+            }
+
+        return liveData
+    }
 
     override suspend fun createComment(comment: Comment): Result<Boolean> =
         suspendCoroutine { continuation ->
@@ -865,7 +956,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
                 .collection(PATH_COMMENTS)
-                .whereEqualTo("plan_id", planId)
+                .whereEqualTo(KEY_PLAN_ID, planId)
                 .orderBy(KEY_POSITION, Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener { task ->
@@ -895,7 +986,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         FirebaseFirestore.getInstance()
             .collection(PATH_COMMENTS)
-            .whereEqualTo("plan_id", planId)
+            .whereEqualTo(KEY_PLAN_ID, planId)
             .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->
 

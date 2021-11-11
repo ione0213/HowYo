@@ -171,7 +171,7 @@
             app:argType="string" />
         <argument
             android:name="mainType"
-            app:argType="string" />
+            app:argType="com.yuchen.howyo.plan.checkorshoppinglist.MainItemType" />
     </fragment>
     <fragment
         android:id="@+id/paymentFragment"

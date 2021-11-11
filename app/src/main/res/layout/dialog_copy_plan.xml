@@ -41,7 +41,7 @@
                 app:layout_constraintBottom_toTopOf="@id/fab_copy_plan_cover_add">
 
                 <TextView
-                    android:id="@+id/text_plan_title"
+                    android:id="@+id/text_copy_plan_title"
                     android:layout_width="wrap_content"
                     style="@style/TextStyle1_black"
                     android:layout_height="wrap_content"
@@ -97,7 +97,6 @@
                         android:layout_marginTop="@dimen/small_padding"
                         android:layout_marginEnd="@dimen/small_padding"
                         android:background="@drawable/delete"
-                        android:backgroundTint="@color/gray2"
                         android:onClick="@{() -> viewModel.resetCoverImg()}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -151,6 +150,7 @@
                         android:layout_height="@dimen/cover_plan_edittext"
                         android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:hint="@string/plan_name"
+                        android:id="@+id/edittext_copy_plan_title"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
 class DefaultHowYoRepository(
     private val remoteDataSource: HowYoRemoteDataSource
@@ -52,8 +53,16 @@ class DefaultHowYoRepository(
         return remoteDataSource.getLivePlans(authorList)
     }
 
+    override fun getAllLivePublicPlans(): MutableLiveData<List<Plan>> {
+        return remoteDataSource.getAllLivePublicPlans()
+    }
+
     override fun getLivePublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
         return remoteDataSource.getLivePublicPlans(authorList)
+    }
+
+    override fun getLiveCollectedPublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+        return remoteDataSource.getLiveCollectedPublicPlans(authorList)
     }
 
     override suspend fun updatePlan(plan: Plan): Result<Boolean> {
@@ -104,20 +113,27 @@ class DefaultHowYoRepository(
         return remoteDataSource.getSchedules(planId)
     }
 
-    override suspend fun createMainCheckList(
+    override suspend fun createCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
+        return remoteDataSource.createCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
+        return remoteDataSource.updateCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun deleteCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
+        return remoteDataSource.deleteCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun deleteCheckShopListWithPlanID(planId: String): Result<Boolean> {
+        return remoteDataSource.deleteCheckShopListWithPlanID(planId)
+    }
+
+    override fun getLiveCheckShopList(
         planId: String,
-        mainType: String,
-        subtype: String?
-    ): Result<Boolean> {
-        return remoteDataSource.createMainCheckList(planId, mainType, subtype)
-    }
-
-    override suspend fun deleteMainCheckList(planId: String): Result<Boolean> {
-        return remoteDataSource.deleteMainCheckList(planId)
-    }
-
-    override suspend fun deleteCheckList(planId: String): Result<Boolean> {
-        return remoteDataSource.deleteCheckList(planId)
+        mainType: MainItemType
+    ): MutableLiveData<List<CheckShoppingList>> {
+        return remoteDataSource.getLiveCheckShopList(planId, mainType)
     }
 
     override suspend fun createComment(comment: Comment): Result<Boolean> {

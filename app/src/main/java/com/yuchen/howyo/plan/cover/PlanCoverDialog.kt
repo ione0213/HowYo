@@ -92,11 +92,20 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             }
         })
 
+        viewModel.isSavePlan.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    binding.edittextPlanTitle.closeKeyBoard()
+                    viewModel.handlePlanCover()
+                    viewModel.onSavedPlan()
+                }
+            }
+        }
+
         viewModel.isCoverPhotoReady.observe(viewLifecycleOwner, {
             it?.let {
                 when {
                     it -> {
-                        binding.edittextPlanTitle.closeKeyBoard()
                         when (viewModel.plan.value?.id.isNullOrEmpty()) {
                             true -> {
                                 viewModel.createPlan()

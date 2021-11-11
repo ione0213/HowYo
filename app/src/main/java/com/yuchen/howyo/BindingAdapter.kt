@@ -23,6 +23,7 @@ import com.yuchen.howyo.home.HomeAdapter
 import com.yuchen.howyo.home.notification.NotificationAdapter
 import com.yuchen.howyo.plan.*
 import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.plan.companion.CompanionAdapter
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
@@ -295,16 +296,16 @@ fun bindRecyclerViewWithDays(recyclerView: RecyclerView, user: User) {
     }
 }
 
-@BindingAdapter("checkLists")
-fun bindRecyclerViewWithCheckLists(
-    recyclerView: RecyclerView,
-    checkLists: List<CheckShoppingItemResult>
+@BindingAdapter("checkLists", "mainType")
+fun RecyclerView.bindRecyclerViewWithCheckLists(
+    checkLists: List<CheckShoppingList>?,
+    mainItemType: MainItemType
 ) {
     checkLists.let {
-        recyclerView.adapter?.apply {
+        adapter?.apply {
             when (this) {
                 is CheckOrShoppingListAdapter -> {
-                    addTitleAndItem(it)
+                    addTitleAndItem(it, mainItemType)
                 }
             }
         }
@@ -442,38 +443,49 @@ fun ImageButton.bindUnlockBtn(privacy: String?, accessType: AccessPlanType?) {
     }
 }
 
-@BindingAdapter("heartButton", "likeType")
-fun ImageButton.bindHeartBtn(plan: Plan?, type: LikeType?) {
-    visibility = when (type) {
-        LikeType.LIKE -> {
-            when {
-                plan?.likeList?.contains(UserManager.userId) == true -> View.VISIBLE
+@BindingAdapter("heartButton", "likeType", "accessType")
+fun ImageButton.bindHeartBtn(plan: Plan?, type: LikeType?, accessType: AccessPlanType?) {
+    visibility = when (accessType) {
+        AccessPlanType.VIEW -> {
+            when (type) {
+                LikeType.LIKE -> {
+                    when {
+                        plan?.likeList?.contains(UserManager.userId) == true -> View.VISIBLE
+                        else -> View.GONE
+                    }
+                }
+                LikeType.UNLIKE -> {
+                    when {
+                        plan?.likeList?.contains(UserManager.userId) == true -> View.GONE
+                        else -> View.VISIBLE
+                    }
+                }
                 else -> View.GONE
-            }
-        }
-        LikeType.UNLIKE -> {
-            when {
-                plan?.likeList?.contains(UserManager.userId) == true -> View.GONE
-                else -> View.VISIBLE
             }
         }
         else -> View.GONE
     }
 }
 
-@BindingAdapter("favoriteButton", "favoriteType")
-fun ImageButton.bindFavoriteBtn(plan: Plan?, type: FavoriteType?) {
-    visibility = when (type) {
-        FavoriteType.COLLECT -> {
-            when {
-                plan?.planCollectedList?.contains(UserManager.userId) == true -> View.VISIBLE
+@BindingAdapter("favoriteButton", "favoriteType", "accessType")
+fun ImageButton.bindFavoriteBtn(plan: Plan?, type: FavoriteType?, accessType: AccessPlanType?) {
+    visibility = when (accessType) {
+        AccessPlanType.VIEW -> {
+
+            when (type) {
+                FavoriteType.COLLECT -> {
+                    when {
+                        plan?.planCollectedList?.contains(UserManager.userId) == true -> View.VISIBLE
+                        else -> View.GONE
+                    }
+                }
+                FavoriteType.REMOVE -> {
+                    when {
+                        plan?.planCollectedList?.contains(UserManager.userId) == true -> View.GONE
+                        else -> View.VISIBLE
+                    }
+                }
                 else -> View.GONE
-            }
-        }
-        FavoriteType.REMOVE -> {
-            when {
-                plan?.planCollectedList?.contains(UserManager.userId) == true -> View.GONE
-                else -> View.VISIBLE
             }
         }
         else -> View.GONE
@@ -481,7 +493,7 @@ fun ImageButton.bindFavoriteBtn(plan: Plan?, type: FavoriteType?) {
 }
 
 @BindingAdapter("followButton", "followType")
-fun AppCompatButton.bindHeartBtn(user: User?, type: FollowType?) {
+fun AppCompatButton.bindFollowBtn(user: User?, type: FollowType?) {
     visibility = when (user?.id) {
         UserManager.userId -> {
             View.GONE
@@ -504,4 +516,21 @@ fun AppCompatButton.bindHeartBtn(user: User?, type: FollowType?) {
             }
         }
     }
+}
+
+@BindingAdapter("buttonForAuthor", "accessType")
+fun AppCompatButton.bindBtnForAuthor(plan: Plan?, accessType: AccessPlanType?) {
+
+    val userId = UserManager.userId ?: ""
+
+    visibility =
+        when {
+            (plan?.authorId == userId || plan?.companionList?.contains(userId) == true)
+                    && accessType == AccessPlanType.VIEW -> {
+                View.VISIBLE
+            }
+            else -> {
+                View.GONE
+            }
+        }
 }

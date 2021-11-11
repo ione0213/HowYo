@@ -8,11 +8,12 @@ sealed class CheckListItem {
         override val id: String = title
     }
 
-    data class CheckItem(val item: CheckShoppingItem) : CheckListItem() {
+    data class CheckItem(val item: CheckShoppingList) : CheckListItem() {
         override val id: String
             get() = item.id ?: ""
     }
-    object AddBtn : CheckListItem() {
-        override val id: String = ""
+    data class AddBtn(val subType: String) : CheckListItem() {
+        override val id: String
+            get() = subType
     }
 }

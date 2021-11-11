@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -84,10 +84,10 @@ class PlanViewModel(
     private val planResult: LiveData<Boolean>
         get() = _planResult
 
-    private val _mainCheckListResult = MutableLiveData<Boolean>()
+    private val _checkShopListResult = MutableLiveData<Boolean>()
 
-    private val mainCheckListResult: LiveData<Boolean>
-        get() = _mainCheckListResult
+    private val checkShopListResult: LiveData<Boolean>
+        get() = _checkShopListResult
 
     private val _checkListResult = MutableLiveData<Boolean>()
 
@@ -168,9 +168,9 @@ class PlanViewModel(
         get() = _navigateToComment
 
     // Handle navigation to check or shopping list
-    private val _navigateToCheckOrShoppingList = MutableLiveData<String>()
+    private val _navigateToCheckOrShoppingList = MutableLiveData<MainItemType>()
 
-    val navigateToCheckOrShoppingList: LiveData<String>
+    val navigateToCheckOrShoppingList: LiveData<MainItemType>
         get() = _navigateToCheckOrShoppingList
 
     // Handle navigation to payment
@@ -323,8 +323,8 @@ class PlanViewModel(
                     deleteComment(comment)?.let { commentResult.add(it) }
                 }
 
-                _mainCheckListResult.postValue(deleteMainCheckList(plan.id))
-                _checkListResult.postValue(deleteCheckList(plan.id))
+                _checkShopListResult.postValue(deleteCheckShopList(plan.id))
+//                _checkListResult.postValue(deleteCheckList(plan.id))
                 _planResult.postValue(deletePlan(plan)!!)
                 _photoResult.postValue(deletePhoto(plan.coverFileName))
             }
@@ -334,8 +334,8 @@ class PlanViewModel(
                         && !scheduleResult.contains(false)
                         && !commentResult.contains(false)
                         && planResult.value == true
-                        && mainCheckListResult.value == true
-                        && checkListResult.value == true
+                        && checkShopListResult.value == true
+//                        && checkListResult.value == true
                         && photoResult.value == true -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
@@ -596,21 +596,21 @@ class PlanViewModel(
                 ?.filter { it.dayId == currentDayId }?.sortedBy { it.position } ?: listOf()
     }
 
-    private suspend fun deleteMainCheckList(planId: String): Boolean =
-        when (val result = howYoRepository.deleteMainCheckList(planId)) {
+    private suspend fun deleteCheckShopList(planId: String): Boolean =
+        when (val result = howYoRepository.deleteCheckShopListWithPlanID(planId)) {
             is Result.Success -> {
                 result.data
             }
             else -> false
         }
 
-    private suspend fun deleteCheckList(planId: String): Boolean =
-        when (val result = howYoRepository.deleteCheckList(planId)) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> false
-        }
+//    private suspend fun deleteCheckList(planId: String): Boolean =
+//        when (val result = howYoRepository.deleteCheckList(planId)) {
+//            is Result.Success -> {
+//                result.data
+//            }
+//            else -> false
+//        }
 
     private suspend fun deletePhoto(fileName: String): Boolean? =
         when (val result = howYoRepository.deletePhoto(fileName)) {
@@ -1181,8 +1181,8 @@ class PlanViewModel(
         _navigateToComment.value = null
     }
 
-    fun navigateToCheckList(listType: String) {
-        _navigateToCheckOrShoppingList.value = listType
+    fun navigateToCheckList(mainType: MainItemType) {
+        _navigateToCheckOrShoppingList.value = mainType
     }
 
     fun onCheckLIstNavigated() {

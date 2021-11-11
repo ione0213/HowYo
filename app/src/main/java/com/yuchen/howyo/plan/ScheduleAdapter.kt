@@ -3,22 +3,18 @@ package com.yuchen.howyo.plan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.databinding.ItemPlanScheduleBinding
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.chauthai.swipereveallayout.SwipeRevealLayout
+import com.chauthai.swipereveallayout.ViewBinderHelper
+import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.ScheduleDataItem
 import com.yuchen.howyo.databinding.ItemEmptyScheduleBinding
+import com.yuchen.howyo.databinding.ItemPlanScheduleBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.chauthai.swipereveallayout.ViewBinderHelper
-import com.chauthai.swipereveallayout.SwipeRevealLayout
-
-
-
-
 
 class ScheduleAdapter(
     val viewModel: PlanViewModel,

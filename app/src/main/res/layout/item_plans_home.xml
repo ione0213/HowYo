@@ -23,7 +23,7 @@
             android:background="@color/gray_f5f5f5"
             android:elevation="5dp"
             app:cardBackgroundColor="@color/gray_f5f5f5"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
                     android:layout_width="@dimen/home_avatar"
                     android:layout_height="@dimen/home_avatar"
                     android:layout_marginStart="@dimen/middle_padding"
-                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_marginTop="@dimen/small_padding"
                     android:scaleType="centerCrop"
                     android:src="@drawable/avatar_sample"
                     app:layout_constraintStart_toStartOf="parent"
@@ -78,12 +78,13 @@
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_marginStart="@dimen/middle_padding"
-                    android:layout_marginTop="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:scaleType="centerCrop"
                     app:imageUrl="@{String.valueOf(plan.coverPhotoUrl)}"
                     app:layout_constraintBottom_toTopOf="@+id/img_home_plan_title"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_home_plan_avatar"
                     app:shapeAppearanceOverlay="@style/circle" />
@@ -96,18 +97,21 @@
                     android:layout_marginTop="@dimen/small_padding"
                     android:text="@{plan.title}"
                     android:textStyle="bold"
-                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintBaseline_toBottomOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="@+id/img_home_plan_cover"
                     app:layout_constraintTop_toBottomOf="@+id/img_home_plan_cover"
+
                     app:layout_goneMarginStart="@dimen/small_padding"
                     tools:text="Tokyo 2 days" />
 
                 <ImageButton
                     android:id="@+id/button_home_plan_heart_selected"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_smallest"
+                    android:layout_height="@dimen/plan_img_btn_smallest"
                     android:layout_marginEnd="@dimen/small_padding"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="@dimen/small_padding"
                     android:background="@drawable/heart_selected"
                     app:layout_constraintEnd_toEndOf="@+id/img_home_plan_cover"
                     app:layout_constraintTop_toTopOf="@+id/img_home_plan_title" />
@@ -120,11 +124,10 @@
                     android:layout_marginEnd="@dimen/small_padding"
                     android:text="@{String.valueOf(plan.likeList.size)}"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/button_home_plan_heart_selected"
                     app:layout_constraintEnd_toStartOf="@+id/button_home_plan_heart_selected"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintTop_toTopOf="@+id/button_home_plan_heart_selected"
+                    app:layout_constraintTop_toTopOf="@+id/img_home_plan_title"
                     tools:text="87" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

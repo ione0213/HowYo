@@ -22,6 +22,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AppCompatActivity
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.util.Util.getColor
 
 
@@ -299,6 +300,7 @@ class PlanFragment : Fragment() {
                 when {
                     it -> {
                         mainViewModel.navigateToHomeByBottomNav()
+                        resetToolbar()
                         viewModel.onNavigatedHome()
                     }
                 }
@@ -435,6 +437,7 @@ class PlanFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToGroupMessageFragment(it)
                 )
+                resetToolbar()
                 viewModel.onGroupMessageNavigated()
             }
         })
@@ -453,6 +456,7 @@ class PlanFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToComment(it)
                 )
+                resetToolbar()
                 viewModel.onCommentNavigated()
             }
         })
@@ -466,7 +470,14 @@ class PlanFragment : Fragment() {
                     )
                 )
                 viewModel.onCheckLIstNavigated()
-                mainViewModel.setSharedToolbarTitle(it)
+//                mainViewModel.resetToolbar()
+                resetToolbar()
+                mainViewModel.setSharedToolbarTitle(
+                    when (it) {
+                        MainItemType.CHECK -> getString(R.string.check_list)
+                        MainItemType.SHOPPING -> getString(R.string.shopping_list)
+                    }
+                )
             }
         })
 
@@ -475,6 +486,7 @@ class PlanFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToPaymentFragment(it)
                 )
+                mainViewModel.resetToolbar()
                 viewModel.onPaymentNavigated()
             }
         })
@@ -529,13 +541,17 @@ class PlanFragment : Fragment() {
             }
             android.R.id.home -> {
 
-                val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-                mainViewModel.resetToolbar()
+                resetToolbar()
 
                 activity?.invalidateOptionsMenu()
                 findNavController().popBackStack()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun resetToolbar() {
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        mainViewModel.resetToolbar()
     }
 }

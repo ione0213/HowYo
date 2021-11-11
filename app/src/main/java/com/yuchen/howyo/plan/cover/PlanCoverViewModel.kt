@@ -11,8 +11,8 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.ext.toHour
 import com.yuchen.howyo.ext.toMinute
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.plan.CheckItemType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getString
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
@@ -84,7 +84,13 @@ class PlanCoverViewModel(
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
-    // Handle the plan data is ready or not
+    // Handle the submit plan
+    private val _isSavePlan = MutableLiveData<Boolean>()
+
+    val isSavePlan: LiveData<Boolean>
+        get() = _isSavePlan
+
+    // Handle the plan cover is ready or not
     private val _isCoverPhotoReady = MutableLiveData<Boolean>()
 
     val isCoverPhotoReady: LiveData<Boolean>
@@ -169,23 +175,6 @@ class PlanCoverViewModel(
         getLiveUserResult()
     }
 
-//    fun getUserResult() {
-//
-//        val planId = plan.value?.id
-//
-//        coroutineScope.launch {
-//
-//            _plan.value = when (val result = planId?.let { howYoRepository.getPlan(it) }) {
-//                is Result.Success -> {
-//                    result.data
-//                }
-//                else -> {
-//                    _plan.value
-//                }
-//            }
-//        }
-//    }
-
     private fun getLiveUserResult() {
 
         val userId = UserManager.userId
@@ -226,12 +215,20 @@ class PlanCoverViewModel(
         when {
             plan.value?.title.isNullOrEmpty() -> _invalidPlan.value = INVALID_FORMAT_TITLE_EMPTY
             else -> {
-                handlePlanCover()
+                savePlan()
             }
         }
     }
 
-    private fun handlePlanCover() {
+    private fun savePlan() {
+        _isSavePlan.value = true
+    }
+
+    fun onSavedPlan() {
+        _isSavePlan.value = null
+    }
+
+    fun handlePlanCover() {
 
         val coverPhotoResult = mutableListOf<Boolean>()
 
@@ -364,7 +361,7 @@ class PlanCoverViewModel(
             withContext(Dispatchers.IO) {
 
                 _isDaysReady.postValue(createDays()!!)
-                _isChkListReady.postValue(createMainCheckList()!!)
+                _isChkListReady.postValue(createDefaultCheckList()!!)
             }
 
             when {
@@ -560,47 +557,132 @@ class PlanCoverViewModel(
         }
     }
 
-    private suspend fun createMainCheckList(): Boolean {
+    private suspend fun createDefaultCheckList(): Boolean {
 
         val planId = planId.value
-        val mainTypeList = HowYoApplication.instance.resources.getStringArray(R.array.main_list)
         val subTypeList = HowYoApplication.instance.resources.getStringArray(R.array.check_list)
+        val checkListResults = mutableListOf<Boolean>()
 
-        val mainCheckListResults = mutableListOf<Boolean>()
+        subTypeList.forEach { subType ->
+            when (subType) {
+                getString(R.string.necessary) -> {
+                    CheckItemType.NECESSARY.list.forEach { item ->
 
-        mainTypeList.forEach { mainType ->
-            when (mainType) {
-                HowYoApplication.instance.getString(R.string.check) -> {
-                    subTypeList.forEach { subType ->
-                        val result = howYoRepository.createMainCheckList(
-                            planId!!,
-                            mainType,
-                            subType
+                        val newItem = CheckShoppingList(
+                            planId = planId,
+                            mainType = getString(R.string.check),
+                            subType = subType,
+                            item = item
                         )
 
+                        val result = howYoRepository.createCheckShopList(newItem)
+
                         if (result is Result.Success) {
-                            mainCheckListResults.add(result.data)
+                            checkListResults.add(result.data)
                         } else {
-                            mainCheckListResults.add(false)
+                            checkListResults.add(false)
                         }
                     }
                 }
-                HowYoApplication.instance.getString(R.string.shopping) -> {
-                    val result = howYoRepository.createMainCheckList(
-                        planId!!,
-                        mainType,
-                        ""
-                    )
+                getString(R.string.clothe) -> {
+                    CheckItemType.CLOTHE.list.forEach { item ->
 
-                    if (result is Result.Success) {
-                        mainCheckListResults.add(result.data)
-                    } else {
-                        mainCheckListResults.add(false)
+                        val newItem = CheckShoppingList(
+                            planId = planId,
+                            mainType = getString(R.string.check),
+                            subType = subType,
+                            item = item
+                        )
+
+                        val result = howYoRepository.createCheckShopList(newItem)
+
+                        if (result is Result.Success) {
+                            checkListResults.add(result.data)
+                        } else {
+                            checkListResults.add(false)
+                        }
+                    }
+                }
+                getString(R.string.wash) -> {
+                    CheckItemType.WASH.list.forEach { item ->
+
+                        val newItem = CheckShoppingList(
+                            planId = planId,
+                            mainType = getString(R.string.check),
+                            subType = subType,
+                            item = item
+                        )
+
+                        val result = howYoRepository.createCheckShopList(newItem)
+
+                        if (result is Result.Success) {
+                            checkListResults.add(result.data)
+                        } else {
+                            checkListResults.add(false)
+                        }
+                    }
+                }
+                getString(R.string.electronic) -> {
+                    CheckItemType.ELECTRONIC.list.forEach { item ->
+
+                        val newItem = CheckShoppingList(
+                            planId = planId,
+                            mainType = getString(R.string.check),
+                            subType = subType,
+                            item = item
+                        )
+
+                        val result = howYoRepository.createCheckShopList(newItem)
+
+                        if (result is Result.Success) {
+                            checkListResults.add(result.data)
+                        } else {
+                            checkListResults.add(false)
+                        }
+                    }
+                }
+                getString(R.string.health) -> {
+                    CheckItemType.HEALTH.list.forEach { item ->
+
+                        val newItem = CheckShoppingList(
+                            planId = planId,
+                            mainType = getString(R.string.check),
+                            subType = subType,
+                            item = item
+                        )
+
+                        val result = howYoRepository.createCheckShopList(newItem)
+
+                        if (result is Result.Success) {
+                            checkListResults.add(result.data)
+                        } else {
+                            checkListResults.add(false)
+                        }
+                    }
+                }
+                getString(R.string.other) -> {
+                    CheckItemType.OTHER.list.forEach { item ->
+
+                        val newItem = CheckShoppingList(
+                            planId = planId,
+                            mainType = getString(R.string.check),
+                            subType = subType,
+                            item = item
+                        )
+
+                        val result = howYoRepository.createCheckShopList(newItem)
+
+                        if (result is Result.Success) {
+                            checkListResults.add(result.data)
+                        } else {
+                            checkListResults.add(false)
+                        }
                     }
                 }
             }
         }
-        return !mainCheckListResults.contains(false)
+
+        return !checkListResults.contains(false)
     }
 
     private fun getDaysResult() {

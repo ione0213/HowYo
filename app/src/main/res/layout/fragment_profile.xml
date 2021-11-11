@@ -20,13 +20,13 @@
             android:layout_width="@dimen/profile_avatar"
             android:layout_height="@dimen/profile_avatar"
             android:layout_marginStart="@dimen/standard_padding"
-            app:imageUrl="@{viewModel.user.avatar}"
-            tools:src="@mipmap/ic_launcher"
             android:layout_marginTop="@dimen/middle_padding"
             android:scaleType="centerCrop"
+            app:imageUrl="@{viewModel.user.avatar}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/circle" />
+            app:shapeAppearanceOverlay="@style/circle"
+            tools:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/text_profile_following"
@@ -40,6 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/text_profile_fans"
             app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
             tools:text="@string/profile_following" />
 
@@ -55,6 +56,7 @@
             app:layout_constraintEnd_toStartOf="@+id/text_profile_following"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/text_profile_plans"
             app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
             tools:text="@string/profile_fans" />
 
@@ -64,12 +66,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_padding"
+            android:layout_marginStart="@dimen/middle_padding"
             android:layout_marginEnd="@dimen/standard_padding"
             android:text="@{String.format(@string/profile_plans, viewModel.plans.size)}"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/text_profile_fans"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/img_profile_avatar"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/profile_plans" />
 
@@ -79,10 +83,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
-            android:text="@{viewModel.user.id}"
-            android:singleLine="true"
-            android:maxWidth="@dimen/profile_text_width_small"
             android:ellipsize="end"
+            android:maxWidth="@dimen/profile_text_width_small"
+            android:singleLine="true"
+            android:text="@{viewModel.user.id}"
             android:textStyle="bold"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -99,9 +103,9 @@
             android:ellipsize="end"
             android:maxLines="3"
             android:text="@{viewModel.user.introduction}"
-            android:visibility="@{viewModel.user.introduction == null ? View.GONE : View.VISIBLE}"
             android:textAlignment="viewStart"
             android:textStyle="bold"
+            android:visibility="@{viewModel.user.introduction == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -115,10 +119,10 @@
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/small_padding"
             android:layout_marginEnd="@dimen/small_padding"
-            app:layout_goneMarginTop="@dimen/small_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_profile_information" />
+            app:layout_constraintTop_toBottomOf="@+id/text_profile_information"
+            app:layout_goneMarginTop="@dimen/small_padding" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_profile_plans"

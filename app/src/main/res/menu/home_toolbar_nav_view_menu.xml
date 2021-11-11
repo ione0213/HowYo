@@ -30,11 +30,15 @@
         android:visible="false"
         android:title="@string/delete"
         app:showAsAction="always|withText" />
-
     <item
         android:id="@+id/nothing"
         android:icon="@drawable/nothing"
         android:visible="false"
         android:title=""
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/resetCheckItem"
+        android:title="@string/rest_check_item"
+        android:visible="false"
         app:showAsAction="always|withText" />
 </menu>

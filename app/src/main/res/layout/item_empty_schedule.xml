@@ -36,10 +36,9 @@
             android:id="@+id/animationView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginTop="@dimen/largest_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/empty_cart_title"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/empty_schedule" />

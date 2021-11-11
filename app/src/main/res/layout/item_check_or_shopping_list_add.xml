@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="subType"
+            type="String" />
+
+        <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListViewModel" />
     </data>
@@ -18,12 +22,13 @@
 
         <ImageView
             android:id="@+id/img_check_list_checked"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_width="@dimen/plan_img_btn_smallest"
+            android:layout_height="@dimen/plan_img_btn_smallest"
+            android:layout_marginStart="@dimen/standard_padding"
             android:layout_marginTop="@dimen/small_padding"
             android:layout_marginBottom="@dimen/small_padding"
             android:background="@drawable/plus"
+            android:onClick="@{() -> viewModel.createItem(subType)}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,9 +39,10 @@
             style="@style/TextStyle2_black"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/standard_padding"
             android:hint="@string/new_item"
+            android:layout_marginStart="@dimen/small_padding"
             android:textAlignment="viewStart"
+            android:text="@={viewModel.item}"
             app:layout_constraintBottom_toBottomOf="@+id/img_check_list_checked"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/img_check_list_checked"
