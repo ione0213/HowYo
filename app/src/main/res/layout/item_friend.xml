@@ -39,8 +39,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_companion_avatar"
-                    android:layout_width="@dimen/plan_img_btn_big"
-                    android:layout_height="@dimen/plan_img_btn_big"
+                    android:layout_width="@dimen/plan_img_btn_bigger"
+                    android:layout_height="@dimen/plan_img_btn_bigger"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginBottom="@dimen/small_padding"

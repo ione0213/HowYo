@@ -73,7 +73,6 @@ class SignInFragment : Fragment() {
                 .setAvailableProviders(providers)
                 .setIsSmartLockEnabled(false)
                 .setTheme(R.style.LoginTheme)
-//                .setLogo(R.drawable.ic_placeholder)
                 .build(),
             RC_SIGN_IN
         )
@@ -113,7 +112,11 @@ class SignInFragment : Fragment() {
                         .show()
                     return
                 }
+
+                activity?.finish()
             }
+        } else {
+            activity?.finish()
         }
     }
 }

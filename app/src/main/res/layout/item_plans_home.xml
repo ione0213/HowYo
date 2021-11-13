@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.yuchen.howyo.home.HomeViewModel" />
+
+        <variable
             name="plan"
             type="com.yuchen.howyo.data.Plan" />
     </data>
@@ -19,10 +23,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginBottom="@dimen/small_padding"
-            android:background="@color/gray_f5f5f5"
+            android:background="@color/white"
             android:elevation="5dp"
-            app:cardBackgroundColor="@color/gray_f5f5f5"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,20 +42,27 @@
                     android:id="@+id/img_home_plan_avatar"
                     android:layout_width="@dimen/home_avatar"
                     android:layout_height="@dimen/home_avatar"
-                    android:layout_marginStart="@dimen/middle_padding"
-                    android:layout_marginTop="@dimen/small_padding"
+                    android:layout_marginStart="@dimen/small_padding"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/avatar_sample"
+                    android:elevation="1dp"
+                    android:layout_marginBottom="@dimen/small_padding"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/circle" />
+                    app:layout_constraintBottom_toBottomOf="@+id/img_home_plan_cover"
+                    app:authorData="@{viewModel.authorDataList}"
+                    app:plan="@{plan}"
+                    app:shapeAppearanceOverlay="@style/circle"
+                    tools:src="@drawable/avatar_sample" />
 
                 <TextView
                     android:id="@+id/text_home_plan_user_name"
-                    style="@style/TextStyle2_black"
+                    style="@style/TextStyle2_white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
+                    android:ellipsize="end"
+                    android:elevation="1dp"
+                    android:maxWidth="@dimen/home_max_width"
+                    android:maxLines="1"
                     android:text="@{plan.authorId}"
                     android:textStyle="bold"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -61,10 +73,11 @@
 
                 <TextView
                     android:id="@+id/text_home_plan_duration"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_padding"
+                    android:elevation="1dp"
                     app:endDate="@{plan.endDate}"
                     app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintHorizontal_chainStyle="packed"
@@ -76,32 +89,30 @@
                 <ImageView
                     android:id="@+id/img_home_plan_cover"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_marginStart="@dimen/middle_padding"
-                    android:layout_marginTop="@dimen/small_padding"
-                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:layout_height="160dp"
                     android:scaleType="centerCrop"
                     app:imageUrl="@{String.valueOf(plan.coverPhotoUrl)}"
                     app:layout_constraintBottom_toTopOf="@+id/img_home_plan_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
+                    tools:src="@drawable/sample_cover"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/img_home_plan_avatar"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:shapeAppearanceOverlay="@style/circle" />
 
                 <TextView
                     android:id="@+id/img_home_plan_title"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_matcha_5_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_padding"
                     android:text="@{plan.title}"
+                    android:layout_marginStart="@dimen/small_padding"
                     android:textStyle="bold"
                     app:layout_constraintBaseline_toBottomOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="@+id/img_home_plan_cover"
+                    app:layout_constraintStart_toStartOf="@+id/img_home_plan_avatar"
                     app:layout_constraintTop_toBottomOf="@+id/img_home_plan_cover"
-
                     app:layout_goneMarginStart="@dimen/small_padding"
                     tools:text="Tokyo 2 days" />
 
@@ -110,15 +121,16 @@
                     android:layout_width="@dimen/plan_img_btn_smallest"
                     android:layout_height="@dimen/plan_img_btn_smallest"
                     android:layout_marginEnd="@dimen/small_padding"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="@dimen/small_padding"
                     android:background="@drawable/heart_selected"
-                    app:layout_constraintEnd_toEndOf="@+id/img_home_plan_cover"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_goneMarginEnd="@dimen/small_padding"
                     app:layout_constraintTop_toTopOf="@+id/img_home_plan_title" />
 
                 <TextView
                     android:id="@+id/img_home_plan_likes"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_matcha_5_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/small_padding"

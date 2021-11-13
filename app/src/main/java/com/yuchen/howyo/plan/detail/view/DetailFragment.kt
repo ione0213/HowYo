@@ -31,6 +31,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentDetailBinding
     private val viewModel by viewModels<DetailViewModel> {
         getVmFactory(
+            DetailFragmentArgs.fromBundle(requireArguments()).plan,
+            DetailFragmentArgs.fromBundle(requireArguments()).day,
             DetailFragmentArgs.fromBundle(requireArguments()).schedule
         )
     }
@@ -63,8 +65,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 findNavController().navigate(
                     NavigationDirections.navToDetailEditFragment()
                         .setSchedule(it)
-                        .setPlan(null)
-                        .setDay(null)
+                        .setPlan(viewModel.plan.value)
+                        .setDay(viewModel.day.value)
                 )
                 viewModel.onEditScheduleNavigated()
             }

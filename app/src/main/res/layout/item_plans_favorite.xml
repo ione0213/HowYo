@@ -8,6 +8,10 @@
         <variable
             name="plan"
             type="com.yuchen.howyo.data.Plan" />
+        
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.favorite.FavoriteViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,11 +41,13 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_favorite_plan_avatar"
                     android:layout_width="@dimen/favorite_avatar"
+                    app:plan="@{plan}"
+                    app:authorData="@{viewModel.authorDataList}"
                     android:layout_height="@dimen/favorite_avatar"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/small_padding"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/avatar_sample"
+                    tools:src="@drawable/avatar_sample"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:shapeAppearanceOverlay="@style/circle" />

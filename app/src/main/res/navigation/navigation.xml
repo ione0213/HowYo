@@ -80,6 +80,14 @@
             android:name="schedule"
             app:argType="com.yuchen.howyo.data.Schedule"
             app:nullable="false" />
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan"
+            app:nullable="false" />
+        <argument
+            android:name="day"
+            app:argType="com.yuchen.howyo.data.Day"
+            app:nullable="false" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"

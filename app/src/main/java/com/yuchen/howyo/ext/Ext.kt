@@ -46,6 +46,10 @@ fun Long.toHour(): Int {
     return SimpleDateFormat("HH").format(this).toInt()
 }
 
+fun Long.toHourString(): String = "${(this / 1000 / 60 / 60)}"
+
+fun Long.toMinuteString(): String = "${(this / 1000 / 60 % 60)}"
+
 fun Long.toMinute(): Int {
     return SimpleDateFormat("mm").format(this).toInt()
 }

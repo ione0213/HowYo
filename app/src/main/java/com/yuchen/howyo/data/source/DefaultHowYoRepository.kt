@@ -9,6 +9,10 @@ import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 class DefaultHowYoRepository(
     private val remoteDataSource: HowYoRemoteDataSource
 ) : HowYoRepository {
+    override suspend fun signOut() {
+        remoteDataSource.signOut()
+    }
+
     override suspend fun createUser(user: User): Result<String> {
         return remoteDataSource.createUser(user)
     }
@@ -47,6 +51,10 @@ class DefaultHowYoRepository(
 
     override suspend fun getPlans(authorList: List<String>): Result<List<Plan>> {
         return remoteDataSource.getPlans(authorList)
+    }
+
+    override suspend fun getAllPlans(): Result<List<Plan>> {
+        return remoteDataSource.getAllPlans()
     }
 
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {

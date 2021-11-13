@@ -65,7 +65,11 @@ class MainActivity : BaseActivity() {
                 }
                 R.id.navigation_profile -> {
 
-                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navToProfileFragment(UserManager.userId!!))
+                    findNavController(R.id.myNavHostFragment).navigate(
+                        NavigationDirections.navToProfileFragment(
+                            UserManager.userId!!
+                        )
+                    )
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -84,6 +88,7 @@ class MainActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_HowYo)
         super.onCreate(savedInstanceState)
         mContext = this
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -127,7 +132,7 @@ class MainActivity : BaseActivity() {
         setupBottomNav()
         setupDrawer()
         setupNavController()
-        getLocationPermission()
+        if (isLoggedIn) getLocationPermission()
     }
 
     private fun setupBottomNav() {

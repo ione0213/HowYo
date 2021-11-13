@@ -30,26 +30,24 @@
 
         <TextView
             android:id="@+id/textview_comment__name"
-            style="@style/TextStyle3_black_bold"
+            style="@style/TextStyle3_matcha_3_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
             android:text="@{commentData.userId}"
-            android:ellipsize="end"
+            android:ellipsize="marquee"
             android:maxLines="1"
             android:maxWidth="100dp"
-            android:textColor="@android:color/black"
             app:layout_constraintStart_toEndOf="@+id/img_comment_avatar"
             app:layout_constraintTop_toTopOf="@+id/img_comment_avatar"
             tools:text="Mark" />
 
         <TextView
             android:id="@+id/textview_comment_time"
-            style="@style/TextStyle3_black"
+            style="@style/TextStyle3_matcha_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
-            android:textColor="@android:color/black"
             app:dateTime="@{commentData.createdTime}"
             app:layout_constraintStart_toEndOf="@+id/textview_comment__name"
             app:layout_constraintTop_toTopOf="@+id/textview_comment__name"
@@ -57,19 +55,25 @@
 
         <TextView
             android:id="@+id/textview_comment_msg"
-            style="@style/TextStyle2_black"
+            style="@style/TextStyle2_matcha_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="300dp"
             android:textAlignment="textStart"
             android:paddingBottom="@dimen/small_padding"
             android:text="@{commentData.comment}"
-            android:textColor="@android:color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textview_comment__name"
             app:layout_constraintTop_toBottomOf="@+id/textview_comment__name"
             tools:text="This is a sent message keep the text going so we can see" />
 
-
+        <View
+            android:id="@+id/view_comment_separation"
+            style="@style/SeparationHorizontal"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textview_comment_msg"
+            app:layout_goneMarginTop="@dimen/small_padding" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

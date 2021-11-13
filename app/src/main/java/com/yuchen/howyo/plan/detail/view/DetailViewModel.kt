@@ -3,13 +3,33 @@ package com.yuchen.howyo.plan.detail.view
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.yuchen.howyo.data.Day
+import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.source.HowYoRepository
 
 class DetailViewModel(
     private val howYoRepository: HowYoRepository,
+    private val argumentPlan: Plan?,
+    private val argumentDay: Day?,
     private val arguments: Schedule?,
 ): ViewModel() {
+
+    // Plan data from arguments
+    private val _plan = MutableLiveData<Plan>().apply {
+        value = argumentPlan
+    }
+
+    val plan: LiveData<Plan>
+        get() = _plan
+
+    // Day data from arguments
+    private val _day = MutableLiveData<Day>().apply {
+        value = argumentDay
+    }
+
+    val day: LiveData<Day>
+        get() = _day
 
     // Detail data from arguments
     private val _schedule = MutableLiveData<Schedule>().apply {

@@ -7,6 +7,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.yuchen.howyo.plan.AccessPlanType" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.detail.view.DetailViewModel" />
@@ -14,7 +16,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5">
 
         <ScrollView
             android:id="@+id/recycler_detail"
@@ -49,7 +52,9 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/middle_padding"
                     android:background="@drawable/edit"
-                    android:backgroundTint="@{viewModel.schedule.photoUrlList.size == 0 ? @color/black : @color/gray2}"
+                    app:buttonForAuthor="@{viewModel.plan}"
+                    app:accessType="@{AccessPlanType.VIEW}"
+                    android:backgroundTint="@{viewModel.schedule.photoUrlList.size == 0 ? @color/matcha_3 : @color/matcha_6}"
                     android:onClick="@{() -> viewModel.navigateToEditSchedule()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -70,8 +75,8 @@
 
                 <ImageView
                     android:id="@+id/img_detail_type"
-                    android:layout_width="@dimen/plan_img_btn"
-                    android:layout_height="@dimen/plan_img_btn"
+                    android:layout_width="@dimen/plan_img_btn_big"
+                    android:layout_height="@dimen/plan_img_btn_big"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
                     app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +86,7 @@
 
                 <TextView
                     android:id="@+id/text_detail_title"
-                    style="@style/TextStyle2_black"
+                    style="@style/TextStyle2_matcha_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
@@ -133,19 +138,20 @@
                     app:layout_constraintStart_toStartOf="@+id/layout_detail_destination"
                     app:layout_constraintTop_toTopOf="@id/layout_detail_destination" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/img_detail_time"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:src="@drawable/clock"
+                    android:background="@drawable/clock"
+                    android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layout_detail_destination" />
 
                 <TextView
                     android:id="@+id/text_detail_time"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_matcha_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
@@ -160,19 +166,20 @@
                     app:layout_constraintTop_toTopOf="@+id/img_detail_time"
                     app:toTime="@{viewModel.schedule.endTime}" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/img_detail_address"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:src="@drawable/locator"
+                    android:backgroundTint="@color/matcha_3"
+                    android:background="@drawable/locator"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_time" />
 
                 <TextView
                     android:id="@+id/text_detail_address"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_matcha_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
@@ -186,13 +193,14 @@
                     app:layout_constraintStart_toEndOf="@+id/img_detail_address"
                     app:layout_constraintTop_toTopOf="@+id/img_detail_address" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/img_detail_note"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:src="@drawable/note"
+                    android:background="@drawable/note"
+                    android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_address" />
 
@@ -212,13 +220,14 @@
                     app:layout_constraintStart_toEndOf="@+id/img_detail_note"
                     app:layout_constraintTop_toTopOf="@+id/img_detail_note" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/img_detail_budge"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:src="@drawable/coin"
+                    android:background="@drawable/coin"
+                    android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_note" />
 
@@ -238,13 +247,14 @@
                     app:layout_constraintStart_toEndOf="@+id/img_detail_budge"
                     app:layout_constraintTop_toTopOf="@+id/img_detail_budge" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/img_detail_url"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:src="@drawable/hyperlink"
+                    android:background="@drawable/hyperlink"
+                    android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_budge" />
 
@@ -265,14 +275,15 @@
                     app:layout_constraintStart_toEndOf="@+id/img_detail_url"
                     app:layout_constraintTop_toTopOf="@+id/img_detail_url" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/img_detail_notify"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
                     android:layout_marginBottom="@dimen/standard_padding"
-                    android:src="@drawable/bell"
+                    android:background="@drawable/bell"
+                    android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_url" />
 
@@ -283,6 +294,7 @@
                     android:layout_marginStart="@dimen/small_padding"
                     android:checked="@{viewModel.schedule.notification}"
                     android:clickable="false"
+                    android:shadowColor="@color/matcha_3"
                     android:switchMinWidth="56dp"
                     android:textOff="OFF"
                     android:textOn="ON"

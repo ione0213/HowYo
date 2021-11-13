@@ -8,6 +8,8 @@ import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
 interface HowYoRepository {
 
+    suspend fun signOut()
+
     suspend fun createUser(user: User): Result<String>
 
     suspend fun getUser(userId: String): Result<User>
@@ -27,6 +29,8 @@ interface HowYoRepository {
     fun getLivePlan(planId: String): MutableLiveData<Plan>
 
     suspend fun getPlans(authorList: List<String>): Result<List<Plan>>
+
+    suspend fun getAllPlans(): Result<List<Plan>>
 
     fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>>
 

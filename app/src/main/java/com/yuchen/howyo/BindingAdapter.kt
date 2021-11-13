@@ -39,6 +39,7 @@ import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getColor
 import com.yuchen.howyo.util.Util.getString
+import kotlinx.coroutines.withTimeoutOrNull
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")
@@ -52,6 +53,26 @@ fun TextView.bindMsgTime(time: Long) {
 
     when {
         time != 0L -> text = time.toTime()
+    }
+}
+
+@BindingAdapter("schedule")
+fun TextView.bindDurationTime(schedule: Schedule) {
+
+    val startTime = schedule.startTime
+    val endTime = schedule.endTime
+
+    when {
+        startTime != null && endTime != null -> {
+            if (endTime > startTime) {
+                text =
+                    HowYoApplication.instance.getString(
+                        R.string.schedule_time_duration,
+                        (endTime - startTime).toHourString(),
+                        (endTime - startTime).toMinuteString()
+                    )
+            }
+        }
     }
 }
 
@@ -202,6 +223,30 @@ fun bindImage(imageView: ShapeableImageView, imgUrl: String?) {
                     .error(R.drawable.ic_placeholder)
             )
             .into(imageView)
+    }
+}
+
+@BindingAdapter("plan", "authorData")
+fun bindImage(imageView: ShapeableImageView, plan: Plan?, authorDataList: Set<User>?) {
+
+    Logger.i("Plan:$plan")
+    Logger.i("authorDataListBinding:$authorDataList")
+
+    plan?.let {
+
+        val imgUrl = authorDataList?.first { it.id == plan.authorId }?.avatar
+
+        imgUrl?.let {
+            val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+            Glide.with(imageView.context)
+                .load(imgUri)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_placeholder)
+                )
+                .into(imageView)
+        }
     }
 }
 

@@ -54,7 +54,7 @@
     <string name="traffic">交通</string>
     <string name="hotel">住宿</string>
     <string name="place">景點</string>
-    <string name="insert_keywords">Insert keywords</string>
+    <string name="search">搜尋</string>
     <string name="day">第%d天\n%S</string>
     <string name="confirm_delete_plan">您確定要移除 %s 嗎？</string>
     <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
@@ -65,7 +65,7 @@
     <string name="private_plan">私人旅遊計畫</string>
     <string name="set_private">隱藏</string>
     <string name="confirm_update_privacy">您確定要 %s 行程嗎？</string>
-
+    <string name="schedule_time_duration">%s 時 %s 分</string>
 
     <!-- Payment-->
     <string name="payment_item">品項名稱</string>
@@ -91,7 +91,7 @@
     <string name="notification_follow_type">follow</string>
 
     <!-- Group Msg-->
-    <string name="type_message_here">Type message here</string>
+    <string name="type_message_here">輸入訊息</string>
 
     <!-- Default subtype for check list-->
     <string name="check">check</string>

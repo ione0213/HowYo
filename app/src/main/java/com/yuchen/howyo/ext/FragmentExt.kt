@@ -14,9 +14,13 @@ fun Fragment.getVmFactory(): ViewModelFactory {
     return ViewModelFactory(repository)
 }
 
-fun Fragment.getVmFactory(schedule: Schedule?): DetailViewModelFactory {
+fun Fragment.getVmFactory(
+    plan: Plan?,
+    day: Day?,
+    schedule: Schedule?
+): DetailViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return DetailViewModelFactory(repository, schedule)
+    return DetailViewModelFactory(repository, plan, day, schedule)
 }
 
 fun Fragment.getVmFactory(

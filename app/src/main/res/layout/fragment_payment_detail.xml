@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
         tools:context=".plan.payment.paymentdetail.PaymentDetailFragment">
 
         <com.google.android.material.textfield.TextInputLayout

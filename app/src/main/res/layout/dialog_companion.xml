@@ -67,7 +67,7 @@
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_toEndOf="@+id/img_companion_search"
                     android:background="@color/white"
-                    android:hint="@string/insert_keywords" />
+                    android:hint="@string/search" />
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView

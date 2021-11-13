@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="elevation_all">4dp</dimen>
-    <dimen name="size_bottom_nav_icon">36dp</dimen>
+    <dimen name="size_bottom_nav_icon">24dp</dimen>
 
     <!-- Padding -->
     <dimen name="largest_padding">50dp</dimen>
@@ -20,7 +20,8 @@
 
     <!-- Plan-->
     <dimen name="plan_img_btn_biggest">64dp</dimen>
-    <dimen name="plan_img_btn_big">56dp</dimen>
+    <dimen name="plan_img_btn_bigger">56dp</dimen>
+    <dimen name="plan_img_btn_big">48dp</dimen>
     <dimen name="plan_img_btn">36dp</dimen>
     <dimen name="plan_img_btn_middle">30dp</dimen>
     <dimen name="plan_img_btn_small">24dp</dimen>
@@ -46,9 +47,11 @@
 
     <!-- Home-->
     <dimen name="home_avatar">48dp</dimen>
+    <dimen name="home_max_width">200dp</dimen>
 
     <!-- Favorite-->
     <dimen name="favorite_avatar">36dp</dimen>
+    <dimen name="favorite_max_width">200dp</dimen>
 
     <!-- Comment-->
     <dimen name="comment_avatar">56dp</dimen>

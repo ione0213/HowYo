@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.databinding.ItemPlansFavoriteBinding
 
-class FavoriteAdapter(private val onClickListener: OnClickListener) :
+class FavoriteAdapter(
+    private val onClickListener: OnClickListener,
+    private val viewModel: FavoriteViewModel
+) :
     ListAdapter<Plan, FavoriteAdapter.PlanViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
@@ -40,7 +43,7 @@ class FavoriteAdapter(private val onClickListener: OnClickListener) :
         return PlanViewHolder(
             ItemPlansFavoriteBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
-            )
+            ).apply { viewModel = this@FavoriteAdapter.viewModel }
         )
     }
 

@@ -17,6 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
         tools:context=".plan.checkorshoppinglist.CheckOrShoppingListFragment">
 
         <androidx.recyclerview.widget.RecyclerView

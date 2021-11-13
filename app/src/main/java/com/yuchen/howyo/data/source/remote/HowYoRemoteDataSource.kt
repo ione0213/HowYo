@@ -2,8 +2,11 @@ package com.yuchen.howyo.data.source.remote
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
@@ -33,6 +36,11 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val KEY_COLLECTED = "plan_collected_list"
     private const val KEY_PLAN_ID = "plan_id"
     private const val KEY_MAIN_TYPE = "main_type"
+
+    override suspend fun signOut() {
+
+        FirebaseAuth.getInstance().signOut()
+    }
 
     override suspend fun createUser(user: User): Result<String> =
         suspendCoroutine { continuation ->
@@ -95,8 +103,15 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
                 if (task.isSuccessful) {
                     if (task.result != null) {
-                        user = task.result.first().toObject(User::class.java)
-                        continuation.resume(Result.Success(user))
+                        when {
+                            task.result.size() > 0 -> {
+                                user = task.result.first().toObject(User::class.java)
+                                continuation.resume(Result.Success(user))
+                            }
+                            else -> {
+                                continuation.resume(Result.Fail("No user"))
+                            }
+                        }
                     }
                 } else {
                     task.exception?.let {
@@ -329,6 +344,45 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
             }
         }
+
+    override suspend fun getAllPlans(): Result<List<Plan>> = suspendCoroutine { continuation ->
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_PLANS)
+            .whereEqualTo(KEY_PRIVACY, "public")
+            .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+            .get()
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    val list = mutableListOf<Plan>()
+
+                    if (task.result != null) {
+                        for (document in task.result!!) {
+                            Logger.d(document.id + " => " + document.data)
+
+                            val plan = document.toObject(Plan::class.java)
+                            list.add(plan)
+                        }
+                        continuation.resume(Result.Success(list))
+                    }
+                } else {
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting schedules. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
+                    }
+                    continuation.resume(
+                        Result.Fail(
+                            HowYoApplication.instance.getString(
+                                R.string.nothing
+                            )
+                        )
+                    )
+                }
+            }
+    }
 
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
 

@@ -178,6 +178,7 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         val dateRangePicker =
             MaterialDatePicker.Builder.dateRangePicker()
                 .setTitleText(getString(R.string.select_plan_duration))
+                .setTheme(R.style.MaterialCalendarTheme)
                 .build()
 
         dateRangePicker.show(childFragmentManager, TAG)

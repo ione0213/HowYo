@@ -9,6 +9,7 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
+import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -28,6 +29,18 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     val plans: LiveData<List<Plan>>
         get() = _plans
+
+    //User id set
+    private val _authorIds = MutableLiveData<Set<String>>()
+
+    val authorIds: LiveData<Set<String>>
+        get() = _authorIds
+
+    //User id set
+    private val _authorDataList = MutableLiveData<Set<User>>()
+
+    val authorDataList: LiveData<Set<User>>
+        get() = _authorDataList
 
     // Handle navigation to plan
     private val _navigateToPlan = MutableLiveData<Plan>()
@@ -73,14 +86,15 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-//                _user.postValue(
                     when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
                         is Result.Success -> {
                             followingList = result.data.followingList?.toList() ?: listOf()
                         }
-                        else -> null
+                        else -> {
+                            howYoRepository.signOut()
+                            UserManager.clear()
+                        }
                     }
-//                )
             }
 
             _followingList.value = followingList
@@ -99,6 +113,37 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 else -> null
             }
 
+
+        }
+    }
+
+    fun setAuthorIdSet() {
+
+        val authorIdSet = mutableSetOf<String>()
+
+        plans.value?.forEach {
+            it.authorId?.let { authorId -> authorIdSet.add(authorId) }
+        }
+
+        _authorIds.value = authorIdSet
+    }
+
+    fun getAuthorData() {
+
+        val authorDataList = mutableSetOf<User>()
+
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                authorIds.value?.forEach { authorId ->
+                    when (val result = howYoRepository.getUser(authorId)){
+                        is Result.Success -> {
+                            authorDataList.add(result.data)
+                        }
+                    }
+                }
+            }
+
+            _authorDataList.value = authorDataList.toSet()
             _refreshStatus.value = false
         }
     }

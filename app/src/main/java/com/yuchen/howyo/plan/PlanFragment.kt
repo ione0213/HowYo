@@ -3,27 +3,25 @@ package com.yuchen.howyo.plan
 import android.graphics.*
 import android.os.Build
 import android.os.Bundle
+import android.view.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.yuchen.howyo.MainViewModel
-import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.databinding.FragmentPlanBinding
-import com.yuchen.howyo.ext.getVmFactory
-import android.view.*
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
+import com.yuchen.howyo.MainViewModel
+import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
-import com.yuchen.howyo.util.Logger
-import kotlinx.coroutines.launch
-import androidx.appcompat.app.AppCompatActivity
+import com.yuchen.howyo.databinding.FragmentPlanBinding
+import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.util.Util.getColor
+import kotlinx.coroutines.launch
 
 
 class PlanFragment : Fragment() {
@@ -201,6 +199,7 @@ class PlanFragment : Fragment() {
                 scrollRange = barLayout?.totalScrollRange!!
             }
             if (scrollRange + verticalOffset == 0) {
+                binding.collapsingToolbar.setCollapsedTitleTextColor(getColor(R.color.matcha_6))
                 binding.collapsingToolbar.title = viewModel.plan.value?.title
                 isShow = true
             } else if (isShow) {
@@ -355,7 +354,13 @@ class PlanFragment : Fragment() {
             it?.let {
                 findNavController().navigate(
                     when (viewModel.accessType) {
-                        AccessPlanType.VIEW -> NavigationDirections.navToDetailFragment(it)
+                        AccessPlanType.VIEW -> NavigationDirections.navToDetailFragment(
+                            it,
+                            viewModel.plan.value!!,
+                            viewModel.selectedDayPosition.value?.let { position ->
+                                viewModel.days.value?.get(position)
+                            }!!
+                        )
                         AccessPlanType.EDIT -> {
                             NavigationDirections.navToDetailEditFragment()
                                 .setPlan(viewModel.plan.value)

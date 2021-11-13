@@ -9,9 +9,16 @@
     </style>
 
     <style name="InputTextColorTheme" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/gray2</item>
-        <item name="colorControlActivated">@color/gray_black</item>
-        <item name="android:colorControlHighlight">@color/gray_black</item>
+        <item name="colorControlNormal">@color/matcha_5</item>
+        <item name="colorControlActivated">@color/matcha_5</item>
+        <item name="android:colorControlHighlight">@color/matcha_5</item>
+    </style>
+
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/matcha_5</item>
+        <item name="colorControlActivated">@color/matcha_5</item>
+        <item name="android:colorControlHighlight">@color/matcha_5</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
     <style name="circle" parent="">
@@ -27,13 +34,13 @@
     <style name="SeparationVertical">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">24dp</item>
-        <item name="android:background">@color/gray2</item>
+        <item name="android:background">@color/matcha_5</item>
     </style>
 
     <style name="SeparationHorizontal">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/gray2</item>
+        <item name="android:background">@color/matcha_5</item>
     </style>
 
     <style name="ProgressTheme" parent="Widget.AppCompat.ProgressBar">
@@ -65,5 +72,11 @@
         <item name="android:textColorHint">@android:color/white</item>
     </style>
 
+    <style name="PlanToolbarTheme" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <!-- This attributes is used by title -->
+        <item name="android:textColorPrimary">@color/matcha_6</item>
 
+        <!-- This attributes is used by navigation icon and overflow icon -->
+        <item name="colorOnPrimary">@color/matcha_6</item>
+    </style>
 </resources>

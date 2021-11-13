@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -28,6 +29,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentMapBinding
     private val viewModel by viewModels<MapViewModel> {
         getVmFactory(
+            null,
+            null,
             MapFragmentArgs.fromBundle(requireArguments()).schedule
         )
     }
@@ -43,6 +46,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         binding = FragmentMapBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         mContext = HowYoApplication.instance
 
@@ -53,6 +57,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map_view_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        viewModel.leaveMap.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it) findNavController().popBackStack()
+                viewModel.onLeaveMap()
+            }
+        })
 
         return binding.root
     }
@@ -81,6 +92,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         marker?.showInfoWindow()
 
         //Disable touch in scrollView
-        googleMap?.uiSettings?.isScrollGesturesEnabled = false
+//        googleMap?.uiSettings?.isScrollGesturesEnabled = false
     }
 }

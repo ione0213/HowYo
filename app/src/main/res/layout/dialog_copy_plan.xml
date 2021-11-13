@@ -42,12 +42,12 @@
 
                 <TextView
                     android:id="@+id/text_copy_plan_title"
+                    style="@style/TextStyle1_matcha5_bold"
                     android:layout_width="wrap_content"
-                    style="@style/TextStyle1_black"
                     android:layout_height="wrap_content"
+                    android:text="@string/plan_copy"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="@string/plan_copy"
                     app:layout_constraintTop_toTopOf="@+id/btn_copy_plan_cover_close" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -58,6 +58,7 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/smallest_padding"
                     android:background="@drawable/icons_24px_close"
+                    android:backgroundTint="@color/matcha_5"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.leave()}"
                     app:layout_constraintBottom_toTopOf="@+id/layout_dialog_copy_plan_cover_empty_image"
@@ -68,8 +69,8 @@
                     android:id="@+id/layout_dialog_copy_plan_cover_empty_image"
                     android:layout_width="0dp"
                     android:layout_height="150dp"
-                    android:layout_marginTop="@dimen/middle_padding"
                     android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/middle_padding"
                     android:layout_marginEnd="@dimen/middle_padding"
                     app:layout_constraintBottom_toTopOf="@id/btn_copy_plan_cover_take_photo"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -90,17 +91,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/button_copy_plan_cover_delete"
-                        android:layout_width="@dimen/plan_img_btn_small"
-                        android:layout_height="@dimen/plan_img_btn_small"
-                        android:layout_marginTop="@dimen/small_padding"
-                        android:layout_marginEnd="@dimen/small_padding"
-                        android:background="@drawable/delete"
-                        android:onClick="@{() -> viewModel.resetCoverImg()}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:planPhoto="@{viewModel.planPhoto}" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -111,6 +101,7 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/small_padding"
                     android:background="@drawable/camera"
+                    android:backgroundTint="@color/matcha_5"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.takePhoto()}"
                     app:layout_constraintBottom_toTopOf="@+id/layout_copy_plan_title"
@@ -125,11 +116,24 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/small_padding"
                     android:background="@drawable/image"
+                    android:backgroundTint="@color/matcha_5"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.selectPhoto()}"
                     app:layout_constraintBottom_toBottomOf="@+id/btn_copy_plan_cover_take_photo"
                     app:layout_constraintEnd_toStartOf="@+id/btn_copy_plan_cover_take_photo"
                     app:layout_constraintTop_toTopOf="@+id/btn_copy_plan_cover_take_photo" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_copy_plan_cover_delete"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:backgroundTint="@color/matcha_5"
+                    android:background="@drawable/delete"
+                    android:onClick="@{() -> viewModel.resetCoverImg()}"
+                    app:layout_constraintEnd_toStartOf="@id/btn_copy_plan_cover_select_photo"
+                    app:layout_constraintTop_toTopOf="@+id/btn_copy_plan_cover_select_photo"
+                    app:planPhoto="@{viewModel.planPhoto}" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_copy_plan_title"
@@ -143,19 +147,20 @@
                     app:boxStrokeColor="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                     app:layout_constraintBottom_toTopOf="@id/layout_copy_plan_date"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:hintTextColor="@color/matcha_5"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_copy_plan_title"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/cover_plan_edittext"
                         android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:hint="@string/plan_name"
-                        android:id="@+id/edittext_copy_plan_title"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@={viewModel._plan.title}"
-                        android:textColor="@color/gray_black"
+                        android:textColor="@color/matcha_5"
                         android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -165,7 +170,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginEnd="@dimen/middle_padding"
-
                     android:theme="@style/InputTextColorTheme"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -180,7 +184,7 @@
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/gray_black"
+                        android:textColor="@color/matcha_5"
                         app:endDate="@{viewModel.endDateFromUser}"
                         app:startDate="@{viewModel.startDateFromUser}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -188,7 +192,7 @@
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/fab_copy_plan_cover_add"
-                style="@style/TextStyle2_white"
+                style="@style/TextStyle2_matcha_6_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/middle_padding"
@@ -199,7 +203,7 @@
                 android:onClick="@{() -> viewModel.prepareSubmitPlan()}"
                 android:text="@{viewModel.status != LoadApiStatus.LOADING ? @string/save_setting : @string/save_uploading}"
                 android:textAlignment="center"
-                app:backgroundTint="@color/green"
+                app:backgroundTint="@color/matcha_5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

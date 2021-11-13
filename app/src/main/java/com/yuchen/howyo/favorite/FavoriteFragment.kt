@@ -13,6 +13,7 @@ import com.yuchen.howyo.databinding.FragmentFavoriteBinding
 import com.yuchen.howyo.discover.DiscoverViewModel
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.util.Logger
 
 class FavoriteFragment : Fragment() {
 
@@ -29,11 +30,35 @@ class FavoriteFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.recyclerFavoritePlans.adapter = FavoriteAdapter(
+        val adapter = FavoriteAdapter(
             FavoriteAdapter.OnClickListener {
                 viewModel.navigateToPlan(it)
-            }
+            },
+            viewModel
         )
+
+        binding.recyclerFavoritePlans.adapter = adapter
+
+        viewModel.plans.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.setAuthorIdSet()
+            }
+        }
+
+        viewModel.authorIds.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.getAuthorData()
+            }
+        }
+
+        viewModel.authorDataList.observe(viewLifecycleOwner) {
+            it?.let {
+
+                viewModel.setStatusDone()
+                binding.viewModel = viewModel
+                adapter.submitList(viewModel.plans.value)
+            }
+        }
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {
             it?.let {
@@ -41,7 +66,8 @@ class FavoriteFragment : Fragment() {
                     NavigationDirections.navToPlanFragment(
                         it,
                         AccessPlanType.VIEW
-                    ))
+                    )
+                )
                 viewModel.onPlanNavigated()
             }
         })

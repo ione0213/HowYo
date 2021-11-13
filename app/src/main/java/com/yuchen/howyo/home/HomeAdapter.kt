@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.databinding.ItemPlansHomeBinding
 
-class HomeAdapter(private val onClickListener: OnClickListener) :
+class HomeAdapter(
+    private val onClickListener: OnClickListener,
+    private val viewModel: HomeViewModel
+) :
     ListAdapter<Plan, HomeAdapter.PlanViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
@@ -40,7 +43,7 @@ class HomeAdapter(private val onClickListener: OnClickListener) :
         return PlanViewHolder(
             ItemPlansHomeBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
-            )
+            ).apply { viewModel = this@HomeAdapter.viewModel }
         )
     }
 
