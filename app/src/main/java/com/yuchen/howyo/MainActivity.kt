@@ -107,6 +107,7 @@ class MainActivity : BaseActivity() {
 
         viewModel.currentFragmentType.observe(this, {
             it?.let {
+                Logger.i("currentFragmentType:${it}")
                 when {
                     it != CurrentFragmentType.SIGNIN && !isLoggedIn
                     -> {

@@ -5,13 +5,15 @@
 
     <data>
 
+        <import type="com.yuchen.howyo.plan.companion.CompanionType" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.companion.CompanionViewModel" />
 
         <variable
             name="user"
-            type="String" />
+            type="com.yuchen.howyo.data.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,10 +26,10 @@
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/small_padding"
             android:layout_marginBottom="@dimen/small_padding"
-            android:background="@color/gray_f5f5f5"
+            android:background="@color/white"
             android:elevation="5dp"
-            app:cardBackgroundColor="@color/gray_f5f5f5"
-            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/cardview_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,11 +47,12 @@
                     android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginBottom="@dimen/small_padding"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/avatar_sample"
+                    app:imageUrl="@{user.avatar}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/circle" />
+                    app:shapeAppearanceOverlay="@style/circle"
+                    tools:src="@drawable/avatar_sample" />
 
                 <TextView
                     android:id="@+id/text_companion_user_name"
@@ -57,7 +60,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/standard_padding"
-                    android:text="traveller"
+                    android:ellipsize="marquee"
+                    android:maxWidth="100dp"
+                    android:maxLines="1"
+                    android:text="@{user.id}"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/img_companion_avatar"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -69,29 +75,33 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_companion_add"
-                    android:layout_width="60dp"
-                    android:layout_height="32dp"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_marginEnd="@dimen/standard_padding"
-                    android:background="@drawable/button_ripple"
-                    android:drawablePadding="@dimen/small_padding"
-                    android:foreground="@drawable/plus"
-                    android:src="@drawable/plus"
+                    android:background="@drawable/plus"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.setCompanion(user.id, CompanionType.ADD)}"
+                    app:companionBtn="@{viewModel.plan}"
+                    app:companionType="@{CompanionType.ADD}"
                     app:layout_constraintBottom_toBottomOf="@+id/text_companion_user_name"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/text_companion_user_name" />
+                    app:layout_constraintTop_toTopOf="@+id/text_companion_user_name"
+                    app:user="@{user}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_companion_remove"
-                    android:layout_width="60dp"
-                    android:layout_height="32dp"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_marginEnd="@dimen/standard_padding"
-                    android:visibility="gone"
-                    android:background="@drawable/button_ripple"
-                    android:foreground="@drawable/minus"
-                    android:src="@drawable/plus"
+                    android:background="@drawable/remove"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.setCompanion(user.id, CompanionType.REMOVE)}"
+                    app:companionBtn="@{viewModel.plan}"
+                    app:companionType="@{CompanionType.REMOVE}"
                     app:layout_constraintBottom_toBottomOf="@+id/text_companion_user_name"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/text_companion_user_name" />
+                    app:layout_constraintTop_toTopOf="@+id/text_companion_user_name"
+                    app:user="@{user}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

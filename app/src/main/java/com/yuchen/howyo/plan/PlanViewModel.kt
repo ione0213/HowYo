@@ -144,9 +144,9 @@ class PlanViewModel(
         get() = _navigateToMapMode
 
     // Handle navigation to companion
-    private val _navigateToCompanion = MutableLiveData<User>()
+    private val _navigateToCompanion = MutableLiveData<Boolean>()
 
-    val navigateToCompanion: LiveData<User>
+    val navigateToCompanion: LiveData<Boolean>
         get() = _navigateToCompanion
 
     // Handle navigation to group message
@@ -270,23 +270,6 @@ class PlanViewModel(
         }
     }
 
-    fun getPlanResult() {
-
-        val planId = plan.value?.id
-
-        coroutineScope.launch {
-
-            _plan.value = when (val result = planId?.let { howYoRepository.getPlan(it) }) {
-                is Result.Success -> {
-                    result.data
-                }
-                else -> {
-                    _plan.value
-                }
-            }
-        }
-    }
-
     private fun getLivePlanResult() {
         when (argumentPlan.id.isNotEmpty()) {
             true -> {
@@ -301,7 +284,6 @@ class PlanViewModel(
         val scheduleResult = mutableListOf<Boolean>()
         val scheduleImgResult = mutableListOf<Boolean>()
 
-//        getCommentsResult()
         val commentResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
@@ -324,7 +306,6 @@ class PlanViewModel(
                 }
 
                 _checkShopListResult.postValue(deleteCheckShopList(plan.id))
-//                _checkListResult.postValue(deleteCheckList(plan.id))
                 _planResult.postValue(deletePlan(plan)!!)
                 _photoResult.postValue(deletePhoto(plan.coverFileName))
             }
@@ -335,7 +316,6 @@ class PlanViewModel(
                         && !commentResult.contains(false)
                         && planResult.value == true
                         && checkShopListResult.value == true
-//                        && checkListResult.value == true
                         && photoResult.value == true -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
@@ -603,14 +583,6 @@ class PlanViewModel(
             }
             else -> false
         }
-
-//    private suspend fun deleteCheckList(planId: String): Boolean =
-//        when (val result = howYoRepository.deleteCheckList(planId)) {
-//            is Result.Success -> {
-//                result.data
-//            }
-//            else -> false
-//        }
 
     private suspend fun deletePhoto(fileName: String): Boolean? =
         when (val result = howYoRepository.deletePhoto(fileName)) {
@@ -1150,7 +1122,7 @@ class PlanViewModel(
     }
 
     fun navigateToCompanion() {
-        _navigateToCompanion.value = author.value
+        _navigateToCompanion.value = true
     }
 
     fun onCompanionNavigated() {

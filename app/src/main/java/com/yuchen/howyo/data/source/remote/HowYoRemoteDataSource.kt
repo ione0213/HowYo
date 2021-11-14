@@ -493,7 +493,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
     }
 
     override fun getLiveCollectedPublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
-
         val liveData = MutableLiveData<List<Plan>>()
         when (authorList.size) {
             0 -> {

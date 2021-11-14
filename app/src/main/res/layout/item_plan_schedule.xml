@@ -51,7 +51,7 @@
                 android:layout_marginBottom="@dimen/small_padding"
                 android:elevation="10dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="10dp"
+                app:cardCornerRadius="@dimen/cardview_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +117,7 @@
                         android:layout_marginEnd="@dimen/middle_padding"
                         android:elevation="5dp"
                         app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="10dp"
+                        app:cardCornerRadius="@dimen/cardview_radius"
                         app:layout_constraintBottom_toBottomOf="@+id/text_plan_schedule_to_time"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/img_plan_schedule_type"
@@ -129,31 +129,31 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/text_plan_schedule_time_duration"
-                                style="@style/TextStyle3_matcha_3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/middle_padding"
-                                android:layout_marginTop="@dimen/small_padding"
-                                app:schedule="@{schedule}"
-                                android:textStyle="bold"
-                                app:layout_constraintHorizontal_bias="0.5"
-                                app:layout_constraintHorizontal_chainStyle="packed"
-                                tools:text="1時35分" />
-
-                            <TextView
                                 android:id="@+id/text_plan_schedule_title"
                                 style="@style/TextStyle2_matcha_5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/middle_padding"
                                 android:layout_marginTop="@dimen/small_padding"
-                                android:layout_marginBottom="@dimen/small_padding"
                                 android:text="@{schedule.title}"
                                 android:textStyle="bold"
                                 app:layout_constraintHorizontal_bias="0.5"
                                 app:layout_constraintHorizontal_chainStyle="packed"
                                 tools:text="Check in" />
+
+                            <TextView
+                                android:id="@+id/text_plan_schedule_time_duration"
+                                style="@style/TextStyle3_matcha_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/middle_padding"
+                                android:layout_marginTop="@dimen/small_padding"
+                                android:layout_marginBottom="@dimen/small_padding"
+                                app:schedule="@{schedule}"
+                                android:textStyle="bold"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintHorizontal_chainStyle="packed"
+                                tools:text="1時35分" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
                     </androidx.cardview.widget.CardView>
 

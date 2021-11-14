@@ -224,6 +224,15 @@
         <!--            android:name="plan"-->
         <!--            app:argType="com.yuchen.howyo.data.Plan" />-->
     </fragment>
+    <fragment
+        android:id="@+id/companionFragment"
+        android:name="com.yuchen.howyo.plan.companion.CompanionFragment"
+        android:label="CompanionFragment"
+        tools:layout="@layout/fragment_companion">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
+    </fragment>
     <dialog
         android:id="@+id/planCoverDialog"
         android:name="com.yuchen.howyo.plan.cover.PlanCoverDialog"
@@ -243,18 +252,6 @@
         <argument
             android:name="plan"
             app:argType="com.yuchen.howyo.data.Plan" />
-    </dialog>
-    <dialog
-        android:id="@+id/companionDialog"
-        android:name="com.yuchen.howyo.plan.companion.CompanionDialog"
-        android:label="CompanionDialog"
-        tools:layout="@layout/dialog_companion">
-        <argument
-            android:name="user"
-            app:argType="com.yuchen.howyo.data.User" />
-        <!--        <argument-->
-        <!--            android:name="plan"-->
-        <!--            app:argType="com.yuchen.howyo.data.Plan" />-->
     </dialog>
 
     <action
@@ -341,8 +338,10 @@
         app:popUpTo="@navigation/navigation"
         app:popUpToInclusive="true" />
     <action
-        android:id="@+id/nav_to_companion_dialog"
-        app:destination="@id/companionDialog" />
+        android:id="@+id/nav_to_companion_fragment"
+        app:destination="@id/companionFragment"
+        app:enterAnim="@anim/anim_slide_up"
+        app:popExitAnim="@anim/anim_slide_down" />
     <action
         android:id="@+id/nav_to_copy_plan_dialog"
         app:destination="@id/copyPlanDialog" />

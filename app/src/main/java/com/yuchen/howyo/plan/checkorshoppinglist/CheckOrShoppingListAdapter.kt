@@ -65,7 +65,7 @@ class CheckOrShoppingListAdapter(
 
     companion object DiffCallback : DiffUtil.ItemCallback<CheckListItem>() {
         override fun areItemsTheSame(oldItem: CheckListItem, newItem: CheckListItem): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: CheckListItem, newItem: CheckListItem): Boolean {

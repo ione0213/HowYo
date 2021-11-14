@@ -78,8 +78,8 @@ class DiscoverFragment : Fragment() {
 
         viewModel.plansForShow.observe(viewLifecycleOwner) {
 
-            binding.viewModel = viewModel
             adapter.submitList(it)
+            binding.viewModel = viewModel
         }
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {

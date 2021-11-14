@@ -82,7 +82,7 @@
         <entry key="app/src/main/res/layout/item_comment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_companion.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/item_detail_edit_image.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/item_detail_edit_image_add.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/item_detail_edit_image_add.xml" value="0.75" />
         <entry key="app/src/main/res/layout/item_detail_edit_spinner.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_detail_image.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_detail_view_delete_image.xml" value="0.335" />

@@ -20,6 +20,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Util.getColor
 import kotlinx.coroutines.launch
 
@@ -189,8 +190,7 @@ class PlanFragment : Fragment() {
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
 
-        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.planToolbar)
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setToolbar()
 
         var isShow = true
         var scrollRange = -1
@@ -427,13 +427,15 @@ class PlanFragment : Fragment() {
 
         viewModel.navigateToCompanion.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(
-                    NavigationDirections.navToCompanionDialog(
-                        it
-//                        viewModel.plan.value ?: Plan()
+                if (it) {
+                    findNavController().navigate(
+                        NavigationDirections.navToCompanionFragment(
+                            viewModel.plan.value!!
+                        )
                     )
-                )
-                viewModel.onCompanionNavigated()
+                    resetToolbar()
+                    viewModel.onCompanionNavigated()
+                }
             }
         })
 
@@ -513,12 +515,19 @@ class PlanFragment : Fragment() {
         return binding.root
     }
 
+    private fun setToolbar() {
+        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.planToolbar)
+        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
         menu.findItem(R.id.delete).apply {
 
-            if (viewModel.accessType == AccessPlanType.EDIT) isVisible = true
+            if (viewModel.accessType == AccessPlanType.EDIT &&
+                viewModel.plan.value?.authorId == UserManager.userId
+            ) isVisible = true
         }
 
         //For collapsed title align

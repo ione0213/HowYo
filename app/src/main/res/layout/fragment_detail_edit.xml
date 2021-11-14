@@ -16,6 +16,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/gray_f5f5f5"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/large_padding"
-                        android:layout_marginTop="@dimen/middle_padding"
+                        android:layout_marginTop="@dimen/small_padding"
                         android:layout_marginEnd="@dimen/large_padding"
                         android:visibility="@{viewModel.photoDataList.size != 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -362,7 +363,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/fab_detail_edit_add"
-            style="@style/TextStyle2_white"
+            style="@style/TextStyle2_matcha_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/middle_padding"
@@ -372,12 +373,11 @@
             android:onClick="@{() -> viewModel.saveSchedule()}"
             android:text="@{viewModel.status != LoadApiStatus.LOADING ? @string/save_setting : @string/save_uploading}"
             android:textAlignment="center"
-            app:backgroundTint="@color/green"
+            app:backgroundTint="@color/matcha_5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="36dp"
-            app:srcCompat="@android:drawable/ic_input_add"
-            app:tint="@android:color/white" />
+            app:tint="@color/matcha_6" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

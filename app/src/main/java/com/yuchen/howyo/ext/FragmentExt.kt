@@ -37,14 +37,6 @@ fun Fragment.getVmFactory(
 //    return FindLocationViewModelFactory(repository, days)
 //}
 
-fun Fragment.getVmFactory(
-    user: User
-//                          , plan: Plan
-): CompanionViewModelFactory {
-    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return CompanionViewModelFactory(repository, user)
-}
-
 fun Fragment.getVmFactory(plan: Plan?): PlanContentViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PlanContentViewModelFactory(repository, plan)

@@ -35,7 +35,7 @@
             android:onClick="@{() -> viewModel.deleteImage()}"
             android:layout_marginEnd="@dimen/middle_padding"
             android:background="@drawable/delete"
-            android:backgroundTint="@color/white"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

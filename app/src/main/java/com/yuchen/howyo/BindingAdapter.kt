@@ -25,6 +25,7 @@ import com.yuchen.howyo.plan.*
 import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.plan.companion.CompanionAdapter
+import com.yuchen.howyo.plan.companion.CompanionType
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
@@ -321,24 +322,12 @@ fun bindImageWithScheduleType(imageView: ImageView, scheduleType: String?) {
                 getString(R.string.traffic) -> R.drawable.train
                 getString(R.string.hotel) -> R.drawable.hotel
                 getString(R.string.place) -> R.drawable.place
+                getString(R.string.food) -> R.drawable.food
                 else -> 0
             }
         )
     }
 
-}
-
-@BindingAdapter("user")
-fun bindRecyclerViewWithDays(recyclerView: RecyclerView, user: User) {
-    user.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is CompanionAdapter -> {
-                    submitList(it.followingList)
-                }
-            }
-        }
-    }
 }
 
 @BindingAdapter("checkLists", "mainType")
@@ -578,4 +567,25 @@ fun AppCompatButton.bindBtnForAuthor(plan: Plan?, accessType: AccessPlanType?) {
                 View.GONE
             }
         }
+}
+
+@BindingAdapter("companionBtn", "user", "companionType")
+fun AppCompatButton.bindCompanionBtn(plan: Plan?, user: User?, companionType: CompanionType) {
+
+    when (companionType) {
+        CompanionType.ADD -> {
+            visibility = when (plan?.companionList?.contains(user?.id)) {
+                true -> View.GONE
+                false -> View.VISIBLE
+                else -> View.GONE
+            }
+        }
+        CompanionType.REMOVE -> {
+            visibility = when (plan?.companionList?.contains(user?.id)) {
+                true -> View.VISIBLE
+                false -> View.GONE
+                else -> View.GONE
+            }
+        }
+    }
 }

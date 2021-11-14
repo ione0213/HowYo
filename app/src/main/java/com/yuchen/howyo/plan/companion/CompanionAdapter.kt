@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.ItemCompanionBinding
 
-class CompanionAdapter(val viewModel: CompanionViewModel): ListAdapter<String, CompanionAdapter.FriendViewHolder>(DiffCallback) {
+class CompanionAdapter(val viewModel: CompanionViewModel): ListAdapter<User, CompanionAdapter.FriendViewHolder>(DiffCallback) {
 
     class FriendViewHolder(
         private var binding: ItemCompanionBinding,
         private val viewModel: CompanionViewModel
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(user: String) {
+        fun bind(user: User) {
             binding.viewModel = viewModel
 //            binding.viewHolder = this
             user.let {
@@ -25,13 +25,13 @@ class CompanionAdapter(val viewModel: CompanionViewModel): ListAdapter<String, C
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<String>() {
-        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem === newItem
+    companion object DiffCallback : DiffUtil.ItemCallback<User>() {
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+            return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+            return oldItem.id == newItem.id
         }
     }
 

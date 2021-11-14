@@ -15,14 +15,16 @@
         android:layout_height="wrap_content"
         android:onClick="@{() -> viewModel.selectPhoto()}">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/image_detail_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/large_padding"
+            android:layout_height="@dimen/large_padding"
             android:scaleType="centerCrop"
             android:background="@drawable/plus"
             app:layout_constraintEnd_toEndOf="parent"
             android:elevation="1dp"
+            android:onClick="@{() -> viewModel.selectPhoto()}"
+            android:backgroundTint="@color/matcha_6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,6 +38,7 @@
             android:layout_width="@dimen/width_detail_gallery_small"
             android:layout_height="@dimen/height_detail_gallery_small"
             android:scaleType="centerCrop"
+            android:onClick="@{() -> viewModel.selectPhoto()}"
             android:foreground="@drawable/add_image_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

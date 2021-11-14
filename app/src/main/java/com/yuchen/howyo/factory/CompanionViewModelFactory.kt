@@ -10,19 +10,19 @@ import com.yuchen.howyo.plan.companion.CompanionViewModel
 import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
 import com.yuchen.howyo.plan.detail.view.DetailViewModel
 
-class CompanionViewModelFactory(
-    private val howYoRepository: HowYoRepository,
-    private val user: User
-//    private val plan: Plan
-) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        with(modelClass) {
-            when {
-                isAssignableFrom(CompanionViewModel::class.java) ->
-                    CompanionViewModel(howYoRepository, user)
-                else ->
-                    throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
-            }
-        } as T
-}
+//class CompanionViewModelFactory(
+//    private val howYoRepository: HowYoRepository,
+//    private val user: User
+////    private val plan: Plan
+//) : ViewModelProvider.Factory {
+//
+//    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+//        with(modelClass) {
+//            when {
+//                isAssignableFrom(CompanionViewModel::class.java) ->
+//                    CompanionViewModel(howYoRepository, user)
+//                else ->
+//                    throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+//            }
+//        } as T
+//}
