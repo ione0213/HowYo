@@ -17,10 +17,10 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
             android:layout_marginBottom="@dimen/small_padding"
             android:background="@color/white"
             android:elevation="5dp"
-            android:layout_marginStart="@dimen/small_padding"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/cardview_radius"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -42,25 +42,47 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/circle" />
+                    app:shapeAppearanceOverlay="@style/circle"
+                    tools:src="@drawable/sample_cover" />
 
                 <TextView
                     android:id="@+id/img_profile_plan_title"
-                    style="@style/TextStyle3_matcha_3"
-                    android:layout_width="wrap_content"
+                    style="@style/TextStyle4_matcha_3"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
+                    android:ellipsize="end"
+                    android:maxWidth="0dp"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
                     android:layout_marginTop="@dimen/smallest_padding"
-                    android:layout_marginBottom="@dimen/small_padding"
                     android:text="@{plan.title}"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="@+id/img_profile_plan_cover"
                     app:layout_constraintTop_toBottomOf="@+id/img_profile_plan_cover"
                     app:layout_goneMarginStart="@dimen/small_padding"
                     tools:text="traveller" />
+
+                <TextView
+                    android:id="@+id/img_profile_plan_mark"
+                    style="@style/TextStyle4_matcha_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/smallest_padding"
+                    android:layout_marginEnd="@dimen/small_padding"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:text="@string/profile_group_plan"
+                    android:textStyle="bold"
+                    app:groupPlan="@{plan}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/img_profile_plan_title"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintTop_toBottomOf="@+id/img_profile_plan_title"
+                    app:layout_goneMarginStart="@dimen/small_padding" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

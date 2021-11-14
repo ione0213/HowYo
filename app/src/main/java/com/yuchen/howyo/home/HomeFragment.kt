@@ -74,7 +74,8 @@ class HomeFragment : Fragment() {
                 }
                 viewModel.setStatusDone()
                 binding.viewModel = viewModel
-                adapter.submitList(viewModel.plans.value)
+                Logger.i("authorDataListauthorDataList")
+                adapter.addEmptyAndPlan(viewModel.plans.value!!)
             }
         }
 
@@ -91,6 +92,8 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+
+            if (it.isEmpty()) adapter.addEmptyAndPlan(listOf())
         })
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {

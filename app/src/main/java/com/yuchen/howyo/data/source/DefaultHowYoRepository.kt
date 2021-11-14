@@ -57,6 +57,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.getAllPlans()
     }
 
+    override suspend fun getAllPublicPlans(): Result<List<Plan>> {
+        return remoteDataSource.getAllPublicPlans()
+    }
+
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
         return remoteDataSource.getLivePlans(authorList)
     }

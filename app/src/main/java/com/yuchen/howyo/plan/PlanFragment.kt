@@ -21,6 +21,7 @@ import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.signin.UserManager
+import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getColor
 import kotlinx.coroutines.launch
 
@@ -525,9 +526,7 @@ class PlanFragment : Fragment() {
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
         menu.findItem(R.id.delete).apply {
 
-            if (viewModel.accessType == AccessPlanType.EDIT &&
-                viewModel.plan.value?.authorId == UserManager.userId
-            ) isVisible = true
+            if (viewModel.accessType == AccessPlanType.EDIT) isVisible = true
         }
 
         //For collapsed title align

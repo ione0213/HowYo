@@ -83,6 +83,7 @@
                     android:id="@+id/recycler_discover_plans"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

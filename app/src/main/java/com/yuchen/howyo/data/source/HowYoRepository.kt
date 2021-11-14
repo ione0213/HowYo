@@ -32,6 +32,8 @@ interface HowYoRepository {
 
     suspend fun getAllPlans(): Result<List<Plan>>
 
+    suspend fun getAllPublicPlans(): Result<List<Plan>>
+
     fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>>
 
     fun getAllLivePublicPlans(): MutableLiveData<List<Plan>>

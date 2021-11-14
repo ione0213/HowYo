@@ -38,10 +38,17 @@ class ScheduleAdapter(
             viewModel: PlanViewModel
         ) {
 
-            binding.layoutPlanScheduleContent.setOnClickListener { onClickListener.onClick(schedule) }
-            binding.buttonPlanScheduleDelete.setOnClickListener {
-                viewModel.checkDeleteSchedule(schedule)
-                swipeRevealLayout.close(true)
+
+            binding.layoutPlanScheduleContent.setOnClickListener {
+                onClickListener.onClick(
+                    schedule
+                )
+            }
+            if (viewModel.accessType == AccessPlanType.EDIT) {
+                binding.buttonPlanScheduleDelete.setOnClickListener {
+                    viewModel.checkDeleteSchedule(schedule)
+                    swipeRevealLayout.close(true)
+                }
             }
             schedule.let {
                 binding.schedule = it
@@ -60,7 +67,7 @@ class ScheduleAdapter(
             oldItem: ScheduleDataItem,
             newItem: ScheduleDataItem
         ): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(

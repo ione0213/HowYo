@@ -3,10 +3,8 @@ package com.yuchen.howyo.data.source.remote
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
@@ -346,6 +344,44 @@ object HowYoRemoteDataSource : HowYoDataSource {
         }
 
     override suspend fun getAllPlans(): Result<List<Plan>> = suspendCoroutine { continuation ->
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_PLANS)
+            .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+            .get()
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    val list = mutableListOf<Plan>()
+
+                    if (task.result != null) {
+                        for (document in task.result!!) {
+                            Logger.d(document.id + " => " + document.data)
+
+                            val plan = document.toObject(Plan::class.java)
+                            list.add(plan)
+                        }
+                        continuation.resume(Result.Success(list))
+                    }
+                } else {
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting schedules. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
+                    }
+                    continuation.resume(
+                        Result.Fail(
+                            HowYoApplication.instance.getString(
+                                R.string.nothing
+                            )
+                        )
+                    )
+                }
+            }
+    }
+
+    override suspend fun getAllPublicPlans(): Result<List<Plan>> = suspendCoroutine { continuation ->
 
         FirebaseFirestore.getInstance()
             .collection(PATH_PLANS)

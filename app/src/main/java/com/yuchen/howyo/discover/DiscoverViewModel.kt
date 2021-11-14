@@ -75,7 +75,7 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
 
         coroutineScope.launch {
 
-            val result = howYoRepository.getAllPlans()
+            val result = howYoRepository.getAllPublicPlans()
             _plans.value = when (result) {
                 is Result.Success -> result.data
                 else -> null

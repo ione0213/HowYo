@@ -374,9 +374,6 @@ fun bindRecyclerViewWithPlans(
                 is PlanAdapter -> {
                     submitList(it)
                 }
-                is HomeAdapter -> {
-                    submitList(it)
-                }
                 is DiscoverAdapter -> {
                     submitList(it)
                 }
@@ -586,6 +583,17 @@ fun AppCompatButton.bindCompanionBtn(plan: Plan?, user: User?, companionType: Co
                 false -> View.GONE
                 else -> View.GONE
             }
+        }
+    }
+}
+
+@BindingAdapter("groupPlan")
+fun TextView.bindGroupText(plan: Plan?) {
+
+    if (plan != null) {
+        visibility = when (plan.companionList?.contains(UserManager.userId)) {
+            true -> View.VISIBLE
+            else -> View.GONE
         }
     }
 }

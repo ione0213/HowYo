@@ -206,7 +206,7 @@
 
                 <TextView
                     android:id="@+id/text_detail_note"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_matcha_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
@@ -233,7 +233,7 @@
 
                 <TextView
                     android:id="@+id/text_detail_budge"
-                    style="@style/TextStyle3_black"
+                    style="@style/TextStyle3_matcha_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
@@ -265,6 +265,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginEnd="@dimen/small_padding"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:onClick="@{() -> viewModel.navigateToUrl(viewModel.schedule.refUrl)}"
                     android:text="@{viewModel.schedule.refUrl}"
                     android:textAlignment="viewStart"

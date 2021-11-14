@@ -8,6 +8,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.signin.UserManager
+import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -856,15 +857,24 @@ class PlanViewModel(
         _status.value = LoadApiStatus.LOADING
 
         withContext(Dispatchers.IO) {
+
             tempDays.forEach { tempDay ->
-                days.value?.forEach { day ->
-                    when {
-                        tempDay.position != day.position -> {
-                            daysResult.add(updateDay(tempDay))
-                        }
+                days.value?.forEach { oldDay ->
+                    if (tempDay.id == oldDay.id && tempDay.position != oldDay.position) {
+                        daysResult.add(updateDay(tempDay))
                     }
                 }
             }
+
+//            tempDays.forEach { tempDay ->
+//                .value?.forEach { day ->
+//                    when {
+//                        tempDay.position != day.position -> {
+//                            daysResult.add(updateDay(tempDay))
+//                        }
+//                    }
+//                }
+//            }
         }
 
         _handleDaySuccess.value = !daysResult.contains(false)
@@ -1002,10 +1012,9 @@ class PlanViewModel(
         _status.value = LoadApiStatus.LOADING
         withContext(Dispatchers.IO) {
 
-
-            tempSchedules.forEach { tempSchedule ->
-                when (type) {
-                    HandleScheduleType.POSITION -> {
+            when (type) {
+                HandleScheduleType.POSITION -> {
+                    tempSchedules.forEach { tempSchedule ->
                         schedules.value?.forEach { schedule ->
                             when {
                                 tempSchedule.position != schedule.position -> {
@@ -1014,17 +1023,44 @@ class PlanViewModel(
                             }
                         }
                     }
-                    HandleScheduleType.TIME -> {
-                        allSchedules.value?.forEach { schedule ->
-                            when {
-                                !(tempSchedule === schedule) -> {
-                                    schedulesResult.add(updateSchedule(tempSchedule))
-                                }
+                }
+                HandleScheduleType.TIME -> {
+
+                    tempSchedules.forEach { tempSchedule ->
+                        allSchedules.value?.forEach { oldSchedule ->
+                            if (tempSchedule.id == oldSchedule.id &&
+                                (tempSchedule.startTime != oldSchedule.startTime ||
+                                        tempSchedule.endTime != oldSchedule.endTime)
+                            ) {
+                                schedulesResult.add(updateSchedule(tempSchedule))
                             }
                         }
                     }
                 }
             }
+
+//            tempSchedules.forEach { tempSchedule ->
+//                when (type) {
+//                    HandleScheduleType.POSITION -> {
+//                        schedules.value?.forEach { schedule ->
+//                            when {
+//                                tempSchedule.position != schedule.position -> {
+//                                    schedulesResult.add(updateSchedule(tempSchedule))
+//                                }
+//                            }
+//                        }
+//                    }
+//                    HandleScheduleType.TIME -> {
+//                        allSchedules.value?.forEach { schedule ->
+//                            when {
+//                                !(tempSchedule === schedule) -> {
+//                                    schedulesResult.add(updateSchedule(tempSchedule))
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
 
         _handleScheduleSuccess.value = !schedulesResult.contains(false)

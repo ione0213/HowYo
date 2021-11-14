@@ -4,9 +4,6 @@ import android.content.Context
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.util.Logger
 
-/**
- * Created by Wayne Chen in Jul. 2019｀.
- */
 object UserManager {
 
     private const val USER_DATA = "user_data"
@@ -63,7 +60,6 @@ object UserManager {
         get() = currentUserEmail != null
 
     fun clear() {
-        Logger.i("CLEARRRRR")
         currentUserEmail = null
         userId = null
     }

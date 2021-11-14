@@ -5,9 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.yuchen.howyo.HowYoApplication
 
-/**
- * Updated by Wayne Chen in Mar. 2019.
- */
 object Util {
 
     fun isInternetConnected(): Boolean {

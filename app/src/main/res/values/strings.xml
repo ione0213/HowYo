@@ -29,6 +29,9 @@
     <string name="confirm">確定</string>
     <string name="cancel">取消</string>
 
+    <!-- Home-->
+    <string name="empty_home">好友目前沒有公開行程唷！</string>
+
     <!-- Plan-->
     <string name="plan_new">新增行程</string>
     <string name="plan_edit">編輯行程</string>
@@ -80,6 +83,7 @@
     <string name="profile_modify_avatar">更換大頭貼</string>
     <string name="profile_modify_id">ID</string>
     <string name="profile_modify_info">個人簡介</string>
+    <string name="profile_group_plan">旅遊群組</string>
 
     <!-- Author Profile-->
     <string name="author_profile_follow">追蹤</string>
