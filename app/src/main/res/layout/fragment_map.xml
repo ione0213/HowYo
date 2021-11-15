@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.plan.detail.view.map.MapViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,6 +18,7 @@
             android:id="@+id/button_map_close"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:onClick="@{() -> viewModel.leaveMap()}"
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/standard_padding"
             android:background="@drawable/icons_44px_back01"

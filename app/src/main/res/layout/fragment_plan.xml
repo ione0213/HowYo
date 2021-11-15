@@ -11,6 +11,12 @@
 
         <import type="com.yuchen.howyo.plan.AccessPlanType" />
 
+        <import type="com.yuchen.howyo.plan.LikeType" />
+
+        <import type="com.yuchen.howyo.plan.FavoriteType" />
+
+        <import type="com.yuchen.howyo.plan.checkorshoppinglist.MainItemType" />
+
         <import type="com.yuchen.howyo.network.LoadApiStatus" />
 
         <variable
@@ -18,439 +24,495 @@
             type="com.yuchen.howyo.plan.PlanViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
+        android:fitsSystemWindows="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}">
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/img_plan_cover"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:onClick="@{() -> viewModel.navigateToEditCover()}"
-                android:scaleType="centerCrop"
-                app:imageUrl="@{viewModel.plan.coverPhotoUrl}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/sample_cover" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button_plan_close"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginStart="@dimen/small_padding"
-                android:layout_marginTop="@dimen/standard_padding"
-                android:background="@drawable/icons_44px_back01"
-                android:onClick="@{() -> viewModel.leavePlan()}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button_plan_delete"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginTop="@dimen/standard_padding"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:background="@drawable/delete"
-                android:backgroundTint="@color/gray2"
-                android:onClick="@{() -> viewModel.checkDeletePlan()}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/text_plan_duration"
-                style="@style/TextStyle2_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:endDate="@{viewModel.plan.endDate}"
-                app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/img_plan_cover"
-                app:startDate="@{viewModel.plan.startDate}"
-                tools:text="2021/10/1 - 2021/10/13" />
-
-            <TextView
-                android:id="@+id/text_plan_title"
-                style="@style/TextStyle1_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_padding"
-                android:text="@{viewModel.plan.title}"
-                app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_plan_duration"
-                tools:text="台東三天兩夜" />
-
-            <TextView
-                android:id="@+id/text_plan_location"
-                style="@style/TextStyle2_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_padding"
-                android:layout_marginTop="@dimen/small_padding"
-                android:text="@{viewModel.plan.destination}"
-                app:layout_constraintEnd_toEndOf="@+id/text_plan_title"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="@+id/text_plan_title"
-                app:layout_constraintTop_toBottomOf="@+id/text_plan_title"
-                tools:text="Japan Osaka" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button_plan_share"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginTop="@dimen/standard_padding"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/share"
-                android:backgroundTint="@color/gray2"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
-                app:layout_constraintEnd_toEndOf="@+id/img_plan_cover" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button_plan_edit"
-                android:layout_width="@dimen/plan_img_btn_small"
-                android:layout_height="@dimen/plan_img_btn_small"
-                android:layout_marginTop="@dimen/standard_padding"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/edit"
-                android:backgroundTint="@color/gray2"
-                android:onClick="@{() -> viewModel.navigateToEditPlan()}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
-                app:layout_constraintEnd_toStartOf="@+id/button_plan_share" />
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/img_plan_avatar"
-                android:layout_width="@dimen/plan_img_btn_big"
-                android:layout_height="@dimen/plan_img_btn_big"
-                android:layout_marginStart="@dimen/middle_padding"
-                android:layout_marginTop="@dimen/small_padding"
-                android:scaleType="centerCrop"
-                android:src="@drawable/avatar_sample"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/img_plan_cover"
-                app:shapeAppearanceOverlay="@style/circle" />
-
-            <TextView
-                android:id="@+id/text_plan_user_name"
-                style="@style/TextStyle2_black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_padding"
-                android:ellipsize="end"
-                android:maxWidth="100dp"
-                android:maxLines="1"
-                android:text="@{viewModel.plan.authorId}"
-                android:textStyle="bold"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@+id/img_plan_avatar"
-                app:layout_constraintTop_toTopOf="@+id/img_plan_avatar"
-                app:layout_goneMarginStart="@dimen/small_padding"
-                tools:text="traveller" />
-
-            <TextView
-                android:id="@+id/text_plan_user_status"
-                style="@style/TextStyle3_black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_padding"
-                android:layout_marginTop="@dimen/small_padding"
-                android:text="追蹤中▼"
-                android:textStyle="bold"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@+id/img_plan_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/text_plan_user_name"
-                app:layout_goneMarginStart="@dimen/small_padding"
-                tools:text="追蹤中▼" />
-
-            <ImageButton
-                android:id="@+id/button_plan_companion"
-                android:layout_width="@dimen/plan_img_btn_middle"
-                android:layout_height="@dimen/plan_img_btn_middle"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/friends"
-                android:onClick="@{() -> viewModel.navigateToCompanion()}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
-
-            <ImageButton
-                android:id="@+id/button_plan_map_mode"
-                android:layout_width="@dimen/plan_img_btn_middle"
-                android:layout_height="@dimen/plan_img_btn_middle"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/map"
-                android:onClick="@{() -> viewModel.navigateToMapMode()}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toStartOf="@id/button_plan_companion"
-                app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
-
-            <ImageButton
-                android:id="@+id/button_plan_payment"
-                android:layout_width="@dimen/plan_img_btn_middle"
-                android:layout_height="@dimen/plan_img_btn_middle"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/coin"
-                android:onClick="@{() -> viewModel.navigateToPayment()}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/text_plan_user_name" />
-
-            <ImageButton
-                android:id="@+id/button_plan_luggage"
-                android:layout_width="@dimen/plan_img_btn_middle"
-                android:layout_height="@dimen/plan_img_btn_middle"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/luggage"
-                android:onClick="@{() -> viewModel.navigateToCheckList(@string/check_list)}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toStartOf="@id/button_plan_payment"
-                app:layout_constraintTop_toTopOf="@+id/button_plan_payment" />
-
-            <ImageButton
-                android:id="@+id/button_plan_shopping"
-                android:layout_width="@dimen/plan_img_btn_middle"
-                android:layout_height="@dimen/plan_img_btn_middle"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/shopping"
-                android:onClick="@{() -> viewModel.navigateToCheckList(@string/shopping_list)}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toStartOf="@id/button_plan_luggage"
-                app:layout_constraintTop_toTopOf="@+id/button_plan_luggage" />
-
-            <ImageButton
-                android:id="@+id/button_plan_chatting"
-                android:layout_width="@dimen/plan_img_btn_middle"
-                android:layout_height="@dimen/plan_img_btn_middle"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/chat"
-                android:onClick="@{() -> viewModel.navigateToGroupMessage()}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toStartOf="@id/button_plan_shopping"
-                app:layout_constraintTop_toTopOf="@+id/button_plan_shopping" />
-
-            <ImageButton
-                android:id="@+id/button_plan_locate_friend"
-                android:layout_width="@dimen/plan_img_btn_middle"
-                android:layout_height="@dimen/plan_img_btn_middle"
-                android:layout_marginEnd="@dimen/small_padding"
-                android:layout_marginBottom="@dimen/middle_padding"
-                android:background="@drawable/map"
-                android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
-                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toStartOf="@id/button_plan_chatting"
-                app:layout_constraintTop_toTopOf="@+id/button_plan_chatting" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_plan_days"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/middle_padding"
-                android:layout_marginTop="@dimen/small_padding"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:orientation="horizontal"
-                android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
-                app:days="@{viewModel.days}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_plan_avatar"
-                tools:listitem="@layout/item_plan_day" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_plan_schedules"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="@dimen/middle_padding"
-                android:layout_marginTop="@dimen/small_padding"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:orientation="vertical"
-                android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/layout_plan_bottom"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recycler_plan_days"
-                app:layout_constraintVertical_bias="0.0"
-                app:schedules="@{viewModel.schedules}"
-                tools:listitem="@layout/item_plan_schedule" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_detail_edit_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/middle_padding"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:onClick="@{() -> viewModel.navigateToAddSchedule()}"
-                android:visibility="@{viewModel.status == LoadApiStatus.LOADING || viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
-                app:backgroundTint="@color/green"
-                app:layout_constraintBottom_toTopOf="@id/layout_plan_bottom"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:maxImageSize="36dp"
-                app:srcCompat="@android:drawable/ic_input_add"
-                app:tint="@android:color/white" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_plan_bottom"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/plan_bottom_layout"
-                android:background="@color/white"
-                android:elevation="@dimen/elevation_all"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:layout_height="220dp"
+                android:background="@color/gray_f5f5f5"
+                android:fitsSystemWindows="true"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:collapsedTitleGravity="center"
+                app:contentScrim="@color/matcha_5"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_plan_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_collapseMode="parallax">
 
-                    <ImageButton
-                        android:id="@+id/button_plan_lock"
-                        android:layout_width="@dimen/plan_img_btn_small"
-                        android:layout_height="@dimen/plan_img_btn_small"
-                        android:layout_marginStart="@dimen/middle_padding"
-                        android:background="@drawable/lock"
-                        android:onClick="@{() -> viewModel.updatePrivacy(PlanPrivacy.PUBLIC)}"
-                        app:accessType="@{viewModel.accessType}"
+                    <ImageView
+                        android:id="@+id/img_plan_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:onClick="@{() -> viewModel.navigateToEditCover()}"
+                        android:scaleType="centerCrop"
+                        app:imageUrl="@{viewModel.plan.coverPhotoUrl}"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:lockBtn="@{viewModel.plan.privacy}" />
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:src="@drawable/sample_cover" />
 
-                    <ImageButton
-                        android:id="@+id/button_plan_unlock"
+                    <TextView
+                        android:id="@+id/text_plan_duration"
+                        style="@style/TextStyle2_matcha_6_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        app:endDate="@{viewModel.plan.endDate}"
+                        app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
+                        app:layout_constraintHorizontal_bias="0.497"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/img_plan_cover"
+                        app:startDate="@{viewModel.plan.startDate}"
+                        tools:text="2021/10/1 - 2021/10/13" />
+
+                    <TextView
+                        android:id="@+id/text_plan_title"
+                        style="@style/TextStyle1_matcha6_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/small_padding"
+                        android:text="@{viewModel.plan.title}"
+                        app:layout_constraintEnd_toEndOf="@id/img_plan_cover"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_plan_duration"
+                        tools:text="台東三天兩夜" />
+
+                    <TextView
+                        android:id="@+id/text_plan_location"
+                        style="@style/TextStyle2_white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/small_padding"
+                        android:layout_marginTop="@dimen/small_padding"
+                        android:text="@{viewModel.plan.destination}"
+                        app:layout_constraintEnd_toEndOf="@+id/text_plan_title"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="@+id/text_plan_title"
+                        app:layout_constraintTop_toBottomOf="@+id/text_plan_title"
+                        tools:text="Japan Osaka" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/button_plan_share"
                         android:layout_width="@dimen/plan_img_btn_small"
                         android:layout_height="@dimen/plan_img_btn_small"
-                        android:layout_marginStart="@dimen/middle_padding"
-                        android:background="@drawable/unlock"
-                        android:onClick="@{() -> viewModel.updatePrivacy(PlanPrivacy.PRIVATE)}"
+                        android:layout_marginTop="@dimen/standard_padding"
+                        android:layout_marginEnd="@dimen/middle_padding"
+                        android:layout_marginBottom="@dimen/middle_padding"
+                        android:background="@drawable/share"
+                        android:backgroundTint="@color/matcha_6"
+                        android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
+                        app:layout_constraintEnd_toEndOf="@+id/img_plan_cover" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/button_plan_edit"
+                        android:layout_width="@dimen/plan_img_btn_small"
+                        android:layout_height="@dimen/plan_img_btn_small"
+                        android:layout_marginTop="@dimen/standard_padding"
+                        android:layout_marginEnd="@dimen/middle_padding"
+                        android:layout_marginBottom="@dimen/middle_padding"
+                        android:background="@drawable/edit"
+                        android:backgroundTint="@color/matcha_6"
+                        android:onClick="@{() -> viewModel.navigateToEditPlan()}"
                         app:accessType="@{viewModel.accessType}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:unlockBtn="@{viewModel.plan.privacy}" />
+                        app:buttonForAuthor="@{viewModel.plan}"
+                        app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
+                        app:layout_constraintEnd_toStartOf="@+id/button_plan_share" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/img_plan_avatar"
+                    android:layout_width="@dimen/plan_img_btn_biggest"
+                    android:layout_height="@dimen/plan_img_btn_biggest"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="@dimen/standard_padding"
+                    android:onClick="@{() -> viewModel.navigateToAuthorProfile()}"
+                    android:scaleType="centerCrop"
+                    app:imageUrl="@{viewModel.author.avatar}"
+                    app:layout_collapseMode="parallax"
+                    app:shapeAppearanceOverlay="@style/circle"
+                    tools:src="@mipmap/ic_launcher" />
 
                 <TextView
-                    android:id="@+id/text_plan_status"
-                    style="@style/TextStyle3_gray"
+                    android:id="@+id/text_plan_user_name"
+                    style="@style/TextStyle2_matcha_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/small_padding"
-                    android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/layout_plan_status"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:privacy="@{viewModel.plan.privacy}"
-                    tools:text="@string/public_plan" />
+                    android:layout_gravity="center|bottom"
+                    android:ellipsize="marquee"
+                    android:maxWidth="80dp"
+                    android:maxLines="1"
+                    android:onClick="@{() -> viewModel.navigateToAuthorProfile()}"
+                    android:text="@{viewModel.plan.authorId}"
+                    android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    app:layout_collapseMode="parallax"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    tools:text="traveller" />
 
                 <ImageButton
-                    android:id="@+id/button_plan_heart"
+                    android:id="@+id/button_plan_companion"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginEnd="@dimen/small_padding"
-                    android:background="@drawable/heart_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/button_plan_heart_selected"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginEnd="@dimen/small_padding"
-                    android:background="@drawable/heart_selected"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/button_plan_comment"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginEnd="40dp"
-                    android:background="@drawable/comment"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/button_plan_star"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginEnd="@dimen/small_padding"
-                    android:background="@drawable/star_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/button_plan_star_selected"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginEnd="@dimen/small_padding"
-                    android:background="@drawable/star_selected"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/button_plan_copy"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_gravity="end|bottom"
                     android:layout_marginEnd="@dimen/middle_padding"
-                    android:background="@drawable/copy"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:background="@drawable/friends"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.navigateToCompanion()}"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                    app:layout_collapseMode="parallax" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_map_mode"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="56dp"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:background="@drawable/map"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.navigateToMapMode()}"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                    app:layout_collapseMode="parallax" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_plan_payment"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:background="@drawable/coin"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.navigateToPayment()}"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                    app:accessType="@{viewModel.accessType}"
+                    app:buttonForAuthor="@{viewModel.plan}"
+                    app:layout_collapseMode="parallax" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_plan_luggage"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="56dp"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:background="@drawable/luggage"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.navigateToCheckList(MainItemType.CHECK)}"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                    app:accessType="@{viewModel.accessType}"
+                    app:buttonForAuthor="@{viewModel.plan}"
+                    app:layout_collapseMode="parallax" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_plan_shopping"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="96dp"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:background="@drawable/shopping"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.navigateToCheckList(MainItemType.SHOPPING)}"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                    app:accessType="@{viewModel.accessType}"
+                    app:buttonForAuthor="@{viewModel.plan}"
+                    app:layout_collapseMode="parallax" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_plan_chatting"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_gravity="start|bottom"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:background="@drawable/chat"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.navigateToGroupMessage()}"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                    app:accessType="@{viewModel.accessType}"
+                    app:buttonForAuthor="@{viewModel.plan}"
+                    app:layout_collapseMode="parallax" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_plan_locate_friend"
+                    android:layout_width="@dimen/plan_img_btn_small"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_gravity="start|bottom"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:background="@drawable/map"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.navigateToLocateCompanion()}"
+                    android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                    app:accessType="@{viewModel.accessType}"
+                    app:buttonForAuthor="@{viewModel.plan}"
+                    app:layout_collapseMode="parallax" />
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/plan_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginTop="@dimen/standard_padding"
+                    android:theme="@style/PlanToolbarTheme"
+                    app:layout_collapseMode="pin" />
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_f5f5f5"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_plan_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/img_plan_cover">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_plan_days"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/middle_padding"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:orientation="horizontal"
+                    android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
+                    app:days="@{viewModel.days}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/item_plan_day" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_plan_schedules"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/small_padding"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:orientation="vertical"
+                    android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_plan_days"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:schedules="@{viewModel.schedules}"
+                    tools:listitem="@layout/item_plan_schedule" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_detail_edit_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_margin="@dimen/largest_padding"
+            android:onClick="@{() -> viewModel.navigateToAddSchedule()}"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING || viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+            app:backgroundTint="@color/matcha_5"
+            app:maxImageSize="36dp"
+            app:srcCompat="@android:drawable/ic_input_add"
+            app:tint="@color/matcha_6" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/uploading" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_plan_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/plan_bottom_layout"
+            android:layout_gravity="bottom|start|end"
+            android:background="@color/gray_f5f5f5"
+            android:elevation="@dimen/elevation_all"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_plan_avatar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_plan_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/button_plan_lock"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:background="@drawable/lock"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.updatePrivacy(PlanPrivacy.PUBLIC)}"
+                    app:accessType="@{viewModel.accessType}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lockBtn="@{viewModel.plan.privacy}" />
+
+                <ImageButton
+                    android:id="@+id/button_plan_unlock"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:background="@drawable/unlock"
+                    android:backgroundTint="@color/matcha_3"
+                    android:onClick="@{() -> viewModel.updatePrivacy(PlanPrivacy.PRIVATE)}"
+                    app:accessType="@{viewModel.accessType}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:unlockBtn="@{viewModel.plan.privacy}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/text_plan_status"
+                style="@style/TextStyle2_matcha_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_padding"
+                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/layout_plan_status"
+                app:layout_constraintTop_toTopOf="parent"
+                app:privacy="@{viewModel.plan.privacy}"
+                tools:text="@string/public_plan" />
+
+            <ImageButton
+                android:id="@+id/button_plan_heart"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:background="@drawable/heart_normal"
+                android:backgroundTint="@color/matcha_3"
+                android:onClick="@{() -> viewModel.setLike(LikeType.LIKE)}"
+                app:accessType="@{viewModel.accessType}"
+                app:heartButton="@{viewModel.plan}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
+                app:layout_constraintTop_toTopOf="parent"
+                app:likeType="@{LikeType.UNLIKE}" />
+
+            <ImageButton
+                android:id="@+id/button_plan_heart_selected"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:background="@drawable/heart_selected"
+                android:backgroundTint="@color/matcha_3"
+                android:onClick="@{() -> viewModel.setLike(LikeType.UNLIKE)}"
+                app:accessType="@{viewModel.accessType}"
+                app:heartButton="@{viewModel.plan}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_plan_comment"
+                app:layout_constraintTop_toTopOf="parent"
+                app:likeType="@{LikeType.LIKE}" />
+
+            <ImageButton
+                android:id="@+id/button_plan_comment"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/comment"
+                android:backgroundTint="@color/matcha_3"
+                android:onClick="@{() -> viewModel.navigateToComment()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/button_plan_star"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:background="@drawable/star_normal"
+                android:backgroundTint="@color/matcha_3"
+                android:onClick="@{() -> viewModel.setFavorite(FavoriteType.COLLECT)}"
+                app:accessType="@{viewModel.accessType}"
+                app:favoriteButton="@{viewModel.plan}"
+                app:favoriteType="@{FavoriteType.REMOVE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/button_plan_star_selected"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:background="@drawable/star_selected"
+                android:backgroundTint="@color/matcha_3"
+                android:onClick="@{() -> viewModel.setFavorite(FavoriteType.REMOVE)}"
+                app:accessType="@{viewModel.accessType}"
+                app:favoriteButton="@{viewModel.plan}"
+                app:favoriteType="@{FavoriteType.COLLECT}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_plan_copy"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/button_plan_copy"
+                android:layout_width="@dimen/plan_img_btn_middle"
+                android:layout_height="@dimen/plan_img_btn_middle"
+                android:layout_marginEnd="@dimen/middle_padding"
+                android:background="@drawable/copy"
+                android:backgroundTint="@color/matcha_3"
+                android:onClick="@{() -> viewModel.navigateToCopyPlan()}"
+                android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

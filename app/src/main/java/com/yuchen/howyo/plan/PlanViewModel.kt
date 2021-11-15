@@ -6,9 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
 
 class PlanViewModel(
     private val howYoRepository: HowYoRepository,
@@ -41,13 +42,16 @@ class PlanViewModel(
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
+    //Comments list for deleting plan
+    var comments = MutableLiveData<List<Comment>>()
+
     var tempSchedules = mutableListOf<Schedule>()
 
-    //Current user data
-    private val _user = MutableLiveData<User>()
+    //Author data
+    private val _author = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val author: LiveData<User>
+        get() = _author
 
     var selectedDayPosition = MutableLiveData<Int>()
 
@@ -81,10 +85,10 @@ class PlanViewModel(
     private val planResult: LiveData<Boolean>
         get() = _planResult
 
-    private val _mainCheckListResult = MutableLiveData<Boolean>()
+    private val _checkShopListResult = MutableLiveData<Boolean>()
 
-    private val mainCheckListResult: LiveData<Boolean>
-        get() = _mainCheckListResult
+    private val checkShopListResult: LiveData<Boolean>
+        get() = _checkShopListResult
 
     private val _checkListResult = MutableLiveData<Boolean>()
 
@@ -141,9 +145,9 @@ class PlanViewModel(
         get() = _navigateToMapMode
 
     // Handle navigation to companion
-    private val _navigateToCompanion = MutableLiveData<User>()
+    private val _navigateToCompanion = MutableLiveData<Boolean>()
 
-    val navigateToCompanion: LiveData<User>
+    val navigateToCompanion: LiveData<Boolean>
         get() = _navigateToCompanion
 
     // Handle navigation to group message
@@ -158,10 +162,16 @@ class PlanViewModel(
     val navigateToLocateCompanion: LiveData<Plan>
         get() = _navigateToLocateCompanion
 
-    // Handle navigation to check or shopping list
-    private val _navigateToCheckOrShoppingList = MutableLiveData<String>()
+    // Handle navigation to comment
+    private val _navigateToComment = MutableLiveData<Plan>()
 
-    val navigateToCheckOrShoppingList: LiveData<String>
+    val navigateToComment: LiveData<Plan>
+        get() = _navigateToComment
+
+    // Handle navigation to check or shopping list
+    private val _navigateToCheckOrShoppingList = MutableLiveData<MainItemType>()
+
+    val navigateToCheckOrShoppingList: LiveData<MainItemType>
         get() = _navigateToCheckOrShoppingList
 
     // Handle navigation to payment
@@ -188,6 +198,18 @@ class PlanViewModel(
     val navigateToEditCover: LiveData<Plan>
         get() = _navigateToEditCover
 
+    // Handle navigation to copy plan
+    private val _navigateToCopyPlan = MutableLiveData<Plan>()
+
+    val navigateToCopyPlan: LiveData<Plan>
+        get() = _navigateToCopyPlan
+
+    // Handle navigation to author profile
+    private val _navigateToAuthorProfile = MutableLiveData<String>()
+
+    val navigateToAuthorProfile: LiveData<String>
+        get() = _navigateToAuthorProfile
+
     // Handle leave plan
     private val _leavePlan = MutableLiveData<Boolean>()
 
@@ -211,33 +233,39 @@ class PlanViewModel(
 
     init {
 
-//        coroutineScope.launch {
-//            withContext(Dispatchers.IO) {
         getLivePlanResult()
-//            }
         getLiveDaysResult()
         setDefaultSelectedDay()
         getLiveSchedulesResult()
-//        }
-
+        getAuthorResult()
+        getLiveCommentsResult()
+//        getCommentsResult()
     }
 
     fun selectDay(position: Int) {
         selectedDayPosition.value = position
     }
 
-    fun getPlanResult() {
+    private fun getAuthorResult() {
 
-        val planId = plan.value?.id
+        val authorId = when (argumentPlan.id.isNotEmpty()) {
+            true -> {
+                argumentPlan.authorId
+            }
+            else -> null
+        }
 
-        coroutineScope.launch {
+        when {
+            authorId?.isNotEmpty() == true -> {
+                coroutineScope.launch {
 
-            _plan.value = when (val result = planId?.let { howYoRepository.getPlan(it) }) {
-                is Result.Success -> {
-                    result.data
-                }
-                else -> {
-                    _plan.value
+                    _author.value =
+                        when (val result = authorId.let { howYoRepository.getUser(it) }) {
+                            is Result.Success -> {
+                                result.data
+                            }
+                            else -> null
+                        }
                 }
             }
         }
@@ -257,6 +285,8 @@ class PlanViewModel(
         val scheduleResult = mutableListOf<Boolean>()
         val scheduleImgResult = mutableListOf<Boolean>()
 
+        val commentResult = mutableListOf<Boolean>()
+
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
 
@@ -264,14 +294,19 @@ class PlanViewModel(
                 days.value?.forEach {
                     daysResult.add(deleteDay(it))
                 }
+
                 allSchedules.value?.forEach { schedule ->
                     scheduleResult.add(deleteSchedule(schedule))
                     schedule.photoFileNameList?.forEach {
                         deletePhoto(it)?.let { result -> scheduleImgResult.add(result) }
                     }
                 }
-                _mainCheckListResult.postValue(deleteMainCheckList(plan.id))
-                _checkListResult.postValue(deleteCheckList(plan.id))
+
+                comments.value?.forEach { comment ->
+                    deleteComment(comment)?.let { commentResult.add(it) }
+                }
+
+                _checkShopListResult.postValue(deleteCheckShopList(plan.id))
                 _planResult.postValue(deletePlan(plan)!!)
                 _photoResult.postValue(deletePhoto(plan.coverFileName))
             }
@@ -279,9 +314,9 @@ class PlanViewModel(
             when {
                 !daysResult.contains(false)
                         && !scheduleResult.contains(false)
+                        && !commentResult.contains(false)
                         && planResult.value == true
-                        && mainCheckListResult.value == true
-                        && checkListResult.value == true
+                        && checkShopListResult.value == true
                         && photoResult.value == true -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
@@ -425,13 +460,11 @@ class PlanViewModel(
         val newPosition = days.value?.maxByOrNull { it.position!! }!!.position?.plus(1)
         val planId = plan.value?.id
 
-        return when (val result = howYoRepository.createDay(newPosition!!, planId!!)) {
+        return when (howYoRepository.createDay(newPosition!!, planId!!)) {
             is Result.Success -> {
-                result.data
+                true
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -441,9 +474,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -453,9 +484,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -465,9 +494,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -477,9 +504,7 @@ class PlanViewModel(
             is Result.Success -> {
                 result.data
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -552,16 +577,8 @@ class PlanViewModel(
                 ?.filter { it.dayId == currentDayId }?.sortedBy { it.position } ?: listOf()
     }
 
-    private suspend fun deleteMainCheckList(planId: String): Boolean =
-        when (val result = howYoRepository.deleteMainCheckList(planId)) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> false
-        }
-
-    private suspend fun deleteCheckList(planId: String): Boolean =
-        when (val result = howYoRepository.deleteCheckList(planId)) {
+    private suspend fun deleteCheckShopList(planId: String): Boolean =
+        when (val result = howYoRepository.deleteCheckShopListWithPlanID(planId)) {
             is Result.Success -> {
                 result.data
             }
@@ -570,6 +587,14 @@ class PlanViewModel(
 
     private suspend fun deletePhoto(fileName: String): Boolean? =
         when (val result = howYoRepository.deletePhoto(fileName)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> null
+        }
+
+    private suspend fun deleteComment(comment: Comment): Boolean? =
+        when (val result = howYoRepository.deleteComment(comment)) {
             is Result.Success -> {
                 result.data
             }
@@ -832,15 +857,24 @@ class PlanViewModel(
         _status.value = LoadApiStatus.LOADING
 
         withContext(Dispatchers.IO) {
+
             tempDays.forEach { tempDay ->
-                days.value?.forEach { day ->
-                    when {
-                        tempDay.position != day.position -> {
-                            daysResult.add(updateDay(tempDay))
-                        }
+                days.value?.forEach { oldDay ->
+                    if (tempDay.id == oldDay.id && tempDay.position != oldDay.position) {
+                        daysResult.add(updateDay(tempDay))
                     }
                 }
             }
+
+//            tempDays.forEach { tempDay ->
+//                .value?.forEach { day ->
+//                    when {
+//                        tempDay.position != day.position -> {
+//                            daysResult.add(updateDay(tempDay))
+//                        }
+//                    }
+//                }
+//            }
         }
 
         _handleDaySuccess.value = !daysResult.contains(false)
@@ -978,10 +1012,9 @@ class PlanViewModel(
         _status.value = LoadApiStatus.LOADING
         withContext(Dispatchers.IO) {
 
-
-            tempSchedules.forEach { tempSchedule ->
-                when (type) {
-                    HandleScheduleType.POSITION -> {
+            when (type) {
+                HandleScheduleType.POSITION -> {
+                    tempSchedules.forEach { tempSchedule ->
                         schedules.value?.forEach { schedule ->
                             when {
                                 tempSchedule.position != schedule.position -> {
@@ -990,17 +1023,44 @@ class PlanViewModel(
                             }
                         }
                     }
-                    HandleScheduleType.TIME -> {
-                        allSchedules.value?.forEach { schedule ->
-                            when {
-                                !(tempSchedule === schedule) -> {
-                                    schedulesResult.add(updateSchedule(tempSchedule))
-                                }
+                }
+                HandleScheduleType.TIME -> {
+
+                    tempSchedules.forEach { tempSchedule ->
+                        allSchedules.value?.forEach { oldSchedule ->
+                            if (tempSchedule.id == oldSchedule.id &&
+                                (tempSchedule.startTime != oldSchedule.startTime ||
+                                        tempSchedule.endTime != oldSchedule.endTime)
+                            ) {
+                                schedulesResult.add(updateSchedule(tempSchedule))
                             }
                         }
                     }
                 }
             }
+
+//            tempSchedules.forEach { tempSchedule ->
+//                when (type) {
+//                    HandleScheduleType.POSITION -> {
+//                        schedules.value?.forEach { schedule ->
+//                            when {
+//                                tempSchedule.position != schedule.position -> {
+//                                    schedulesResult.add(updateSchedule(tempSchedule))
+//                                }
+//                            }
+//                        }
+//                    }
+//                    HandleScheduleType.TIME -> {
+//                        allSchedules.value?.forEach { schedule ->
+//                            when {
+//                                !(tempSchedule === schedule) -> {
+//                                    schedulesResult.add(updateSchedule(tempSchedule))
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
 
         _handleScheduleSuccess.value = !schedulesResult.contains(false)
@@ -1071,6 +1131,24 @@ class PlanViewModel(
         _navigateToEditCover.value = null
     }
 
+    fun navigateToCopyPlan() {
+        _navigateToCopyPlan.value = plan.value
+    }
+
+    fun onCopyPlanNavigated() {
+        _navigateToCopyPlan.value = null
+    }
+
+    fun navigateToAuthorProfile() {
+        if (accessType == AccessPlanType.VIEW) {
+            _navigateToAuthorProfile.value = plan.value?.authorId ?: ""
+        }
+    }
+
+    fun onAuthorProfileNavigated() {
+        _navigateToAuthorProfile.value = null
+    }
+
     fun navigateToMapMode() {
         _navigateToMapMode.value = days.value
     }
@@ -1080,7 +1158,7 @@ class PlanViewModel(
     }
 
     fun navigateToCompanion() {
-        _navigateToCompanion.value = user.value
+        _navigateToCompanion.value = true
     }
 
     fun onCompanionNavigated() {
@@ -1103,8 +1181,16 @@ class PlanViewModel(
         _navigateToLocateCompanion.value = null
     }
 
-    fun navigateToCheckList(listType: String) {
-        _navigateToCheckOrShoppingList.value = listType
+    fun navigateToComment() {
+        _navigateToComment.value = plan.value
+    }
+
+    fun onCommentNavigated() {
+        _navigateToComment.value = null
+    }
+
+    fun navigateToCheckList(mainType: MainItemType) {
+        _navigateToCheckOrShoppingList.value = mainType
     }
 
     fun onCheckLIstNavigated() {
@@ -1130,5 +1216,80 @@ class PlanViewModel(
 
     fun leavePlan() {
         _leavePlan.value = true
+    }
+
+    fun setLike(type: LikeType) {
+
+        val newPlan = plan.value
+        val likeList = newPlan?.likeList?.toMutableList()
+        val currentUserId = UserManager.userId
+
+        when (type) {
+            LikeType.LIKE -> {
+                when {
+                    newPlan?.likeList?.contains(currentUserId) != true -> {
+                        if (currentUserId != null) {
+                            likeList?.add(currentUserId)
+                        }
+                    }
+                }
+            }
+            LikeType.UNLIKE -> {
+                when {
+                    newPlan?.likeList?.contains(currentUserId) == true -> {
+                        if (currentUserId != null) {
+                            likeList?.removeAt(likeList.indexOf(currentUserId))
+                        }
+                    }
+                }
+            }
+        }
+
+        newPlan?.likeList = likeList
+
+        _plan.value = newPlan
+
+        coroutineScope.launch {
+            _plan.value?.let { howYoRepository.updatePlan(it) }
+        }
+    }
+
+    fun setFavorite(type: FavoriteType) {
+        val newPlan = plan.value
+        val planCollectedList = newPlan?.planCollectedList?.toMutableList()
+        val currentUserId = UserManager.userId
+
+        when (type) {
+            FavoriteType.COLLECT -> {
+                when {
+                    newPlan?.planCollectedList?.contains(currentUserId) != true -> {
+                        if (currentUserId != null) {
+                            planCollectedList?.add(currentUserId)
+                        }
+                    }
+                }
+            }
+            FavoriteType.REMOVE -> {
+                when {
+                    newPlan?.planCollectedList?.contains(currentUserId) == true -> {
+                        if (currentUserId != null) {
+                            planCollectedList?.removeAt(planCollectedList.indexOf(currentUserId))
+                        }
+                    }
+                }
+            }
+        }
+
+        newPlan?.planCollectedList = planCollectedList
+
+        _plan.value = newPlan
+
+        coroutineScope.launch {
+            _plan.value?.let { howYoRepository.updatePlan(it) }
+        }
+    }
+
+    private fun getLiveCommentsResult() {
+        comments = argumentPlan.id.let { howYoRepository.getLiveComments(it) }
     }
 }

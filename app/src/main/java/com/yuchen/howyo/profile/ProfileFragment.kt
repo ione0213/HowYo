@@ -12,11 +12,14 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentProfileBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.util.Logger
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    val viewModel by viewModels<ProfileViewModel> { getVmFactory() }
+    val viewModel by viewModels<ProfileViewModel> { getVmFactory(
+        ProfileFragmentArgs.fromBundle(requireArguments()).userId
+    ) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)

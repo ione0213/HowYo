@@ -25,7 +25,9 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 CurrentFragmentType.PAYMENT_DETAIL,
                 CurrentFragmentType.FIND_LOCATION,
                 CurrentFragmentType.FRIENDS,
-                CurrentFragmentType.SETTING -> DrawerToggleType.BACK
+                CurrentFragmentType.SETTING,
+                CurrentFragmentType.COMMENT,
+                CurrentFragmentType.AUTHOR_PROFILE -> DrawerToggleType.BACK
                 else -> DrawerToggleType.NORMAL
             }
         }
@@ -34,6 +36,11 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     val sharedToolbarTitle: LiveData<String>
         get() = _sharedToolbarTitle
+
+    private val _resetToolbar = MutableLiveData<Boolean>()
+
+    val resetToolbar: LiveData<Boolean>
+        get() = _resetToolbar
 
     // Handle navigation to home by bottom nav directly which includes icon change
     private val _navigateToHomeByBottomNav = MutableLiveData<Boolean>()
@@ -60,5 +67,13 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     fun onHomeNavigated() {
         _navigateToHomeByBottomNav.value = null
+    }
+
+    fun resetToolbar() {
+        _resetToolbar.value = true
+    }
+
+    fun onResetToolbar() {
+        _resetToolbar.value = null
     }
 }

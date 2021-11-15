@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentHomeBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.signin.UserManager
+import com.yuchen.howyo.util.Logger
 
 class HomeFragment : Fragment() {
 
@@ -28,17 +32,69 @@ class HomeFragment : Fragment() {
     ): View {
 
 
-
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
 
-        binding.recyclerHomePlans.adapter = HomeAdapter(
+        val adapter = HomeAdapter(
             HomeAdapter.OnClickListener {
                 viewModel.navigateToPlan(it)
+            }, viewModel
+        )
+
+        binding.recyclerHomePlans.adapter = adapter
+
+        binding.layoutSwipeRefreshHome.setOnRefreshListener {
+            viewModel.getPlansResult()
+        }
+        viewModel.refreshStatus.observe(
+            viewLifecycleOwner, {
+                it?.let {
+                    binding.layoutSwipeRefreshHome.isRefreshing = it
+                }
             }
         )
+
+        viewModel.plans.observe(viewLifecycleOwner, {
+            it?.let {
+                viewModel.setAuthorIdSet()
+            }
+        })
+
+        viewModel.authorIds.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.getAuthorData()
+            }
+        }
+
+        viewModel.authorDataList.observe(viewLifecycleOwner) {
+            it?.let {
+                it.forEach { user ->
+                }
+                viewModel.setStatusDone()
+                binding.viewModel = viewModel
+                Logger.i("authorDataListauthorDataList")
+                adapter.addEmptyAndPlan(viewModel.plans.value!!)
+            }
+        }
+
+        viewModel.followingList.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it.isNotEmpty()) {
+                    viewModel.getPlansResult()
+                } else {
+                    viewModel.setStatusDone()
+                    if (!UserManager.isLoggedIn) {
+                        val mainViewModel =
+                            ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+                        mainViewModel.navigateToHomeByBottomNav()
+                    }
+                }
+            }
+
+            if (it.isEmpty()) adapter.addEmptyAndPlan(listOf())
+        })
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {
 

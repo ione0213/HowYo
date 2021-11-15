@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.yuchen.howyo.network.LoadApiStatus" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.favorite.FavoriteViewModel" />
@@ -12,26 +17,37 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
         tools:context=".favorite.FavoriteFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_favorite_plans"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/small_padding"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/small_padding"
             android:layout_marginStart="@dimen/small_padding"
             app:layout_constraintHorizontal_bias="0.0"
-            app:plans="@{viewModel.plans}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
-            app:spanCount="2"
             tools:itemCount="10"
             tools:listitem="@layout/item_plans_favorite" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/uploading"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

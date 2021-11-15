@@ -1,6 +1,7 @@
 package com.yuchen.howyo.data
 
 import com.google.firebase.firestore.PropertyName
+import java.util.*
 
 data class Notification(
     val id: String? = null,
@@ -9,6 +10,6 @@ data class Notification(
     @get:PropertyName("notification_type") val notificationType: String? = null,
     @get:PropertyName("plan_id") val planId: String? = null,
     val read: Boolean? = null,
-    @get:PropertyName("created_time") val createdTime: Long? = 0L,
+    @get:PropertyName("created_time") val createdTime: Long? = Calendar.getInstance().timeInMillis,
     @get:PropertyName("plan_cover_url") val planCoverUrl: String? = ""
 )

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.yuchen.howyo.profile.author.FollowType" />
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.profile.author.AuthorProfileViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".profile.author.AuthorProfileFragment">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_author_profile_avatar"
+            android:layout_width="@dimen/profile_avatar"
+            android:layout_height="@dimen/profile_avatar"
+            android:layout_marginStart="@dimen/standard_padding"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{viewModel.author.avatar}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circle"
+            tools:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/text_author_profile_following"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:onClick="@{() -> viewModel.navigateToFriend()}"
+            android:text="@{String.format(@string/profile_following, 0)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/text_author_profile_fans"
+            app:layout_constraintTop_toTopOf="@+id/text_author_profile_plans"
+            tools:text="@string/profile_following" />
+
+        <TextView
+            android:id="@+id/text_author_profile_fans"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.navigateToFriend()}"
+            android:text="@{String.format(@string/profile_fans, 0)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/text_author_profile_following"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/text_author_profile_plans"
+            app:layout_constraintTop_toTopOf="@+id/text_author_profile_plans"
+            tools:text="@string/profile_fans" />
+
+        <TextView
+            android:id="@+id/text_author_profile_plans"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:text="@{String.format(@string/profile_plans, viewModel.plans.size)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/text_author_profile_fans"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/img_author_profile_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/profile_plans" />
+
+        <TextView
+            android:id="@+id/text_author_profile_user_name"
+            style="@style/TextStyle2_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/profile_text_width_small"
+            android:singleLine="true"
+            android:text="@{viewModel.author.id}"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/img_author_profile_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/img_author_profile_avatar"
+            tools:text="traveller" />
+
+        <TextView
+            android:id="@+id/text_author_profile_information"
+            style="@style/TextStyle3_black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="@{viewModel.author.introduction}"
+            android:textAlignment="viewStart"
+            android:textStyle="bold"
+            android:visibility="@{viewModel.author.introduction == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/text_author_profile_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_author_profile_user_name"
+            tools:text="traveller" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_author_profile_follow"
+            android:layout_width="0dp"
+            android:background="@drawable/follow_corner_selected"
+            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:layout_marginBottom="@dimen/middle_padding"
+            android:gravity="center"
+            style="@style/TextStyle3_white"
+            android:text="@string/author_profile_follow"
+            android:textAllCaps="false"
+            android:onClick="@{() -> viewModel.setFollow(FollowType.FOLLOW)}"
+            app:followButton="@{viewModel.author}"
+            app:followType="@{FollowType.UNFOLLOW}"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="@+id/text_author_profile_user_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_goneMarginTop="16dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_author_profile_unfollow"
+            android:background="@drawable/follow_corner_normal"
+            android:layout_width="0dp"
+            style="@style/TextStyle3_black"
+            android:text="@string/author_profile_following"
+            android:onClick="@{() -> viewModel.setFollow(FollowType.UNFOLLOW)}"
+            android:layout_height="@dimen/plan_img_btn_small"
+            app:followButton="@{viewModel.author}"
+            app:followType="@{FollowType.FOLLOW}"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:layout_marginBottom="@dimen/middle_padding"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="@+id/text_author_profile_user_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_goneMarginTop="16dp" />
+
+        <View
+            android:id="@+id/view_author_profile_separation"
+            style="@style/SeparationHorizontal"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_author_profile_information"
+            app:layout_goneMarginTop="@dimen/small_padding" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_author_profile_plans"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_author_profile_separation"
+            app:layout_constraintVertical_bias="1.0"
+            app:plans="@{viewModel.plans}"
+            app:spanCount="3"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_plans_profile" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

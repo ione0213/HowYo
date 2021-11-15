@@ -2,28 +2,25 @@ package com.yuchen.howyo.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.yuchen.howyo.data.Plan
-import com.yuchen.howyo.data.SchedulePhoto
-import com.yuchen.howyo.data.SchedulePhotos
 import com.yuchen.howyo.data.source.HowYoRepository
-import com.yuchen.howyo.plan.AccessPlanType
-import com.yuchen.howyo.plan.PlanViewModel
-import com.yuchen.howyo.plan.companion.locate.LocateViewModel
-import com.yuchen.howyo.plan.detail.edit.image.DetailEditImageViewModel
 import com.yuchen.howyo.plan.detail.view.image.DetailViewImageViewModel
-import com.yuchen.howyo.plan.groupmessage.GroupMessageViewModel
-import com.yuchen.howyo.plan.payment.PaymentViewModel
+import com.yuchen.howyo.profile.ProfileViewModel
+import com.yuchen.howyo.profile.author.AuthorProfileViewModel
 
-class DetailViewImageViewModelFactory(
+class StringViewModelFactory(
     private val howYoRepository: HowYoRepository,
-    private val imageUrl: String
+    private val stringData: String
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {
                 isAssignableFrom(DetailViewImageViewModel::class.java) ->
-                    DetailViewImageViewModel(howYoRepository, imageUrl)
+                    DetailViewImageViewModel(howYoRepository, stringData)
+                isAssignableFrom(ProfileViewModel::class.java) ->
+                    ProfileViewModel(howYoRepository, stringData)
+                isAssignableFrom(AuthorProfileViewModel::class.java) ->
+                    AuthorProfileViewModel(howYoRepository, stringData)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

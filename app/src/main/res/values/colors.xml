@@ -26,7 +26,19 @@
     <color name="translucent_40">#66000000</color>
     <color name="translucent_80">#cc000000</color>
 
+    <!-- Matcha Sweets-->
+    <color name="matcha_1">#94A540</color>
+    <color name="matcha_2">#C0C67A</color>
+    <color name="matcha_3">#7A8446</color>
+    <color name="matcha_4">#B2B285</color>
+    <color name="matcha_5">#AFBEA9</color>
+    <color name="matcha_6">#EDDFB2</color>
+    <color name="matcha_7">#A98546</color>
+    <color name="matcha_8">#6F4A2A</color>
+    <color name="matcha_9">#404A4A</color>
+
+
     <!-- Bottom Navigation -->
-    <color name="bottom_navigation_item_normal">@color/gray</color>
-    <color name="bottom_navigation_item_selected">@color/gray_black</color>
+    <color name="bottom_navigation_item_normal">@color/matcha_5</color>
+    <color name="bottom_navigation_item_selected">@color/matcha_6</color>
 </resources>

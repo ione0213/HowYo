@@ -43,7 +43,8 @@ class SignInFragment : Fragment() {
         viewModel.createUserResult.observe(viewLifecycleOwner, {
             it?.let {
                 when {
-                    it -> {
+                    it.isNotEmpty() -> {
+                        viewModel.setUser()
                         when (UserManager.isLoggedIn) {
                             true -> {
                                 findNavController().navigate(NavigationDirections.navToHomeFragment())
@@ -72,7 +73,6 @@ class SignInFragment : Fragment() {
                 .setAvailableProviders(providers)
                 .setIsSmartLockEnabled(false)
                 .setTheme(R.style.LoginTheme)
-//                .setLogo(R.drawable.ic_placeholder)
                 .build(),
             RC_SIGN_IN
         )
@@ -94,7 +94,7 @@ class SignInFragment : Fragment() {
                             avatar = currentUser.photoUrl.toString()
                         )
 
-                        viewModel.setUser(user)
+                        viewModel.createUser(user)
                     }
                 }
             } else {
@@ -110,10 +110,13 @@ class SignInFragment : Fragment() {
                         Toast.LENGTH_LONG
                     )
                         .show()
-                    Log.d("ERRORCODE", response.error?.errorCode.toString())
                     return
                 }
+
+                activity?.finish()
             }
+        } else {
+            activity?.finish()
         }
     }
 }

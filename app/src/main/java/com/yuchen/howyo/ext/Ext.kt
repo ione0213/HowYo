@@ -3,7 +3,9 @@ package com.yuchen.howyo.ext
 import android.graphics.Rect
 import android.view.TouchDelegate
 import android.view.View
+import com.yuchen.howyo.util.Logger
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Increase touch area of the view/button .
@@ -44,6 +46,29 @@ fun Long.toHour(): Int {
     return SimpleDateFormat("HH").format(this).toInt()
 }
 
+fun Long.toHourString(): String = "${(this / 1000 / 60 / 60)}"
+
+fun Long.toMinuteString(): String = "${(this / 1000 / 60 % 60)}"
+
 fun Long.toMinute(): Int {
     return SimpleDateFormat("mm").format(this).toInt()
+}
+
+fun Long.displayTime(): String {
+    val sec = (Calendar.getInstance().timeInMillis - this) / 1000
+    return when {
+        sec < 60 -> sec.toString() + "秒前"
+
+        sec < 3600 -> (sec / 60).toString() + "分鐘前"
+
+        sec < 86400 -> (sec / 3600).toString() + "小時前"
+
+        sec < 604800 -> (sec / 86400).toString() + "天前"
+
+        sec < 2592000 -> (sec / 604800).toString() + "周前"
+
+        sec < 31536000 -> (sec / 2592000).toString() + "月前"
+
+        else -> (sec / 31536000).toString() + "年前"
+    }
 }

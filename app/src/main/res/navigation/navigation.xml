@@ -34,7 +34,20 @@
         android:id="@+id/profileFragment"
         android:name="com.yuchen.howyo.profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/authorProfileFragment"
+        android:name="com.yuchen.howyo.profile.author.AuthorProfileFragment"
+        android:label="AuthorProfileFragment"
+        tools:layout="@layout/fragment_author_profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/friendsFragment"
         android:name="com.yuchen.howyo.profile.friends.FriendsFragment"
@@ -67,6 +80,14 @@
             android:name="schedule"
             app:argType="com.yuchen.howyo.data.Schedule"
             app:nullable="false" />
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan"
+            app:nullable="false" />
+        <argument
+            android:name="day"
+            app:argType="com.yuchen.howyo.data.Day"
+            app:nullable="false" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -77,6 +98,15 @@
             android:name="schedule"
             app:argType="com.yuchen.howyo.data.Schedule"
             app:nullable="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="com.yuchen.howyo.plan.comment.CommentFragment"
+        android:label="CommentFragment"
+        tools:layout="@layout/fragment_comment">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
     </fragment>
     <fragment
         android:id="@+id/detailEditFragment"
@@ -149,7 +179,7 @@
             app:argType="string" />
         <argument
             android:name="mainType"
-            app:argType="string" />
+            app:argType="com.yuchen.howyo.plan.checkorshoppinglist.MainItemType" />
     </fragment>
     <fragment
         android:id="@+id/paymentFragment"
@@ -194,6 +224,15 @@
         <!--            android:name="plan"-->
         <!--            app:argType="com.yuchen.howyo.data.Plan" />-->
     </fragment>
+    <fragment
+        android:id="@+id/companionFragment"
+        android:name="com.yuchen.howyo.plan.companion.CompanionFragment"
+        android:label="CompanionFragment"
+        tools:layout="@layout/fragment_companion">
+        <argument
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
+    </fragment>
     <dialog
         android:id="@+id/planCoverDialog"
         android:name="com.yuchen.howyo.plan.cover.PlanCoverDialog"
@@ -206,16 +245,13 @@
             app:nullable="true" />
     </dialog>
     <dialog
-        android:id="@+id/companionDialog"
-        android:name="com.yuchen.howyo.plan.companion.CompanionDialog"
-        android:label="CompanionDialog"
-        tools:layout="@layout/dialog_companion">
+        android:id="@+id/copyPlanDialog"
+        android:name="com.yuchen.howyo.copyplan.CopyPlanDialog"
+        android:label="CopyPlanDialog"
+        tools:layout="@layout/dialog_copy_plan">
         <argument
-            android:name="user"
-            app:argType="com.yuchen.howyo.data.User" />
-        <!--        <argument-->
-        <!--            android:name="plan"-->
-        <!--            app:argType="com.yuchen.howyo.data.Plan" />-->
+            android:name="plan"
+            app:argType="com.yuchen.howyo.data.Plan" />
     </dialog>
 
     <action
@@ -247,6 +283,9 @@
         app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
     <action
+        android:id="@+id/nav_to_author_profile_fragment"
+        app:destination="@id/authorProfileFragment" />
+    <action
         android:id="@+id/nav_to_friends_fragment"
         app:destination="@id/friendsFragment" />
     <action
@@ -256,7 +295,7 @@
         android:id="@+id/nav_to_plan_fragment"
         app:destination="@id/planFragment"
         app:popUpTo="@navigation/navigation"
-        app:popUpToInclusive="false" />
+        app:popUpToInclusive="true" />
     <action
         android:id="@+id/nav_to_detail_fragment"
         app:destination="@id/detailFragment" />
@@ -266,6 +305,9 @@
     <action
         android:id="@+id/nav_to_map_fragment"
         app:destination="@id/mapFragment" />
+    <action
+        android:id="@+id/nav_to_comment"
+        app:destination="@id/commentFragment" />
     <action
         android:id="@+id/nav_to_detail_edit_fragment"
         app:destination="@+id/detailEditFragment" />
@@ -294,9 +336,13 @@
         android:id="@+id/nav_to_plan_cover_dialog"
         app:destination="@id/planCoverDialog"
         app:popUpTo="@navigation/navigation"
-        app:popUpToInclusive="true"/>
+        app:popUpToInclusive="true" />
     <action
-        android:id="@+id/nav_to_companion_dialog"
-        app:destination="@id/companionDialog" />
-
+        android:id="@+id/nav_to_companion_fragment"
+        app:destination="@id/companionFragment"
+        app:enterAnim="@anim/anim_slide_up"
+        app:popExitAnim="@anim/anim_slide_down" />
+    <action
+        android:id="@+id/nav_to_copy_plan_dialog"
+        app:destination="@id/copyPlanDialog" />
 </navigation>

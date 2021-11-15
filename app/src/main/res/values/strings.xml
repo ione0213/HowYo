@@ -16,18 +16,26 @@
     <string name="new_item">新增項目</string>
     <string name="payment">款項清單</string>
     <string name="add_payment">新增款項</string>
-    <string name="delete_payment">刪除款項</string>
+    <string name="delete">刪除</string>
     <string name="payment_detail">款項資訊</string>
     <string name="find_location">尋找景點</string>
     <string name="setting">設定</string>
+    <string name="comment">評論</string>
     <string name="save_setting">儲存</string>
+    <string name="rest_check_item">重置</string>
     <string name="save_uploading">建立中</string>
     <string name="select_capture_image">Please select or capture image</string>
     <string name="file_provider_name" translatable="false">.fileProvider</string>
     <string name="confirm">確定</string>
     <string name="cancel">取消</string>
 
+    <!-- Home-->
+    <string name="empty_home">好友目前沒有公開行程唷！</string>
+
     <!-- Plan-->
+    <string name="plan_new">新增行程</string>
+    <string name="plan_edit">編輯行程</string>
+    <string name="plan_copy">複製行程</string>
     <string name="default_cover">android.resource://com.yuchen.howyo/drawable/sample_cover</string>
     <string name="plan_public">public</string>
     <string name="plan_private">private</string>
@@ -49,7 +57,8 @@
     <string name="traffic">交通</string>
     <string name="hotel">住宿</string>
     <string name="place">景點</string>
-    <string name="insert_keywords">Insert keywords</string>
+    <string name="food">美食</string>
+    <string name="search">搜尋</string>
     <string name="day">第%d天\n%S</string>
     <string name="confirm_delete_plan">您確定要移除 %s 嗎？</string>
     <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
@@ -60,7 +69,7 @@
     <string name="private_plan">私人旅遊計畫</string>
     <string name="set_private">隱藏</string>
     <string name="confirm_update_privacy">您確定要 %s 行程嗎？</string>
-
+    <string name="schedule_time_duration">%s 時 %s 分</string>
 
     <!-- Payment-->
     <string name="payment_item">品項名稱</string>
@@ -74,6 +83,11 @@
     <string name="profile_modify_avatar">更換大頭貼</string>
     <string name="profile_modify_id">ID</string>
     <string name="profile_modify_info">個人簡介</string>
+    <string name="profile_group_plan">旅遊群組</string>
+
+    <!-- Author Profile-->
+    <string name="author_profile_follow">追蹤</string>
+    <string name="author_profile_following">追蹤中</string>
 
     <!-- Notification-->
     <string name="notification_like_msg">說你的行程讚</string>
@@ -82,24 +96,86 @@
     <string name="notification_follow_type">follow</string>
 
     <!-- Group Msg-->
-    <string name="type_message_here">Type message here</string>
+    <string name="type_message_here">輸入訊息</string>
+
+    <!-- Favorite-->
+    <string name="empty_favorite">目前沒有收藏行程唷！</string>
 
     <!-- Default subtype for check list-->
     <string name="check">check</string>
     <string name="shopping">shopping</string>
-    <string-array name="main_list">
-        <item>check</item>
-        <item>shopping</item>
-    </string-array>
+    <string name="necessary">necessary</string>
+    <string name="necessary_title">必要物品</string>
+    <string name="clothe">clothe</string>
+    <string name="clothe_title">衣物</string>
+    <string name="wash">wash</string>
+    <string name="wash_title">盥洗用品</string>
+    <string name="electronic">electronic</string>
+    <string name="electronic_title">3C</string>
+    <string name="health">health</string>
+    <string name="health_title">健康</string>
+    <string name="other">other</string>
+    <string name="other_title">其他</string>
+    <string name="confirm_reset_check_list">您確定要重置嗎？</string>
+
+
     <string-array name="check_list">
         <item>necessary</item>
         <item>clothe</item>
         <item>wash</item>
-        <item>3C</item>
+        <item>electronic</item>
         <item>health</item>
         <item>other</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="necessary_list">
+        <item>護照</item>
+        <item>簽證</item>
+        <item>登機證</item>
+        <item>駕照</item>
+        <item>旅平險</item>
+        <item>外幣</item>
+    </string-array>
+
+    <string-array name="clothe_list">
+        <item>內衣</item>
+        <item>上衣</item>
+        <item>睡衣</item>
+        <item>褲子</item>
+        <item>拖鞋</item>
+        <item>外套</item>
+    </string-array>
+
+    <string-array name="wash_list">
+        <item>牙刷</item>
+        <item>牙膏</item>
+        <item>毛巾</item>
+        <item>化妝品</item>
+        <item>乳液</item>
+        <item>隱形眼鏡</item>
+    </string-array>
+
+    <string-array name="electronic_list">
+        <item>手機</item>
+        <item>SIM卡</item>
+        <item>行動電源</item>
+        <item>相機</item>
+        <item>充電器</item>
+        <item>插座轉接頭</item>
+    </string-array>
+
+    <string-array name="health_list">
+        <item>藥物</item>
+        <item>維他命</item>
+        <item>急救用品</item>
+    </string-array>
+
+    <string-array name="other_list">
+        <item>雨傘</item>
+        <item>水壺</item>
+        <item>餐具</item>
+        <item>太陽眼鏡</item>
+        <item>防曬乳</item>
+    </string-array>
 
 </resources>

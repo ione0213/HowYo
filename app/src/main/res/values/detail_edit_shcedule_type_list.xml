@@ -5,5 +5,6 @@
         <item>@string/traffic</item>
         <item>@string/hotel</item>
         <item>@string/place</item>
+        <item>@string/food</item>
     </string-array>
 </resources>

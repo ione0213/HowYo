@@ -65,7 +65,11 @@ class MainActivity : BaseActivity() {
                 }
                 R.id.navigation_profile -> {
 
-                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navToProfileFragment())
+                    findNavController(R.id.myNavHostFragment).navigate(
+                        NavigationDirections.navToProfileFragment(
+                            UserManager.userId!!
+                        )
+                    )
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -84,6 +88,7 @@ class MainActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_HowYo)
         super.onCreate(savedInstanceState)
         mContext = this
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -101,8 +106,8 @@ class MainActivity : BaseActivity() {
         )
 
         viewModel.currentFragmentType.observe(this, {
-            Logger.i("isLoggedIn:${isLoggedIn}")
             it?.let {
+                Logger.i("currentFragmentType:${it}")
                 when {
                     it != CurrentFragmentType.SIGNIN && !isLoggedIn
                     -> {
@@ -112,11 +117,23 @@ class MainActivity : BaseActivity() {
             }
         })
 
+        viewModel.resetToolbar.observe(this, {
+            it?.let {
+
+                if (it) {
+                    setupToolbar()
+                    setupDrawer()
+                    setupNavController()
+                    viewModel.onResetToolbar()
+                }
+            }
+        })
+
         setupToolbar()
         setupBottomNav()
         setupDrawer()
         setupNavController()
-        getLocationPermission()
+        if (isLoggedIn) getLocationPermission()
     }
 
     private fun setupBottomNav() {
@@ -130,6 +147,7 @@ class MainActivity : BaseActivity() {
                 R.id.discoverFragment -> CurrentFragmentType.DISCOVER
                 R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
                 R.id.profileFragment -> CurrentFragmentType.PROFILE
+                R.id.authorProfileFragment -> CurrentFragmentType.AUTHOR_PROFILE
                 R.id.notificationFragment -> CurrentFragmentType.NOTIFICATION
                 R.id.planFragment -> CurrentFragmentType.PLAN
                 R.id.groupMessageFragment -> CurrentFragmentType.GROUP_MESSAGE
@@ -140,6 +158,7 @@ class MainActivity : BaseActivity() {
                 R.id.friendsFragment -> CurrentFragmentType.FRIENDS
                 R.id.settingFragment -> CurrentFragmentType.SETTING
                 R.id.signInFragment -> CurrentFragmentType.SIGNIN
+                R.id.commentFragment -> CurrentFragmentType.COMMENT
                 else -> viewModel.currentFragmentType.value
             }
         }
@@ -220,7 +239,9 @@ class MainActivity : BaseActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(!type.indicatorEnabled)
 
                 when (type) {
-                    DrawerToggleType.BACK -> binding.toolbar.setNavigationIcon(R.drawable.toolbar_back)
+                    DrawerToggleType.BACK -> {
+                        binding.toolbar.setNavigationIcon(R.drawable.toolbar_back)
+                    }
                     else -> {
 
                     }
@@ -240,6 +261,7 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
 
         viewModel.resetSharedToolbarTitle()
+        viewModel.resetToolbar()
         super.onBackPressed()
     }
 

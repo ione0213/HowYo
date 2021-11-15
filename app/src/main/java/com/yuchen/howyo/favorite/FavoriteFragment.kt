@@ -13,6 +13,10 @@ import com.yuchen.howyo.databinding.FragmentFavoriteBinding
 import com.yuchen.howyo.discover.DiscoverViewModel
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.util.Logger
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+
 
 class FavoriteFragment : Fragment() {
 
@@ -29,11 +33,46 @@ class FavoriteFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.recyclerFavoritePlans.adapter = FavoriteAdapter(
+        val adapter = FavoriteAdapter(
             FavoriteAdapter.OnClickListener {
                 viewModel.navigateToPlan(it)
-            }
+            },
+            viewModel
         )
+
+        binding.recyclerFavoritePlans.adapter = adapter
+
+        viewModel.plans.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.setAuthorIdSet()
+            }
+        }
+
+        viewModel.authorIds.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.getAuthorData()
+            }
+        }
+
+        viewModel.authorDataList.observe(viewLifecycleOwner) {
+            it?.let {
+
+                val gridLayoutManager = GridLayoutManager(context, 2)
+                gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (viewModel.plans.value?.size) {
+                            0 -> 2
+                            else -> 1
+                        }
+                    }
+                }
+                binding.recyclerFavoritePlans.layoutManager = gridLayoutManager
+
+                viewModel.setStatusDone()
+                binding.viewModel = viewModel
+                adapter.addEmptyAndPlan(viewModel.plans.value!!)
+            }
+        }
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {
             it?.let {
@@ -41,7 +80,8 @@ class FavoriteFragment : Fragment() {
                     NavigationDirections.navToPlanFragment(
                         it,
                         AccessPlanType.VIEW
-                    ))
+                    )
+                )
                 viewModel.onPlanNavigated()
             }
         })

@@ -15,19 +15,19 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/plan_img_btn"
-        android:layout_height="@dimen/plan_img_btn">
+        android:layout_width="@dimen/plan_img_btn_bigger"
+        android:layout_height="@dimen/plan_img_btn_bigger">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_plan_day_plus"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
+            android:layout_width="@dimen/plan_img_btn"
+            android:layout_height="@dimen/plan_img_btn"
             android:layout_marginStart="@dimen/middle_padding"
             android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginTop="@dimen/middle_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/plus"
-            android:backgroundTint="@color/gray_black"
+            android:backgroundTint="@color/matcha_3"
             android:onClick="@{() -> viewModel.addNewDay()}"
             android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"

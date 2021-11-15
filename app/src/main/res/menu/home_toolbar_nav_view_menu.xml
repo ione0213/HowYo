@@ -3,31 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/notification"
-        android:icon="@drawable/bell"
+        android:icon="@drawable/custom_bell"
         android:title="@string/notification"
         android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/plus"
-        android:icon="@drawable/plus"
+        android:icon="@drawable/custom_plus"
         android:title="@string/add_payment"
         android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/setting"
-        android:icon="@drawable/setting"
+        android:icon="@drawable/custom_setting"
         android:title="@string/setting"
         android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/save"
-        android:title="@string/save_setting"
         android:visible="false"
+        android:icon="@drawable/custom_save"
         app:showAsAction="always|withText" />
     <item
         android:id="@+id/delete"
-        android:icon="@drawable/delete"
+        android:icon="@drawable/custom_delete"
         android:visible="false"
-        android:title="@string/delete_payment"
+        android:title="@string/delete"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/nothing"
+        android:icon="@drawable/nothing"
+        android:visible="false"
+        android:title=""
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/resetCheckItem"
+        android:icon="@drawable/custom_reset"
+        android:visible="false"
         app:showAsAction="always|withText" />
 </menu>

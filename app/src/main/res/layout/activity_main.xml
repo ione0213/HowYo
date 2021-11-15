@@ -29,7 +29,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_toolbar"
-                android:background="@color/white"
+                android:background="@color/matcha_5"
                 android:elevation="@dimen/elevation_all"
                 app:currentFragmentTypeForToolbar="@{viewModel.currentFragmentType}"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -40,21 +40,25 @@
                     android:id="@+id/text_toolbar_title"
                     android:layout_width="wrap_content"
                     android:maxWidth="@dimen/profile_text_width_big"
+                    style="@style/TextStyle1_matcha6"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:fontFamily="@font/noto_sans"
-                    android:letterSpacing="0.15"
                     app:currentFragmentTypeForText="@{viewModel.currentFragmentType}"
                     app:sharedFragmentTitle="@{viewModel.sharedToolbarTitle}"
-                    android:textColor="@color/gray_black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:layout_editor_absoluteX="177dp"
-                    tools:layout_editor_absoluteY="18dp"
-                    tools:text="Stylish"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.HOME ? View.GONE : View.VISIBLE}"
+                    tools:text="HowYo"
                     tools:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/image_toolbar_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/logo_howyo_s"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.HOME ? View.VISIBLE : View.GONE}"
+                    tools:visibility="gone" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -73,8 +77,8 @@
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavView"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:background="@color/white"
+                android:layout_height="60dp"
+                android:background="@color/gray_f5f5f5"
                 android:elevation="@dimen/elevation_all"
                 app:itemIconSize="@dimen/size_bottom_nav_icon"
                 app:currentFragmentType="@{viewModel.currentFragmentType}"

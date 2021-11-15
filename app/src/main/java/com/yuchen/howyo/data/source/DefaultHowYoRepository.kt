@@ -4,20 +4,29 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
 class DefaultHowYoRepository(
     private val remoteDataSource: HowYoRemoteDataSource
 ) : HowYoRepository {
-    override suspend fun createUser(user: User): Result<Boolean> {
+    override suspend fun signOut() {
+        remoteDataSource.signOut()
+    }
+
+    override suspend fun createUser(user: User): Result<String> {
         return remoteDataSource.createUser(user)
     }
 
-    override suspend fun getUser(email: String): Result<User> {
-        return remoteDataSource.getUser(email)
+    override suspend fun getUser(userId: String): Result<User> {
+        return remoteDataSource.getUser(userId)
     }
 
-    override fun getLiveUser(email: String): MutableLiveData<User> {
-        return remoteDataSource.getLiveUser(email)
+    override fun getLiveUser(userId: String): MutableLiveData<User> {
+        return remoteDataSource.getLiveUser(userId)
+    }
+
+    override suspend fun updateUser(user: User): Result<Boolean> {
+        return remoteDataSource.updateUser(user)
     }
 
     override suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String> {
@@ -40,8 +49,32 @@ class DefaultHowYoRepository(
         return remoteDataSource.getLivePlan(planId)
     }
 
+    override suspend fun getPlans(authorList: List<String>): Result<List<Plan>> {
+        return remoteDataSource.getPlans(authorList)
+    }
+
+    override suspend fun getAllPlans(): Result<List<Plan>> {
+        return remoteDataSource.getAllPlans()
+    }
+
+    override suspend fun getAllPublicPlans(): Result<List<Plan>> {
+        return remoteDataSource.getAllPublicPlans()
+    }
+
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
         return remoteDataSource.getLivePlans(authorList)
+    }
+
+    override fun getAllLivePublicPlans(): MutableLiveData<List<Plan>> {
+        return remoteDataSource.getAllLivePublicPlans()
+    }
+
+    override fun getLivePublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+        return remoteDataSource.getLivePublicPlans(authorList)
+    }
+
+    override fun getLiveCollectedPublicPlans(authorList: List<String>): MutableLiveData<List<Plan>> {
+        return remoteDataSource.getLiveCollectedPublicPlans(authorList)
     }
 
     override suspend fun updatePlan(plan: Plan): Result<Boolean> {
@@ -52,7 +85,7 @@ class DefaultHowYoRepository(
         return remoteDataSource.deletePlan(plan)
     }
 
-    override suspend fun createDay(position: Int, planId: String): Result<Boolean> {
+    override suspend fun createDay(position: Int, planId: String): Result<Day> {
         return remoteDataSource.createDay(position, planId)
     }
 
@@ -92,19 +125,42 @@ class DefaultHowYoRepository(
         return remoteDataSource.getSchedules(planId)
     }
 
-    override suspend fun createMainCheckList(
+    override suspend fun createCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
+        return remoteDataSource.createCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
+        return remoteDataSource.updateCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun deleteCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
+        return remoteDataSource.deleteCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun deleteCheckShopListWithPlanID(planId: String): Result<Boolean> {
+        return remoteDataSource.deleteCheckShopListWithPlanID(planId)
+    }
+
+    override fun getLiveCheckShopList(
         planId: String,
-        mainType: String,
-        subtype: String?
-    ): Result<Boolean> {
-        return remoteDataSource.createMainCheckList(planId, mainType, subtype)
+        mainType: MainItemType
+    ): MutableLiveData<List<CheckShoppingList>> {
+        return remoteDataSource.getLiveCheckShopList(planId, mainType)
     }
 
-    override suspend fun deleteMainCheckList(planId: String): Result<Boolean> {
-        return remoteDataSource.deleteMainCheckList(planId)
+    override suspend fun createComment(comment: Comment): Result<Boolean> {
+        return remoteDataSource.createComment(comment)
     }
 
-    override suspend fun deleteCheckList(planId: String): Result<Boolean> {
-        return remoteDataSource.deleteCheckList(planId)
+    override suspend fun deleteComment(comment: Comment): Result<Boolean> {
+        return remoteDataSource.deleteComment(comment)
+    }
+
+    override suspend fun getComments(planId: String): Result<List<Comment>> {
+        return remoteDataSource.getComments(planId)
+    }
+
+    override fun getLiveComments(planId: String): MutableLiveData<List<Comment>> {
+        return remoteDataSource.getLiveComments(planId)
     }
 }

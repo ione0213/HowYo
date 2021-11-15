@@ -2,10 +2,8 @@ package com.yuchen.howyo.signin
 
 import android.content.Context
 import com.yuchen.howyo.HowYoApplication
+import com.yuchen.howyo.util.Logger
 
-/**
- * Created by Wayne Chen in Jul. 2019｀.
- */
 object UserManager {
 
     private const val USER_DATA = "user_data"
@@ -63,5 +61,6 @@ object UserManager {
 
     fun clear() {
         currentUserEmail = null
+        userId = null
     }
 }

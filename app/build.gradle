@@ -5,6 +5,7 @@ plugins {
     id 'androidx.navigation.safeargs'
     id 'com.google.gms.google-services'
     id 'kotlin-parcelize'
+    id 'com.google.firebase.crashlytics'
 
 }
 
@@ -15,8 +16,8 @@ android {
         applicationId "com.yuchen.howyo"
         minSdk 26
         targetSdk 30
-        versionCode 2
-        versionName "1.1"
+        versionCode 4
+        versionName "1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -104,6 +105,10 @@ dependencies {
 
     // Firebase Auth UI
     implementation "com.firebaseui:firebase-ui-auth:$version_firebase_auth_ui"
+
+    //Firebase Crashlytics
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //Google Map
     implementation "com.google.android.gms:play-services-maps:$varsion_map_service"

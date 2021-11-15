@@ -1,25 +1,28 @@
 package com.yuchen.howyo.plan
 
+import android.graphics.*
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.yuchen.howyo.MainViewModel
-import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.databinding.FragmentPlanBinding
-import com.yuchen.howyo.ext.getVmFactory
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
+import com.yuchen.howyo.MainViewModel
+import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
+import com.yuchen.howyo.databinding.FragmentPlanBinding
+import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.util.Util.getColor
 import kotlinx.coroutines.launch
 
 
@@ -153,6 +156,11 @@ class PlanFragment : Fragment() {
         ItemTouchHelper(simpleItemTouchCallback)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -183,6 +191,25 @@ class PlanFragment : Fragment() {
         val grayColorFilter = ColorMatrixColorFilter(cm)
         binding.imgPlanCover.colorFilter = grayColorFilter
 
+        setToolbar()
+
+        var isShow = true
+        var scrollRange = -1
+        binding.appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { barLayout, verticalOffset ->
+            if (scrollRange == -1) {
+                scrollRange = barLayout?.totalScrollRange!!
+            }
+            if (scrollRange + verticalOffset == 0) {
+                binding.collapsingToolbar.setCollapsedTitleTextColor(getColor(R.color.matcha_6))
+                binding.collapsingToolbar.title = viewModel.plan.value?.title
+                isShow = true
+            } else if (isShow) {
+                binding.collapsingToolbar.title = " "
+                isShow = false
+            }
+        })
+
+
         viewModel.selectedDayPosition.observe(viewLifecycleOwner, {
             it?.let {
                 viewModel.filterSchedule()
@@ -209,7 +236,7 @@ class PlanFragment : Fragment() {
             it?.let { day ->
                 context?.let { context ->
                     AlertDialog.Builder(context)
-                        .setMessage(getString(R.string.confirm_delete_day, day.position?.plus(1)))
+                        .setMessage(getString(R.string.confirm_delete_day, day.position.plus(1)))
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                             viewModel.delExistDay(day)
                         }
@@ -273,6 +300,7 @@ class PlanFragment : Fragment() {
                 when {
                     it -> {
                         mainViewModel.navigateToHomeByBottomNav()
+                        resetToolbar()
                         viewModel.onNavigatedHome()
                     }
                 }
@@ -327,7 +355,13 @@ class PlanFragment : Fragment() {
             it?.let {
                 findNavController().navigate(
                     when (viewModel.accessType) {
-                        AccessPlanType.VIEW -> NavigationDirections.navToDetailFragment(it)
+                        AccessPlanType.VIEW -> NavigationDirections.navToDetailFragment(
+                            it,
+                            viewModel.plan.value!!,
+                            viewModel.selectedDayPosition.value?.let { position ->
+                                viewModel.days.value?.get(position)
+                            }!!
+                        )
                         AccessPlanType.EDIT -> {
                             NavigationDirections.navToDetailEditFragment()
                                 .setPlan(viewModel.plan.value)
@@ -376,6 +410,15 @@ class PlanFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToCopyPlan.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToCopyPlanDialog(it)
+                )
+                viewModel.onCopyPlanNavigated()
+            }
+        })
+
         viewModel.navigateToMapMode.observe(viewLifecycleOwner, {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToFindLocationFragment())
@@ -385,13 +428,15 @@ class PlanFragment : Fragment() {
 
         viewModel.navigateToCompanion.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(
-                    NavigationDirections.navToCompanionDialog(
-                        it
-//                        viewModel.plan.value ?: Plan()
+                if (it) {
+                    findNavController().navigate(
+                        NavigationDirections.navToCompanionFragment(
+                            viewModel.plan.value!!
+                        )
                     )
-                )
-                viewModel.onCompanionNavigated()
+                    resetToolbar()
+                    viewModel.onCompanionNavigated()
+                }
             }
         })
 
@@ -400,6 +445,7 @@ class PlanFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToGroupMessageFragment(it)
                 )
+                resetToolbar()
                 viewModel.onGroupMessageNavigated()
             }
         })
@@ -413,6 +459,16 @@ class PlanFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToComment.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToComment(it)
+                )
+                resetToolbar()
+                viewModel.onCommentNavigated()
+            }
+        })
+
         viewModel.navigateToCheckOrShoppingList.observe(viewLifecycleOwner, {
             it?.let {
                 findNavController().navigate(
@@ -422,7 +478,14 @@ class PlanFragment : Fragment() {
                     )
                 )
                 viewModel.onCheckLIstNavigated()
-                mainViewModel.setSharedToolbarTitle(it)
+//                mainViewModel.resetToolbar()
+                resetToolbar()
+                mainViewModel.setSharedToolbarTitle(
+                    when (it) {
+                        MainItemType.CHECK -> getString(R.string.check_list)
+                        MainItemType.SHOPPING -> getString(R.string.shopping_list)
+                    }
+                )
             }
         })
 
@@ -431,6 +494,7 @@ class PlanFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToPaymentFragment(it)
                 )
+                mainViewModel.resetToolbar()
                 viewModel.onPaymentNavigated()
             }
         })
@@ -441,6 +505,66 @@ class PlanFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToAuthorProfile.observe(viewLifecycleOwner, {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToAuthorProfileFragment(it))
+                mainViewModel.resetToolbar()
+                viewModel.onAuthorProfileNavigated()
+            }
+        })
+
         return binding.root
+    }
+
+    private fun setToolbar() {
+        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.planToolbar)
+        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
+        inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
+        menu.findItem(R.id.delete).apply {
+
+            if (viewModel.accessType == AccessPlanType.EDIT) isVisible = true
+        }
+
+        //For collapsed title align
+        menu.findItem(R.id.nothing).apply {
+
+            if (viewModel.accessType == AccessPlanType.VIEW) isVisible = true
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                icon.colorFilter = BlendModeColorFilter(
+                    Color.TRANSPARENT, BlendMode.SRC_IN
+                )
+            } else {
+                icon.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+            }
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.delete -> {
+                viewModel.checkDeletePlan()
+            }
+            android.R.id.home -> {
+
+                resetToolbar()
+
+                activity?.invalidateOptionsMenu()
+                findNavController().popBackStack()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun resetToolbar() {
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        mainViewModel.resetToolbar()
     }
 }

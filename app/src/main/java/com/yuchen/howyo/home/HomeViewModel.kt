@@ -3,17 +3,44 @@ package com.yuchen.howyo.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseUser
 import com.yuchen.howyo.data.Plan
+import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.signin.UserManager
+import com.yuchen.howyo.util.Logger
+import kotlinx.coroutines.*
 
 class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
+
+    private var _user = MutableLiveData<User>()
+
+    val user: LiveData<User>
+        get() = _user
+
+    private var _followingList = MutableLiveData<List<String>>()
+
+    val followingList: LiveData<List<String>>
+        get() = _followingList
 
     //Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>
         get() = _plans
+
+    //User id set
+    private val _authorIds = MutableLiveData<Set<String>>()
+
+    val authorIds: LiveData<Set<String>>
+        get() = _authorIds
+
+    //User id set
+    private val _authorDataList = MutableLiveData<Set<User>>()
+
+    val authorDataList: LiveData<Set<User>>
+        get() = _authorDataList
 
     // Handle navigation to plan
     private val _navigateToPlan = MutableLiveData<Plan>()
@@ -27,62 +54,102 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val navigateToNotification: LiveData<Boolean>
         get() = _navigateToNotification
 
-    init {
+    private val _status = MutableLiveData<LoadApiStatus>()
 
-        _plans.value = listOf(
-            Plan(
-                "VWN61M99rDHJnWcmguvE",
-                "traveller",
-                listOf(),
-                "Go to Osaka",
-                "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/sample_cover.jpg?alt=media&token=29567cb7-b77b-41e9-b713-7498e7329c81",
-                "",
-                1634601600000,
-                1634688000000,
-                "Japan",
-                listOf("Jack", "Mary", "dd", "afadfas", "ddd"),
-                listOf()
-            ),
-            Plan(
-                "2",
-                "Jack",
-                listOf(),
-                "Go to Nagoya",
-                "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/Tokyo-Subway-Ticket.jpeg?alt=media&token=a2ea35b5-0e24-4f12-a35c-fd8f740b35ac",
-                "",
-                1634601600000,
-                1634688000000,
-                "Japan",
-                listOf("Jack", "Mary", "Mark"),
-                listOf()
-            ),
-            Plan(
-                "3",
-                "Mark",
-                listOf(),
-                "Go to Tokyo",
-                "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/%E4%B8%8B%E8%BC%89%20(1).jpeg?alt=media&token=f5731312-ac2c-4a38-8e5e-4774ad32057a",
-                "",
-                1634601600000,
-                1634688000000,
-                "Japan",
-                listOf("Jack", "Mary"),
-                listOf()
-            ),
-            Plan(
-                "4",
-                "Mark",
-                listOf(),
-                "Go to Tokyo Cole",
-                "https://firebasestorage.googleapis.com/v0/b/howyo-ione.appspot.com/o/%E4%B8%8B%E8%BC%89%20(1).jpeg?alt=media&token=f5731312-ac2c-4a38-8e5e-4774ad32057a",
-                "",
-                1634601600000,
-                1634688000000,
-                "Japan",
-                listOf("Jack", "Mary"),
-                listOf()
-            )
-        )
+    val status: LiveData<LoadApiStatus>
+        get() = _status
+
+    private val _refreshStatus = MutableLiveData<Boolean>()
+
+    val refreshStatus: LiveData<Boolean>
+        get() = _refreshStatus
+
+    private var viewModelJob = Job()
+
+    // the Coroutine runs using the Main (UI) dispatcher
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    init {
+        getUserResult()
+    }
+
+    private fun getUserResult() {
+
+        var followingList = listOf<String>()
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            withContext(Dispatchers.IO) {
+                    when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
+                        is Result.Success -> {
+                            followingList = result.data.followingList?.toList() ?: listOf()
+                        }
+                        else -> {
+                            howYoRepository.signOut()
+                            UserManager.clear()
+                        }
+                    }
+            }
+
+            _followingList.value = followingList
+        }
+    }
+
+    fun getPlansResult() {
+
+        _status.value = LoadApiStatus.LOADING
+
+        coroutineScope.launch {
+
+            val result = howYoRepository.getPlans(followingList.value ?: listOf())
+            _plans.value = when (result) {
+                is Result.Success -> result.data
+                else -> null
+            }
+
+
+        }
+    }
+
+    fun setAuthorIdSet() {
+
+        val authorIdSet = mutableSetOf<String>()
+
+        plans.value?.forEach {
+            it.authorId?.let { authorId -> authorIdSet.add(authorId) }
+        }
+
+        _authorIds.value = authorIdSet
+    }
+
+    fun getAuthorData() {
+
+        val authorDataList = mutableSetOf<User>()
+
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                authorIds.value?.forEach { authorId ->
+                    when (val result = howYoRepository.getUser(authorId)){
+                        is Result.Success -> {
+                            authorDataList.add(result.data)
+                        }
+                    }
+                }
+            }
+
+            _authorDataList.value = authorDataList.toSet()
+            _refreshStatus.value = false
+        }
+    }
+
+    fun setStatusDone() {
+        _status.value = LoadApiStatus.DONE
     }
 
     fun navigateToPlan(plan: Plan) {

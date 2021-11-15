@@ -79,7 +79,7 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
 
     companion object DiffCallback : DiffUtil.ItemCallback<DayItem>() {
         override fun areItemsTheSame(oldItem: DayItem, newItem: DayItem): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: DayItem, newItem: DayItem): Boolean {

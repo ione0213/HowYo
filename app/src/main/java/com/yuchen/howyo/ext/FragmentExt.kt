@@ -5,6 +5,8 @@ import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.factory.*
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.plan.CheckItemType
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.profile.friends.FriendFilter
 
 fun Fragment.getVmFactory(): ViewModelFactory {
@@ -12,9 +14,13 @@ fun Fragment.getVmFactory(): ViewModelFactory {
     return ViewModelFactory(repository)
 }
 
-fun Fragment.getVmFactory(schedule: Schedule?): DetailViewModelFactory {
+fun Fragment.getVmFactory(
+    plan: Plan?,
+    day: Day?,
+    schedule: Schedule?
+): DetailViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return DetailViewModelFactory(repository, schedule)
+    return DetailViewModelFactory(repository, plan, day, schedule)
 }
 
 fun Fragment.getVmFactory(
@@ -31,14 +37,6 @@ fun Fragment.getVmFactory(
 //    return FindLocationViewModelFactory(repository, days)
 //}
 
-fun Fragment.getVmFactory(
-    user: User
-//                          , plan: Plan
-): CompanionViewModelFactory {
-    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return CompanionViewModelFactory(repository, user)
-}
-
 fun Fragment.getVmFactory(plan: Plan?): PlanContentViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PlanContentViewModelFactory(repository, plan)
@@ -49,7 +47,7 @@ fun Fragment.getVmFactory(plan: Plan, accessPlanType: AccessPlanType): PlanViewM
     return PlanViewModelFactory(repository, plan, accessPlanType)
 }
 
-fun Fragment.getVmFactory(planId: String, mainType: String): CheckListViewModelFactory {
+fun Fragment.getVmFactory(planId: String, mainType: MainItemType): CheckListViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return CheckListViewModelFactory(repository, planId, mainType)
 }
@@ -73,8 +71,8 @@ fun Fragment.getVmFactory(
 }
 
 fun Fragment.getVmFactory(
-    imageUrl: String
-): DetailViewImageViewModelFactory {
+    stringData: String
+): StringViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return DetailViewImageViewModelFactory(repository, imageUrl)
+    return StringViewModelFactory(repository, stringData)
 }

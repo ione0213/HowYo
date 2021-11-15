@@ -13,11 +13,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_check_list_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/gray_f5f5f5">
 
         <TextView
             android:id="@+id/text_check_list_title"
-            style="@style/TextStyle2_black"
+            style="@style/TextStyle2_matcha_3_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/middle_padding"

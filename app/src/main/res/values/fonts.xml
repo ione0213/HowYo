@@ -28,6 +28,54 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="TextStyle1_matcha3">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle1_matcha3_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle1_matcha5_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle1_matcha6">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_6</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle1_matcha6_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_6</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="TextStyle2_white">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">@font/noto_sans</item>
@@ -82,6 +130,63 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="TextStyle2_matcha_3">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle2_matcha_3_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle2_matcha_5">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle2_matcha_5_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/matcha_5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle2_matcha_6">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_6</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle2_matcha_6_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_6</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="TextStyle3_white">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">@font/noto_sans</item>
@@ -95,6 +200,16 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/gray_black</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle3_black_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">0.15</item>
         <item name="android:textColor">@color/gray_black</item>
         <item name="android:ellipsize">end</item>
@@ -127,6 +242,62 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="TextStyle3_matcha_3">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle3_matcha_3_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/matcha_3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle3_matcha_5">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle3_matcha_5_bold">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle3_matcha_6">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_6</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle4_matcha_3">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">@color/matcha_3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="TextStyle4_black">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">@font/noto_sans</item>
@@ -135,4 +306,5 @@
         <item name="android:textColor">@color/gray_black</item>
         <item name="android:ellipsize">end</item>
     </style>
+
 </resources>
