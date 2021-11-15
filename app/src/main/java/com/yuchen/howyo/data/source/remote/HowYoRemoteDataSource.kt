@@ -387,44 +387,45 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
     }
 
-    override suspend fun getAllPublicPlans(): Result<List<Plan>> = suspendCoroutine { continuation ->
+    override suspend fun getAllPublicPlans(): Result<List<Plan>> =
+        suspendCoroutine { continuation ->
 
-        FirebaseFirestore.getInstance()
-            .collection(PATH_PLANS)
-            .whereEqualTo(KEY_PRIVACY, "public")
-            .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
-            .get()
-            .addOnCompleteListener { task ->
+            FirebaseFirestore.getInstance()
+                .collection(PATH_PLANS)
+                .whereEqualTo(KEY_PRIVACY, "public")
+                .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener { task ->
 
-                if (task.isSuccessful) {
-                    val list = mutableListOf<Plan>()
+                    if (task.isSuccessful) {
+                        val list = mutableListOf<Plan>()
 
-                    if (task.result != null) {
-                        for (document in task.result!!) {
-                            Logger.d(document.id + " => " + document.data)
+                        if (task.result != null) {
+                            for (document in task.result!!) {
+                                Logger.d(document.id + " => " + document.data)
 
-                            val plan = document.toObject(Plan::class.java)
-                            list.add(plan)
+                                val plan = document.toObject(Plan::class.java)
+                                list.add(plan)
+                            }
+                            continuation.resume(Result.Success(list))
                         }
-                        continuation.resume(Result.Success(list))
-                    }
-                } else {
-                    task.exception?.let {
+                    } else {
+                        task.exception?.let {
 
-                        Logger.w("[${this::class.simpleName}] Error getting schedules. ${it.message}")
-                        continuation.resume(Result.Error(it))
-                        return@addOnCompleteListener
-                    }
-                    continuation.resume(
-                        Result.Fail(
-                            HowYoApplication.instance.getString(
-                                R.string.nothing
+                            Logger.w("[${this::class.simpleName}] Error getting schedules. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(
+                                HowYoApplication.instance.getString(
+                                    R.string.nothing
+                                )
                             )
                         )
-                    )
+                    }
                 }
-            }
-    }
+        }
 
     override fun getLivePlans(authorList: List<String>): MutableLiveData<List<Plan>> {
 
@@ -780,6 +781,38 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
+    override suspend fun createScheduleWithBatch(list: List<Schedule>): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val db = FirebaseFirestore.getInstance()
+
+            db.runBatch { batch ->
+
+                list.forEach { schedule ->
+
+                    val document = db.collection(PATH_SCHEDULES).document()
+                    schedule.id = document.id
+
+                    batch.set(document, schedule)
+                }
+            }.addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error coping schedule. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@let
+                    }
+                    continuation.resume(
+                        Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                    )
+                }
+            }
+        }
+
     override suspend fun updateSchedule(schedule: Schedule): Result<Boolean> =
         suspendCoroutine { continuation ->
 
@@ -900,6 +933,38 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     }
                 }
 
+        }
+
+    override suspend fun createCheckShopListWithBatch(list: List<CheckShoppingList>): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val db = FirebaseFirestore.getInstance()
+
+            db.runBatch { batch ->
+
+                list.forEach { checkShoppingList ->
+
+                    val document = db.collection(PATH_CHECK_SHOPPING_LIST).document()
+                    checkShoppingList.id = document.id
+
+                    batch.set(document, checkShoppingList)
+                }
+            }.addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error creating CheckShopList. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@let
+                    }
+                    continuation.resume(
+                        Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                    )
+                }
+            }
         }
 
     override suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> =

@@ -57,6 +57,8 @@ interface HowYoDataSource {
 
     suspend fun createSchedule(schedule: Schedule): Result<Boolean>
 
+    suspend fun createScheduleWithBatch(list: List<Schedule>): Result<Boolean>
+
     suspend fun updateSchedule(schedule: Schedule): Result<Boolean>
 
     suspend fun deleteSchedule(schedule: Schedule): Result<Boolean>
@@ -66,6 +68,8 @@ interface HowYoDataSource {
     suspend fun getSchedules(planId: String): Result<List<Schedule>>
 
     suspend fun createCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean>
+
+    suspend fun createCheckShopListWithBatch(list: List<CheckShoppingList>): Result<Boolean>
 
     suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean>
 

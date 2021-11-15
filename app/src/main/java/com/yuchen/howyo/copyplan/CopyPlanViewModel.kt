@@ -283,6 +283,7 @@ class CopyPlanViewModel(
                 ?.div((60 * 60 * 24 * 1000)))?.toInt()
         val dayResults = mutableListOf<Boolean>()
         val scheduleResults = mutableListOf<Boolean>()
+        val daysData = mutableListOf<Pair<Day, Int>>()
 
         for (position in 0..days!!) {
 
@@ -290,11 +291,15 @@ class CopyPlanViewModel(
 
             if (result is Result.Success) {
                 dayResults.add(true)
-                scheduleResults.add(copySchedules(result.data, position))
+                daysData.add(Pair(result.data, position))
+//                scheduleResults.add(copySchedules(result.data, position))
             } else {
                 dayResults.add(false)
             }
         }
+
+        scheduleResults.add(copySchedules(daysData))
+
         return when {
             !dayResults.contains(false) && !scheduleResults.contains(false) -> true
             else -> false
@@ -322,6 +327,7 @@ class CopyPlanViewModel(
         val planId = planId.value
         val subTypeList = HowYoApplication.instance.resources.getStringArray(R.array.check_list)
         val checkListResults = mutableListOf<Boolean>()
+        val itemList = mutableListOf<CheckShoppingList>()
 
         subTypeList.forEach { subType ->
             when (subType) {
@@ -335,13 +341,7 @@ class CopyPlanViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.clothe) -> {
@@ -354,13 +354,7 @@ class CopyPlanViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.wash) -> {
@@ -373,13 +367,7 @@ class CopyPlanViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.electronic) -> {
@@ -392,13 +380,7 @@ class CopyPlanViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.health) -> {
@@ -411,13 +393,7 @@ class CopyPlanViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.other) -> {
@@ -430,38 +406,45 @@ class CopyPlanViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
             }
         }
 
+        checkListResults.add(createDefaultCheckListWithBatch(itemList))
+
         return !checkListResults.contains(false)
     }
 
-    suspend fun copySchedules(day: Day, position: Int): Boolean {
+    private suspend fun createDefaultCheckListWithBatch(list: List<CheckShoppingList>): Boolean =
+        when (val result = howYoRepository.createCheckShopListWithBatch(list)) {
+            is Result.Success -> result.data
+            else -> false
+        }
+
+    private suspend fun copySchedules(list: List<Pair<Day, Int>>): Boolean {
 
         val schedulesResult = mutableListOf<Boolean>()
+        val scheduleList = mutableListOf<Schedule>()
 
-//        days.value?.forEachIndexed { index, day ->
-        schedules.value?.filter { it.dayId == days.value?.get(position)?.id }?.forEach { schedule ->
-            val newSchedule = schedule.copy(
-                planId = planId.value,
-                dayId = day.id,
-                id = "",
-                photoUrlList = listOf(),
-                photoFileNameList = listOf()
-            )
+        for ((day, position) in list) {
+            schedules.value?.filter { it.dayId == days.value?.get(position)?.id }
+                ?.forEach { schedule ->
+                    val newSchedule = schedule.copy(
+                        planId = planId.value,
+                        dayId = day.id,
+                        id = "",
+                        photoUrlList = listOf(),
+                        photoFileNameList = listOf()
+                    )
 
-            schedulesResult.add(createSchedule(newSchedule))
+                    scheduleList.add(newSchedule)
+                }
         }
-//        }
+
+        schedulesResult.add(createScheduleWithBatch(scheduleList))
+
         return !schedulesResult.contains(false)
     }
 
@@ -495,8 +478,8 @@ class CopyPlanViewModel(
 //        }
 //    }
 
-    private suspend fun createSchedule(schedule: Schedule): Boolean =
-        when (val result = howYoRepository.createSchedule(schedule)) {
+    private suspend fun createScheduleWithBatch(list: List<Schedule>): Boolean =
+        when (val result = howYoRepository.createScheduleWithBatch(list)) {
             is Result.Success -> result.data
             else -> false
         }

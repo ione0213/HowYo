@@ -18,23 +18,23 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_detail_edit_image_close"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginTop="@dimen/standard_padding"
-            android:onClick="@{() -> viewModel.leaveEditImage()}"
+            android:layout_width="@dimen/plan_img_btn"
+            android:layout_height="@dimen/plan_img_btn"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/large_padding"
             android:background="@drawable/icons_44px_back01"
+            android:onClick="@{() -> viewModel.leaveEditImage()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_detail_edit_image_delete"
-            android:layout_width="@dimen/plan_img_btn_small"
-            android:layout_height="@dimen/plan_img_btn_small"
-            android:layout_marginTop="@dimen/standard_padding"
-            android:onClick="@{() -> viewModel.deleteImage()}"
+            android:layout_width="@dimen/plan_img_btn"
+            android:layout_height="@dimen/plan_img_btn"
+            android:layout_marginTop="@dimen/large_padding"
             android:layout_marginEnd="@dimen/middle_padding"
             android:background="@drawable/delete"
+            android:onClick="@{() -> viewModel.deleteImage()}"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,7 +42,7 @@
         <ImageView
             android:id="@+id/image_detail_edit_image_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_detail_gallery"
+            android:layout_height="580dp"
             android:background="@drawable/ic_placeholder"
             android:scaleType="centerCrop"
             app:imageData="@{viewModel.schedulePhoto}"

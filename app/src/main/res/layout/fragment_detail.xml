@@ -35,10 +35,10 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_detail_close"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/small_padding"
-                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_width="@dimen/plan_img_btn"
+                    android:layout_height="@dimen/plan_img_btn"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginTop="@dimen/large_padding"
                     android:onClick="@{() -> viewModel.leaveViewDetail()}"
                     android:background="@drawable/icons_44px_back01"
                     app:layout_constraintStart_toStartOf="parent"
@@ -46,9 +46,9 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_edit"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
-                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_width="@dimen/plan_img_btn"
+                    android:layout_height="@dimen/plan_img_btn"
+                    android:layout_marginTop="@dimen/large_padding"
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/middle_padding"
                     android:background="@drawable/edit"
@@ -81,7 +81,7 @@
                     android:layout_marginTop="@dimen/standard_padding"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_detail_images"
-                    app:layout_goneMarginTop="@dimen/largest_padding"
+                    app:layout_goneMarginTop="96dp"
                     app:scheduleType="@{viewModel.schedule.scheduleType}" />
 
                 <TextView

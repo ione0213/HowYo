@@ -109,6 +109,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.createSchedule(schedule)
     }
 
+    override suspend fun createScheduleWithBatch(list: List<Schedule>): Result<Boolean> {
+        return remoteDataSource.createScheduleWithBatch(list)
+    }
+
     override suspend fun updateSchedule(schedule: Schedule): Result<Boolean> {
         return remoteDataSource.updateSchedule(schedule)
     }
@@ -127,6 +131,10 @@ class DefaultHowYoRepository(
 
     override suspend fun createCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
         return remoteDataSource.createCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun createCheckShopListWithBatch(list: List<CheckShoppingList>): Result<Boolean> {
+        return remoteDataSource.createCheckShopListWithBatch(list)
     }
 
     override suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
