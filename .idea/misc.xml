@@ -86,6 +86,7 @@
         <entry key="app/src/main/res/layout/item_detail_edit_spinner.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_detail_image.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_detail_view_delete_image.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/item_empty_favorite.xml" value="0.2296195652173913" />
         <entry key="app/src/main/res/layout/item_empty_plan.xml" value="0.10418768920282542" />
         <entry key="app/src/main/res/layout/item_empty_schedule.xml" value="0.165" />
         <entry key="app/src/main/res/layout/item_find_location_day.xml" value="0.67" />

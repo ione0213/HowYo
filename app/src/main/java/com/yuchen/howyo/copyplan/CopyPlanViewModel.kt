@@ -249,7 +249,8 @@ class CopyPlanViewModel(
             companionList = listOf(),
             likeList = listOf(),
             planCollectedList = listOf(),
-            privacy = getString(R.string.plan_private)
+            privacy = getString(R.string.plan_private),
+            createdTime = Calendar.getInstance().timeInMillis
         )
 
         coroutineScope.launch {
@@ -281,18 +282,23 @@ class CopyPlanViewModel(
             (endDateFromUser.value?.minus(startDateFromUser.value!!)
                 ?.div((60 * 60 * 24 * 1000)))?.toInt()
         val dayResults = mutableListOf<Boolean>()
+        val scheduleResults = mutableListOf<Boolean>()
 
         for (position in 0..days!!) {
 
             val result = howYoRepository.createDay(position, planId!!)
 
             if (result is Result.Success) {
-                dayResults.add(result.data)
+                dayResults.add(true)
+                scheduleResults.add(copySchedules(result.data, position))
             } else {
                 dayResults.add(false)
             }
         }
-        return !dayResults.contains(false)
+        return when {
+            !dayResults.contains(false) && !scheduleResults.contains(false) -> true
+            else -> false
+        }
     }
 
     fun createRelatedCollection() {
@@ -439,35 +445,55 @@ class CopyPlanViewModel(
         return !checkListResults.contains(false)
     }
 
-    fun copySchedules() {
+    suspend fun copySchedules(day: Day, position: Int): Boolean {
 
         val schedulesResult = mutableListOf<Boolean>()
 
+//        days.value?.forEachIndexed { index, day ->
+        schedules.value?.filter { it.dayId == days.value?.get(position)?.id }?.forEach { schedule ->
+            val newSchedule = schedule.copy(
+                planId = planId.value,
+                dayId = day.id,
+                id = "",
+                photoUrlList = listOf(),
+                photoFileNameList = listOf()
+            )
 
-
-        coroutineScope.launch {
-
-            withContext(Dispatchers.IO) {
-                days.value?.forEachIndexed { index, day ->
-                    schedules.value?.filter { it.dayId == day.id }?.forEach { schedule ->
-                        val newSchedule = schedule.copy(
-                            planId = planId.value,
-                            dayId = newDays.value?.get(index)?.id,
-                            id = "",
-                            photoUrlList = listOf(),
-                            photoFileNameList = listOf()
-                        )
-
-                        schedulesResult.add(createSchedule(newSchedule))
-                    }
-                }
-            }
-
-            when {
-                !schedulesResult.contains(false) -> _isCopyFinished.value = true
-            }
+            schedulesResult.add(createSchedule(newSchedule))
         }
+//        }
+        return !schedulesResult.contains(false)
     }
+
+//    fun copySchedules() {
+//
+//        val schedulesResult = mutableListOf<Boolean>()
+//
+//
+//
+//        coroutineScope.launch {
+//
+//            withContext(Dispatchers.IO) {
+//                days.value?.forEachIndexed { index, day ->
+//                    schedules.value?.filter { it.dayId == day.id }?.forEach { schedule ->
+//                        val newSchedule = schedule.copy(
+//                            planId = planId.value,
+//                            dayId = newDays.value?.get(index)?.id,
+//                            id = "",
+//                            photoUrlList = listOf(),
+//                            photoFileNameList = listOf()
+//                        )
+//
+//                        schedulesResult.add(createSchedule(newSchedule))
+//                    }
+//                }
+//            }
+//
+//            when {
+//                !schedulesResult.contains(false) -> _isCopyFinished.value = true
+//            }
+//        }
+//    }
 
     private suspend fun createSchedule(schedule: Schedule): Boolean =
         when (val result = howYoRepository.createSchedule(schedule)) {

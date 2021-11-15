@@ -171,12 +171,15 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             val storageRef =
                 FirebaseStorage.getInstance().reference.child("$PATH_COVERS/$fileName")
-
+            Logger.i("uploadPhoto")
             storageRef.putFile(imgUri)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Logger.i("isSuccessful")
                         task.result.storage.downloadUrl.addOnCompleteListener {
                             if (it.isSuccessful) {
+                                Logger.i("get Url isSuccessful")
+
                                 continuation.resume(Result.Success(it.result.toString()))
                             } else {
                                 task.exception?.let { exception ->
@@ -230,10 +233,13 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         plan.id = document.id
 
+        Logger.i("createPlan")
         document
             .set(plan)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    Logger.i("createPlan")
+
                     continuation.resume(Result.Success(document.id))
                 } else {
                     task.exception?.let {
@@ -599,7 +605,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
-    override suspend fun createDay(position: Int, planId: String): Result<Boolean> =
+    override suspend fun createDay(position: Int, planId: String): Result<Day> =
         suspendCoroutine { continuation ->
             val dayRef = FirebaseFirestore.getInstance().collection(PATH_DAYS)
             val document = dayRef.document()
@@ -609,12 +615,14 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 planId,
                 position = position
             )
-
+            Logger.i("createDay")
             document
                 .set(day)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        continuation.resume(Result.Success(true))
+                        Logger.i("createDay isSuccessful")
+
+                        continuation.resume(Result.Success(day))
                     } else {
                         task.exception?.let {
 
@@ -721,6 +729,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     override suspend fun createSchedule(schedule: Schedule): Result<Boolean> =
         suspendCoroutine { continuation ->
 
+            Logger.i("createSchedule")
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)
                 .whereEqualTo("day_id", schedule.dayId)
@@ -730,6 +739,8 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     val lastSchedule: Schedule
 
                     if (task.isSuccessful) {
+                        Logger.i("createSchedule isSuccessful")
+
                         when (task.result.size()) {
                             0 -> {
                                 schedule.position = 0
@@ -749,6 +760,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                             .set(schedule)
                             .addOnCompleteListener { scheduleTask ->
                                 if (scheduleTask.isSuccessful) {
+                                    Logger.i("createSchedule isSuccessful222")
 
                                     continuation.resume(Result.Success(true))
                                 } else {
@@ -865,7 +877,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
             val mainCheckListRef = FirebaseFirestore.getInstance().collection(
                 PATH_CHECK_SHOPPING_LIST
             )
-
+            Logger.i("createCheckShopList")
             val document = mainCheckListRef.document()
 
             checkShoppingList.id = document.id
@@ -874,6 +886,8 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .set(checkShoppingList)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Logger.i("createCheckShopList isSuccessful")
+
                         continuation.resume(Result.Success(true))
                     } else {
                         task.exception?.let {

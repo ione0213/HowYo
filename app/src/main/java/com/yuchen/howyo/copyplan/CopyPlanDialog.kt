@@ -109,14 +109,16 @@ class CopyPlanDialog : AppCompatDialogFragment() {
 
         viewModel.isRelatedDataReady.observe(viewLifecycleOwner, {
             it?.let {
-                if (it) viewModel.getNewDaysResult()
-
+//                if (it) viewModel.getNewDaysResult()
+                findNavController().navigate(
+                    NavigationDirections.navToProfileFragment(UserManager.userId!!)
+                )
             }
         })
 
         viewModel.newDays.observe(viewLifecycleOwner, {
             it?.let {
-                viewModel.copySchedules()
+//                viewModel.copySchedules()
             }
         })
 

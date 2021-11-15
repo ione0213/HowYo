@@ -377,9 +377,6 @@ fun bindRecyclerViewWithPlans(
                 is DiscoverAdapter -> {
                     submitList(it)
                 }
-                is FavoriteAdapter -> {
-                    submitList(it)
-                }
                 is AuthorProfilePlanAdapter -> {
                     submitList(it)
                 }

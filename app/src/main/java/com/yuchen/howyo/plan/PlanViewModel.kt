@@ -460,9 +460,9 @@ class PlanViewModel(
         val newPosition = days.value?.maxByOrNull { it.position!! }!!.position?.plus(1)
         val planId = plan.value?.id
 
-        return when (val result = howYoRepository.createDay(newPosition!!, planId!!)) {
+        return when (howYoRepository.createDay(newPosition!!, planId!!)) {
             is Result.Success -> {
-                result.data
+                true
             }
             else -> false
         }

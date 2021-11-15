@@ -98,6 +98,9 @@
     <!-- Group Msg-->
     <string name="type_message_here">輸入訊息</string>
 
+    <!-- Favorite-->
+    <string name="empty_favorite">目前沒有收藏行程唷！</string>
+
     <!-- Default subtype for check list-->
     <string name="check">check</string>
     <string name="shopping">shopping</string>

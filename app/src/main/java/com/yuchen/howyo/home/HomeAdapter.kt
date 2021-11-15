@@ -77,8 +77,6 @@ class HomeAdapter(
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
-
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -98,16 +96,12 @@ class HomeAdapter(
     }
 
     fun addEmptyAndPlan(list: List<Plan>) {
-        Logger.i("addEmptyAndPlan")
         adapterScope.launch {
             val items = when (list.size) {
                 0 -> {
-                    Logger.i("zero")
                     listOf(PlanDataItem.EmptySchedule)
                 }
                 else -> {
-                    Logger.i("not zero")
-
                     list.map { PlanDataItem.PlanItem(it) }
                 }
             }

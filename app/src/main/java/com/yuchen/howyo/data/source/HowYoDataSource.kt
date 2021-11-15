@@ -45,7 +45,7 @@ interface HowYoDataSource {
 
     suspend fun deletePlan(plan: Plan): Result<Boolean>
 
-    suspend fun createDay(position: Int, planId: String): Result<Boolean>
+    suspend fun createDay(position: Int, planId: String): Result<Day>
 
     suspend fun updateDay(day: Day): Result<Boolean>
 

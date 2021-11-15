@@ -475,7 +475,7 @@ class PlanCoverViewModel(
                                     }
 
                                 if (result is Result.Success) {
-                                    dayResults.add(result.data)
+                                    dayResults.add(true)
                                 } else {
                                     dayResults.add(false)
                                 }
@@ -525,7 +525,7 @@ class PlanCoverViewModel(
             val result = howYoRepository.createDay(position, planId!!)
 
             if (result is Result.Success) {
-                dayResults.add(result.data)
+                dayResults.add(true)
             } else {
                 dayResults.add(false)
             }

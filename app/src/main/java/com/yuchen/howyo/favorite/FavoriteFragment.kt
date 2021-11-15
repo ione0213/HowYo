@@ -14,6 +14,9 @@ import com.yuchen.howyo.discover.DiscoverViewModel
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.util.Logger
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+
 
 class FavoriteFragment : Fragment() {
 
@@ -54,9 +57,20 @@ class FavoriteFragment : Fragment() {
         viewModel.authorDataList.observe(viewLifecycleOwner) {
             it?.let {
 
+                val gridLayoutManager = GridLayoutManager(context, 2)
+                gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (viewModel.plans.value?.size) {
+                            0 -> 2
+                            else -> 1
+                        }
+                    }
+                }
+                binding.recyclerFavoritePlans.layoutManager = gridLayoutManager
+
                 viewModel.setStatusDone()
                 binding.viewModel = viewModel
-                adapter.submitList(viewModel.plans.value)
+                adapter.addEmptyAndPlan(viewModel.plans.value!!)
             }
         }
 

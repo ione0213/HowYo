@@ -85,7 +85,7 @@ class DefaultHowYoRepository(
         return remoteDataSource.deletePlan(plan)
     }
 
-    override suspend fun createDay(position: Int, planId: String): Result<Boolean> {
+    override suspend fun createDay(position: Int, planId: String): Result<Day> {
         return remoteDataSource.createDay(position, planId)
     }
 
