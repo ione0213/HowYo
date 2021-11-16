@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.yuchen.howyo.data.*
+import com.yuchen.howyo.data.source.remote.DeleteDataType
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
 interface HowYoRepository {
@@ -52,6 +53,8 @@ interface HowYoRepository {
 
     suspend fun deleteDay(day: Day): Result<Boolean>
 
+    suspend fun deleteDaysWithBatch(list: List<Day>): Result<Boolean>
+
     fun getLiveDays(planId: String): MutableLiveData<List<Day>>
 
     suspend fun getDays(planId: String): Result<List<Day>>
@@ -63,6 +66,8 @@ interface HowYoRepository {
     suspend fun updateSchedule(schedule: Schedule): Result<Boolean>
 
     suspend fun deleteSchedule(schedule: Schedule): Result<Boolean>
+
+    suspend fun deleteScheduleWithBatch(list: List<Schedule>): Result<Boolean>
 
     fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>>
 
@@ -84,7 +89,15 @@ interface HowYoRepository {
 
     suspend fun deleteComment(comment: Comment): Result<Boolean>
 
+    suspend fun deleteCommentWithBatch(list: List<Comment>): Result<Boolean>
+
     suspend fun getComments(planId: String): Result<List<Comment>>
 
     fun getLiveComments(planId: String): MutableLiveData<List<Comment>>
+
+    suspend fun createGroupMessage(groupMessage: GroupMessage): Result<Boolean>
+
+    fun getLiveGroupMessages(planId: String): MutableLiveData<List<GroupMessage>>
+
+    suspend fun deleteDataListsWithPlanID(planId: String, type: DeleteDataType): Result<Boolean>
 }

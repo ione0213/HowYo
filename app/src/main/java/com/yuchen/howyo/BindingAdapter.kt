@@ -417,21 +417,21 @@ fun bindRecyclerViewWithUsers(
     }
 }
 
-@BindingAdapter("groupMessages")
-fun bindRecyclerViewWithMessages(
-    recyclerView: RecyclerView,
-    groupMessages: List<GroupMessage>
-) {
-    groupMessages.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is GroupMessageAdapter -> {
-                    submitList(it)
-                }
-            }
-        }
-    }
-}
+//@BindingAdapter("groupMessages")
+//fun bindRecyclerViewWithMessages(
+//    recyclerView: RecyclerView,
+//    groupMessages: List<GroupMessage>
+//) {
+//    groupMessages.let {
+//        recyclerView.adapter?.apply {
+//            when (this) {
+//                is GroupMessageAdapter -> {
+//                    submitList(it)
+//                }
+//            }
+//        }
+//    }
+//}
 
 @BindingAdapter("privacy")
 fun TextView.bindPrivacyStatus(privacy: String?) {

@@ -13,7 +13,7 @@ class DetailViewModel(
     private val argumentPlan: Plan?,
     private val argumentDay: Day?,
     private val arguments: Schedule?,
-): ViewModel() {
+) : ViewModel() {
 
     // Plan data from arguments
     private val _plan = MutableLiveData<Plan>().apply {
@@ -94,7 +94,8 @@ class DetailViewModel(
     }
 
     fun navigateToUrl(url: String) {
-        _navigateToUrl.value = url
+
+        if (url.isNotEmpty()) _navigateToUrl.value = url
     }
 
     fun onUrlNavigated() {

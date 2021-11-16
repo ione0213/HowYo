@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.data.source.remote.DeleteDataType
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PlanViewModel(
@@ -281,43 +281,56 @@ class PlanViewModel(
 
     fun delExistPlan(plan: Plan) {
 
+        val planResult = mutableListOf<Boolean>()
         val daysResult = mutableListOf<Boolean>()
         val scheduleResult = mutableListOf<Boolean>()
         val scheduleImgResult = mutableListOf<Boolean>()
-
         val commentResult = mutableListOf<Boolean>()
+        val checkShopListResult = mutableListOf<Boolean>()
+        var groupMsgResult = false
+        val photoResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-                days.value?.forEach {
-                    daysResult.add(deleteDay(it))
-                }
+
+//                daysResult.add(deleteDataListsWithBatch(plan.id, DeleteDataType.DAYS))
+
+                days.value?.let { deleteDaysWithBatch(it) }?.let { daysResult.add(it) }
+
+//                scheduleResult.add(deleteDataListsWithBatch(plan.id, DeleteDataType.SCHEDULES))
+
+                allSchedules.value?.let { deleteScheduleWithBatch(it) }?.let { scheduleResult.add(it) }
 
                 allSchedules.value?.forEach { schedule ->
-                    scheduleResult.add(deleteSchedule(schedule))
                     schedule.photoFileNameList?.forEach {
                         deletePhoto(it)?.let { result -> scheduleImgResult.add(result) }
                     }
                 }
 
-                comments.value?.forEach { comment ->
-                    deleteComment(comment)?.let { commentResult.add(it) }
-                }
+//                commentResult.add(deleteDataListsWithBatch(plan.id, DeleteDataType.COMMENTS))
+                comments.value?.let { deleteCommentWithBatch(it) }?.let { commentResult.add(it) }
 
-                _checkShopListResult.postValue(deleteCheckShopList(plan.id))
-                _planResult.postValue(deletePlan(plan)!!)
-                _photoResult.postValue(deletePhoto(plan.coverFileName))
+                checkShopListResult.add(
+                    deleteDataListsWithBatch(plan.id, DeleteDataType.CHECK_SHOP_LIST)
+                )
+//                _checkShopListResult.postValue(deleteCheckShopList(plan.id))
+
+                planResult.add(deletePlan(plan)!!)
+                deletePhoto(plan.coverFileName)?.let { photoResult.add(it) }
+
+                groupMsgResult = deleteDataListsWithBatch(plan.id, DeleteDataType.GROUP_MSG)
             }
 
             when {
                 !daysResult.contains(false)
                         && !scheduleResult.contains(false)
                         && !commentResult.contains(false)
-                        && planResult.value == true
-                        && checkShopListResult.value == true
-                        && photoResult.value == true -> {
+                        && !planResult.contains(false)
+                        && !checkShopListResult.contains(false)
+                        && !photoResult.contains(false)
+                        && groupMsgResult -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
                 }
@@ -488,6 +501,16 @@ class PlanViewModel(
         }
     }
 
+    private suspend fun deleteDaysWithBatch(dayList: List<Day>): Boolean {
+
+        return when (val result = howYoRepository.deleteDaysWithBatch(dayList)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> false
+        }
+    }
+
     private suspend fun updateSchedule(schedule: Schedule): Boolean {
 
         return when (val result = howYoRepository.updateSchedule(schedule)) {
@@ -501,6 +524,16 @@ class PlanViewModel(
     private suspend fun deleteSchedule(schedule: Schedule): Boolean {
 
         return when (val result = howYoRepository.deleteSchedule(schedule)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> false
+        }
+    }
+
+    private suspend fun deleteScheduleWithBatch(scheduleList: List<Schedule>): Boolean {
+
+        return when (val result = howYoRepository.deleteScheduleWithBatch(scheduleList)) {
             is Result.Success -> {
                 result.data
             }
@@ -593,8 +626,8 @@ class PlanViewModel(
             else -> null
         }
 
-    private suspend fun deleteComment(comment: Comment): Boolean? =
-        when (val result = howYoRepository.deleteComment(comment)) {
+    private suspend fun deleteCommentWithBatch(commentList: List<Comment>): Boolean? =
+        when (val result = howYoRepository.deleteCommentWithBatch(commentList)) {
             is Result.Success -> {
                 result.data
             }
@@ -1038,29 +1071,6 @@ class PlanViewModel(
                     }
                 }
             }
-
-//            tempSchedules.forEach { tempSchedule ->
-//                when (type) {
-//                    HandleScheduleType.POSITION -> {
-//                        schedules.value?.forEach { schedule ->
-//                            when {
-//                                tempSchedule.position != schedule.position -> {
-//                                    schedulesResult.add(updateSchedule(tempSchedule))
-//                                }
-//                            }
-//                        }
-//                    }
-//                    HandleScheduleType.TIME -> {
-//                        allSchedules.value?.forEach { schedule ->
-//                            when {
-//                                !(tempSchedule === schedule) -> {
-//                                    schedulesResult.add(updateSchedule(tempSchedule))
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
         }
 
         _handleScheduleSuccess.value = !schedulesResult.contains(false)
@@ -1291,5 +1301,15 @@ class PlanViewModel(
 
     private fun getLiveCommentsResult() {
         comments = argumentPlan.id.let { howYoRepository.getLiveComments(it) }
+    }
+
+    private suspend fun deleteDataListsWithBatch(planId: String, type: DeleteDataType): Boolean {
+
+        return when (val result = howYoRepository.deleteDataListsWithPlanID(planId, type)) {
+            is Result.Success -> {
+                result.data
+            }
+            else -> false
+        }
     }
 }

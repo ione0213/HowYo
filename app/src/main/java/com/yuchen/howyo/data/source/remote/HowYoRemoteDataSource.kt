@@ -25,6 +25,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_SCHEDULES = "schedules"
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
     private const val PATH_COMMENTS = "comments"
+    private const val PATH_GROUP_MESSAGE = "group_messages"
     private const val KEY_POSITION = "position"
     private const val KEY_CREATED_TIME = "created_time"
     private const val KEY_EMAIL = "email"
@@ -171,14 +172,11 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             val storageRef =
                 FirebaseStorage.getInstance().reference.child("$PATH_COVERS/$fileName")
-            Logger.i("uploadPhoto")
             storageRef.putFile(imgUri)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Logger.i("isSuccessful")
                         task.result.storage.downloadUrl.addOnCompleteListener {
                             if (it.isSuccessful) {
-                                Logger.i("get Url isSuccessful")
 
                                 continuation.resume(Result.Success(it.result.toString()))
                             } else {
@@ -233,12 +231,10 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         plan.id = document.id
 
-        Logger.i("createPlan")
         document
             .set(plan)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Logger.i("createPlan")
 
                     continuation.resume(Result.Success(document.id))
                 } else {
@@ -616,12 +612,10 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 planId,
                 position = position
             )
-            Logger.i("createDay")
             document
                 .set(day)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Logger.i("createDay isSuccessful")
 
                         continuation.resume(Result.Success(day))
                     } else {
@@ -667,6 +661,37 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 continuation.resume(Result.Error(it))
             }
     }
+
+    override suspend fun deleteDaysWithBatch(list: List<Day>): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val db = FirebaseFirestore.getInstance()
+
+            db.runBatch { batch ->
+
+                list.forEach { day ->
+
+                    val document = db.collection(PATH_DAYS).document(day.id)
+
+                    batch.delete(document)
+                }
+            }.addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error deleting Days. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@let
+                    }
+                    continuation.resume(
+                        Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                    )
+                }
+            }
+        }
 
     override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
 
@@ -730,7 +755,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
     override suspend fun createSchedule(schedule: Schedule): Result<Boolean> =
         suspendCoroutine { continuation ->
 
-            Logger.i("createSchedule")
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)
                 .whereEqualTo("day_id", schedule.dayId)
@@ -740,7 +764,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     val lastSchedule: Schedule
 
                     if (task.isSuccessful) {
-                        Logger.i("createSchedule isSuccessful")
 
                         when (task.result.size()) {
                             0 -> {
@@ -761,7 +784,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                             .set(schedule)
                             .addOnCompleteListener { scheduleTask ->
                                 if (scheduleTask.isSuccessful) {
-                                    Logger.i("createSchedule isSuccessful222")
 
                                     continuation.resume(Result.Success(true))
                                 } else {
@@ -787,7 +809,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
             val db = FirebaseFirestore.getInstance()
 
             db.runBatch { batch ->
-
                 list.forEach { schedule ->
 
                     val document = db.collection(PATH_SCHEDULES).document()
@@ -845,6 +866,37 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     Logger.w("[${this::class.simpleName}] Error deleting schedule. ${it.message}")
                     continuation.resume(Result.Error(it))
                 }
+        }
+
+    override suspend fun deleteScheduleWithBatch(list: List<Schedule>): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val db = FirebaseFirestore.getInstance()
+
+            db.runBatch { batch ->
+
+                list.forEach { schedule ->
+
+                    val document = db.collection(PATH_SCHEDULES).document(schedule.id!!)
+
+                    batch.delete(document)
+                }
+            }.addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error deleting Schedule. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@let
+                    }
+                    continuation.resume(
+                        Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                    )
+                }
+            }
         }
 
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
@@ -910,7 +962,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
             val mainCheckListRef = FirebaseFirestore.getInstance().collection(
                 PATH_CHECK_SHOPPING_LIST
             )
-            Logger.i("createCheckShopList")
             val document = mainCheckListRef.document()
 
             checkShoppingList.id = document.id
@@ -919,7 +970,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .set(checkShoppingList)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Logger.i("createCheckShopList isSuccessful")
 
                         continuation.resume(Result.Success(true))
                     } else {
@@ -1014,14 +1064,22 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         task.result.forEach {
-                            collectionRef.document(it.id).delete()
-                                .addOnCompleteListener { subTask ->
-                                    if (subTask.isSuccessful) {
-                                        deleteResults.add(true)
-                                    } else {
-                                        deleteResults.add(false)
-                                    }
+
+                            val db = FirebaseFirestore.getInstance()
+
+                            db.runBatch { batch ->
+
+                                val document =
+                                    db.collection(PATH_CHECK_SHOPPING_LIST).document(it.id)
+
+                                batch.delete(document)
+                            }.addOnCompleteListener { subTask ->
+                                if (subTask.isSuccessful) {
+                                    deleteResults.add(true)
+                                } else {
+                                    deleteResults.add(false)
                                 }
+                            }
                         }
 
                         continuation.resume(
@@ -1120,6 +1178,37 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
+    override suspend fun deleteCommentWithBatch(list: List<Comment>): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val db = FirebaseFirestore.getInstance()
+
+            db.runBatch { batch ->
+
+                list.forEach { comment ->
+
+                    val document = db.collection(PATH_COMMENTS).document(comment.id)
+
+                    batch.delete(document)
+                }
+            }.addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error deleting Comment. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@let
+                    }
+                    continuation.resume(
+                        Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                    )
+                }
+            }
+        }
+
     override suspend fun getComments(planId: String): Result<List<Comment>> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()
@@ -1179,4 +1268,127 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
         return liveData
     }
+
+    override suspend fun createGroupMessage(groupMessage: GroupMessage): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_GROUP_MESSAGE)
+                .document()
+                .set(groupMessage)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        continuation.resume(Result.Success(true))
+                    } else {
+                        task.exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error creating group message. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                        )
+                    }
+                }
+        }
+
+    override fun getLiveGroupMessages(planId: String): MutableLiveData<List<GroupMessage>> {
+
+        val liveData = MutableLiveData<List<GroupMessage>>()
+        when (planId.isEmpty()) {
+            true -> {
+
+            }
+            else -> {
+                FirebaseFirestore.getInstance()
+                    .collection(PATH_GROUP_MESSAGE)
+                    .whereEqualTo(KEY_PLAN_ID, planId)
+                    .orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
+                    .addSnapshotListener { snapshot, exception ->
+
+                        Logger.i("addSnapshotListener! detect")
+
+                        exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error getting GroupMessages. ${it.message}")
+                        }
+
+                        val list = mutableListOf<GroupMessage>()
+                        if (snapshot != null) {
+                            for (document in snapshot) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val groupMessage = document.toObject(GroupMessage::class.java)
+                                list.add(groupMessage)
+                            }
+                        }
+
+                        liveData.value = list
+                    }
+            }
+        }
+
+        return liveData
+    }
+
+    override suspend fun deleteDataListsWithPlanID(
+        planId: String,
+        type: DeleteDataType
+    ): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val collectionName = when (type) {
+                DeleteDataType.DAYS -> PATH_DAYS
+                DeleteDataType.SCHEDULES -> PATH_SCHEDULES
+                DeleteDataType.COMMENTS -> PATH_COMMENTS
+                DeleteDataType.CHECK_SHOP_LIST -> PATH_CHECK_SHOPPING_LIST
+                DeleteDataType.GROUP_MSG -> PATH_GROUP_MESSAGE
+            }
+
+            val firebaseRef = FirebaseFirestore.getInstance()
+            val collectionRef = firebaseRef.collection(collectionName)
+
+            val deleteResults = mutableListOf<Boolean>()
+
+
+            collectionRef.whereEqualTo(KEY_PLAN_ID, planId)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        task.result.forEach {
+
+                            val db = FirebaseFirestore.getInstance()
+
+                            db.runBatch { batch ->
+
+                                val document =
+                                    db.collection(collectionName).document(it.id)
+
+                                batch.delete(document)
+                            }.addOnCompleteListener { subTask ->
+                                if (subTask.isSuccessful) {
+                                    deleteResults.add(true)
+                                } else {
+                                    deleteResults.add(false)
+                                }
+                            }
+                        }
+
+                        continuation.resume(
+                            when (!deleteResults.contains(false)) {
+                                true -> Result.Success(true)
+                                false -> Result.Success(false)
+                            }
+                        )
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error deleting group messages. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
 }

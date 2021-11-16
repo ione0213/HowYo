@@ -3,6 +3,7 @@ package com.yuchen.howyo.data.source
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.*
+import com.yuchen.howyo.data.source.remote.DeleteDataType
 import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
@@ -97,6 +98,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.deleteDay(day)
     }
 
+    override suspend fun deleteDaysWithBatch(list: List<Day>): Result<Boolean> {
+        return remoteDataSource.deleteDaysWithBatch(list)
+    }
+
     override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
         return remoteDataSource.getLiveDays(planId)
     }
@@ -119,6 +124,10 @@ class DefaultHowYoRepository(
 
     override suspend fun deleteSchedule(schedule: Schedule): Result<Boolean> {
         return remoteDataSource.deleteSchedule(schedule)
+    }
+
+    override suspend fun deleteScheduleWithBatch(list: List<Schedule>): Result<Boolean> {
+        return remoteDataSource.deleteScheduleWithBatch(list)
     }
 
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
@@ -164,6 +173,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.deleteComment(comment)
     }
 
+    override suspend fun deleteCommentWithBatch(list: List<Comment>): Result<Boolean> {
+        return remoteDataSource.deleteCommentWithBatch(list)
+    }
+
     override suspend fun getComments(planId: String): Result<List<Comment>> {
         return remoteDataSource.getComments(planId)
     }
@@ -171,4 +184,20 @@ class DefaultHowYoRepository(
     override fun getLiveComments(planId: String): MutableLiveData<List<Comment>> {
         return remoteDataSource.getLiveComments(planId)
     }
+
+    override suspend fun createGroupMessage(groupMessage: GroupMessage): Result<Boolean> {
+        return remoteDataSource.createGroupMessage(groupMessage)
+    }
+
+    override fun getLiveGroupMessages(planId: String): MutableLiveData<List<GroupMessage>> {
+        return remoteDataSource.getLiveGroupMessages(planId)
+    }
+
+    override suspend fun deleteDataListsWithPlanID(planId: String, type: DeleteDataType): Result<Boolean> {
+        return remoteDataSource.deleteDataListsWithPlanID(planId, type)
+    }
+
+//    override suspend fun deleteAllDataAboutPlanWithBatch(planId: String): Result<Boolean> {
+//        return deleteAllDataAboutPlanWithBatch(planId)
+//    }
 }
