@@ -100,6 +100,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
     visibility = when (currentFragmentType) {
         CurrentFragmentType.PLAN,
         CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
+        CurrentFragmentType.COMPANION_LOCATE,
         CurrentFragmentType.PAYMENT,
         CurrentFragmentType.PAYMENT_DETAIL,
         CurrentFragmentType.SETTING,

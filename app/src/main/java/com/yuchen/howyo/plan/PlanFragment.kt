@@ -455,6 +455,7 @@ class PlanFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToLocateCompanionFragment(it)
                 )
+                resetToolbar()
                 viewModel.onLocateCompanionNavigated()
             }
         })

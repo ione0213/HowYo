@@ -1,23 +1,23 @@
 package com.yuchen.howyo
 
 import android.Manifest
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.Gravity
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
@@ -25,6 +25,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yuchen.howyo.databinding.ActivityMainBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.ext.toText
+import com.yuchen.howyo.service.UserLocateService
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.signin.UserManager.isLoggedIn
 import com.yuchen.howyo.util.*
@@ -39,6 +41,28 @@ class MainActivity : BaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var locationPermissionGranted = false
     private lateinit var mContext: Context
+    private var userLocateServiceBound = false
+    private var userLocateService: UserLocateService? = null
+    private lateinit var howYoBroadcastReceiver: HowYoBroadcastReceiver
+
+    private val userLocateServiceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            Logger.i("onServiceConnected")
+            val binder = service as UserLocateService.LocalBinder
+            userLocateService = binder.service
+            Logger.i("userLocateService on connected:${userLocateService == null}")
+            userLocateServiceBound = true
+            viewModel.setUserLocateServiceStatus(userLocateServiceBound)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            Logger.i("onServiceDisconnected")
+            userLocateService = null
+            userLocateServiceBound = false
+            viewModel.setUserLocateServiceStatus(userLocateServiceBound)
+        }
+    }
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -95,6 +119,8 @@ class MainActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        howYoBroadcastReceiver = HowYoBroadcastReceiver()
+
         viewModel.navigateToHomeByBottomNav.observe(
             this,
             {
@@ -129,6 +155,24 @@ class MainActivity : BaseActivity() {
             }
         })
 
+        viewModel.isUserLocateServiceReady.observe(this) {
+            it?.let {
+                if (it) {
+                    userLocateService?.subscribeToLocationUpdates()
+                    viewModel.onSetUserLocateServiceStatus()
+                }
+            }
+        }
+
+        viewModel.isAccessAppFirstTime.observe(this) {
+            it?.let {
+                if (it && isLoggedIn) {
+                    getLocationPermission()
+                    viewModel.onSetIsAccessAppFirstTime()
+                }
+            }
+        }
+
         setupToolbar()
         setupBottomNav()
         setupDrawer()
@@ -152,6 +196,7 @@ class MainActivity : BaseActivity() {
                 R.id.planFragment -> CurrentFragmentType.PLAN
                 R.id.groupMessageFragment -> CurrentFragmentType.GROUP_MESSAGE
                 R.id.checkOrShoppingListFragment -> CurrentFragmentType.CHECK_OR_SHOPPING_LIST
+                R.id.locateFragment -> CurrentFragmentType.COMPANION_LOCATE
                 R.id.paymentFragment -> CurrentFragmentType.PAYMENT
                 R.id.paymentDetailFragment -> CurrentFragmentType.PAYMENT_DETAIL
 //                R.id.findLocationFragment -> CurrentFragmentType.FIND_LOCATION
@@ -201,7 +246,6 @@ class MainActivity : BaseActivity() {
                             layoutParams.topMargin = statusBarHeight - oriStatusBarHeight
                         }
                     }
-//                    binding.imageToolbarLogo.layoutParams = layoutParams
                     binding.textToolbarTitle.layoutParams = layoutParams
                 }
             }
@@ -256,6 +300,73 @@ class MainActivity : BaseActivity() {
                 }
             }
         )
+
+        viewModel.userLocation.observe(this) {
+            it?.let {
+                viewModel.updateUser(it)
+                viewModel.onSetUserLocation()
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Logger.i("onstart bindservice")
+        bindService()
+    }
+
+    private fun bindService() {
+        val serviceIntent = Intent(this, UserLocateService::class.java)
+        Logger.i("bindServicebindServicebindServicebindService")
+        if (isLoggedIn) bindService(serviceIntent, userLocateServiceConnection, BIND_AUTO_CREATE)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Logger.i("viewModel.isAccessAppFirstTime.value:${viewModel.isAccessAppFirstTime.value}")
+        Logger.i("viewModel.isBroadcastUnRegistered.value:${viewModel.isBroadcastUnRegistered.value}")
+        if (viewModel.isAccessAppFirstTime.value != true) {
+            Logger.i("registerLocationReceiverregisterLocationReceiverregisterLocationReceiver")
+            registerLocationReceiver()
+            viewModel.onsetBroadcastRegistered()
+        }
+    }
+
+    private fun registerLocationReceiver() {
+
+        if (isLoggedIn && viewModel.isBroadcastUnRegistered.value != true) {
+            Logger.i("registerLocationReceiver")
+
+            LocalBroadcastManager.getInstance(this).registerReceiver(
+                howYoBroadcastReceiver,
+                IntentFilter(
+                    UserLocateService.ACTION_HOW_YO_LOCATION_BROADCAST
+                )
+            )
+
+            viewModel.setBroadcastRegistered()
+        }
+    }
+
+    override fun onPause() {
+        if (isLoggedIn) {
+            Logger.i("onPauseonPauseonPauseonPause")
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                howYoBroadcastReceiver
+            )
+            viewModel.onsetBroadcastRegistered()
+        }
+        super.onPause()
+    }
+
+    override fun onStop() {
+        if (userLocateServiceBound && isLoggedIn) {
+            Logger.i("onStoponStoponStoponStoponStop")
+            unbindService(userLocateServiceConnection)
+            userLocateServiceBound = false
+        }
+
+        super.onStop()
     }
 
     override fun onBackPressed() {
@@ -266,13 +377,13 @@ class MainActivity : BaseActivity() {
     }
 
     //These function about getting location should be in a dependent class
-    fun getLocationPermission() {
+    private fun getLocationPermission() {
+        Logger.i("getLocationPermission")
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-//            Toast.makeText(this, "Get Permission", Toast.LENGTH_LONG).show()
             locationPermissionGranted = true
             checkGPSState()
         } else {
@@ -280,7 +391,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun requestLocationPermission() {
+    private fun requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -313,33 +424,8 @@ class MainActivity : BaseActivity() {
             REQUEST_LOCATION_PERMISSION -> {
                 if (grantResults.isNotEmpty()) {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        //已獲取到權限
                         locationPermissionGranted = true
                         checkGPSState()
-                    } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                                this,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            )
-                        ) {
-                            //權限被永久拒絕
-//                            Toast.makeText(this, "位置權限已被關閉，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
-
-                            //Navigate to setting page
-//                            AlertDialog.Builder(this)
-//                                .setTitle("開啟位置權限")
-//                                .setMessage("此應用程式，位置權限已被關閉，需開啟才能正常使用")
-//                                .setPositiveButton("確定") { _, _ ->
-//                                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-//                                    startActivityForResult(intent, REQUEST_LOCATION_PERMISSION)
-//                                }
-//                                .setNegativeButton("取消") { _, _ -> requestLocationPermission() }
-//                                .show()
-                        } else {
-                            //權限被拒絕
-//                            Toast.makeText(this, "位置權限被拒絕，功能將會無法正常使用", Toast.LENGTH_SHORT).show()
-//                            requestLocationPermission()
-                        }
                     }
                 }
             }
@@ -359,6 +445,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun checkGPSState() {
+        Logger.i("checkGPSState")
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
@@ -373,8 +460,25 @@ class MainActivity : BaseActivity() {
                 .setNegativeButton("取消", null)
                 .show()
         } else {
-            //todo getDeviceLocation()
-//            Toast.makeText(this, "已獲取到位置權限且GPS已開啟，可以準備開始獲取經緯度", Toast.LENGTH_SHORT).show()
+            Logger.i("checkGPSState bindservice")
+
+            bindService()
+            registerLocationReceiver()
+//            userLocateService?.subscribeToLocationUpdates()
+        }
+    }
+
+    private inner class HowYoBroadcastReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            val location = intent.getParcelableExtra<Location>(
+                UserLocateService.EXTRA_LOCATION
+            )
+
+            if (location != null) {
+                viewModel.setUserLocation(location)
+                Logger.i("Foreground location: ${location.toText()}")
+            }
         }
     }
 }

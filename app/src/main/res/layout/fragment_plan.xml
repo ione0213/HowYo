@@ -179,8 +179,8 @@
 
                 <ImageButton
                     android:id="@+id/button_plan_companion"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_gravity="end|bottom"
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/small_padding"
@@ -192,8 +192,8 @@
 
                 <ImageButton
                     android:id="@+id/button_plan_map_mode"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_gravity="end|bottom"
                     android:layout_marginEnd="56dp"
                     android:layout_marginBottom="@dimen/small_padding"
@@ -205,8 +205,8 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_payment"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_gravity="end|bottom"
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/small_padding"
@@ -220,8 +220,8 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_luggage"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_gravity="end|bottom"
                     android:layout_marginEnd="56dp"
                     android:layout_marginBottom="@dimen/small_padding"
@@ -235,8 +235,8 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_shopping"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_gravity="end|bottom"
                     android:layout_marginEnd="96dp"
                     android:layout_marginBottom="@dimen/small_padding"
@@ -250,8 +250,8 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_chatting"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_gravity="start|bottom"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/small_padding"
@@ -265,8 +265,8 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_locate_friend"
-                    android:layout_width="@dimen/plan_img_btn_small"
-                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_width="@dimen/plan_img_btn_middle"
+                    android:layout_height="@dimen/plan_img_btn_middle"
                     android:layout_gravity="start|bottom"
                     android:layout_marginStart="56dp"
                     android:layout_marginBottom="@dimen/small_padding"

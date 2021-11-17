@@ -1,20 +1,33 @@
 package com.yuchen.howyo.home
 
+import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.view.*
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.yuchen.howyo.MainViewModel
-import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.R
+import com.yuchen.howyo.*
 import com.yuchen.howyo.databinding.FragmentHomeBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.ext.toText
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.service.UserLocateService
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.util.REQUEST_ENABLE_GPS
+import com.yuchen.howyo.util.REQUEST_LOCATION_PERMISSION
 
 class HomeFragment : Fragment() {
 
@@ -30,7 +43,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this

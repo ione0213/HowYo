@@ -1,6 +1,7 @@
 package com.yuchen.howyo.ext
 
 import android.graphics.Rect
+import android.location.Location
 import android.view.TouchDelegate
 import android.view.View
 import com.yuchen.howyo.util.Logger
@@ -70,5 +71,13 @@ fun Long.displayTime(): String {
         sec < 31536000 -> (sec / 2592000).toString() + "月前"
 
         else -> (sec / 31536000).toString() + "年前"
+    }
+}
+
+fun Location?.toText(): String {
+    return if (this != null) {
+        "($latitude, $longitude)"
+    } else {
+        "Unknown location"
     }
 }

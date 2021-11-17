@@ -26,6 +26,14 @@ class DefaultHowYoRepository(
         return remoteDataSource.getLiveUser(userId)
     }
 
+    override fun getLiveUsers(userIdList: List<String>): MutableLiveData<List<User>> {
+        return remoteDataSource.getLiveUsers(userIdList)
+    }
+
+    override suspend fun getUsers(userIdList: List<String>): Result<List<User>> {
+        return remoteDataSource.getUsers(userIdList)
+    }
+
     override suspend fun updateUser(user: User): Result<Boolean> {
         return remoteDataSource.updateUser(user)
     }

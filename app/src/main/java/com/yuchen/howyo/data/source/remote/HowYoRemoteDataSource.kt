@@ -151,6 +151,87 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
+    override fun getLiveUsers(userIdList: List<String>): MutableLiveData<List<User>> {
+        val liveData = MutableLiveData<List<User>>()
+        when (userIdList.size) {
+            0 -> {
+
+            }
+            else -> {
+                FirebaseFirestore.getInstance()
+                    .collection(PATH_USERS)
+                    .whereIn(KEY_ID, userIdList)
+                    .addSnapshotListener { snapshot, exception ->
+
+                        Logger.i("addSnapshotListener detect")
+
+                        exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error getting users. ${it.message}")
+                        }
+
+                        val list = mutableListOf<User>()
+                        if (snapshot != null) {
+                            for (document in snapshot) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val user = document.toObject(User::class.java)
+                                list.add(user)
+                            }
+                        }
+
+                        liveData.value = list
+                    }
+            }
+        }
+
+        return liveData
+    }
+
+    override suspend fun getUsers(userIdList: List<String>): Result<List<User>> =
+        suspendCoroutine { continuation ->
+            when (userIdList.size) {
+                0 -> {
+                    continuation.resume(Result.Success(listOf()))
+                }
+                else -> {
+                    FirebaseFirestore.getInstance()
+                        .collection(PATH_USERS)
+                        .whereIn(KEY_ID, userIdList)
+                        .get()
+                        .addOnCompleteListener { task ->
+
+                            if (task.isSuccessful) {
+                                val list = mutableListOf<User>()
+
+                                if (task.result != null) {
+                                    for (document in task.result!!) {
+                                        Logger.d(document.id + " => " + document.data)
+
+                                        val user = document.toObject(User::class.java)
+                                        list.add(user)
+                                    }
+                                    continuation.resume(Result.Success(list))
+                                }
+                            } else {
+                                task.exception?.let {
+
+                                    Logger.w("[${this::class.simpleName}] Error getting users. ${it.message}")
+                                    continuation.resume(Result.Error(it))
+                                    return@addOnCompleteListener
+                                }
+                                continuation.resume(
+                                    Result.Fail(
+                                        HowYoApplication.instance.getString(
+                                            R.string.nothing
+                                        )
+                                    )
+                                )
+                            }
+                        }
+                }
+            }
+        }
+
     override suspend fun updateUser(user: User): Result<Boolean> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance()

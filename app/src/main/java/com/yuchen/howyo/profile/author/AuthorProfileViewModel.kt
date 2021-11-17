@@ -162,41 +162,4 @@ class AuthorProfileViewModel(
             _currentUser.value?.let { howYoRepository.updateUser(it) }
         }
     }
-
-    fun unfollow() {
-        val newAuthor = author.value
-        val fansList = newAuthor?.fansList?.toMutableList()
-
-        val newCurrentUser = currentUser.value
-        val followingList = newCurrentUser?.followingList?.toMutableList()
-
-        val currentUserId = UserManager.userId
-
-        when {
-            newAuthor?.fansList?.contains(currentUserId) == true -> {
-                if (currentUserId != null) {
-                    fansList?.removeAt(fansList.indexOf(currentUserId))
-                }
-            }
-        }
-
-        when {
-            newCurrentUser?.followingList?.contains(newAuthor?.id) == true -> {
-                if (newAuthor?.id != null) {
-                    followingList?.removeAt(followingList.indexOf(newAuthor.id))
-                }
-            }
-        }
-
-        newAuthor?.fansList = fansList
-        newCurrentUser?.followingList = followingList
-
-        _author.value = newAuthor!!
-        _currentUser.value = newCurrentUser!!
-
-        coroutineScope.launch {
-            _author.value?.let { howYoRepository.updateUser(it) }
-            _currentUser.value?.let { howYoRepository.updateUser(it) }
-        }
-    }
 }

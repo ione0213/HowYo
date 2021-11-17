@@ -18,6 +18,7 @@
     <string name="add_payment">新增款項</string>
     <string name="delete">刪除</string>
     <string name="payment_detail">款項資訊</string>
+    <string name="companion_location">旅伴位置</string>
     <string name="find_location">尋找景點</string>
     <string name="setting">設定</string>
     <string name="comment">評論</string>
@@ -28,6 +29,8 @@
     <string name="file_provider_name" translatable="false">.fileProvider</string>
     <string name="confirm">確定</string>
     <string name="cancel">取消</string>
+    <string name="locating">提供旅伴您的位置</string>
+    <string name="back_to_app">返回HowYo</string>
 
     <!-- Home-->
     <string name="empty_home">好友目前沒有公開行程唷！</string>

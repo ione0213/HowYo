@@ -16,11 +16,11 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_map_close"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/plan_img_btn"
+            android:layout_height="@dimen/plan_img_btn"
+            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/large_padding"
             android:onClick="@{() -> viewModel.leaveMap()}"
-            android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginTop="@dimen/standard_padding"
             android:background="@drawable/icons_44px_back01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

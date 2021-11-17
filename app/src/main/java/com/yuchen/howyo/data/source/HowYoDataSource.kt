@@ -16,6 +16,10 @@ interface HowYoDataSource {
 
     fun getLiveUser(userId: String): MutableLiveData<User>
 
+    fun getLiveUsers(userIdList: List<String>): MutableLiveData<List<User>>
+
+    suspend fun getUsers(userIdList: List<String>): Result<List<User>>
+
     suspend fun updateUser(user: User): Result<Boolean>
 
     suspend fun uploadPhoto(imgUri: Uri, fileName: String): Result<String>
