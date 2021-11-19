@@ -68,7 +68,7 @@ class DiscoverFragment : Fragment() {
             }
         }
 
-        viewModel.authorDataList.observe(viewLifecycleOwner) {
+        viewModel.authorDataSet.observe(viewLifecycleOwner) {
             it?.let {
 
                 viewModel.setStatusDone()

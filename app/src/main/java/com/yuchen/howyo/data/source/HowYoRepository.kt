@@ -2,7 +2,6 @@ package com.yuchen.howyo.data.source
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseUser
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.remote.DeleteDataType
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
@@ -102,6 +101,14 @@ interface HowYoRepository {
     suspend fun createGroupMessage(groupMessage: GroupMessage): Result<Boolean>
 
     fun getLiveGroupMessages(planId: String): MutableLiveData<List<GroupMessage>>
+
+    suspend fun createNotification(notification: Notification): Result<Boolean>
+
+    fun getLiveNotifications(): MutableLiveData<List<Notification>>
+
+    suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean>
+
+    suspend fun deleteFollowNotification(toUserId: String): Result<Boolean>
 
     suspend fun deleteDataListsWithPlanID(planId: String, type: DeleteDataType): Result<Boolean>
 }

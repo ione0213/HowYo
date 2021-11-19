@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.data.source.remote.DeleteDataType
+import com.yuchen.howyo.home.notification.NotificationType
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.signin.UserManager
@@ -288,6 +289,7 @@ class PlanViewModel(
         val commentResult = mutableListOf<Boolean>()
         val checkShopListResult = mutableListOf<Boolean>()
         var groupMsgResult = false
+        var notificationResult = false
         val photoResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
@@ -295,11 +297,7 @@ class PlanViewModel(
 
             withContext(Dispatchers.IO) {
 
-//                daysResult.add(deleteDataListsWithBatch(plan.id, DeleteDataType.DAYS))
-
                 days.value?.let { deleteDaysWithBatch(it) }?.let { daysResult.add(it) }
-
-//                scheduleResult.add(deleteDataListsWithBatch(plan.id, DeleteDataType.SCHEDULES))
 
                 allSchedules.value?.let { deleteScheduleWithBatch(it) }?.let { scheduleResult.add(it) }
 
@@ -309,18 +307,18 @@ class PlanViewModel(
                     }
                 }
 
-//                commentResult.add(deleteDataListsWithBatch(plan.id, DeleteDataType.COMMENTS))
                 comments.value?.let { deleteCommentWithBatch(it) }?.let { commentResult.add(it) }
 
                 checkShopListResult.add(
                     deleteDataListsWithBatch(plan.id, DeleteDataType.CHECK_SHOP_LIST)
                 )
-//                _checkShopListResult.postValue(deleteCheckShopList(plan.id))
 
                 planResult.add(deletePlan(plan)!!)
                 deletePhoto(plan.coverFileName)?.let { photoResult.add(it) }
 
                 groupMsgResult = deleteDataListsWithBatch(plan.id, DeleteDataType.GROUP_MSG)
+
+                notificationResult = deleteDataListsWithBatch(plan.id, DeleteDataType.NOTIFICATION)
             }
 
             when {
@@ -330,7 +328,8 @@ class PlanViewModel(
                         && !planResult.contains(false)
                         && !checkShopListResult.contains(false)
                         && !photoResult.contains(false)
-                        && groupMsgResult -> {
+                        && groupMsgResult
+                        && notificationResult -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
                 }
@@ -898,16 +897,6 @@ class PlanViewModel(
                     }
                 }
             }
-
-//            tempDays.forEach { tempDay ->
-//                .value?.forEach { day ->
-//                    when {
-//                        tempDay.position != day.position -> {
-//                            daysResult.add(updateDay(tempDay))
-//                        }
-//                    }
-//                }
-//            }
         }
 
         _handleDaySuccess.value = !daysResult.contains(false)
@@ -1234,6 +1223,14 @@ class PlanViewModel(
         val likeList = newPlan?.likeList?.toMutableList()
         val currentUserId = UserManager.userId
 
+        val notification = Notification(
+            toUserId = plan.value?.authorId,
+            fromUserId = currentUserId,
+            notificationType = NotificationType.LIKE.type,
+            planId = plan.value?.id,
+            planCoverUrl = plan.value?.coverPhotoUrl
+        )
+
         when (type) {
             LikeType.LIKE -> {
                 when {
@@ -1261,6 +1258,7 @@ class PlanViewModel(
 
         coroutineScope.launch {
             _plan.value?.let { howYoRepository.updatePlan(it) }
+            if (type == LikeType.LIKE) howYoRepository.createNotification(notification)
         }
     }
 

@@ -6,10 +6,10 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.*
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -41,17 +41,18 @@ import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
-import android.util.DisplayMetrics
-
-import android.R
-import android.graphics.Canvas
-
-import android.widget.TextView
+import android.graphics.drawable.Drawable
 
 import androidx.annotation.DrawableRes
+import com.yuchen.howyo.databinding.LayoutAvatarInMapBinding
+import android.graphics.PorterDuff
 
-
-
+import android.graphics.Bitmap
+import android.widget.ImageView
+import android.widget.TextView
+import com.google.maps.android.ui.IconGenerator
+import com.yuchen.howyo.data.User
+import com.yuchen.howyo.util.Util.isInternetConnected
 
 
 class LocateFragment : Fragment(), OnMapReadyCallback {
@@ -83,13 +84,17 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
 
         mContext = HowYoApplication.instance
 
+
         //Map
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
             HowYoApplication.instance
         )
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.map_locate_companion) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+
+        if (isInternetConnected()) {
+            val mapFragment =
+                childFragmentManager.findFragmentById(R.id.map_locate_companion) as SupportMapFragment
+            mapFragment.getMapAsync(this)
+        }
 
         viewModel.companions.observe(viewLifecycleOwner, {
             Logger.i("googleMap null? :${googleMap == null}")
@@ -100,6 +105,8 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         })
+
+        Logger.i("~~~~~${googleMap == null}")
 
         return binding.root
     }
@@ -112,6 +119,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun locateCurrentUser() {
+        Logger.i("locateCurrentUser")
         googleMap?.clear()
         if (ActivityCompat.checkSelfPermission(
                 HowYoApplication.instance,
@@ -141,15 +149,15 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
 
                     //Load avatar as icon of map marker
                     val imageURLBase = "${it.avatar}"
-                    Logger.i("avatar:${it.avatar}")
                     val imageURL = URL(imageURLBase)
                     val connection: URLConnection = imageURL.openConnection()
                     val iconStream: InputStream = connection.getInputStream()
                     bmp = BitmapFactory.decodeStream(iconStream, null, options) as Bitmap
                 }
 
-                Logger.i("Locattion:${it.longitude}, ${it.latitude}")
+                Logger.i("Location:${it.longitude}, ${it.latitude}")
                 Logger.i("id:${it.id}")
+
                 googleMap?.addMarker(
                     MarkerOptions()
                         .position(
@@ -159,13 +167,19 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                             )
                         )
 //                        .title(it.id)
-                        .title(it.name).icon(BitmapDescriptorFactory.fromBitmap(bmp))
+//                        .title(it.name).icon(BitmapDescriptorFactory.fromBitmap(bmp))
+                        .title(it.name).icon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                getMarkerBitmapFromView(it, bmp)!!
+                            )
+                        )
                 )
             }
         }
     }
 
     private fun checkGPSState() {
+        Logger.i("checkGPSState")
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
@@ -254,12 +268,15 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getDeviceLocation() {
+        Logger.i("getDeviceLocation")
+        Logger.i("locationPermissionGranted:$locationPermissionGranted")
         try {
             if (locationPermissionGranted) {
+                Logger.i("device innn")
                 val locationRequest = LocationRequest()
                 locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
                 //更新頻率
-                locationRequest.interval = 60000
+                locationRequest.interval = 6000
                 //更新次數，若沒設定，會持續更新
                 locationRequest.numUpdates = 1
                 mFusedLocationProviderClient.requestLocationUpdates(
@@ -278,11 +295,11 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                                     currentLocation, 16f
                                 )
                             )
-
+                            Logger.i("requestLocationUpdates")
                             viewModel.onLocateDone()
                         }
                     },
-                    null
+                    Looper.getMainLooper()
                 )
             } else {
                 getLocationPermission()
@@ -290,5 +307,16 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
+    }
+
+    private fun getMarkerBitmapFromView(user: User, bitmap: Bitmap): Bitmap? {
+        val iconGenerator = IconGenerator(mContext)
+        val markerView: View = LayoutInflater.from(mContext).inflate(R.layout.layout_avatar_in_map, null)
+        val imgMarker = markerView.findViewById<ImageView>(R.id.img_map_user_avatar)
+        imgMarker.setImageBitmap(bitmap)
+//            .setImageResource()
+        iconGenerator.setContentView(markerView)
+        iconGenerator.setBackground(null)
+        return iconGenerator.makeIcon("")
     }
 }

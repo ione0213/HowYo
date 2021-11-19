@@ -3,10 +3,13 @@ package com.yuchen.howyo.profile.author
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.yuchen.howyo.data.Notification
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.home.notification.NotificationType
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.plan.LikeType
 import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +117,12 @@ class AuthorProfileViewModel(
 
         val currentUserId = UserManager.userId
 
+        val notification = Notification(
+            toUserId = author.value?.id,
+            fromUserId = currentUserId,
+            notificationType = NotificationType.FOLLOW.type
+        )
+
         when (type) {
             FollowType.FOLLOW -> {
                 when {
@@ -160,6 +169,11 @@ class AuthorProfileViewModel(
         coroutineScope.launch {
             _author.value?.let { howYoRepository.updateUser(it) }
             _currentUser.value?.let { howYoRepository.updateUser(it) }
+            if (type == FollowType.FOLLOW) {
+                howYoRepository.createNotification(notification)
+            } else {
+                author.value?.let { howYoRepository.deleteFollowNotification(it.id) }
+            }
         }
     }
 }

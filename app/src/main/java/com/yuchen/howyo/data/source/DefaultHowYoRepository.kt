@@ -201,6 +201,22 @@ class DefaultHowYoRepository(
         return remoteDataSource.getLiveGroupMessages(planId)
     }
 
+    override suspend fun createNotification(notification: Notification): Result<Boolean> {
+        return remoteDataSource.createNotification(notification)
+    }
+
+    override fun getLiveNotifications(): MutableLiveData<List<Notification>> {
+        return remoteDataSource.getLiveNotifications()
+    }
+
+    override suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean> {
+        return remoteDataSource.updateNotificationWithBatch(list)
+    }
+
+    override suspend fun deleteFollowNotification(toUserId: String): Result<Boolean> {
+        return remoteDataSource.deleteFollowNotification(toUserId)
+    }
+
     override suspend fun deleteDataListsWithPlanID(planId: String, type: DeleteDataType): Result<Boolean> {
         return remoteDataSource.deleteDataListsWithPlanID(planId, type)
     }

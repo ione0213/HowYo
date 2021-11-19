@@ -10,7 +10,9 @@ import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoDataSource
+import com.yuchen.howyo.home.notification.NotificationType
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
 import java.util.*
 import kotlin.coroutines.resume
@@ -26,6 +28,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_CHECK_SHOPPING_LIST = "check_shopping_lists"
     private const val PATH_COMMENTS = "comments"
     private const val PATH_GROUP_MESSAGE = "group_messages"
+    private const val PATH_NOTIFICATION = "notifications"
     private const val KEY_POSITION = "position"
     private const val KEY_CREATED_TIME = "created_time"
     private const val KEY_EMAIL = "email"
@@ -35,6 +38,9 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val KEY_COLLECTED = "plan_collected_list"
     private const val KEY_PLAN_ID = "plan_id"
     private const val KEY_MAIN_TYPE = "main_type"
+    private const val KEY_TO_USER_ID = "to_user_id"
+    private const val KEY_FROM_USER_ID = "from_user_id"
+    private const val KEY_NOTIFICATION_TYPE = "notification_type"
 
     override suspend fun signOut() {
 
@@ -1412,6 +1418,148 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
+    override suspend fun createNotification(notification: Notification): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val notifications = FirebaseFirestore.getInstance().collection(PATH_NOTIFICATION)
+            val document = notifications.document()
+
+            notification.id = document.id
+
+            document
+                .set(notification)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        continuation.resume(Result.Success(true))
+                    } else {
+                        task.exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error creating notification. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                        )
+                    }
+                }
+        }
+
+    override fun getLiveNotifications(): MutableLiveData<List<Notification>> {
+        val liveData = MutableLiveData<List<Notification>>()
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_NOTIFICATION)
+            .whereEqualTo(KEY_TO_USER_ID, UserManager.userId)
+            .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting Notifications. ${it.message}")
+                }
+
+                val list = mutableListOf<Notification>()
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val notification = document.toObject(Notification::class.java)
+                        list.add(notification)
+                    }
+                }
+
+                liveData.value = list
+            }
+        return liveData
+    }
+
+    override suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean>  =
+        suspendCoroutine { continuation ->
+
+            val db = FirebaseFirestore.getInstance()
+
+            db.runBatch { batch ->
+
+                list.forEach { notification ->
+
+                    val document = db.collection(PATH_NOTIFICATION).document(notification.id!!)
+
+                    batch.set(document, notification)
+                }
+            }.addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error updating Notifications. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@let
+                    }
+                    continuation.resume(
+                        Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                    )
+                }
+            }
+        }
+
+    override suspend fun deleteFollowNotification(toUserId: String): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            val deleteResults = mutableListOf<Boolean>()
+
+            Logger.i("FROM USER ID: ${UserManager.userId}")
+            Logger.i("To USER ID: $toUserId")
+            FirebaseFirestore.getInstance()
+                .collection(PATH_NOTIFICATION)
+                .whereEqualTo(KEY_FROM_USER_ID, UserManager.userId)
+                .whereEqualTo(KEY_TO_USER_ID, toUserId)
+                .whereEqualTo(KEY_NOTIFICATION_TYPE, NotificationType.FOLLOW.type)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        if (task.result.size() != 0) {
+                            Logger.i("task .result:${task.result}")
+                            task.result.forEach {
+
+                                val db = FirebaseFirestore.getInstance()
+
+                                db.runBatch { batch ->
+
+                                    val document =
+                                        db.collection(PATH_NOTIFICATION).document(it.id)
+
+                                    batch.delete(document)
+                                }.addOnCompleteListener { subTask ->
+                                    if (subTask.isSuccessful) {
+                                        deleteResults.add(true)
+                                    } else {
+                                        deleteResults.add(false)
+                                    }
+                                }
+                            }
+                        }
+
+                        continuation.resume(
+                            when (!deleteResults.contains(false)) {
+                                true -> Result.Success(true)
+                                false -> Result.Success(false)
+                            }
+                        )
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error deleting notifications. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
+                    }
+                }
+        }
+
     override suspend fun deleteDataListsWithPlanID(
         planId: String,
         type: DeleteDataType
@@ -1424,6 +1572,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 DeleteDataType.COMMENTS -> PATH_COMMENTS
                 DeleteDataType.CHECK_SHOP_LIST -> PATH_CHECK_SHOPPING_LIST
                 DeleteDataType.GROUP_MSG -> PATH_GROUP_MESSAGE
+                DeleteDataType.NOTIFICATION -> PATH_NOTIFICATION
             }
 
             val firebaseRef = FirebaseFirestore.getInstance()
@@ -1436,21 +1585,23 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        task.result.forEach {
+                        if (task.result.size() != 0) {
+                            task.result.forEach {
 
-                            val db = FirebaseFirestore.getInstance()
+                                val db = FirebaseFirestore.getInstance()
 
-                            db.runBatch { batch ->
+                                db.runBatch { batch ->
 
-                                val document =
-                                    db.collection(collectionName).document(it.id)
+                                    val document =
+                                        db.collection(collectionName).document(it.id)
 
-                                batch.delete(document)
-                            }.addOnCompleteListener { subTask ->
-                                if (subTask.isSuccessful) {
-                                    deleteResults.add(true)
-                                } else {
-                                    deleteResults.add(false)
+                                    batch.delete(document)
+                                }.addOnCompleteListener { subTask ->
+                                    if (subTask.isSuccessful) {
+                                        deleteResults.add(true)
+                                    } else {
+                                        deleteResults.add(false)
+                                    }
                                 }
                             }
                         }

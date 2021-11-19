@@ -19,6 +19,7 @@ import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
+import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.ext.toText
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
@@ -43,6 +44,12 @@ class UserLocateService : Service() {
     private lateinit var locationCallback: LocationCallback
 
     private var currentLocation: Location? = null
+
+    private val howYoRepository = (HowYoApplication.instance).howYoRepository
+
+    private var job = Job()
+
+    private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
 
     override fun onCreate() {
 
@@ -85,7 +92,7 @@ class UserLocateService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Logger.i("onDestroy")
+        job.cancel()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -155,18 +162,20 @@ class UserLocateService : Service() {
 
     private fun generateNotification(location: Location?): Notification {
 
+        updateUserLocation(location)
+
         Logger.d("generateNotification()")
 
         val titleText = getString(R.string.app_name)
 
         val notificationChannel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID, titleText, NotificationManager.IMPORTANCE_DEFAULT
+            NOTIFICATION_CHANNEL_ID, titleText, NotificationManager.IMPORTANCE_LOW
         )
 
         notificationManager.createNotificationChannel(notificationChannel)
 
         val bigTextStyle = NotificationCompat.BigTextStyle()
-            .bigText(getString(R.string.locating))
+            .bigText(getString(R.string.locating) + location.toText())
             .setBigContentTitle(titleText)
 
         val launchActivityIntent = Intent(this, MainActivity::class.java)
@@ -181,7 +190,7 @@ class UserLocateService : Service() {
         return notificationCompatBuilder
             .setStyle(bigTextStyle)
             .setContentTitle(titleText)
-            .setContentText(getString(R.string.locating) + location.toText())
+            .setContentText(getString(R.string.locating))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setOngoing(true)
@@ -195,7 +204,39 @@ class UserLocateService : Service() {
 
     private fun updateUserLocation(location: Location?) {
 
+        coroutineScope.launch {
+            var user: User?
 
+            withContext(Dispatchers.IO) {
+                user = getUserResult()
+            }
+
+            user?.apply {
+                latitude = location?.latitude
+                longitude = location?.longitude
+            }
+
+            withContext(Dispatchers.IO) {
+                user?.let { howYoRepository.updateUser(it) }
+            }
+        }
+    }
+
+    private suspend fun getUserResult(): User {
+
+        var user = User()
+
+        when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
+            is Result.Success -> {
+                user = result.data
+            }
+            else -> {
+                howYoRepository.signOut()
+                UserManager.clear()
+            }
+        }
+
+        return user
     }
 
     inner class LocalBinder : Binder() {

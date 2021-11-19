@@ -48,7 +48,7 @@
                     android:layout_marginBottom="@dimen/small_padding"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="@+id/img_home_plan_cover"
-                    app:authorData="@{viewModel.authorDataList}"
+                    app:authorData="@{viewModel.authorDataSet}"
                     app:plan="@{plan}"
                     app:shapeAppearanceOverlay="@style/circle"
                     tools:src="@drawable/avatar_sample" />

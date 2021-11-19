@@ -252,6 +252,27 @@ fun bindImage(imageView: ShapeableImageView, plan: Plan?, authorDataList: Set<Us
     }
 }
 
+@BindingAdapter("userId", "authorData")
+fun bindImage(imageView: ShapeableImageView, userId: String?, authorDataList: Set<User>?) {
+
+    userId?.let {
+
+        val imgUrl = authorDataList?.first { it.id == userId }?.avatar
+
+        imgUrl?.let {
+            val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+            Glide.with(imageView.context)
+                .load(imgUri)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_placeholder)
+                )
+                .into(imageView)
+        }
+    }
+}
+
 @BindingAdapter("imageData")
 fun bindImageWithData(imageView: ImageView, schedulePhoto: SchedulePhoto?) {
     schedulePhoto?.let { photoData ->
@@ -380,22 +401,6 @@ fun bindRecyclerViewWithPlans(
                 }
                 is AuthorProfilePlanAdapter -> {
                     submitList(it)
-                }
-            }
-        }
-    }
-}
-
-@BindingAdapter("notifications")
-fun bindRecyclerViewWithNotifications(
-    recyclerView: RecyclerView,
-    plans: List<Notification>
-) {
-    plans.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is NotificationAdapter -> {
-                    addNotificationItem(it)
                 }
             }
         }
@@ -586,7 +591,7 @@ fun AppCompatButton.bindCompanionBtn(plan: Plan?, user: User?, companionType: Co
 }
 
 @BindingAdapter("groupPlan")
-fun TextView.bindGroupText(plan: Plan?) {
+fun AppCompatButton.bindGroupText(plan: Plan?) {
 
     if (plan != null) {
         visibility = when (plan.companionList?.contains(UserManager.userId)) {
