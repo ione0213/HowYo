@@ -730,7 +730,6 @@ class PlanCoverViewModel(
         )
 
         _planPhoto.value = newPlanPhoto
-//        _photoUri.value = photoUri!!
     }
 
     fun resetCoverImg() {

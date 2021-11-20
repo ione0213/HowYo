@@ -99,7 +99,7 @@
 
                 <ImageView
                     android:id="@+id/img_home_plan_cover"
-                    android:layout_width="0dp"
+                    android:layout_width="120dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginEnd="@dimen/small_padding"
@@ -108,7 +108,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/img_notify_like_avatar"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:onClick="@{() -> viewModel.navigateToPlan(notification.planId)}"
-                    app:layout_constraintStart_toEndOf="@+id/textview_notify_like_time"
+
                     app:layout_constraintTop_toTopOf="@+id/img_notify_like_avatar"
                     app:layout_goneMarginStart="@dimen/small_padding"
                     app:shapeAppearanceOverlay="@style/circle"

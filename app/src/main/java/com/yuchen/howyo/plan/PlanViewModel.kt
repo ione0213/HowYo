@@ -290,6 +290,7 @@ class PlanViewModel(
         val checkShopListResult = mutableListOf<Boolean>()
         var groupMsgResult = false
         var notificationResult = false
+        var paymentResult = false
         val photoResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
@@ -319,6 +320,8 @@ class PlanViewModel(
                 groupMsgResult = deleteDataListsWithBatch(plan.id, DeleteDataType.GROUP_MSG)
 
                 notificationResult = deleteDataListsWithBatch(plan.id, DeleteDataType.NOTIFICATION)
+
+                paymentResult = deleteDataListsWithBatch(plan.id, DeleteDataType.PAYMENT)
             }
 
             when {
@@ -329,7 +332,8 @@ class PlanViewModel(
                         && !checkShopListResult.contains(false)
                         && !photoResult.contains(false)
                         && groupMsgResult
-                        && notificationResult -> {
+                        && notificationResult
+                        &&paymentResult -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
                 }

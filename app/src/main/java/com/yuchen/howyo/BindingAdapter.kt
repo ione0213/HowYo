@@ -368,21 +368,21 @@ fun RecyclerView.bindRecyclerViewWithCheckLists(
     }
 }
 
-@BindingAdapter("payments")
-fun bindRecyclerViewWithPayments(
-    recyclerView: RecyclerView,
-    paymentLists: List<Payment>
-) {
-    paymentLists.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is PaymentAdapter -> {
-                    submitList(it)
-                }
-            }
-        }
-    }
-}
+//@BindingAdapter("payments")
+//fun bindRecyclerViewWithPayments(
+//    recyclerView: RecyclerView,
+//    paymentLists: List<Payment>
+//) {
+//    paymentLists.let {
+//        recyclerView.adapter?.apply {
+//            when (this) {
+//                is PaymentAdapter -> {
+//                    submitList(it)
+//                }
+//            }
+//        }
+//    }
+//}
 
 @BindingAdapter("plans")
 fun bindRecyclerViewWithPlans(

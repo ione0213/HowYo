@@ -110,5 +110,13 @@ interface HowYoDataSource {
 
     suspend fun deleteFollowNotification(toUserId: String): Result<Boolean>
 
+    suspend fun createPayment(payment: Payment): Result<Boolean>
+
+    suspend fun deletePayment(payment: Payment): Result<Boolean>
+
+    suspend fun updatePayment(payment: Payment): Result<Boolean>
+
+    fun getLivePayments(planId: String): MutableLiveData<List<Payment>>
+
     suspend fun deleteDataListsWithPlanID(planId: String, type: DeleteDataType): Result<Boolean>
 }

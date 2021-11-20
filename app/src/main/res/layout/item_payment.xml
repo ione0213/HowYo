@@ -40,8 +40,8 @@
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginBottom="@dimen/small_padding"
-                    android:backgroundTint="@color/matcha_3"
                     android:background="@drawable/coin"
+                    android:backgroundTint="@color/matcha_3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -66,26 +66,31 @@
                     android:id="@+id/view_payment_separation"
                     style="@style/SeparationVertical"
                     android:layout_marginStart="@dimen/middle_padding"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_payment_amount"
                     app:layout_constraintStart_toEndOf="@+id/text_payment_amount"
-                    app:layout_constraintTop_toTopOf="@+id/text_payment_amount"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_payment_amount"/>
+                    app:layout_constraintTop_toTopOf="@+id/text_payment_amount" />
 
                 <TextView
                     android:id="@+id/text_payment_item_name"
-                    style="@style/TextStyle2_black"
-                    android:layout_width="wrap_content"
+                    style="@style/TextStyle2_matcha_3"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginTop="@dimen/middle_padding"
+                    android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/middle_padding"
-                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="textStart"
                     android:text="@{payment.item}"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/view_payment_separation"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
+                    tools:text="拉麵"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/view_payment_separation"
-                    app:layout_constraintTop_toTopOf="@+id/view_payment_separation"
-                    app:layout_constraintBottom_toBottomOf="@+id/view_payment_separation"
-                     />
+                    app:layout_constraintTop_toTopOf="@+id/view_payment_separation" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

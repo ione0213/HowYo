@@ -6,5 +6,6 @@ enum class DeleteDataType {
     COMMENTS,
     CHECK_SHOP_LIST,
     GROUP_MSG,
-    NOTIFICATION
+    NOTIFICATION,
+    PAYMENT
 }

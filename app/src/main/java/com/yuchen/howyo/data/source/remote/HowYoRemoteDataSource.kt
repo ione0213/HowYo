@@ -29,6 +29,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
     private const val PATH_COMMENTS = "comments"
     private const val PATH_GROUP_MESSAGE = "group_messages"
     private const val PATH_NOTIFICATION = "notifications"
+    private const val PATH_PAYMENT = "payments"
     private const val KEY_POSITION = "position"
     private const val KEY_CREATED_TIME = "created_time"
     private const val KEY_EMAIL = "email"
@@ -1474,7 +1475,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
         return liveData
     }
 
-    override suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean>  =
+    override suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean> =
         suspendCoroutine { continuation ->
 
             val db = FirebaseFirestore.getInstance()
@@ -1560,6 +1561,96 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
         }
 
+    override suspend fun createPayment(payment: Payment): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val payments = FirebaseFirestore.getInstance().collection(PATH_PAYMENT)
+            val document = payments.document()
+
+            payment.id = document.id
+
+            document
+                .set(payment)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        continuation.resume(Result.Success(true))
+                    } else {
+                        task.exception?.let {
+                            Logger.w("[${this::class.simpleName}] Error creating payment. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(HowYoApplication.instance.getString(R.string.nothing))
+                        )
+                    }
+                }
+        }
+
+    override suspend fun deletePayment(payment: Payment): Result<Boolean> =
+        suspendCoroutine { continuation ->
+
+            FirebaseFirestore.getInstance()
+                .collection(PATH_PAYMENT)
+                .document(payment.id)
+                .delete()
+                .addOnSuccessListener {
+                    Logger.i("Delete: $payment")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error deleting payment. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
+    override suspend fun updatePayment(payment: Payment): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            FirebaseFirestore.getInstance()
+                .collection(PATH_PAYMENT)
+                .document(payment.id)
+                .set(payment)
+                .addOnSuccessListener {
+                    Logger.i("Update: $payment")
+
+                    continuation.resume(Result.Success(true))
+                }.addOnFailureListener {
+                    Logger.w("[${this::class.simpleName}] Error updating payment. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+        }
+
+    override fun getLivePayments(planId: String): MutableLiveData<List<Payment>> {
+        val liveData = MutableLiveData<List<Payment>>()
+
+        FirebaseFirestore.getInstance()
+            .collection(PATH_PAYMENT)
+            .whereEqualTo(KEY_PLAN_ID, planId)
+            .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting payments. ${it.message}")
+                }
+
+                val list = mutableListOf<Payment>()
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val day = document.toObject(Payment::class.java)
+                        list.add(day)
+                    }
+                }
+
+                liveData.value = list
+            }
+
+        return liveData
+    }
+
     override suspend fun deleteDataListsWithPlanID(
         planId: String,
         type: DeleteDataType
@@ -1573,6 +1664,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 DeleteDataType.CHECK_SHOP_LIST -> PATH_CHECK_SHOPPING_LIST
                 DeleteDataType.GROUP_MSG -> PATH_GROUP_MESSAGE
                 DeleteDataType.NOTIFICATION -> PATH_NOTIFICATION
+                DeleteDataType.PAYMENT -> PATH_PAYMENT
             }
 
             val firebaseRef = FirebaseFirestore.getInstance()

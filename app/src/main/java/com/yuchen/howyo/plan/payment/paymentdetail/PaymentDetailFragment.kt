@@ -2,15 +2,15 @@ package com.yuchen.howyo.plan.payment.paymentdetail
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.yuchen.howyo.HowYoApplication
+import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentPaymentDetailBinding
+import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.plan.detail.edit.DetailEditSpinnerAdapter
-import com.yuchen.howyo.plan.payment.PaymentFragmentArgs
-import com.yuchen.howyo.plan.payment.PaymentViewModel
+import com.yuchen.howyo.plan.payment.PaymentType
 
 class PaymentDetailFragment : Fragment() {
 
@@ -37,9 +37,42 @@ class PaymentDetailFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        val argumentPlan = PaymentDetailFragmentArgs.fromBundle(requireArguments()).plan
+
+        val spinnerList = mutableListOf(argumentPlan.authorId)
+        argumentPlan.companionList?.let { spinnerList.addAll(it) }
+
         binding.spinnerPaymentDetailPayer.adapter = PaymentDetailSpinnerAdapter(
-            viewModel.plan.value?.companionList ?: listOf()
+            spinnerList.toList() as List<String>
         )
+
+        binding.radioGroupPaymentDetailType.check(
+            when (viewModel.payment.value?.type) {
+                PaymentType.SELF.type -> R.id.radio_self_payment
+                PaymentType.SHARE.type -> R.id.radio_share_payment
+                else -> 0
+            }
+        )
+
+        viewModel.isSavePayment.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    binding.edittextPaymentDetailItem.closeKeyBoard()
+                    binding.edittextPaymentDetailAmount.closeKeyBoard()
+                    viewModel.submitPayment()
+                    viewModel.onSavePayment()
+                }
+            }
+        }
+
+        viewModel.paymentResult.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    findNavController().popBackStack()
+                    viewModel.onSubmitPayment()
+                }
+            }
+        }
 
         return binding.root
     }
@@ -57,7 +90,18 @@ class PaymentDetailFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.plus -> {
+            R.id.delete -> {
+                context?.let { context ->
+                    AlertDialog.Builder(context)
+                        .setMessage(getString(R.string.payment_confirm_delete))
+                        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            viewModel.deletePayment()
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+
+                        }
+                        .show()
+                }
             }
         }
         return super.onOptionsItemSelected(item)

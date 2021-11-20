@@ -117,10 +117,10 @@ class UserLocateService : Service() {
         Logger.d("service onUnbind")
 
         if (!configurationChange) {
-            Logger.d("Start foreground service")
-            val notification = generateNotification(currentLocation)
-            startForeground(NOTIFICATION_ID, notification)
-            serviceRunningInForeground = true
+//            Logger.d("Start foreground service")
+//            val notification = generateNotification(currentLocation)
+//            startForeground(NOTIFICATION_ID, notification)
+//            serviceRunningInForeground = true
         }
 
         return true

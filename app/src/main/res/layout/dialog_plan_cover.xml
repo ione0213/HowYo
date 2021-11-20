@@ -154,13 +154,13 @@
                         android:id="@+id/edittext_plan_title"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/cover_plan_edittext"
-                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:hint="@string/plan_name"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@={viewModel._plan.title}"
-                        android:textColor="@color/matcha_5"
+                        android:textColor="@color/matcha_3"
+                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -185,7 +185,7 @@
                         android:maxLines="1"
                         android:onClick="@{()-> viewModel.selectDate()}"
                         android:singleLine="true"
-                        android:textColor="@color/matcha_5"
+                        android:textColor="@color/matcha_3"
                         app:endDate="@{viewModel.endDateFromUser}"
                         app:startDate="@{viewModel.startDateFromUser}" />
                 </com.google.android.material.textfield.TextInputLayout>

@@ -172,7 +172,7 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.title}"
-                            android:textColor="@color/gray_black" />
+                            android:textColor="@color/matcha_3" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -196,7 +196,7 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.address}"
-                            android:textColor="@color/gray_black" />
+                            android:textColor="@color/matcha_3" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -221,7 +221,7 @@
                             android:maxLines="1"
                             android:onClick="@{() -> viewModel.setTime(@string/detail_edit_schedule_start_time)}"
                             android:singleLine="true"
-                            android:textColor="@color/gray_black"
+                            android:textColor="@color/matcha_3"
                             app:time="@{viewModel.startTime}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -247,7 +247,7 @@
                             android:maxLines="1"
                             android:onClick="@{() -> viewModel.setTime(@string/detail_edit_schedule_end_time)}"
                             android:singleLine="true"
-                            android:textColor="@color/gray_black"
+                            android:textColor="@color/matcha_3"
                             app:time="@{viewModel.endTime}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -273,7 +273,7 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.remark}"
-                            android:textColor="@color/gray_black" />
+                            android:textColor="@color/matcha_3" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -298,7 +298,7 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.budget}"
-                            android:textColor="@color/gray_black" />
+                            android:textColor="@color/matcha_3" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -323,7 +323,7 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.refUrl}"
-                            android:textColor="@color/gray_black" />
+                            android:textColor="@color/matcha_3" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <View

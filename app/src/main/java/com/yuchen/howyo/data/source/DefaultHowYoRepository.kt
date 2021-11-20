@@ -217,11 +217,23 @@ class DefaultHowYoRepository(
         return remoteDataSource.deleteFollowNotification(toUserId)
     }
 
+    override suspend fun createPayment(payment: Payment): Result<Boolean> {
+        return remoteDataSource.createPayment(payment)
+    }
+
+    override suspend fun deletePayment(payment: Payment): Result<Boolean> {
+        return remoteDataSource.deletePayment(payment)
+    }
+
+    override suspend fun updatePayment(payment: Payment): Result<Boolean> {
+        return remoteDataSource.updatePayment(payment)
+    }
+
+    override fun getLivePayments(planId: String): MutableLiveData<List<Payment>> {
+        return remoteDataSource.getLivePayments(planId)
+    }
+
     override suspend fun deleteDataListsWithPlanID(planId: String, type: DeleteDataType): Result<Boolean> {
         return remoteDataSource.deleteDataListsWithPlanID(planId, type)
     }
-
-//    override suspend fun deleteAllDataAboutPlanWithBatch(planId: String): Result<Boolean> {
-//        return deleteAllDataAboutPlanWithBatch(planId)
-//    }
 }

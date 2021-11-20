@@ -53,8 +53,6 @@ class DetailEditViewModel(
     val photoDataList: LiveData<MutableList<SchedulePhoto>>
         get() = _photoDataList
 
-    val type = MutableLiveData<String>()
-
     val notification = MutableLiveData<Boolean>()
 
     var title = MutableLiveData<String>()
@@ -70,8 +68,6 @@ class DetailEditViewModel(
     val budget = MutableLiveData<String>()
 
     val refUrl = MutableLiveData<String>()
-
-    val photoList = MutableLiveData<List<String>>()
 
     val selectedScheduleTypePosition = MutableLiveData<Int>()
 
@@ -123,11 +119,11 @@ class DetailEditViewModel(
 
         setData()
     }
+
     private fun setData() {
         when {
             schedule.value != null -> {
                 schedule.value.apply {
-                    type.value = this?.scheduleType ?: ""
                     notification.value = this?.notification ?: false
                     title.value = this?.title ?: ""
                     address.value = this?.address ?: ""
@@ -136,6 +132,10 @@ class DetailEditViewModel(
                     remark.value = this?.remark ?: ""
                     budget.value = this?.budget?.toString()
                     refUrl.value = this?.refUrl ?: ""
+
+                    val spinnerList =
+                        HowYoApplication.instance.resources.getStringArray(R.array.schedule_type_list)
+                    selectedScheduleTypePosition.value = spinnerList.indexOf(this?.scheduleType)
                 }
             }
         }

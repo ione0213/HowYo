@@ -143,8 +143,8 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/middle_padding"
                     android:theme="@style/InputTextColorTheme"
-                    app:boxBackgroundColor="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
-                    app:boxStrokeColor="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
+                    app:boxBackgroundColor="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
+                    app:boxStrokeColor="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
                     app:layout_constraintBottom_toTopOf="@id/layout_copy_plan_date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:hintTextColor="@color/matcha_5"
@@ -154,14 +154,14 @@
                         android:id="@+id/edittext_copy_plan_title"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/cover_plan_edittext"
-                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
+                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
                         android:hint="@string/plan_name"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@={viewModel._plan.title}"
-                        android:textColor="@color/matcha_5"
-                        android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}" />
+                        android:textColor="@color/matcha_3"
+                        android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -184,7 +184,7 @@
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/matcha_5"
+                        android:textColor="@color/matcha_3"
                         app:endDate="@{viewModel.endDateFromUser}"
                         app:startDate="@{viewModel.startDateFromUser}" />
                 </com.google.android.material.textfield.TextInputLayout>
