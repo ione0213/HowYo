@@ -10,6 +10,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.home.notification.NotificationType
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.LikeType
+import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,9 +42,9 @@ class AuthorProfileViewModel(
         get() = _navigateToPlan
 
     // Handle navigation to friends
-    private val _navigateToFriends = MutableLiveData<Boolean>()
+    private val _navigateToFriends = MutableLiveData<FriendFilter>()
 
-    val navigateToFriends: LiveData<Boolean>
+    val navigateToFriends: LiveData<FriendFilter>
         get() = _navigateToFriends
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -95,8 +96,8 @@ class AuthorProfileViewModel(
         _navigateToPlan.value = null
     }
 
-    fun navigateToFriend() {
-        _navigateToFriends.value = true
+    fun navigateToFriend(type: FriendFilter) {
+        _navigateToFriends.value = type
     }
 
     fun onFriendNavigated() {
@@ -172,7 +173,7 @@ class AuthorProfileViewModel(
             if (type == FollowType.FOLLOW) {
                 howYoRepository.createNotification(notification)
             } else {
-                author.value?.let { howYoRepository.deleteFollowNotification(it.id) }
+                author.value?.let { howYoRepository.deleteFollowNotification(it.id, currentUserId!!) }
             }
         }
     }

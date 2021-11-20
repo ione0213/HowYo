@@ -8,6 +8,7 @@ import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -44,9 +45,9 @@ class ProfileViewModel(
         get() = _navigateToSetting
 
     // Handle navigation to friends
-    private val _navigateToFriends = MutableLiveData<Boolean>()
+    private val _navigateToFriends = MutableLiveData<FriendFilter>()
 
-    val navigateToFriends: LiveData<Boolean>
+    val navigateToFriends: LiveData<FriendFilter>
         get() = _navigateToFriends
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -125,8 +126,8 @@ class ProfileViewModel(
         _navigateToSetting.value = null
     }
 
-    fun navigateToFriend() {
-        _navigateToFriends.value = true
+    fun navigateToFriend(type: FriendFilter) {
+        _navigateToFriends.value = type
     }
 
     fun onFriendNavigated() {

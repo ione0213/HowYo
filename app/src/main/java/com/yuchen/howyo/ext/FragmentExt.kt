@@ -5,7 +5,6 @@ import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.factory.*
 import com.yuchen.howyo.plan.AccessPlanType
-import com.yuchen.howyo.plan.CheckItemType
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.profile.friends.FriendFilter
 
@@ -57,9 +56,9 @@ fun Fragment.getVmFactory(payment: Payment?, plan: Plan): PaymentDetailViewModel
     return PaymentDetailViewModelFactory(repository, payment, plan)
 }
 
-fun Fragment.getVmFactory(friendType: FriendFilter): FriendItemViewModelFactory {
+fun Fragment.getVmFactory(friendType: FriendFilter, userId: String): FriendItemViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return FriendItemViewModelFactory(repository, friendType)
+    return FriendItemViewModelFactory(repository, friendType, userId)
 }
 
 fun Fragment.getVmFactory(

@@ -213,8 +213,8 @@ class DefaultHowYoRepository(
         return remoteDataSource.updateNotificationWithBatch(list)
     }
 
-    override suspend fun deleteFollowNotification(toUserId: String): Result<Boolean> {
-        return remoteDataSource.deleteFollowNotification(toUserId)
+    override suspend fun deleteFollowNotification(toUserId: String, fromUserId: String): Result<Boolean> {
+        return remoteDataSource.deleteFollowNotification(toUserId, fromUserId)
     }
 
     override suspend fun createPayment(payment: Payment): Result<Boolean> {

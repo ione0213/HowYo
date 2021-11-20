@@ -132,7 +132,8 @@ fun TextView.bindToolbarTitle(
     text = when (currentFragmentTypeForText) {
         CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
         CurrentFragmentType.PROFILE,
-        CurrentFragmentType.AUTHOR_PROFILE -> {
+        CurrentFragmentType.AUTHOR_PROFILE,
+        CurrentFragmentType.FRIENDS -> {
             sharedFragmentTitle
         }
         else -> currentFragmentTypeForText.value
@@ -406,38 +407,6 @@ fun bindRecyclerViewWithPlans(
         }
     }
 }
-
-@BindingAdapter("users")
-fun bindRecyclerViewWithUsers(
-    recyclerView: RecyclerView,
-    plans: List<User>
-) {
-    plans.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is FriendItemAdapter -> {
-                    submitList(it)
-                }
-            }
-        }
-    }
-}
-
-//@BindingAdapter("groupMessages")
-//fun bindRecyclerViewWithMessages(
-//    recyclerView: RecyclerView,
-//    groupMessages: List<GroupMessage>
-//) {
-//    groupMessages.let {
-//        recyclerView.adapter?.apply {
-//            when (this) {
-//                is GroupMessageAdapter -> {
-//                    submitList(it)
-//                }
-//            }
-//        }
-//    }
-//}
 
 @BindingAdapter("privacy")
 fun TextView.bindPrivacyStatus(privacy: String?) {

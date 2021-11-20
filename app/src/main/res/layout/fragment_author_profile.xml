@@ -9,6 +9,8 @@
 
         <import type="com.yuchen.howyo.profile.author.FollowType" />
 
+        <import type="com.yuchen.howyo.profile.friends.FriendFilter" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.profile.author.AuthorProfileViewModel" />
@@ -55,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToFriend()}"
+            android:onClick="@{() -> viewModel.navigateToFriend(FriendFilter.FANS)}"
             android:text="@{String.format(@string/profile_fans, viewModel.author.fansList.size)}"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/text_author_profile_following"
@@ -70,7 +72,7 @@
             style="@style/TextStyle2_matcha_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> viewModel.navigateToFriend()}"
+            android:onClick="@{() -> viewModel.navigateToFriend(FriendFilter.FOLLOWING)}"
             android:text="@{String.format(@string/profile_following, viewModel.author.followingList.size)}"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

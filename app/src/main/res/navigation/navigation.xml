@@ -52,7 +52,14 @@
         android:id="@+id/friendsFragment"
         android:name="com.yuchen.howyo.profile.friends.FriendsFragment"
         android:label="FriendsFragment"
-        tools:layout="@layout/fragment_friends" />
+        tools:layout="@layout/fragment_friends" >
+        <argument
+            android:name="tabType"
+            app:argType="com.yuchen.howyo.profile.friends.FriendFilter" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.yuchen.howyo.profile.setting.SettingFragment"

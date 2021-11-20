@@ -17,9 +17,11 @@ import com.yuchen.howyo.plan.AccessPlanType
 class AuthorProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentAuthorProfileBinding
-    val viewModel by viewModels<AuthorProfileViewModel> { getVmFactory(
-        AuthorProfileFragmentArgs.fromBundle(requireArguments()).userId
-    ) }
+    val viewModel by viewModels<AuthorProfileViewModel> {
+        getVmFactory(
+            AuthorProfileFragmentArgs.fromBundle(requireArguments()).userId
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -63,11 +65,12 @@ class AuthorProfileFragment : Fragment() {
 
         viewModel.navigateToFriends.observe(viewLifecycleOwner, {
             it?.let {
-                when {
-                    it -> {
-                        findNavController().navigate(NavigationDirections.navToFriendsFragment())
-                    }
-                }
+
+                findNavController().navigate(
+                    NavigationDirections.navToFriendsFragment(
+                        it, viewModel.author.value?.id!!
+                    )
+                )
                 viewModel.onFriendNavigated()
             }
         })

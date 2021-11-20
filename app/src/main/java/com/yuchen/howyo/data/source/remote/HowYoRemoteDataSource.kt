@@ -1506,16 +1506,14 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
         }
 
-    override suspend fun deleteFollowNotification(toUserId: String): Result<Boolean> =
+    override suspend fun deleteFollowNotification(toUserId: String, fromUserId: String): Result<Boolean> =
         suspendCoroutine { continuation ->
 
             val deleteResults = mutableListOf<Boolean>()
 
-            Logger.i("FROM USER ID: ${UserManager.userId}")
-            Logger.i("To USER ID: $toUserId")
             FirebaseFirestore.getInstance()
                 .collection(PATH_NOTIFICATION)
-                .whereEqualTo(KEY_FROM_USER_ID, UserManager.userId)
+                .whereEqualTo(KEY_FROM_USER_ID, fromUserId)
                 .whereEqualTo(KEY_TO_USER_ID, toUserId)
                 .whereEqualTo(KEY_NOTIFICATION_TYPE, NotificationType.FOLLOW.type)
                 .get()

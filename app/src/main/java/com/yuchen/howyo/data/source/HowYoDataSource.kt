@@ -108,7 +108,7 @@ interface HowYoDataSource {
 
     suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean>
 
-    suspend fun deleteFollowNotification(toUserId: String): Result<Boolean>
+    suspend fun deleteFollowNotification(toUserId: String, fromUserId: String): Result<Boolean>
 
     suspend fun createPayment(payment: Payment): Result<Boolean>
 

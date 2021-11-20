@@ -74,12 +74,10 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     }
 
     fun getLiveNotificationsResult() {
-        Logger.i("getLiveNotificationsResult")
         notifications = howYoRepository.getLiveNotifications()
     }
 
     fun getUserData() {
-        Logger.i("getUserData")
 
         val userIds = mutableSetOf<String>()
         val userDataSet = mutableSetOf<User>()
@@ -105,7 +103,6 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     }
 
     fun setFollow(user: User, type: FollowType) {
-        Logger.i("setFollowsetFollowsetFollowsetFollow")
         val fansList = user.fansList?.toMutableList()
 
         val newCurrentUser = currentUser.value
@@ -167,7 +164,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
                         else -> false
                     }
                 } else {
-                    when (val result = howYoRepository.deleteFollowNotification(user.id)) {
+                    when (val result = howYoRepository.deleteFollowNotification(user.id, currentUserId!!)) {
                         is Result.Success -> result.data
                         else -> false
                     }
