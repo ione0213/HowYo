@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.yuchen.howyo.R
+import androidx.navigation.fragment.findNavController
+import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.databinding.FragmentNotificationBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.util.Logger
 
 class NotificationFragment : Fragment() {
 
@@ -25,7 +28,56 @@ class NotificationFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.recyclerNotifications.adapter = NotificationAdapter()
+        val adapter = NotificationAdapter(viewModel)
+
+        binding.recyclerNotifications.adapter = adapter
+
+        viewModel.notifications.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.getUserData()
+            }
+        }
+
+        viewModel.userDataSet.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.notifications.value?.let { notifications ->
+                    adapter.addNotificationItem(
+                        notifications
+                    )
+                }
+                binding.viewModel = viewModel
+            }
+        }
+
+        viewModel.sendNotificationResult.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+//                    viewModel.getLiveNotificationsResult()
+                    viewModel.getUserData()
+                    viewModel.onSentNotification()
+                }
+            }
+        }
+
+        viewModel.navigateToUserProfile.observe(viewLifecycleOwner) {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToAuthorProfileFragment(it))
+                viewModel.onUserProfileNavigated()
+            }
+        }
+
+        viewModel.navigateToPlan.observe(viewLifecycleOwner) {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navToPlanFragment(
+                        it,
+                        AccessPlanType.VIEW
+                    )
+                )
+
+                viewModel.onPlanNavigated()
+            }
+        }
 
         return binding.root
     }

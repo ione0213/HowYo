@@ -126,17 +126,9 @@ class CopyPlanDialog : AppCompatDialogFragment() {
             it?.let {
                 when {
                     it -> {
-//                        when (viewModel.isNewPlan.value) {
-//                            true -> {
                                 findNavController().navigate(
                                     NavigationDirections.navToProfileFragment(UserManager.userId!!)
                                 )
-//                            }
-//                            false -> {
-//                                findNavController().popBackStack()
-//                            }
-//                        }
-
                     }
                 }
             }

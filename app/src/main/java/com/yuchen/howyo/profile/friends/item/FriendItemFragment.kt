@@ -1,23 +1,24 @@
 package com.yuchen.howyo.profile.friends.item
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.yuchen.howyo.R
+import androidx.navigation.fragment.findNavController
+import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.databinding.FragmentFriendItemBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.profile.friends.FriendAdapter
 import com.yuchen.howyo.profile.friends.FriendFilter
-import kotlinx.coroutines.launch
 
-class FriendItemFragment(private val friendType: FriendFilter) : Fragment() {
+class FriendItemFragment(
+    private val friendType: FriendFilter,
+    private val userId: String
+) : Fragment() {
 
     private lateinit var binding: FragmentFriendItemBinding
-    private val viewModel by viewModels<FriendItemViewModel> { getVmFactory(friendType) }
+    private val viewModel by viewModels<FriendItemViewModel> { getVmFactory(friendType, userId) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,15 +30,28 @@ class FriendItemFragment(private val friendType: FriendFilter) : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.recyclerFriends.adapter = FriendItemAdapter(viewModel)
+        val adapter = FriendItemAdapter(viewModel, friendType, userId)
 
-//        viewModel.users.observe(viewLifecycleOwner, {
-//
-//            lifecycleScope.launch {
-//
-//                (binding.recyclerFriends.adapter as FriendItemAdapter).submitData(it)
-//            }
-//        })
+        binding.recyclerFriends.adapter = adapter
+
+        viewModel.userIdList.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.getUserDataList()
+            }
+        }
+
+        viewModel.userList.observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.submitList(it)
+            }
+        }
+
+        viewModel.navigateToUserProfile.observe(viewLifecycleOwner) {
+            it?.let {
+                findNavController().navigate(NavigationDirections.navToAuthorProfileFragment(it))
+                viewModel.onUserProfileNavigated()
+            }
+        }
 
         return binding.root
     }

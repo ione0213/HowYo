@@ -9,7 +9,6 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -36,11 +35,11 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val authorIds: LiveData<Set<String>>
         get() = _authorIds
 
-    //User id set
-    private val _authorDataList = MutableLiveData<Set<User>>()
+    //User data set
+    private val _authorDataSet = MutableLiveData<Set<User>>()
 
-    val authorDataList: LiveData<Set<User>>
-        get() = _authorDataList
+    val authorDataSet: LiveData<Set<User>>
+        get() = _authorDataSet
 
     // Handle navigation to plan
     private val _navigateToPlan = MutableLiveData<Plan>()
@@ -112,8 +111,6 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 is Result.Success -> result.data
                 else -> null
             }
-
-
         }
     }
 
@@ -143,7 +140,7 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 }
             }
 
-            _authorDataList.value = authorDataList.toSet()
+            _authorDataSet.value = authorDataList.toSet()
             _refreshStatus.value = false
         }
     }

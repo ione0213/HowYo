@@ -6,16 +6,15 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.*
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -33,6 +32,7 @@ import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentLocateBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.REQUEST_ENABLE_GPS
 import com.yuchen.howyo.util.REQUEST_LOCATION_PERMISSION
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +41,18 @@ import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
+import android.graphics.drawable.Drawable
+
+import androidx.annotation.DrawableRes
+import com.yuchen.howyo.databinding.LayoutAvatarInMapBinding
+import android.graphics.PorterDuff
+
+import android.graphics.Bitmap
+import android.widget.ImageView
+import android.widget.TextView
+import com.google.maps.android.ui.IconGenerator
+import com.yuchen.howyo.data.User
+import com.yuchen.howyo.util.Util.isInternetConnected
 
 
 class LocateFragment : Fragment(), OnMapReadyCallback {
@@ -56,6 +68,11 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     private var locationPermissionGranted = false
     private lateinit var mContext: Context
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,18 +80,23 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
 
         binding = FragmentLocateBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         mContext = HowYoApplication.instance
+
 
         //Map
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
             HowYoApplication.instance
         )
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.map_locate_companion) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
-        viewModel.user.observe(viewLifecycleOwner, {
+        if (isInternetConnected()) {
+            val mapFragment =
+                childFragmentManager.findFragmentById(R.id.map_locate_companion) as SupportMapFragment
+            mapFragment.getMapAsync(this)
+        }
+
+        viewModel.companions.observe(viewLifecycleOwner, {
             it?.let {
                 when {
                     it.isNotEmpty() -> locateCompanion()
@@ -82,13 +104,13 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
             }
         })
 
+
         return binding.root
     }
 
     override fun onMapReady(map: GoogleMap) {
         this.googleMap = map
         locateCurrentUser()
-        viewModel.setMockUserData()
     }
 
     private fun locateCurrentUser() {
@@ -102,20 +124,19 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
         } else {
             requestLocationPermission()
         }
-        getDeviceLocation()
+//        getDeviceLocation()
         googleMap?.isMyLocationEnabled = true
     }
 
     private fun locateCompanion() {
-
-        viewModel.user.value?.forEach {
+        viewModel.companions.value?.forEach {
 
             lifecycleScope.launch {
 
                 val bmp: Bitmap
                 val options = BitmapFactory.Options()
                 //Resize image as 1 / 5
-                options.inSampleSize = 5
+                options.inSampleSize = 1
 
                 withContext(Dispatchers.IO) {
 
@@ -131,23 +152,19 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                     MarkerOptions()
                         .position(
                             LatLng(
-                                it.longitude ?: 0.0,
-                                it.latitude ?: 0.0
+                                it.latitude ?: 0.0,
+                                it.longitude ?: 0.0
                             )
                         )
-                        .title("${it.id}").icon(BitmapDescriptorFactory.fromBitmap(bmp))
+//                        .title(it.id)
+//                        .title(it.name).icon(BitmapDescriptorFactory.fromBitmap(bmp))
+                        .title(it.name).icon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                getMarkerBitmapFromView(it, bmp)!!
+                            )
+                        )
                 )
             }
-
-//            googleMap?.addMarker(
-//                MarkerOptions().position(
-//                    LatLng(
-//                        it.longitude ?: 0.0,
-//                        it.latitude ?: 0.0
-//                    )
-//                ).title("${it.id}")
-//                    .icon(BitmapDescriptor(BitmapDescriptorFactory.fromBitmap(bmp)))
-//            )
         }
     }
 
@@ -167,11 +184,11 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                 .show()
         } else {
             getDeviceLocation()
-            Toast.makeText(mContext, "已獲取到位置權限且GPS已開啟，可以準備開始獲取經緯度", Toast.LENGTH_SHORT).show()
+            viewModel.getCompanionsData()
         }
     }
 
-    fun requestLocationPermission() {
+    private fun requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 mContext as Activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -207,32 +224,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                         //已獲取到權限
                         locationPermissionGranted = true
                         checkGPSState()
-                    } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                                mContext as Activity,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            )
-                        ) {
-                            //權限被永久拒絕
-                            Toast.makeText(mContext, "位置權限已被關閉，功能將會無法正常使用", Toast.LENGTH_SHORT)
-                                .show()
-
-                            //Navigate to setting page
-//                            AlertDialog.Builder(this)
-//                                .setTitle("開啟位置權限")
-//                                .setMessage("此應用程式，位置權限已被關閉，需開啟才能正常使用")
-//                                .setPositiveButton("確定") { _, _ ->
-//                                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-//                                    startActivityForResult(intent, REQUEST_LOCATION_PERMISSION)
-//                                }
-//                                .setNegativeButton("取消") { _, _ -> requestLocationPermission() }
-//                                .show()
-                        } else {
-                            //權限被拒絕
-                            Toast.makeText(mContext, "位置權限被拒絕，功能將會無法正常使用", Toast.LENGTH_SHORT)
-                                .show()
-//                            requestLocationPermission()
-                        }
                     }
                 }
             }
@@ -252,13 +243,12 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     //These function about getting location should be in a dependent class
-    fun getLocationPermission() {
+    private fun getLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 mContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(mContext, "Get Permission", Toast.LENGTH_LONG).show()
             locationPermissionGranted = true
             checkGPSState()
         } else {
@@ -268,46 +258,51 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
 
     private fun getDeviceLocation() {
         try {
-            if (locationPermissionGranted
-            ) {
+            if (locationPermissionGranted) {
                 val locationRequest = LocationRequest()
                 locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                //更新頻率
+                // update frequency
                 locationRequest.interval = 6000
-                //更新次數，若沒設定，會持續更新
+                // update times
                 locationRequest.numUpdates = 1
                 mFusedLocationProviderClient.requestLocationUpdates(
                     locationRequest,
                     object : LocationCallback() {
                         override fun onLocationResult(locationResult: LocationResult?) {
                             locationResult ?: return
-                            Log.d(
-                                "HKT",
-                                "緯度:${locationResult.lastLocation.latitude} , 經度:${locationResult.lastLocation.longitude} "
-                            )
+
                             val currentLocation =
                                 LatLng(
                                     locationResult.lastLocation.latitude,
                                     locationResult.lastLocation.longitude
                                 )
-//                            googleMap?.addMarker(
-//                                MarkerOptions().position(currentLocation).title("現在位置")
-//                            )
                             googleMap?.moveCamera(
                                 CameraUpdateFactory.newLatLngZoom(
                                     currentLocation, 16f
                                 )
                             )
+
+                            viewModel.onLocateDone()
                         }
                     },
-                    null
+                    Looper.getMainLooper()
                 )
-
             } else {
                 getLocationPermission()
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
+    }
+
+    private fun getMarkerBitmapFromView(user: User, bitmap: Bitmap): Bitmap? {
+        val iconGenerator = IconGenerator(mContext)
+        val markerView: View = LayoutInflater.from(mContext).inflate(R.layout.layout_avatar_in_map, null)
+        val imgMarker = markerView.findViewById<ImageView>(R.id.img_map_user_avatar)
+        imgMarker.setImageBitmap(bitmap)
+//            .setImageResource()
+        iconGenerator.setContentView(markerView)
+        iconGenerator.setBackground(null)
+        return iconGenerator.makeIcon("")
     }
 }

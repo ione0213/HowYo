@@ -562,6 +562,7 @@ class PlanCoverViewModel(
         val planId = planId.value
         val subTypeList = HowYoApplication.instance.resources.getStringArray(R.array.check_list)
         val checkListResults = mutableListOf<Boolean>()
+        val itemList = mutableListOf<CheckShoppingList>()
 
         subTypeList.forEach { subType ->
             when (subType) {
@@ -575,13 +576,7 @@ class PlanCoverViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.clothe) -> {
@@ -594,13 +589,7 @@ class PlanCoverViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.wash) -> {
@@ -613,13 +602,7 @@ class PlanCoverViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.electronic) -> {
@@ -632,13 +615,7 @@ class PlanCoverViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.health) -> {
@@ -651,13 +628,7 @@ class PlanCoverViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
                 getString(R.string.other) -> {
@@ -670,20 +641,22 @@ class PlanCoverViewModel(
                             item = item
                         )
 
-                        val result = howYoRepository.createCheckShopList(newItem)
-
-                        if (result is Result.Success) {
-                            checkListResults.add(result.data)
-                        } else {
-                            checkListResults.add(false)
-                        }
+                        itemList.add(newItem)
                     }
                 }
             }
         }
 
+        checkListResults.add(createDefaultCheckListWithBatch(itemList))
+
         return !checkListResults.contains(false)
     }
+
+    private suspend fun createDefaultCheckListWithBatch(list: List<CheckShoppingList>): Boolean =
+        when (val result = howYoRepository.createCheckShopListWithBatch(list)) {
+            is Result.Success -> result.data
+            else -> false
+        }
 
     private fun getDaysResult() {
 
@@ -757,7 +730,6 @@ class PlanCoverViewModel(
         )
 
         _planPhoto.value = newPlanPhoto
-//        _photoUri.value = photoUri!!
     }
 
     fun resetCoverImg() {

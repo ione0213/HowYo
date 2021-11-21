@@ -18,5 +18,6 @@ class User(
     var fansList: List<String>? = listOf(),
     @get:PropertyName("following_list")
     @set:PropertyName("following_list")
-    var followingList: List<String>? = listOf()
+    var followingList: List<String>? = listOf(),
+    var fileName: String = ""
 ) : Parcelable

@@ -27,6 +27,7 @@ buildscript {
         version_firebase_auth = '21.0.1'
         verison_firebase_storage = '20.0.0'
         version_firebase_auth_ui = '5.0.0'
+        version_map_utils = '2.3.0'
     }
     repositories {
         google()

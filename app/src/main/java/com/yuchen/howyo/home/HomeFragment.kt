@@ -6,15 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.yuchen.howyo.MainViewModel
-import com.yuchen.howyo.NavigationDirections
-import com.yuchen.howyo.R
+import com.yuchen.howyo.*
 import com.yuchen.howyo.databinding.FragmentHomeBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 
 class HomeFragment : Fragment() {
 
@@ -30,7 +26,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
@@ -68,13 +63,12 @@ class HomeFragment : Fragment() {
             }
         }
 
-        viewModel.authorDataList.observe(viewLifecycleOwner) {
+        viewModel.authorDataSet.observe(viewLifecycleOwner) {
             it?.let {
                 it.forEach { user ->
                 }
                 viewModel.setStatusDone()
                 binding.viewModel = viewModel
-                Logger.i("authorDataListauthorDataList")
                 adapter.addEmptyAndPlan(viewModel.plans.value!!)
             }
         }

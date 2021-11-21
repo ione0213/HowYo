@@ -48,7 +48,7 @@
                     android:layout_marginBottom="@dimen/small_padding"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="@+id/img_home_plan_cover"
-                    app:authorData="@{viewModel.authorDataList}"
+                    app:authorData="@{viewModel.authorDataSet}"
                     app:plan="@{plan}"
                     app:shapeAppearanceOverlay="@style/circle"
                     tools:src="@drawable/avatar_sample" />
@@ -63,7 +63,8 @@
                     android:elevation="1dp"
                     android:maxWidth="@dimen/home_max_width"
                     android:maxLines="1"
-                    android:text="@{plan.authorId}"
+                    app:authorData="@{viewModel.authorDataSet}"
+                    app:plan="@{plan}"
                     android:textStyle="bold"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"

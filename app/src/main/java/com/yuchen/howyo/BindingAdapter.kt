@@ -100,6 +100,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
     visibility = when (currentFragmentType) {
         CurrentFragmentType.PLAN,
         CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
+        CurrentFragmentType.COMPANION_LOCATE,
         CurrentFragmentType.PAYMENT,
         CurrentFragmentType.PAYMENT_DETAIL,
         CurrentFragmentType.SETTING,
@@ -131,7 +132,8 @@ fun TextView.bindToolbarTitle(
     text = when (currentFragmentTypeForText) {
         CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
         CurrentFragmentType.PROFILE,
-        CurrentFragmentType.AUTHOR_PROFILE -> {
+        CurrentFragmentType.AUTHOR_PROFILE,
+        CurrentFragmentType.FRIENDS -> {
             sharedFragmentTitle
         }
         else -> currentFragmentTypeForText.value
@@ -230,9 +232,6 @@ fun bindImage(imageView: ShapeableImageView, imgUrl: String?) {
 @BindingAdapter("plan", "authorData")
 fun bindImage(imageView: ShapeableImageView, plan: Plan?, authorDataList: Set<User>?) {
 
-    Logger.i("Plan:$plan")
-    Logger.i("authorDataListBinding:$authorDataList")
-
     plan?.let {
 
         val imgUrl = authorDataList?.first { it.id == plan.authorId }?.avatar
@@ -248,6 +247,49 @@ fun bindImage(imageView: ShapeableImageView, plan: Plan?, authorDataList: Set<Us
                 )
                 .into(imageView)
         }
+    }
+}
+
+@BindingAdapter("plan", "authorData")
+fun bindNickName(textView: TextView, plan: Plan?, authorDataList: Set<User>?) {
+
+    plan?.let {
+
+        val user = authorDataList?.first { it.id == plan.authorId }
+
+        textView.text = user?.name
+    }
+}
+
+@BindingAdapter("userId", "authorData")
+fun bindImage(imageView: ShapeableImageView, userId: String?, authorDataList: Set<User>?) {
+
+    userId?.let {
+
+        val imgUrl = authorDataList?.first { it.id == userId }?.avatar
+
+        imgUrl?.let {
+            val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+            Glide.with(imageView.context)
+                .load(imgUri)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_placeholder)
+                )
+                .into(imageView)
+        }
+    }
+}
+
+@BindingAdapter("userId", "authorData")
+fun bindNickName(textView: TextView, userId: String?, authorDataList: Set<User>?) {
+
+    userId?.let {
+
+        val user = authorDataList?.first { it.id == userId }
+
+        textView.text = user?.name
     }
 }
 
@@ -346,28 +388,27 @@ fun RecyclerView.bindRecyclerViewWithCheckLists(
     }
 }
 
-@BindingAdapter("payments")
-fun bindRecyclerViewWithPayments(
-    recyclerView: RecyclerView,
-    paymentLists: List<Payment>
-) {
-    paymentLists.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is PaymentAdapter -> {
-                    submitList(it)
-                }
-            }
-        }
-    }
-}
+//@BindingAdapter("payments")
+//fun bindRecyclerViewWithPayments(
+//    recyclerView: RecyclerView,
+//    paymentLists: List<Payment>
+//) {
+//    paymentLists.let {
+//        recyclerView.adapter?.apply {
+//            when (this) {
+//                is PaymentAdapter -> {
+//                    submitList(it)
+//                }
+//            }
+//        }
+//    }
+//}
 
 @BindingAdapter("plans")
 fun bindRecyclerViewWithPlans(
     recyclerView: RecyclerView,
     plans: List<Plan>?
 ) {
-    Logger.i("BindingAdapter: $plans")
     plans?.let {
         recyclerView.adapter?.apply {
             when (this) {
@@ -378,54 +419,6 @@ fun bindRecyclerViewWithPlans(
                     submitList(it)
                 }
                 is AuthorProfilePlanAdapter -> {
-                    submitList(it)
-                }
-            }
-        }
-    }
-}
-
-@BindingAdapter("notifications")
-fun bindRecyclerViewWithNotifications(
-    recyclerView: RecyclerView,
-    plans: List<Notification>
-) {
-    plans.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is NotificationAdapter -> {
-                    addNotificationItem(it)
-                }
-            }
-        }
-    }
-}
-
-@BindingAdapter("users")
-fun bindRecyclerViewWithUsers(
-    recyclerView: RecyclerView,
-    plans: List<User>
-) {
-    plans.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is FriendItemAdapter -> {
-                    submitList(it)
-                }
-            }
-        }
-    }
-}
-
-@BindingAdapter("groupMessages")
-fun bindRecyclerViewWithMessages(
-    recyclerView: RecyclerView,
-    groupMessages: List<GroupMessage>
-) {
-    groupMessages.let {
-        recyclerView.adapter?.apply {
-            when (this) {
-                is GroupMessageAdapter -> {
                     submitList(it)
                 }
             }
@@ -585,7 +578,7 @@ fun AppCompatButton.bindCompanionBtn(plan: Plan?, user: User?, companionType: Co
 }
 
 @BindingAdapter("groupPlan")
-fun TextView.bindGroupText(plan: Plan?) {
+fun AppCompatButton.bindGroupText(plan: Plan?) {
 
     if (plan != null) {
         visibility = when (plan.companionList?.contains(UserManager.userId)) {

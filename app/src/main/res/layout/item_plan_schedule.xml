@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="com.yuchen.howyo.plan.AccessPlanType" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.plan.PlanViewModel" />
@@ -24,6 +28,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/plan_img_btn_bigger"
             android:layout_height="100dp"
+            android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
             android:background="@color/matcha_5">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -46,7 +51,6 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_padding"
                 android:layout_marginTop="@dimen/small_padding"
                 android:layout_marginBottom="@dimen/small_padding"
                 android:elevation="10dp"

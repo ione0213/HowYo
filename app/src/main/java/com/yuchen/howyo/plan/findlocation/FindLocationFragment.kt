@@ -32,11 +32,6 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var binding: FragmentFindLocationBinding
     val viewModel by viewModels<FindLocationViewModel> { getVmFactory() }
-//    private val viewModel by viewModels<FindLocationViewModel> {
-//        getVmFactory(
-////            FindLocationFragmentArgs.fromBundle(requireArguments()).days
-//        )
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

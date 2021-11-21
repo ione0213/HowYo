@@ -263,7 +263,6 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270)
             else -> bitmap
         }
-
     }
 
     private fun rotateBitmap(bitmap: Bitmap, degree: Int): Bitmap {

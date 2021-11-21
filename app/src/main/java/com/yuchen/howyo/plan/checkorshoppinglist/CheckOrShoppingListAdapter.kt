@@ -31,8 +31,6 @@ class CheckOrShoppingListAdapter(
         fun bind(checkShoppingList: CheckShoppingList) {
 
             binding.checkboxCheckList.setOnCheckedChangeListener { buttonView, isChecked ->
-                Logger.i("buttonView:$buttonView")
-                Logger.i("isChecked::$isChecked")
                 viewModelOrShopping.setCheck(checkShoppingList, isChecked)
             }
             binding.viewModel = viewModelOrShopping

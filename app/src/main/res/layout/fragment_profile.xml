@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="com.yuchen.howyo.profile.friends.FriendFilter" />
         <variable
             name="viewModel"
             type="com.yuchen.howyo.profile.ProfileViewModel" />
@@ -30,44 +31,12 @@
             tools:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/text_profile_following"
-            style="@style/TextStyle2_matcha_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/standard_padding"
-            android:onClick="@{() -> viewModel.navigateToFriend()}"
-            android:text="@{String.format(@string/profile_following, viewModel.user.followingList.size)}"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/text_profile_fans"
-            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
-            tools:text="@string/profile_following" />
-
-        <TextView
-            android:id="@+id/text_profile_fans"
-            style="@style/TextStyle2_matcha_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.navigateToFriend()}"
-            android:text="@{String.format(@string/profile_fans, viewModel.user.fansList.size)}"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/text_profile_following"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/text_profile_plans"
-            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
-            tools:text="@string/profile_fans" />
-
-        <TextView
             android:id="@+id/text_profile_plans"
             style="@style/TextStyle2_matcha_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_padding"
-            android:layout_marginStart="@dimen/middle_padding"
+            android:layout_marginStart="@dimen/largest_padding"
             android:layout_marginEnd="@dimen/standard_padding"
             android:text="@{String.format(@string/profile_plans, viewModel.plans.size)}"
             android:textStyle="bold"
@@ -79,15 +48,46 @@
             tools:text="@string/profile_plans" />
 
         <TextView
+            android:id="@+id/text_profile_fans"
+            style="@style/TextStyle2_matcha_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/middle_padding"
+            android:onClick="@{() -> viewModel.navigateToFriend(FriendFilter.FANS)}"
+            android:text="@{String.format(@string/profile_fans, viewModel.user.fansList.size)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/text_profile_following"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/text_profile_plans"
+            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
+            tools:text="@string/profile_fans" />
+
+        <TextView
+            android:id="@+id/text_profile_following"
+            style="@style/TextStyle2_matcha_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.navigateToFriend(FriendFilter.FOLLOWING)}"
+            android:text="@{String.format(@string/profile_following, viewModel.user.followingList.size)}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/text_profile_fans"
+            app:layout_constraintTop_toTopOf="@+id/text_profile_plans"
+            tools:text="@string/profile_following" />
+
+        <TextView
             android:id="@+id/text_profile_user_name"
             style="@style/TextStyle2_matcha_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
             android:ellipsize="end"
-            android:maxWidth="@dimen/profile_text_width_small"
+            android:maxWidth="@dimen/profile_text_width_big"
             android:singleLine="true"
-            android:text="@{viewModel.user.id}"
+            android:text="@{viewModel.user.name}"
             android:textStyle="bold"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -97,7 +97,7 @@
 
         <TextView
             android:id="@+id/text_profile_information"
-            style="@style/TextStyle3_matcha_3"
+            style="@style/TextStyle2_matcha_3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"

@@ -16,7 +16,7 @@ android {
         applicationId "com.yuchen.howyo"
         minSdk 26
         targetSdk 30
-        versionCode 4
+        versionCode 6
         versionName "1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -113,6 +113,9 @@ dependencies {
     //Google Map
     implementation "com.google.android.gms:play-services-maps:$varsion_map_service"
     implementation "com.google.android.gms:play-services-location:$varsion_location_service"
+
+    // Utilities for Maps SDK for Android (requires Google Play Services)
+    implementation "com.google.maps.android:android-maps-utils:$version_map_utils"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

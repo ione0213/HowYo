@@ -3,6 +3,7 @@ package com.yuchen.howyo.data.source
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.yuchen.howyo.data.*
+import com.yuchen.howyo.data.source.remote.DeleteDataType
 import com.yuchen.howyo.data.source.remote.HowYoRemoteDataSource
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
@@ -23,6 +24,14 @@ class DefaultHowYoRepository(
 
     override fun getLiveUser(userId: String): MutableLiveData<User> {
         return remoteDataSource.getLiveUser(userId)
+    }
+
+    override fun getLiveUsers(userIdList: List<String>): MutableLiveData<List<User>> {
+        return remoteDataSource.getLiveUsers(userIdList)
+    }
+
+    override suspend fun getUsers(userIdList: List<String>): Result<List<User>> {
+        return remoteDataSource.getUsers(userIdList)
     }
 
     override suspend fun updateUser(user: User): Result<Boolean> {
@@ -97,6 +106,10 @@ class DefaultHowYoRepository(
         return remoteDataSource.deleteDay(day)
     }
 
+    override suspend fun deleteDaysWithBatch(list: List<Day>): Result<Boolean> {
+        return remoteDataSource.deleteDaysWithBatch(list)
+    }
+
     override fun getLiveDays(planId: String): MutableLiveData<List<Day>> {
         return remoteDataSource.getLiveDays(planId)
     }
@@ -109,12 +122,20 @@ class DefaultHowYoRepository(
         return remoteDataSource.createSchedule(schedule)
     }
 
+    override suspend fun createScheduleWithBatch(list: List<Schedule>): Result<Boolean> {
+        return remoteDataSource.createScheduleWithBatch(list)
+    }
+
     override suspend fun updateSchedule(schedule: Schedule): Result<Boolean> {
         return remoteDataSource.updateSchedule(schedule)
     }
 
     override suspend fun deleteSchedule(schedule: Schedule): Result<Boolean> {
         return remoteDataSource.deleteSchedule(schedule)
+    }
+
+    override suspend fun deleteScheduleWithBatch(list: List<Schedule>): Result<Boolean> {
+        return remoteDataSource.deleteScheduleWithBatch(list)
     }
 
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
@@ -127,6 +148,10 @@ class DefaultHowYoRepository(
 
     override suspend fun createCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
         return remoteDataSource.createCheckShopList(checkShoppingList)
+    }
+
+    override suspend fun createCheckShopListWithBatch(list: List<CheckShoppingList>): Result<Boolean> {
+        return remoteDataSource.createCheckShopListWithBatch(list)
     }
 
     override suspend fun updateCheckShopList(checkShoppingList: CheckShoppingList): Result<Boolean> {
@@ -156,11 +181,59 @@ class DefaultHowYoRepository(
         return remoteDataSource.deleteComment(comment)
     }
 
+    override suspend fun deleteCommentWithBatch(list: List<Comment>): Result<Boolean> {
+        return remoteDataSource.deleteCommentWithBatch(list)
+    }
+
     override suspend fun getComments(planId: String): Result<List<Comment>> {
         return remoteDataSource.getComments(planId)
     }
 
     override fun getLiveComments(planId: String): MutableLiveData<List<Comment>> {
         return remoteDataSource.getLiveComments(planId)
+    }
+
+    override suspend fun createGroupMessage(groupMessage: GroupMessage): Result<Boolean> {
+        return remoteDataSource.createGroupMessage(groupMessage)
+    }
+
+    override fun getLiveGroupMessages(planId: String): MutableLiveData<List<GroupMessage>> {
+        return remoteDataSource.getLiveGroupMessages(planId)
+    }
+
+    override suspend fun createNotification(notification: Notification): Result<Boolean> {
+        return remoteDataSource.createNotification(notification)
+    }
+
+    override fun getLiveNotifications(): MutableLiveData<List<Notification>> {
+        return remoteDataSource.getLiveNotifications()
+    }
+
+    override suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean> {
+        return remoteDataSource.updateNotificationWithBatch(list)
+    }
+
+    override suspend fun deleteFollowNotification(toUserId: String, fromUserId: String): Result<Boolean> {
+        return remoteDataSource.deleteFollowNotification(toUserId, fromUserId)
+    }
+
+    override suspend fun createPayment(payment: Payment): Result<Boolean> {
+        return remoteDataSource.createPayment(payment)
+    }
+
+    override suspend fun deletePayment(payment: Payment): Result<Boolean> {
+        return remoteDataSource.deletePayment(payment)
+    }
+
+    override suspend fun updatePayment(payment: Payment): Result<Boolean> {
+        return remoteDataSource.updatePayment(payment)
+    }
+
+    override fun getLivePayments(planId: String): MutableLiveData<List<Payment>> {
+        return remoteDataSource.getLivePayments(planId)
+    }
+
+    override suspend fun deleteDataListsWithPlanID(planId: String, type: DeleteDataType): Result<Boolean> {
+        return remoteDataSource.deleteDataListsWithPlanID(planId, type)
     }
 }

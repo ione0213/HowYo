@@ -31,10 +31,10 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
         get() = _authorIds
 
     //User id set
-    private val _authorDataList = MutableLiveData<Set<User>>()
+    private val _authorDataSet = MutableLiveData<Set<User>>()
 
-    val authorDataList: LiveData<Set<User>>
-        get() = _authorDataList
+    val authorDataSet: LiveData<Set<User>>
+        get() = _authorDataSet
 
     val keywords = MutableLiveData<String>()
 
@@ -109,7 +109,7 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
                 }
             }
 
-            _authorDataList.value = authorDataList.toSet()
+            _authorDataSet.value = authorDataList.toSet()
             _refreshStatus.value = false
         }
     }
@@ -137,13 +137,11 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
 
         when (keywords.value?.isEmpty()) {
             true -> {
-                Logger.i("plans.value ?: listOf():${plans.value ?: listOf()}")
                 newPlans = plans.value ?: listOf()
             }
             false -> {
                 newPlans =
                     plans.value?.filter { it.title?.contains(keywords.value?:"") ?: false } ?: listOf()
-                Logger.i("newPlan:$newPlans")
             }
         }
 

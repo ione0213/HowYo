@@ -15,15 +15,26 @@ class FriendsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        val tabTypePosition =
+            when (FriendsFragmentArgs.fromBundle(requireArguments()).tabType) {
+                FriendFilter.FANS -> 0
+                FriendFilter.FOLLOWING -> 1
+            }
+        val userId = FriendsFragmentArgs.fromBundle(requireArguments()).userId
+
         FragmentFriendsBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             viewpagerFriend.let {
                 tabsFriend.setupWithViewPager(it)
                 it.adapter = FriendAdapter(
-                    childFragmentManager
+                    childFragmentManager, userId
                 )
                 it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabsFriend))
+
+
             }
+            tabsFriend.setScrollPosition(tabTypePosition, 0f, true)
+            viewpagerFriend.currentItem = tabTypePosition
             return@onCreateView root
         }
     }

@@ -18,6 +18,7 @@
     <string name="add_payment">新增款項</string>
     <string name="delete">刪除</string>
     <string name="payment_detail">款項資訊</string>
+    <string name="companion_location">旅伴位置</string>
     <string name="find_location">尋找景點</string>
     <string name="setting">設定</string>
     <string name="comment">評論</string>
@@ -28,6 +29,8 @@
     <string name="file_provider_name" translatable="false">.fileProvider</string>
     <string name="confirm">確定</string>
     <string name="cancel">取消</string>
+    <string name="locating">正在提供您的位置給旅伴</string>
+    <string name="back_to_app">返回HowYo</string>
 
     <!-- Home-->
     <string name="empty_home">好友目前沒有公開行程唷！</string>
@@ -75,24 +78,33 @@
     <string name="payment_item">品項名稱</string>
     <string name="payment_amount">金額</string>
     <string name="payment_payer">付款人</string>
+    <string name="payment_select_payer">選擇付款人</string>
+    <string name="payment_type_self">個人費用</string>
+    <string name="payment_type_self_value">self</string>
+    <string name="payment_type_share">平均費用</string>
+    <string name="payment_type_share_value">share</string>
+    <string name="payment_confirm_delete">您確定要刪除此筆款項嗎？</string>
+    <string name="payment_should_pay">應付</string>
+
 
     <!-- Profile-->
     <string name="profile_following">%d\n追蹤中</string>
     <string name="profile_fans">%d\n紛絲</string>
     <string name="profile_plans">%d\n行程</string>
-    <string name="profile_modify_avatar">更換大頭貼</string>
-    <string name="profile_modify_id">ID</string>
+    <string name="profile_modify_nick_name">暱稱</string>
     <string name="profile_modify_info">個人簡介</string>
     <string name="profile_group_plan">旅遊群組</string>
+    <string name="profile_follow_cancel">取消追蹤</string>
+    <string name="profile_fans_remove">移除</string>
 
     <!-- Author Profile-->
     <string name="author_profile_follow">追蹤</string>
     <string name="author_profile_following">追蹤中</string>
 
     <!-- Notification-->
-    <string name="notification_like_msg">說你的行程讚</string>
+    <string name="notification_like_msg">說你的行程讚。</string>
     <string name="notification_like_type">like</string>
-    <string name="notification_follow_msg">開始追蹤你</string>
+    <string name="notification_follow_msg">開始追蹤你。</string>
     <string name="notification_follow_type">follow</string>
 
     <!-- Group Msg-->

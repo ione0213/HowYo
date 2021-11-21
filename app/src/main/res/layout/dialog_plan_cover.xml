@@ -58,7 +58,7 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/smallest_padding"
                     android:background="@drawable/icons_24px_close"
-                    android:backgroundTint="@color/matcha_5"
+                    android:backgroundTint="@color/matcha_3"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.leave()}"
                     app:layout_constraintBottom_toTopOf="@+id/layout_dialog_plan_cover_empty_image"
@@ -100,7 +100,7 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/small_padding"
                     android:background="@drawable/camera"
-                    android:backgroundTint="@color/matcha_5"
+                    android:backgroundTint="@color/matcha_3"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.takePhoto()}"
                     app:layout_constraintBottom_toTopOf="@+id/layout_plan_title"
@@ -115,13 +115,12 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:layout_marginBottom="@dimen/small_padding"
                     android:background="@drawable/image"
-                    android:backgroundTint="@color/matcha_5"
+                    android:backgroundTint="@color/matcha_3"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                     android:onClick="@{() -> viewModel.selectPhoto()}"
                     app:layout_constraintBottom_toBottomOf="@+id/btn_plan_cover_take_photo"
                     app:layout_constraintEnd_toStartOf="@+id/btn_plan_cover_take_photo"
                     app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_take_photo" />
-
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_cover_delete"
@@ -129,7 +128,7 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:background="@drawable/delete"
-                    android:backgroundTint="@color/matcha_5"
+                    android:backgroundTint="@color/matcha_3"
                     android:onClick="@{() -> viewModel.resetCoverImg()}"
                     app:layout_constraintEnd_toStartOf="@id/btn_plan_cover_select_photo"
                     app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_select_photo"
@@ -154,13 +153,13 @@
                         android:id="@+id/edittext_plan_title"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/cover_plan_edittext"
-                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:hint="@string/plan_name"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@={viewModel._plan.title}"
-                        android:textColor="@color/matcha_5"
+                        android:textColor="@color/matcha_3"
+                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -185,7 +184,7 @@
                         android:maxLines="1"
                         android:onClick="@{()-> viewModel.selectDate()}"
                         android:singleLine="true"
-                        android:textColor="@color/matcha_5"
+                        android:textColor="@color/matcha_3"
                         app:endDate="@{viewModel.endDateFromUser}"
                         app:startDate="@{viewModel.startDateFromUser}" />
                 </com.google.android.material.textfield.TextInputLayout>

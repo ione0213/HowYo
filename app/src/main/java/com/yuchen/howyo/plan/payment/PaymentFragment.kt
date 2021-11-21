@@ -34,15 +34,24 @@ class PaymentFragment : Fragment() {
         binding = FragmentPaymentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
-        binding.recyclerPaymentItems.adapter = PaymentAdapter(
+        val adapter = PaymentAdapter(
             PaymentAdapter.OnClickListener {
                 viewModel.navigateToEditExistPaymentDetail(it)
             }
         )
 
+        binding.recyclerPaymentItems.adapter = adapter
+
         binding.viewModel = viewModel
 
-        viewModel.navigateToPaymentDetail.observe(viewLifecycleOwner, {
+        viewModel.payments.observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.submitList(it)
+                viewModel.calculateShouldPay()
+            }
+        }
+
+        viewModel.navigateToPaymentDetail.observe(viewLifecycleOwner) {
             it?.let {
                 when {
                     it -> {
@@ -56,9 +65,9 @@ class PaymentFragment : Fragment() {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.navigateToEditExistPaymentDetail.observe(viewLifecycleOwner, {
+        viewModel.navigateToEditExistPaymentDetail.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
                     NavigationDirections.navToPaymentDetailFragment(
@@ -68,7 +77,7 @@ class PaymentFragment : Fragment() {
                 )
                 viewModel.onEditExistPaymentDetailNavigated()
             }
-        })
+        }
 
         return binding.root
     }

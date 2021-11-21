@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="imgUrl"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/gray_f5f5f5"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_map_user_avatar"
+            android:layout_width="@dimen/companion_avatar"
+            android:layout_height="@dimen/companion_avatar"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{imgUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="@color/matcha_6"
+            app:strokeWidth="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

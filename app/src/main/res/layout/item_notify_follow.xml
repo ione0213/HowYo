@@ -5,6 +5,16 @@
 
     <data>
 
+        <import type="com.yuchen.howyo.profile.author.FollowType" />
+
+        <variable
+            name="viewModel"
+            type="com.yuchen.howyo.home.notification.NotificationViewModel" />
+
+        <variable
+            name="user"
+            type="com.yuchen.howyo.data.User" />
+
         <variable
             name="notification"
             type="com.yuchen.howyo.data.Notification" />
@@ -17,12 +27,11 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/small_padding"
             android:layout_marginBottom="@dimen/small_padding"
-            android:background="@color/gray_f5f5f5"
+            android:background="@color/white"
             android:elevation="5dp"
-            app:cardBackgroundColor="@color/gray_f5f5f5"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/cardview_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,45 +43,107 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/img_notify_like_avatar"
+                    android:id="@+id/img_notify_follow_avatar"
                     android:layout_width="@dimen/home_avatar"
                     android:layout_height="@dimen/home_avatar"
-                    android:layout_marginStart="@dimen/middle_padding"
-                    android:layout_marginTop="@dimen/standard_padding"
-                    android:layout_marginBottom="@dimen/standard_padding"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:layout_marginTop="@dimen/small_padding"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:onClick="@{() -> viewModel.navigateToUserProfile(user.id)}"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/avatar_sample"
+                    app:authorData="@{viewModel.userDataSet}"
+                    app:userId="@{notification.fromUserId}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/circle" />
+                    app:shapeAppearanceOverlay="@style/circle"
+                    tools:src="@drawable/avatar_sample" />
 
                 <TextView
-                    android:id="@+id/text_notify_like_user_name"
-                    style="@style/TextStyle2_black"
+                    android:id="@+id/text_notify_follow_user_name"
+                    style="@style/TextStyle2_matcha_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
-                    android:text="@{notification.fromUserId}"
+                    android:ellipsize="end"
+                    android:maxWidth="180dp"
+                    app:authorData="@{viewModel.userDataSet}"
+                    app:userId="@{notification.fromUserId}"
+                    android:maxLines="1"
+                    android:onClick="@{() -> viewModel.navigateToUserProfile(user.id)}"
+                    android:textAlignment="viewStart"
                     android:textStyle="bold"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@+id/img_notify_like_avatar"
-                    app:layout_constraintTop_toTopOf="@+id/img_notify_like_avatar"
+                    app:layout_constraintStart_toEndOf="@+id/img_notify_follow_avatar"
+                    app:layout_constraintTop_toTopOf="@+id/img_notify_follow_avatar"
                     tools:text="traveller" />
 
                 <TextView
-                    android:id="@+id/text_notify_like_msg"
-                    style="@style/TextStyle3_black"
+                    android:id="@+id/text_notify_follow_msg"
+                    style="@style/TextStyle3_matcha_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_padding"
                     android:text="@string/notification_follow_msg"
-                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="@+id/text_notify_like_user_name"
-                    app:layout_constraintTop_toBottomOf="@+id/text_notify_like_user_name" />
+                    app:layout_constraintStart_toStartOf="@+id/text_notify_follow_user_name"
+                    app:layout_constraintTop_toBottomOf="@+id/text_notify_follow_user_name" />
 
+                <TextView
+                    android:id="@+id/textview_notify_follow_time"
+                    style="@style/TextStyle3_matcha_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    app:dateTime="@{notification.createdTime}"
+                    app:layout_constraintStart_toEndOf="@+id/text_notify_follow_msg"
+                    app:layout_constraintTop_toTopOf="@+id/text_notify_follow_msg"
+                    tools:text="06:30 下午" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_notify_follow"
+                    style="@style/TextStyle3_white"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:background="@drawable/follow_corner_selected"
+                    android:gravity="center"
+                    android:onClick="@{() -> viewModel.setFollow(user ,FollowType.FOLLOW)}"
+                    android:text="@string/author_profile_follow"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:followButton="@{user}"
+                    app:followType="@{FollowType.UNFOLLOW}"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_notify_follow_avatar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_goneMarginTop="16dp" />
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_notify_unfollow"
+                    style="@style/TextStyle3_black"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/plan_img_btn_small"
+                    android:layout_marginStart="@dimen/middle_padding"
+                    android:layout_marginEnd="@dimen/middle_padding"
+                    android:background="@drawable/follow_corner_normal"
+                    android:gravity="center"
+                    android:onClick="@{() -> viewModel.setFollow(user, FollowType.UNFOLLOW)}"
+                    android:text="@string/author_profile_following"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    app:followButton="@{user}"
+                    app:followType="@{FollowType.FOLLOW}"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_notify_follow_avatar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_goneMarginTop="16dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

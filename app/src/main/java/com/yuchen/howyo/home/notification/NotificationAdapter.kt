@@ -9,12 +9,13 @@ import com.yuchen.howyo.data.Notification
 import com.yuchen.howyo.data.NotificationItem
 import com.yuchen.howyo.databinding.ItemNotifyFollowBinding
 import com.yuchen.howyo.databinding.ItemNotifyLikeBinding
+import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NotificationAdapter :
+class NotificationAdapter(private val viewModel: NotificationViewModel) :
     ListAdapter<NotificationItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -29,7 +30,9 @@ class NotificationAdapter :
 
     class FollowViewHolder(private var binding: ItemNotifyFollowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(notification: Notification) {
+        fun bind(notification: Notification, viewModel: NotificationViewModel) {
+            binding.user =
+                viewModel.userDataSet.value?.first { it.id == notification.fromUserId }
             binding.notification = notification
             binding.executePendingBindings()
         }
@@ -60,14 +63,14 @@ class NotificationAdapter :
                 LikeViewHolder(
                     ItemNotifyLikeBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
-                    )
+                    ).apply { viewModel = this@NotificationAdapter.viewModel }
                 )
             }
             ITEM_VIEW_FOLLOW_ITEM -> {
                 FollowViewHolder(
                     ItemNotifyFollowBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
-                    )
+                    ).apply { viewModel = this@NotificationAdapter.viewModel }
                 )
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
@@ -81,7 +84,10 @@ class NotificationAdapter :
                 holder.bind((getItem(position) as NotificationItem.LikeItem).notification)
             }
             is FollowViewHolder -> {
-                holder.bind((getItem(position) as NotificationItem.FollowItem).notification)
+                holder.bind(
+                    (getItem(position) as NotificationItem.FollowItem).notification,
+                    viewModel
+                )
             }
         }
     }

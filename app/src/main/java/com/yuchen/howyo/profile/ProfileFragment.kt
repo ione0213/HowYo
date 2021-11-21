@@ -12,14 +12,17 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentProfileBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    val viewModel by viewModels<ProfileViewModel> { getVmFactory(
-        ProfileFragmentArgs.fromBundle(requireArguments()).userId
-    ) }
+    val viewModel by viewModels<ProfileViewModel> {
+        getVmFactory(
+            ProfileFragmentArgs.fromBundle(requireArguments()).userId
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -45,7 +48,7 @@ class ProfileFragment : Fragment() {
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         viewModel.user.observe(viewLifecycleOwner, {
             it?.let {
-                mainViewModel.setSharedToolbarTitle(it.id ?: "")
+                mainViewModel.setSharedToolbarTitle(it.name ?: "")
             }
         })
 
@@ -74,11 +77,12 @@ class ProfileFragment : Fragment() {
 
         viewModel.navigateToFriends.observe(viewLifecycleOwner, {
             it?.let {
-                when {
-                    it -> {
-                        findNavController().navigate(NavigationDirections.navToFriendsFragment())
-                    }
-                }
+                findNavController().navigate(
+                    NavigationDirections.navToFriendsFragment(
+                        it,
+                        UserManager.userId!!
+                    )
+                )
                 viewModel.onFriendNavigated()
             }
         })

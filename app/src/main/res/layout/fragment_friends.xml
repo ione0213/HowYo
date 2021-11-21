@@ -20,10 +20,11 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs_friend"
                 android:layout_width="match_parent"
+                android:background="@color/gray_f5f5f5"
                 android:layout_height="@dimen/profile_friend_tab"
-                app:tabIndicatorColor="@color/gray_black"
-                app:tabSelectedTextColor="@color/gray_black"
-                app:tabTextColor="@color/gray">
+                app:tabIndicatorColor="@color/matcha_5"
+                app:tabSelectedTextColor="@color/matcha_3"
+                app:tabTextColor="@color/matcha_5">
 
             </com.google.android.material.tabs.TabLayout>
 

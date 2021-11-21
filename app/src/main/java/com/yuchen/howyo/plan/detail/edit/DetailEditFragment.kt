@@ -17,6 +17,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.SchedulePhotos
 import com.yuchen.howyo.databinding.FragmentDetailEditBinding
 import com.yuchen.howyo.ext.getVmFactory
+import com.yuchen.howyo.util.Logger
 import java.util.*
 
 
@@ -46,9 +47,12 @@ class DetailEditFragment : Fragment() {
         binding.recyclerDetailEditImages.adapter = adapter
         LinearSnapHelper().attachToRecyclerView(binding.recyclerDetailEditImages)
 
-        binding.spinnerDetailEditType.adapter = DetailEditSpinnerAdapter(
+        val spinnerList =
             HowYoApplication.instance.resources.getStringArray(R.array.schedule_type_list)
-        )
+
+        val spinnerAdapter = DetailEditSpinnerAdapter(spinnerList)
+
+        binding.spinnerDetailEditType.adapter = spinnerAdapter
 
         viewModel.leaveEditDetail.observe(viewLifecycleOwner, {
             it?.let {

@@ -3,10 +3,14 @@ package com.yuchen.howyo.profile.author
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.yuchen.howyo.data.Notification
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.home.notification.NotificationType
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.plan.LikeType
+import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,9 +42,9 @@ class AuthorProfileViewModel(
         get() = _navigateToPlan
 
     // Handle navigation to friends
-    private val _navigateToFriends = MutableLiveData<Boolean>()
+    private val _navigateToFriends = MutableLiveData<FriendFilter>()
 
-    val navigateToFriends: LiveData<Boolean>
+    val navigateToFriends: LiveData<FriendFilter>
         get() = _navigateToFriends
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -92,8 +96,8 @@ class AuthorProfileViewModel(
         _navigateToPlan.value = null
     }
 
-    fun navigateToFriend() {
-        _navigateToFriends.value = true
+    fun navigateToFriend(type: FriendFilter) {
+        _navigateToFriends.value = type
     }
 
     fun onFriendNavigated() {
@@ -113,6 +117,12 @@ class AuthorProfileViewModel(
         val followingList = newCurrentUser?.followingList?.toMutableList()
 
         val currentUserId = UserManager.userId
+
+        val notification = Notification(
+            toUserId = author.value?.id,
+            fromUserId = currentUserId,
+            notificationType = NotificationType.FOLLOW.type
+        )
 
         when (type) {
             FollowType.FOLLOW -> {
@@ -160,43 +170,11 @@ class AuthorProfileViewModel(
         coroutineScope.launch {
             _author.value?.let { howYoRepository.updateUser(it) }
             _currentUser.value?.let { howYoRepository.updateUser(it) }
-        }
-    }
-
-    fun unfollow() {
-        val newAuthor = author.value
-        val fansList = newAuthor?.fansList?.toMutableList()
-
-        val newCurrentUser = currentUser.value
-        val followingList = newCurrentUser?.followingList?.toMutableList()
-
-        val currentUserId = UserManager.userId
-
-        when {
-            newAuthor?.fansList?.contains(currentUserId) == true -> {
-                if (currentUserId != null) {
-                    fansList?.removeAt(fansList.indexOf(currentUserId))
-                }
+            if (type == FollowType.FOLLOW) {
+                howYoRepository.createNotification(notification)
+            } else {
+                author.value?.let { howYoRepository.deleteFollowNotification(it.id, currentUserId!!) }
             }
-        }
-
-        when {
-            newCurrentUser?.followingList?.contains(newAuthor?.id) == true -> {
-                if (newAuthor?.id != null) {
-                    followingList?.removeAt(followingList.indexOf(newAuthor.id))
-                }
-            }
-        }
-
-        newAuthor?.fansList = fansList
-        newCurrentUser?.followingList = followingList
-
-        _author.value = newAuthor!!
-        _currentUser.value = newCurrentUser!!
-
-        coroutineScope.launch {
-            _author.value?.let { howYoRepository.updateUser(it) }
-            _currentUser.value?.let { howYoRepository.updateUser(it) }
         }
     }
 }
