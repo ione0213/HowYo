@@ -63,7 +63,7 @@
                     android:ellipsize="marquee"
                     android:maxWidth="100dp"
                     android:maxLines="1"
-                    android:text="@{user.id}"
+                    android:text="@{user.name}"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/img_companion_avatar"
                     app:layout_constraintHorizontal_bias="0.5"

@@ -264,7 +264,6 @@ class CheckOrShoppingListViewModel(
     fun setCheck(checkShoppingList: CheckShoppingList, isChecked: Boolean) {
 
         checkShoppingList.check = isChecked
-        Logger.i("checkShoppingList:$checkShoppingList")
 
         coroutineScope.launch {
             howYoRepository.updateCheckShopList(checkShoppingList)

@@ -89,12 +89,10 @@ class ProfileViewModel(
                 is Result.Success -> {
 
                     result.data.filter { it.authorId == UserManager.userId }.forEach {
-                        Logger.i("author:~~ $it")
                         planResults.add(it)
                     }
 
                     result.data.filter { it.companionList?.contains(UserManager.userId!!) ?: false }.forEach {
-                        Logger.i("companionList:~~ $it")
                         planResults.add(it)
                     }
 

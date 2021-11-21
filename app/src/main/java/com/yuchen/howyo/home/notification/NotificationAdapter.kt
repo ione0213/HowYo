@@ -31,8 +31,6 @@ class NotificationAdapter(private val viewModel: NotificationViewModel) :
     class FollowViewHolder(private var binding: ItemNotifyFollowBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(notification: Notification, viewModel: NotificationViewModel) {
-            Logger.i("notification.fromUserId:${notification.fromUserId}")
-            Logger.i("viewModel.userDataSet.value?.first { it.id == notification.fromUserId }:${viewModel.userDataSet.value?.first { it.id == notification.fromUserId }?.id}")
             binding.user =
                 viewModel.userDataSet.value?.first { it.id == notification.fromUserId }
             binding.notification = notification
@@ -103,9 +101,6 @@ class NotificationAdapter(private val viewModel: NotificationViewModel) :
 
     fun addNotificationItem(list: List<Notification>) {
 
-        list.forEach {
-            Logger.i("adapter: $it")
-        }
         adapterScope.launch {
 
             val notificationItems: MutableList<NotificationItem> = mutableListOf()

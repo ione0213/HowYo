@@ -292,7 +292,6 @@ class CopyPlanViewModel(
             if (result is Result.Success) {
                 dayResults.add(true)
                 daysData.add(Pair(result.data, position))
-//                scheduleResults.add(copySchedules(result.data, position))
             } else {
                 dayResults.add(false)
             }
@@ -447,36 +446,6 @@ class CopyPlanViewModel(
 
         return !schedulesResult.contains(false)
     }
-
-//    fun copySchedules() {
-//
-//        val schedulesResult = mutableListOf<Boolean>()
-//
-//
-//
-//        coroutineScope.launch {
-//
-//            withContext(Dispatchers.IO) {
-//                days.value?.forEachIndexed { index, day ->
-//                    schedules.value?.filter { it.dayId == day.id }?.forEach { schedule ->
-//                        val newSchedule = schedule.copy(
-//                            planId = planId.value,
-//                            dayId = newDays.value?.get(index)?.id,
-//                            id = "",
-//                            photoUrlList = listOf(),
-//                            photoFileNameList = listOf()
-//                        )
-//
-//                        schedulesResult.add(createSchedule(newSchedule))
-//                    }
-//                }
-//            }
-//
-//            when {
-//                !schedulesResult.contains(false) -> _isCopyFinished.value = true
-//            }
-//        }
-//    }
 
     private suspend fun createScheduleWithBatch(list: List<Schedule>): Boolean =
         when (val result = howYoRepository.createScheduleWithBatch(list)) {

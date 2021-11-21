@@ -21,9 +21,9 @@
         <TextView
             android:id="@+id/textview_chat_sent_time"
             android:layout_width="wrap_content"
+            style="@style/TextStyle3_matcha_3"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/small_padding"
-            android:textColor="@android:color/black"
             app:layout_constraintBottom_toBottomOf="@+id/textview_chat_sent"
             app:layout_constraintEnd_toStartOf="@+id/textview_chat_sent"
             app:time="@{groupMessageData.createdTime}"
@@ -32,6 +32,7 @@
         <TextView
             android:id="@+id/textview_chat_sent"
             android:layout_width="wrap_content"
+            style="@style/TextStyle2_matcha_6"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:background="@drawable/shape_bubble_received"
@@ -41,7 +42,6 @@
             android:paddingEnd="@dimen/standard_padding"
             android:paddingBottom="@dimen/small_padding"
             android:text="@{groupMessageData.message}"
-            android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="This is a received message keep the text going so we can see" />

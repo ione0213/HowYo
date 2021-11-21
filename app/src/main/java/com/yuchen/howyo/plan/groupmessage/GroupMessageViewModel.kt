@@ -68,6 +68,7 @@ class GroupMessageViewModel(
                             groupMsgData.add(
                                 GroupMessageData(
                                     message.userId,
+                                    result.data.name,
                                     result.data.avatar,
                                     message.message,
                                     message.createdTime

@@ -137,13 +137,11 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
 
         when (keywords.value?.isEmpty()) {
             true -> {
-                Logger.i("plans.value ?: listOf():${plans.value ?: listOf()}")
                 newPlans = plans.value ?: listOf()
             }
             false -> {
                 newPlans =
                     plans.value?.filter { it.title?.contains(keywords.value?:"") ?: false } ?: listOf()
-                Logger.i("newPlan:$newPlans")
             }
         }
 

@@ -63,7 +63,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:onClick="@{() -> viewModel.navigateToUserProfile(user.id)}"
-                    android:text="@{user.id}"
+                    android:text="@{user.name}"
                     android:textAlignment="textStart"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"

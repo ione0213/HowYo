@@ -124,7 +124,7 @@
                         android:layout_marginBottom="@dimen/middle_padding"
                         android:background="@drawable/share"
                         android:backgroundTint="@color/matcha_6"
-                        android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.GONE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="@+id/img_plan_cover"
                         app:layout_constraintEnd_toEndOf="@+id/img_plan_cover" />
 
@@ -165,10 +165,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|bottom"
                     android:ellipsize="marquee"
-                    android:maxWidth="80dp"
+                    android:maxWidth="100dp"
                     android:maxLines="1"
                     android:onClick="@{() -> viewModel.navigateToAuthorProfile()}"
-                    android:text="@{viewModel.plan.authorId}"
+                    android:text="@{viewModel.author.name}"
                     android:textAlignment="textStart"
                     android:textStyle="bold"
                     app:layout_collapseMode="parallax"
@@ -200,8 +200,9 @@
                     android:background="@drawable/map"
                     android:backgroundTint="@color/matcha_3"
                     android:onClick="@{() -> viewModel.navigateToMapMode()}"
-                    android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"
+                    android:visibility="gone"
                     app:layout_collapseMode="parallax" />
+<!--                android:visibility="@{viewModel.accessType == AccessPlanType.VIEW ? View.GONE : View.VISIBLE}"-->
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_payment"

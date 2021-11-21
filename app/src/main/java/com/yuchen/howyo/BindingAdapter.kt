@@ -232,9 +232,6 @@ fun bindImage(imageView: ShapeableImageView, imgUrl: String?) {
 @BindingAdapter("plan", "authorData")
 fun bindImage(imageView: ShapeableImageView, plan: Plan?, authorDataList: Set<User>?) {
 
-    Logger.i("Plan:$plan")
-    Logger.i("authorDataListBinding:$authorDataList")
-
     plan?.let {
 
         val imgUrl = authorDataList?.first { it.id == plan.authorId }?.avatar
@@ -250,6 +247,17 @@ fun bindImage(imageView: ShapeableImageView, plan: Plan?, authorDataList: Set<Us
                 )
                 .into(imageView)
         }
+    }
+}
+
+@BindingAdapter("plan", "authorData")
+fun bindNickName(textView: TextView, plan: Plan?, authorDataList: Set<User>?) {
+
+    plan?.let {
+
+        val user = authorDataList?.first { it.id == plan.authorId }
+
+        textView.text = user?.name
     }
 }
 
@@ -271,6 +279,17 @@ fun bindImage(imageView: ShapeableImageView, userId: String?, authorDataList: Se
                 )
                 .into(imageView)
         }
+    }
+}
+
+@BindingAdapter("userId", "authorData")
+fun bindNickName(textView: TextView, userId: String?, authorDataList: Set<User>?) {
+
+    userId?.let {
+
+        val user = authorDataList?.first { it.id == userId }
+
+        textView.text = user?.name
     }
 }
 
@@ -390,7 +409,6 @@ fun bindRecyclerViewWithPlans(
     recyclerView: RecyclerView,
     plans: List<Plan>?
 ) {
-    Logger.i("BindingAdapter: $plans")
     plans?.let {
         recyclerView.adapter?.apply {
             when (this) {

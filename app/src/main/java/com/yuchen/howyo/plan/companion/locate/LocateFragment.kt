@@ -97,8 +97,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
         }
 
         viewModel.companions.observe(viewLifecycleOwner, {
-            Logger.i("googleMap null? :${googleMap == null}")
-            Logger.i("companions:${it.size}")
             it?.let {
                 when {
                     it.isNotEmpty() -> locateCompanion()
@@ -106,20 +104,16 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
             }
         })
 
-        Logger.i("~~~~~${googleMap == null}")
 
         return binding.root
     }
 
     override fun onMapReady(map: GoogleMap) {
-        Logger.i("googleMap null onMapReady? :${googleMap == null}")
         this.googleMap = map
-        Logger.i("googleMap null onMapReady2? :${googleMap == null}")
         locateCurrentUser()
     }
 
     private fun locateCurrentUser() {
-        Logger.i("locateCurrentUser")
         googleMap?.clear()
         if (ActivityCompat.checkSelfPermission(
                 HowYoApplication.instance,
@@ -135,7 +129,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun locateCompanion() {
-        Logger.i("locateCompanion")
         viewModel.companions.value?.forEach {
 
             lifecycleScope.launch {
@@ -154,9 +147,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                     val iconStream: InputStream = connection.getInputStream()
                     bmp = BitmapFactory.decodeStream(iconStream, null, options) as Bitmap
                 }
-
-                Logger.i("Location:${it.longitude}, ${it.latitude}")
-                Logger.i("id:${it.id}")
 
                 googleMap?.addMarker(
                     MarkerOptions()
@@ -179,7 +169,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun checkGPSState() {
-        Logger.i("checkGPSState")
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
@@ -268,16 +257,13 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getDeviceLocation() {
-        Logger.i("getDeviceLocation")
-        Logger.i("locationPermissionGranted:$locationPermissionGranted")
         try {
             if (locationPermissionGranted) {
-                Logger.i("device innn")
                 val locationRequest = LocationRequest()
                 locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                //更新頻率
+                // update frequency
                 locationRequest.interval = 6000
-                //更新次數，若沒設定，會持續更新
+                // update times
                 locationRequest.numUpdates = 1
                 mFusedLocationProviderClient.requestLocationUpdates(
                     locationRequest,
@@ -295,7 +281,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                                     currentLocation, 16f
                                 )
                             )
-                            Logger.i("requestLocationUpdates")
+
                             viewModel.onLocateDone()
                         }
                     },

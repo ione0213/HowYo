@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginEnd="@dimen/middle_padding"
-            android:text="@{viewModel.user.id}"
+            android:text="@{viewModel.user.name}"
             android:textStyle="bold"
             android:textAlignment="textStart"
             android:maxWidth="@dimen/profile_text_width_small"

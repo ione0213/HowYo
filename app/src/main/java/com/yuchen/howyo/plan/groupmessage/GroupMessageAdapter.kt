@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.yuchen.howyo.data.DetailPhotoItem
 import com.yuchen.howyo.data.GroupMessageData
 import com.yuchen.howyo.data.GroupMessageDataItem
 import com.yuchen.howyo.databinding.ItemChatBinding

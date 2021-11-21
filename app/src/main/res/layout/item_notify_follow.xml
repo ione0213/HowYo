@@ -52,11 +52,11 @@
                     android:onClick="@{() -> viewModel.navigateToUserProfile(user.id)}"
                     android:scaleType="centerCrop"
                     app:authorData="@{viewModel.userDataSet}"
+                    app:userId="@{notification.fromUserId}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:shapeAppearanceOverlay="@style/circle"
-                    app:userId="@{notification.fromUserId}"
                     tools:src="@drawable/avatar_sample" />
 
                 <TextView
@@ -67,9 +67,10 @@
                     android:layout_marginStart="@dimen/small_padding"
                     android:ellipsize="end"
                     android:maxWidth="180dp"
+                    app:authorData="@{viewModel.userDataSet}"
+                    app:userId="@{notification.fromUserId}"
                     android:maxLines="1"
                     android:onClick="@{() -> viewModel.navigateToUserProfile(user.id)}"
-                    android:text="@{notification.fromUserId}"
                     android:textAlignment="viewStart"
                     android:textStyle="bold"
                     app:layout_constraintHorizontal_bias="0.5"

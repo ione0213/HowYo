@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.network.LoadApiStatus
 
 class MapViewModel(
     private val howYoRepository: HowYoRepository,
@@ -19,11 +20,20 @@ class MapViewModel(
     val schedule: LiveData<Schedule>
         get() = _schedule
 
+    private val _status = MutableLiveData<LoadApiStatus>()
+
+    val status: LiveData<LoadApiStatus>
+        get() = _status
+
     // Handle leave map
     private val _leaveMap = MutableLiveData<Boolean>()
 
     val leaveMap: LiveData<Boolean>
         get() = _leaveMap
+
+    init {
+        _status.value = LoadApiStatus.LOADING
+    }
 
     fun leaveMap() {
         _leaveMap.value = true
@@ -32,4 +42,9 @@ class MapViewModel(
     fun onLeaveMap() {
         _leaveMap.value = null
     }
+
+    fun onLocateDone() {
+        _status.value = LoadApiStatus.DONE
+    }
+
 }

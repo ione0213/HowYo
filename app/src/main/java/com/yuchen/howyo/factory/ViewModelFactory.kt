@@ -12,6 +12,7 @@ import com.yuchen.howyo.plan.PlanViewModel
 import com.yuchen.howyo.plan.cover.PlanCoverViewModel
 import com.yuchen.howyo.plan.findlocation.FindLocationViewModel
 import com.yuchen.howyo.profile.ProfileViewModel
+import com.yuchen.howyo.profile.setting.SettingViewModel
 import com.yuchen.howyo.signin.SignInViewModel
 
 class ViewModelFactory constructor(
@@ -35,6 +36,8 @@ class ViewModelFactory constructor(
                     FavoriteViewModel(howYoRepository)
                 isAssignableFrom(SignInViewModel::class.java) ->
                     SignInViewModel(howYoRepository)
+                isAssignableFrom(SettingViewModel::class.java) ->
+                    SettingViewModel(howYoRepository)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

@@ -85,9 +85,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
             android:ellipsize="end"
-            android:maxWidth="@dimen/profile_text_width_small"
+            android:maxWidth="@dimen/profile_text_width_big"
             android:singleLine="true"
-            android:text="@{viewModel.user.id}"
+            android:text="@{viewModel.user.name}"
             android:textStyle="bold"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -97,7 +97,7 @@
 
         <TextView
             android:id="@+id/text_profile_information"
-            style="@style/TextStyle3_matcha_3"
+            style="@style/TextStyle2_matcha_3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"

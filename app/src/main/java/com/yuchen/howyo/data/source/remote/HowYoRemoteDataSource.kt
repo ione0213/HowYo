@@ -1506,7 +1506,10 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
         }
 
-    override suspend fun deleteFollowNotification(toUserId: String, fromUserId: String): Result<Boolean> =
+    override suspend fun deleteFollowNotification(
+        toUserId: String,
+        fromUserId: String
+    ): Result<Boolean> =
         suspendCoroutine { continuation ->
 
             val deleteResults = mutableListOf<Boolean>()

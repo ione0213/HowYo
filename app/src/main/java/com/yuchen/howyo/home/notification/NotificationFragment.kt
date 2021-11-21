@@ -34,17 +34,12 @@ class NotificationFragment : Fragment() {
 
         viewModel.notifications.observe(viewLifecycleOwner) {
             it?.let {
-                Logger.i("notifications")
                 viewModel.getUserData()
             }
         }
 
         viewModel.userDataSet.observe(viewLifecycleOwner) {
             it?.let {
-                Logger.i("userDataSet:${viewModel.notifications.value?.size}")
-                viewModel.notifications.value?.forEach { notification ->
-                    Logger.i("userDataSet:$notification")
-                }
                 viewModel.notifications.value?.let { notifications ->
                     adapter.addNotificationItem(
                         notifications

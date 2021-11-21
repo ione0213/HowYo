@@ -48,16 +48,13 @@ class MainActivity : BaseActivity() {
     private val userLocateServiceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            Logger.i("onServiceConnected")
             val binder = service as UserLocateService.LocalBinder
             userLocateService = binder.service
-            Logger.i("userLocateService on connected:${userLocateService == null}")
             userLocateServiceBound = true
             viewModel.setUserLocateServiceStatus(userLocateServiceBound)
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
-            Logger.i("onServiceDisconnected")
             userLocateService = null
             userLocateServiceBound = false
             viewModel.setUserLocateServiceStatus(userLocateServiceBound)
@@ -133,7 +130,6 @@ class MainActivity : BaseActivity() {
 
         viewModel.currentFragmentType.observe(this, {
             it?.let {
-                Logger.i("currentFragmentType:${it}")
                 when {
                     it != CurrentFragmentType.SIGNIN && !isLoggedIn
                     -> {
@@ -311,22 +307,17 @@ class MainActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        Logger.i("onstart bindservice")
         bindService()
     }
 
     private fun bindService() {
         val serviceIntent = Intent(this, UserLocateService::class.java)
-        Logger.i("bindServicebindServicebindServicebindService")
         if (isLoggedIn) bindService(serviceIntent, userLocateServiceConnection, BIND_AUTO_CREATE)
     }
 
     override fun onResume() {
         super.onResume()
-        Logger.i("viewModel.isAccessAppFirstTime.value:${viewModel.isAccessAppFirstTime.value}")
-        Logger.i("viewModel.isBroadcastUnRegistered.value:${viewModel.isBroadcastUnRegistered.value}")
         if (viewModel.isAccessAppFirstTime.value != true) {
-            Logger.i("registerLocationReceiverregisterLocationReceiverregisterLocationReceiver")
             registerLocationReceiver()
             viewModel.onsetBroadcastRegistered()
         }
@@ -335,7 +326,6 @@ class MainActivity : BaseActivity() {
     private fun registerLocationReceiver() {
 
         if (isLoggedIn && viewModel.isBroadcastUnRegistered.value != true) {
-            Logger.i("registerLocationReceiver")
 
             LocalBroadcastManager.getInstance(this).registerReceiver(
                 howYoBroadcastReceiver,
@@ -350,7 +340,6 @@ class MainActivity : BaseActivity() {
 
     override fun onPause() {
         if (isLoggedIn) {
-            Logger.i("onPauseonPauseonPauseonPause")
             LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 howYoBroadcastReceiver
             )
@@ -361,7 +350,6 @@ class MainActivity : BaseActivity() {
 
     override fun onStop() {
         if (userLocateServiceBound && isLoggedIn) {
-            Logger.i("onStoponStoponStoponStoponStop")
             unbindService(userLocateServiceConnection)
             userLocateServiceBound = false
         }
@@ -378,7 +366,6 @@ class MainActivity : BaseActivity() {
 
     //These function about getting location should be in a dependent class
     private fun getLocationPermission() {
-        Logger.i("getLocationPermission")
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -445,7 +432,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun checkGPSState() {
-        Logger.i("checkGPSState")
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
@@ -460,7 +446,6 @@ class MainActivity : BaseActivity() {
                 .setNegativeButton("取消", null)
                 .show()
         } else {
-            Logger.i("checkGPSState bindservice")
 
             bindService()
             registerLocationReceiver()
@@ -477,7 +462,6 @@ class MainActivity : BaseActivity() {
 
             if (location != null) {
                 viewModel.setUserLocation(location)
-                Logger.i("Foreground location: ${location.toText()}")
             }
         }
     }

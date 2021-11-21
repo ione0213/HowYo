@@ -95,7 +95,6 @@ class CompanionViewModel(
 
         val friendDataList = mutableListOf<User>()
 
-        Logger.i("getFriendsData")
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 user.value?.followingList?.forEach { friendId ->
@@ -154,11 +153,9 @@ class CompanionViewModel(
 
         when (keywords.value?.isEmpty()) {
             true -> {
-                Logger.i("Filter1")
                 newUsers = friends.value ?: listOf()
             }
             false -> {
-                Logger.i("Filter2")
 
                 newUsers =
                     friends.value?.filter { it.id.contains(keywords.value ?: "") } ?: listOf()

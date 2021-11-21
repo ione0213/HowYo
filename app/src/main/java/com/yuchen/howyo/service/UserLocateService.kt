@@ -133,8 +133,6 @@ class UserLocateService : Service() {
 
     fun subscribeToLocationUpdates() {
 
-        Logger.i("subscribeToLocationUpdatessubscribeToLocationUpdatessubscribeToLocationUpdates")
-
         startService(Intent(applicationContext, UserLocateService::class.java))
 
         try {

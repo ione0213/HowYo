@@ -47,7 +47,7 @@ class AuthorProfileFragment : Fragment() {
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         viewModel.author.observe(viewLifecycleOwner, {
             it?.let {
-                mainViewModel.setSharedToolbarTitle(it.id ?: "")
+                mainViewModel.setSharedToolbarTitle(it.name ?: "")
             }
         })
 

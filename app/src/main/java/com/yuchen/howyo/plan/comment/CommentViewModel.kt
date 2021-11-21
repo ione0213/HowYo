@@ -69,7 +69,7 @@ class CommentViewModel(
                         is Result.Success -> {
                             commentData.add(
                                 CommentData(
-                                    comment.userId,
+                                    result.data.name,
                                     result.data.avatar,
                                     comment.comment,
                                     comment.createdTime

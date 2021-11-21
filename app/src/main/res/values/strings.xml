@@ -91,8 +91,7 @@
     <string name="profile_following">%d\n追蹤中</string>
     <string name="profile_fans">%d\n紛絲</string>
     <string name="profile_plans">%d\n行程</string>
-    <string name="profile_modify_avatar">更換大頭貼</string>
-    <string name="profile_modify_id">ID</string>
+    <string name="profile_modify_nick_name">暱稱</string>
     <string name="profile_modify_info">個人簡介</string>
     <string name="profile_group_plan">旅遊群組</string>
     <string name="profile_follow_cancel">取消追蹤</string>
