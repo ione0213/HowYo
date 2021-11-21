@@ -8,11 +8,10 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Payment
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.payment.PaymentType
-import com.yuchen.howyo.util.Logger
-import com.yuchen.howyo.util.Util.getString
 import kotlinx.coroutines.*
 
 class PaymentDetailViewModel(
@@ -189,11 +188,13 @@ class PaymentDetailViewModel(
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-                _paymentResult.postValue(when(val result =
-                    payment.value?.let { howYoRepository.deletePayment(it) }) {
-                    is Result.Success -> result.data
-                    else -> false
-                })
+                _paymentResult.postValue(
+                    when (val result =
+                        payment.value?.let { howYoRepository.deletePayment(it) }) {
+                        is Result.Success -> result.data
+                        else -> false
+                    }
+                )
             }
 
             _status.value = LoadApiStatus.DONE

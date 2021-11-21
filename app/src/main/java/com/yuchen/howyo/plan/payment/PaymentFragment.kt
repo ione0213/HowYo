@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
+import com.yuchen.howyo.data.Users
 import com.yuchen.howyo.databinding.FragmentPaymentBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
@@ -55,12 +56,19 @@ class PaymentFragment : Fragment() {
             it?.let {
                 when {
                     it -> {
+                        val users = Users()
+                        viewModel.planMembersData.value?.forEach { user ->
+                            users.add(user)
+                        }
+
                         findNavController().navigate(
                             NavigationDirections.navToPaymentDetailFragment(
                                 null,
-                                viewModel.plan.value!!
+                                viewModel.plan.value!!,
+                                users
                             )
                         )
+
                         viewModel.onPaymentDetailNavigated()
                     }
                 }
@@ -69,10 +77,16 @@ class PaymentFragment : Fragment() {
 
         viewModel.navigateToEditExistPaymentDetail.observe(viewLifecycleOwner) {
             it?.let {
+                val users = Users()
+                viewModel.planMembersData.value?.forEach { user ->
+                    users.add(user)
+                }
+
                 findNavController().navigate(
                     NavigationDirections.navToPaymentDetailFragment(
                         it,
-                        viewModel.plan.value!!
+                        viewModel.plan.value!!,
+                        users
                     )
                 )
                 viewModel.onEditExistPaymentDetailNavigated()

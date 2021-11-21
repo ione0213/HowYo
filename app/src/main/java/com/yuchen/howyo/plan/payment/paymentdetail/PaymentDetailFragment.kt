@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.R
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.FragmentPaymentDetailBinding
 import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
@@ -39,11 +40,13 @@ class PaymentDetailFragment : Fragment() {
 
         val argumentPlan = PaymentDetailFragmentArgs.fromBundle(requireArguments()).plan
 
-        val spinnerList = mutableListOf(argumentPlan.authorId)
-        argumentPlan.companionList?.let { spinnerList.addAll(it) }
+//        val spinnerList = mutableListOf(argumentPlan.authorId)
+//        argumentPlan.companionList?.let { spinnerList.addAll(it) }
+
+        val spinnerList = PaymentDetailFragmentArgs.fromBundle(requireArguments()).users
 
         binding.spinnerPaymentDetailPayer.adapter = PaymentDetailSpinnerAdapter(
-            spinnerList.toList() as List<String>
+            spinnerList.toList()
         )
 
         binding.radioGroupPaymentDetailType.check(

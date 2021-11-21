@@ -21,3 +21,6 @@ class User(
     var followingList: List<String>? = listOf(),
     var fileName: String = ""
 ) : Parcelable
+
+@Parcelize
+class Users: ArrayList<User>(), Parcelable
