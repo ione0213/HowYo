@@ -211,6 +211,10 @@
             android:name="plan"
             app:argType="com.yuchen.howyo.data.Plan"
             app:nullable="false" />
+        <argument
+            android:name="users"
+            app:argType="com.yuchen.howyo.data.Users"
+            />
     </fragment>
     <fragment
         android:id="@+id/detailViewImageFragment"

@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.ItemDetailEditSpinnerBinding
 
-class PaymentDetailSpinnerAdapter(private val strings: List<String>): BaseAdapter() {
+class PaymentDetailSpinnerAdapter(private val strings: List<User>): BaseAdapter() {
     override fun getItem(position: Int): Any {
         return strings[position]
     }
@@ -21,7 +22,7 @@ class PaymentDetailSpinnerAdapter(private val strings: List<String>): BaseAdapte
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding = ItemDetailEditSpinnerBinding.inflate(LayoutInflater.from(parent?.context), parent, false)
-        binding.title = strings[position]
+        binding.title = strings[position].name
         return binding.root
     }
 }
