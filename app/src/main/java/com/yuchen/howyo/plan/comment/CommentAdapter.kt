@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.CommentData
 import com.yuchen.howyo.databinding.ItemCommentBinding
 
-class CommentAdapter(): ListAdapter<CommentData, CommentAdapter.CommentViewHolder>(DiffCallback) {
+class CommentAdapter() : ListAdapter<CommentData, CommentAdapter.CommentViewHolder>(DiffCallback) {
 
     class CommentViewHolder(
         private var binding: ItemCommentBinding,

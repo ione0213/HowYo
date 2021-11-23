@@ -6,9 +6,6 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.plan.PlanViewModel
-import com.yuchen.howyo.plan.companion.locate.LocateViewModel
-import com.yuchen.howyo.plan.groupmessage.GroupMessageViewModel
-import com.yuchen.howyo.plan.payment.PaymentViewModel
 
 class PlanViewModelFactory(
     private val howYoRepository: HowYoRepository,

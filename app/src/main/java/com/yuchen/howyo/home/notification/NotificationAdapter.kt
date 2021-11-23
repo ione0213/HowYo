@@ -9,7 +9,6 @@ import com.yuchen.howyo.data.Notification
 import com.yuchen.howyo.data.NotificationItem
 import com.yuchen.howyo.databinding.ItemNotifyFollowBinding
 import com.yuchen.howyo.databinding.ItemNotifyLikeBinding
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

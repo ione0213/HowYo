@@ -23,8 +23,6 @@ import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentDetailBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.util.Logger
-
 
 class DetailFragment : Fragment(), OnMapReadyCallback {
 
@@ -41,7 +39,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -53,7 +52,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         LinearSnapHelper().attachToRecyclerView(binding.recyclerDetailImages)
 
-        //Map
+        // Map
         mFusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(HowYoApplication.instance)
         val mapFragment =
@@ -113,13 +112,11 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     private fun setDestination() {
 
-
         val currentLocation =
             LatLng(
                 viewModel.schedule.value?.latitude ?: 0.0,
                 viewModel.schedule.value?.longitude ?: 0.0
             )
-
 
         googleMap?.addMarker(
             MarkerOptions().position(currentLocation).title(viewModel.schedule.value?.title)
@@ -129,7 +126,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             CameraUpdateFactory.newLatLngZoom(currentLocation, 16F)
         )
 
-        //Disable touch in scrollView
+        // Disable touch in scrollView
         googleMap?.uiSettings?.isScrollGesturesEnabled = false
     }
 }

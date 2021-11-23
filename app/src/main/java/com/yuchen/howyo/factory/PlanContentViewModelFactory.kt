@@ -2,7 +2,6 @@ package com.yuchen.howyo.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.yuchen.howyo.copyplan.CopyPlanDialog
 import com.yuchen.howyo.copyplan.CopyPlanViewModel
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.source.HowYoRepository

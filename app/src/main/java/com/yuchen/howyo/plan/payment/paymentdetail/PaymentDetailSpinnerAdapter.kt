@@ -7,7 +7,7 @@ import android.widget.BaseAdapter
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.ItemDetailEditSpinnerBinding
 
-class PaymentDetailSpinnerAdapter(private val strings: List<User>): BaseAdapter() {
+class PaymentDetailSpinnerAdapter(private val strings: List<User>) : BaseAdapter() {
     override fun getItem(position: Int): Any {
         return strings[position]
     }

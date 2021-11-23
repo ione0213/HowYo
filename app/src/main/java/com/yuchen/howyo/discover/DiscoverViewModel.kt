@@ -8,7 +8,6 @@ import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -18,19 +17,19 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     val plansForShow: LiveData<List<Plan>>
         get() = _plansForShow
 
-    //Plan data
+    // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>
         get() = _plans
 
-    //User id set
+    // User id set
     private val _authorIds = MutableLiveData<Set<String>>()
 
     val authorIds: LiveData<Set<String>>
         get() = _authorIds
 
-    //User id set
+    // User id set
     private val _authorDataSet = MutableLiveData<Set<User>>()
 
     val authorDataSet: LiveData<Set<User>>
@@ -101,7 +100,7 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 authorIds.value?.forEach { authorId ->
-                    when (val result = howYoRepository.getUser(authorId)){
+                    when (val result = howYoRepository.getUser(authorId)) {
                         is Result.Success -> {
                             authorDataList.add(result.data)
                         }
@@ -141,7 +140,7 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
             }
             false -> {
                 newPlans =
-                    plans.value?.filter { it.title?.contains(keywords.value?:"") ?: false } ?: listOf()
+                    plans.value?.filter { it.title?.contains(keywords.value ?: "") ?: false } ?: listOf()
             }
         }
 

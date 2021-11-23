@@ -8,10 +8,7 @@ import com.yuchen.howyo.discover.DiscoverViewModel
 import com.yuchen.howyo.favorite.FavoriteViewModel
 import com.yuchen.howyo.home.HomeViewModel
 import com.yuchen.howyo.home.notification.NotificationViewModel
-import com.yuchen.howyo.plan.PlanViewModel
-import com.yuchen.howyo.plan.cover.PlanCoverViewModel
 import com.yuchen.howyo.plan.findlocation.FindLocationViewModel
-import com.yuchen.howyo.profile.ProfileViewModel
 import com.yuchen.howyo.profile.setting.SettingViewModel
 import com.yuchen.howyo.signin.SignInViewModel
 

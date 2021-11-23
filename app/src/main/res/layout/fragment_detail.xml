@@ -298,8 +298,6 @@
                     android:clickable="false"
                     android:shadowColor="@color/matcha_3"
                     android:switchMinWidth="56dp"
-                    android:textOff="OFF"
-                    android:textOn="ON"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_notify"
                     app:layout_constraintStart_toEndOf="@+id/img_detail_notify"
                     app:layout_constraintTop_toTopOf="@+id/img_detail_notify" />

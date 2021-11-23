@@ -7,13 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.PlanDataItem
-import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.data.ScheduleDataItem
 import com.yuchen.howyo.databinding.ItemEmptyPlanBinding
-import com.yuchen.howyo.databinding.ItemEmptyScheduleBinding
 import com.yuchen.howyo.databinding.ItemPlansHomeBinding
-import com.yuchen.howyo.plan.ScheduleAdapter
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,8 +38,7 @@ class HomeAdapter(
     }
 
     class EmptyViewHolder(private var binding: ItemEmptyPlanBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {
         override fun areItemsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {

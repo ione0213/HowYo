@@ -8,24 +8,20 @@ import android.location.Location
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.MainActivity
-import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
-import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.ext.toText
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.ServiceLocator.howYoRepository
-import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
 
 class UserLocateService : Service() {
 
@@ -140,7 +136,6 @@ class UserLocateService : Service() {
                 locationRequest, locationCallback, Looper.getMainLooper()
             )
         } catch (unlikely: SecurityException) {
-
         }
     }
 
@@ -154,7 +149,6 @@ class UserLocateService : Service() {
                 }
             }
         } catch (unlikely: SecurityException) {
-
         }
     }
 

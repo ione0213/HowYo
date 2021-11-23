@@ -10,7 +10,6 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,7 +25,7 @@ class ProfileViewModel(
     val user: LiveData<User>
         get() = _user
 
-    //Plan data
+    // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>

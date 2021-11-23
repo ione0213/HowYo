@@ -44,7 +44,7 @@ object Permission {
         }
         val array = arrayOfNulls<String>(pendingPermissions.size)
         pendingPermissions.toArray(array)
-        requestPermissions(Activity() , array, requestCode)
+        requestPermissions(Activity(), array, requestCode)
     }
 
     fun isAllPermissionsGranted(grantResults: IntArray): Boolean {

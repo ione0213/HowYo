@@ -10,8 +10,6 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Users
 import com.yuchen.howyo.databinding.FragmentPaymentBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
-import com.yuchen.howyo.plan.detail.view.DetailFragmentArgs
 
 class PaymentFragment : Fragment() {
 
@@ -28,7 +26,8 @@ class PaymentFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 

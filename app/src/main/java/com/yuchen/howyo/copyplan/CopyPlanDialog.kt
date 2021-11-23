@@ -20,7 +20,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
@@ -28,7 +27,6 @@ import com.yuchen.howyo.databinding.DialogCopyPlanBinding
 import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
-import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.signin.UserManager
 import java.io.File
 
@@ -51,7 +49,8 @@ class CopyPlanDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -126,9 +125,9 @@ class CopyPlanDialog : AppCompatDialogFragment() {
             it?.let {
                 when {
                     it -> {
-                                findNavController().navigate(
-                                    NavigationDirections.navToProfileFragment(UserManager.userId!!)
-                                )
+                        findNavController().navigate(
+                            NavigationDirections.navToProfileFragment(UserManager.userId!!)
+                        )
                     }
                 }
             }
@@ -209,16 +208,17 @@ class CopyPlanDialog : AppCompatDialogFragment() {
 
     private fun rotateIfRequired(bitmap: Bitmap): Bitmap {
         val exif = ExifInterface(outputImage.path)
-        return when (exif.getAttributeInt(
-            ExifInterface.TAG_ORIENTATION,
-            ExifInterface.ORIENTATION_NORMAL
-        )) {
+        return when (
+            exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+        ) {
             ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90)
             ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180)
             ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270)
             else -> bitmap
         }
-
     }
 
     private fun rotateBitmap(bitmap: Bitmap, degree: Int): Bitmap {

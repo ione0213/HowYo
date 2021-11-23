@@ -10,7 +10,6 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.CheckListItem
 import com.yuchen.howyo.data.CheckShoppingList
 import com.yuchen.howyo.databinding.*
-import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

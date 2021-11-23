@@ -25,7 +25,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yuchen.howyo.databinding.ActivityMainBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.ext.toText
 import com.yuchen.howyo.service.UserLocateService
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.signin.UserManager.isLoggedIn
@@ -106,7 +105,6 @@ class MainActivity : BaseActivity() {
                 else -> 0
             }
         }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_HowYo)
@@ -195,7 +193,6 @@ class MainActivity : BaseActivity() {
                 R.id.locateFragment -> CurrentFragmentType.COMPANION_LOCATE
                 R.id.paymentFragment -> CurrentFragmentType.PAYMENT
                 R.id.paymentDetailFragment -> CurrentFragmentType.PAYMENT_DETAIL
-//                R.id.findLocationFragment -> CurrentFragmentType.FIND_LOCATION
                 R.id.friendsFragment -> CurrentFragmentType.FRIENDS
                 R.id.settingFragment -> CurrentFragmentType.SETTING
                 R.id.signInFragment -> CurrentFragmentType.SIGNIN
@@ -283,7 +280,6 @@ class MainActivity : BaseActivity() {
                         binding.toolbar.setNavigationIcon(R.drawable.toolbar_back)
                     }
                     else -> {
-
                     }
                 }
 
@@ -364,7 +360,7 @@ class MainActivity : BaseActivity() {
         super.onBackPressed()
     }
 
-    //These function about getting location should be in a dependent class
+    // These function about getting location should be in a dependent class
     private fun getLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -385,14 +381,14 @@ class MainActivity : BaseActivity() {
             )
         ) {
             AlertDialog.Builder(this)
-                .setMessage("此應用程式，需要位置權限才能正常使用")
-                .setPositiveButton("確定") { _, _ ->
+                .setMessage(getString(R.string.request_location_permission_message))
+                .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                     ActivityCompat.requestPermissions(
                         this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         REQUEST_LOCATION_PERMISSION
                     )
                 }
-                .setNegativeButton("取消") { _, _ -> requestLocationPermission() }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> requestLocationPermission() }
                 .show()
         } else {
             ActivityCompat.requestPermissions(
@@ -403,7 +399,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -435,21 +433,22 @@ class MainActivity : BaseActivity() {
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
-                .setTitle("GPS 尚未開啟")
-                .setMessage("使用此功能需要開啟 GSP 定位功能")
-                .setPositiveButton("前往開啟",
+                .setTitle(getString(R.string.check_gps_title))
+                .setMessage(getString(R.string.check_gps_message))
+                .setPositiveButton(
+                    getString(R.string.navigate_to_open_setting),
                     DialogInterface.OnClickListener { _, _ ->
                         startActivityForResult(
                             Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
                         )
-                    })
-                .setNegativeButton("取消", null)
+                    }
+                )
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {
 
             bindService()
             registerLocationReceiver()
-//            userLocateService?.subscribeToLocationUpdates()
         }
     }
 

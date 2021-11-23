@@ -25,27 +25,42 @@
     <string name="save_setting">儲存</string>
     <string name="rest_check_item">重置</string>
     <string name="save_uploading">建立中</string>
-    <string name="select_capture_image">Please select or capture image</string>
-    <string name="file_provider_name" translatable="false">.fileProvider</string>
     <string name="confirm">確定</string>
     <string name="cancel">取消</string>
     <string name="locating">正在提供您的位置給旅伴</string>
     <string name="back_to_app">返回HowYo</string>
+    <string name="search">搜尋</string>
+    <string name="duration_with_dash">%s - %s</string>
 
     <!-- Home-->
     <string name="empty_home">好友目前沒有公開行程唷！</string>
 
-    <!-- Plan-->
+    <!-- Plan Cover-->
     <string name="plan_new">新增行程</string>
     <string name="plan_edit">編輯行程</string>
     <string name="plan_copy">複製行程</string>
-    <string name="default_cover">android.resource://com.yuchen.howyo/drawable/sample_cover</string>
-    <string name="plan_public">public</string>
-    <string name="plan_private">private</string>
     <string name="plan_name">行程名稱</string>
     <string name="plan_date_range">旅程區間</string>
     <string name="plan_save">儲存</string>
     <string name="select_plan_duration">選擇旅程日期區間</string>
+
+    <!-- Plan-->
+    <string name="default_cover">android.resource://com.yuchen.howyo/drawable/sample_cover</string>
+    <string name="plan_public">public</string>
+    <string name="plan_private">private</string>
+    <string name="day">第%d天\n%S</string>
+    <string name="confirm_delete_plan">您確定要移除 %s 嗎？</string>
+    <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
+    <string name="confirm_delete_schedule">您確定要移除行程嗎？</string>
+    <string name="empty_schedule">選擇的日期沒有行程。\n點擊新增按鈕建立！</string>
+    <string name="public_plan">公開旅遊計畫</string>
+    <string name="set_public">公開</string>
+    <string name="private_plan">私人旅遊計畫</string>
+    <string name="set_private">隱藏</string>
+    <string name="confirm_update_privacy">您確定要 %s 行程嗎？</string>
+    <string name="schedule_time_duration">%s 時 %s 分</string>
+
+    <!-- Plan Detail-->
     <string name="detail_edit_schedule_type">類別</string>
     <string name="detail_edit_schedule_notification">行程通知</string>
     <string name="detail_edit_schedule_title">標題</string>
@@ -61,18 +76,6 @@
     <string name="hotel">住宿</string>
     <string name="place">景點</string>
     <string name="food">美食</string>
-    <string name="search">搜尋</string>
-    <string name="day">第%d天\n%S</string>
-    <string name="confirm_delete_plan">您確定要移除 %s 嗎？</string>
-    <string name="confirm_delete_day">您確定要移除第 %d 天嗎？</string>
-    <string name="confirm_delete_schedule">您確定要移除行程嗎？</string>
-    <string name="empty_schedule">選擇的日期沒有行程。\n點擊新增按鈕建立！</string>
-    <string name="public_plan">公開旅遊計畫</string>
-    <string name="set_public">公開</string>
-    <string name="private_plan">私人旅遊計畫</string>
-    <string name="set_private">隱藏</string>
-    <string name="confirm_update_privacy">您確定要 %s 行程嗎？</string>
-    <string name="schedule_time_duration">%s 時 %s 分</string>
 
     <!-- Payment-->
     <string name="payment_item">品項名稱</string>
@@ -86,9 +89,10 @@
     <string name="payment_confirm_delete">您確定要刪除此筆款項嗎？</string>
     <string name="payment_should_pay">應付</string>
 
-
     <!-- Profile-->
     <string name="profile_following">%d\n追蹤中</string>
+    <string name="fans_tab">fans</string>
+    <string name="following_tab">following</string>
     <string name="profile_fans">%d\n紛絲</string>
     <string name="profile_plans">%d\n行程</string>
     <string name="profile_modify_nick_name">暱稱</string>
@@ -129,8 +133,14 @@
     <string name="other">other</string>
     <string name="other_title">其他</string>
     <string name="confirm_reset_check_list">您確定要重置嗎？</string>
+    
+    <!-- Permissions-->
+    <string name="request_location_permission_message">此應用程式，需要位置權限才能正常使用</string>
+    <string name="check_gps_title">GPS 尚未開啟</string>
+    <string name="check_gps_message">使用此功能需要開啟 GSP 定位功能</string>
+    <string name="navigate_to_open_setting">前往開啟</string>
 
-
+    <!-- Default check list category-->
     <string-array name="check_list">
         <item>necessary</item>
         <item>clothe</item>
@@ -140,6 +150,7 @@
         <item>other</item>
     </string-array>
 
+    <!-- Default check list items-->
     <string-array name="necessary_list">
         <item>護照</item>
         <item>簽證</item>

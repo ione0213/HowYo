@@ -8,7 +8,6 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Payment
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
-import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.payment.PaymentType
@@ -150,15 +149,19 @@ class PaymentDetailViewModel(
                     when (payment.value?.id.isNullOrEmpty()) {
                         true -> {
 
-                            when (val result =
-                                newPayment?.let { howYoRepository.createPayment(it) }) {
+                            when (
+                                val result =
+                                    newPayment?.let { howYoRepository.createPayment(it) }
+                            ) {
                                 is Result.Success -> result.data
                                 else -> false
                             }
                         }
                         false -> {
-                            when (val result =
-                                newPayment?.let { howYoRepository.updatePayment(it) }) {
+                            when (
+                                val result =
+                                    newPayment?.let { howYoRepository.updatePayment(it) }
+                            ) {
                                 is Result.Success -> result.data
                                 else -> false
                             }
@@ -189,8 +192,10 @@ class PaymentDetailViewModel(
 
             withContext(Dispatchers.IO) {
                 _paymentResult.postValue(
-                    when (val result =
-                        payment.value?.let { howYoRepository.deletePayment(it) }) {
+                    when (
+                        val result =
+                            payment.value?.let { howYoRepository.deletePayment(it) }
+                    ) {
                         is Result.Success -> result.data
                         else -> false
                     }

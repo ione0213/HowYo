@@ -10,7 +10,6 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PaymentViewModel(

@@ -1,6 +1,5 @@
 package com.yuchen.howyo.profile.setting
 
-import android.location.Location
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,9 +10,9 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.*
 
 class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
 
@@ -122,14 +121,12 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
                                 avatarPhotoResult.add(deletePhoto(avatarPhoto.value!!.fileName!!))
                             }
                             else -> {
-
                             }
                         }
 
                         avatarPhotoResult.add(uploadAvatarImg())
                     }
                     else -> {
-
                     }
                 }
             }

@@ -2,7 +2,6 @@ package com.yuchen.howyo.signin
 
 import android.content.Context
 import com.yuchen.howyo.HowYoApplication
-import com.yuchen.howyo.util.Logger
 
 object UserManager {
 

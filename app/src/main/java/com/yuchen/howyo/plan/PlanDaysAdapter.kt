@@ -4,14 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.*
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.DayItem
 import com.yuchen.howyo.databinding.ItemPlanDayAddBinding
 import com.yuchen.howyo.databinding.ItemPlanDayBinding
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +32,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
             it == adapterPosition
         }
 
-
         fun bind(day: Day) {
 
             val isTrueSelected = (adapterPosition == viewModel.selectedDayPosition.value)
@@ -43,7 +41,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
             binding.day = day
             binding.isSelectedOnBind = isTrueSelected
             binding.executePendingBindings()
-
         }
 
         private val lifecycleRegistry = LifecycleRegistry(this)
@@ -111,8 +108,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
-
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

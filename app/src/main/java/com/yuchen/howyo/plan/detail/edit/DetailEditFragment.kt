@@ -17,9 +17,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.SchedulePhotos
 import com.yuchen.howyo.databinding.FragmentDetailEditBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.util.Logger
 import java.util.*
-
 
 class DetailEditFragment : Fragment() {
 
@@ -34,7 +32,8 @@ class DetailEditFragment : Fragment() {
     private val fromAlbum = 0x00
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 

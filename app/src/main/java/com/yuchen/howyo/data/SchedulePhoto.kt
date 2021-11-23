@@ -2,7 +2,6 @@ package com.yuchen.howyo.data
 
 import android.net.Uri
 import android.os.Parcelable
-import com.google.firebase.firestore.PropertyName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -14,4 +13,4 @@ data class SchedulePhoto(
 ) : Parcelable
 
 @Parcelize
-class SchedulePhotos: ArrayList<SchedulePhoto>(), Parcelable
+class SchedulePhotos : ArrayList<SchedulePhoto>(), Parcelable

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -40,7 +39,6 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
                         user.id = result.data
                         _user.postValue(user)
                         _createUserResult.postValue(result.data!!)
-
                     }
                     else -> {
                         _createUserResult.value = null
@@ -48,7 +46,6 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
                 }
             }
         }
-
     }
 
     fun setUser() {

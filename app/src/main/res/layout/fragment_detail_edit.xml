@@ -145,8 +145,6 @@
                         android:layout_marginStart="@dimen/small_padding"
                         android:checked="@={viewModel.notification}"
                         android:switchMinWidth="56dp"
-                        android:textOff="OFF"
-                        android:textOn="ON"
                         app:layout_constraintBottom_toBottomOf="@+id/text_detail_edit_notification"
                         app:layout_constraintStart_toEndOf="@+id/text_detail_edit_notification"
                         app:layout_constraintTop_toTopOf="@+id/text_detail_edit_notification" />

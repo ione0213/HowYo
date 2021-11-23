@@ -162,7 +162,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         val liveData = MutableLiveData<List<User>>()
         when (userIdList.size) {
             0 -> {
-
             }
             else -> {
                 FirebaseFirestore.getInstance()
@@ -516,7 +515,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         val liveData = MutableLiveData<List<Plan>>()
         when (authorList.size) {
             0 -> {
-
             }
             else -> {
                 FirebaseFirestore.getInstance()
@@ -585,7 +583,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         val liveData = MutableLiveData<List<Plan>>()
         when (authorList.size) {
             0 -> {
-
             }
             else -> {
                 FirebaseFirestore.getInstance()
@@ -623,7 +620,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         val liveData = MutableLiveData<List<Plan>>()
         when (authorList.size) {
             0 -> {
-
             }
             else -> {
                 FirebaseFirestore.getInstance()
@@ -1070,7 +1066,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                         continuation.resume(Result.Fail(HowYoApplication.instance.getString(R.string.nothing)))
                     }
                 }
-
         }
 
     override suspend fun createCheckShopListWithBatch(list: List<CheckShoppingList>): Result<Boolean> =
@@ -1386,7 +1381,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         val liveData = MutableLiveData<List<GroupMessage>>()
         when (planId.isEmpty()) {
             true -> {
-
             }
             else -> {
                 FirebaseFirestore.getInstance()
@@ -1672,7 +1666,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
             val collectionRef = firebaseRef.collection(collectionName)
 
             val deleteResults = mutableListOf<Boolean>()
-
 
             collectionRef.whereEqualTo(KEY_PLAN_ID, planId)
                 .get()

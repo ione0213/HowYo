@@ -3,7 +3,6 @@ package com.yuchen.howyo.signin
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.FragmentSignInBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.util.Logger
 
 const val RC_SIGN_IN = 0X00
 
@@ -34,7 +32,8 @@ class SignInFragment : Fragment() {
     val viewModel by viewModels<SignInViewModel> { getVmFactory() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -63,7 +62,6 @@ class SignInFragment : Fragment() {
     }
 
     private fun createSignInIntent() {
-
 
         val providers = arrayListOf(
 //            AuthUI.IdpConfig.EmailBuilder().build(),
@@ -103,7 +101,7 @@ class SignInFragment : Fragment() {
                 }
             } else {
                 if (response?.error?.errorCode == ErrorCodes.NO_NETWORK) {
-                    //Show No Internet Notification
+                    // Show No Internet Notification
                     return
                 }
 

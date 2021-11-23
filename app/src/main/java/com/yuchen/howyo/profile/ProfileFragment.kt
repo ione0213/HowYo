@@ -13,7 +13,6 @@ import com.yuchen.howyo.databinding.FragmentProfileBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 
 class ProfileFragment : Fragment() {
 
@@ -30,7 +29,8 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 

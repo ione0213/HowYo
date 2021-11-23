@@ -4,7 +4,6 @@ import android.graphics.Rect
 import android.location.Location
 import android.view.TouchDelegate
 import android.view.View
-import com.yuchen.howyo.util.Logger
 import java.text.SimpleDateFormat
 import java.util.*
 

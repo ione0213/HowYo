@@ -20,11 +20,8 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentPlanBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
-import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getColor
 import kotlinx.coroutines.launch
-
 
 class PlanFragment : Fragment() {
 
@@ -52,7 +49,7 @@ class PlanFragment : Fragment() {
                 val to = target.adapterPosition
 
                 return when {
-                    //Prevent moving to the position which is out of days range
+                    // Prevent moving to the position which is out of days range
                     from != to && to <= viewModel.days.value?.size!!.minus(1) -> {
                         viewModel.moveDay(from, to)
                         adapter.notifyItemMoved(from, to)
@@ -112,7 +109,7 @@ class PlanFragment : Fragment() {
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
                 return when {
-                    //Prevent moving to the position which is out of schedules range
+                    // Prevent moving to the position which is out of schedules range
                     from != to && to <= viewModel.schedules.value?.size!!.minus(1) -> {
                         viewModel.moveSchedule(from, to)
                         adapter.notifyItemMoved(from, to)
@@ -162,7 +159,8 @@ class PlanFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -176,16 +174,18 @@ class PlanFragment : Fragment() {
                 scheduleItemTouchHelper.attachToRecyclerView(binding.recyclerPlanSchedules)
             }
             else -> {
-
             }
         }
         binding.recyclerPlanDays.adapter = PlanDaysAdapter(viewModel)
         binding.recyclerPlanSchedules.adapter =
-            ScheduleAdapter(viewModel, ScheduleAdapter.OnClickListener {
-                viewModel.navigateToDetail(it)
-            })
+            ScheduleAdapter(
+                viewModel,
+                ScheduleAdapter.OnClickListener {
+                    viewModel.navigateToDetail(it)
+                }
+            )
 
-        //Reduce saturation to make text clear
+        // Reduce saturation to make text clear
         val cm = ColorMatrix()
         cm.setSaturation(0.4F)
         val grayColorFilter = ColorMatrixColorFilter(cm)
@@ -195,20 +195,21 @@ class PlanFragment : Fragment() {
 
         var isShow = true
         var scrollRange = -1
-        binding.appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { barLayout, verticalOffset ->
-            if (scrollRange == -1) {
-                scrollRange = barLayout?.totalScrollRange!!
+        binding.appBar.addOnOffsetChangedListener(
+            AppBarLayout.OnOffsetChangedListener { barLayout, verticalOffset ->
+                if (scrollRange == -1) {
+                    scrollRange = barLayout?.totalScrollRange!!
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    binding.collapsingToolbar.setCollapsedTitleTextColor(getColor(R.color.matcha_6))
+                    binding.collapsingToolbar.title = viewModel.plan.value?.title
+                    isShow = true
+                } else if (isShow) {
+                    binding.collapsingToolbar.title = " "
+                    isShow = false
+                }
             }
-            if (scrollRange + verticalOffset == 0) {
-                binding.collapsingToolbar.setCollapsedTitleTextColor(getColor(R.color.matcha_6))
-                binding.collapsingToolbar.title = viewModel.plan.value?.title
-                isShow = true
-            } else if (isShow) {
-                binding.collapsingToolbar.title = " "
-                isShow = false
-            }
-        })
-
+        )
 
         viewModel.selectedDayPosition.observe(viewLifecycleOwner, {
             it?.let {
@@ -353,25 +354,33 @@ class PlanFragment : Fragment() {
 
         viewModel.navigateToDetail.observe(viewLifecycleOwner, {
             it?.let {
-                findNavController().navigate(
-                    when (viewModel.accessType) {
-                        AccessPlanType.VIEW -> NavigationDirections.navToDetailFragment(
-                            it,
-                            viewModel.plan.value!!,
-                            viewModel.selectedDayPosition.value?.let { position ->
-                                viewModel.days.value?.get(position)
-                            }!!
+
+                when (viewModel.accessType) {
+                    AccessPlanType.VIEW -> {
+                        findNavController().navigate(
+                            NavigationDirections.navToDetailFragment(
+                                it,
+                                viewModel.plan.value!!,
+                                viewModel.selectedDayPosition.value?.let { position ->
+                                    viewModel.days.value?.get(position)
+                                }!!
+                            )
                         )
-                        AccessPlanType.EDIT -> {
+                    }
+                    AccessPlanType.EDIT -> {
+                        findNavController().navigate(
                             NavigationDirections.navToDetailEditFragment()
                                 .setPlan(viewModel.plan.value)
-                                .setDay(viewModel.selectedDayPosition.value?.let { position ->
-                                    viewModel.days.value?.get(position)
-                                })
+                                .setDay(
+                                    viewModel.selectedDayPosition.value?.let { position ->
+                                        viewModel.days.value?.get(position)
+                                    }
+                                )
                                 .setSchedule(it)
-                        }
+                        )
                     }
-                )
+                }
+
                 viewModel.onDetailNavigated()
             }
         })
@@ -530,7 +539,7 @@ class PlanFragment : Fragment() {
             if (viewModel.accessType == AccessPlanType.EDIT) isVisible = true
         }
 
-        //For collapsed title align
+        // For collapsed title align
         menu.findItem(R.id.nothing).apply {
 
             if (viewModel.accessType == AccessPlanType.VIEW) isVisible = true

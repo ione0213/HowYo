@@ -9,7 +9,6 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.home.notification.NotificationType
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.plan.LikeType
 import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +31,7 @@ class AuthorProfileViewModel(
     val currentUser: LiveData<User>
         get() = _currentUser
 
-    //Plan data
+    // Plan data
     var plans = MutableLiveData<List<Plan>>()
 
     // Handle navigation to plan

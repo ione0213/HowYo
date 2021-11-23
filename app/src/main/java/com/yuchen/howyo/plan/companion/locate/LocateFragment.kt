@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.graphics.Bitmap
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -15,6 +16,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -28,32 +30,21 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.ui.IconGenerator
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
+import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.FragmentLocateBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.REQUEST_ENABLE_GPS
 import com.yuchen.howyo.util.REQUEST_LOCATION_PERMISSION
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.yuchen.howyo.util.Util.isInternetConnected
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
-import android.graphics.drawable.Drawable
-
-import androidx.annotation.DrawableRes
-import com.yuchen.howyo.databinding.LayoutAvatarInMapBinding
-import android.graphics.PorterDuff
-
-import android.graphics.Bitmap
-import android.widget.ImageView
-import android.widget.TextView
-import com.google.maps.android.ui.IconGenerator
-import com.yuchen.howyo.data.User
-import com.yuchen.howyo.util.Util.isInternetConnected
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LocateFragment : Fragment(), OnMapReadyCallback {
 
@@ -74,7 +65,8 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -84,8 +76,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
 
         mContext = HowYoApplication.instance
 
-
-        //Map
+        // Map
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
             HowYoApplication.instance
         )
@@ -103,7 +94,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         })
-
 
         return binding.root
     }
@@ -135,12 +125,12 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
 
                 val bmp: Bitmap
                 val options = BitmapFactory.Options()
-                //Resize image as 1 / 5
+                // Resize image as 1 / 5
                 options.inSampleSize = 1
 
                 withContext(Dispatchers.IO) {
 
-                    //Load avatar as icon of map marker
+                    // Load avatar as icon of map marker
                     val imageURLBase = "${it.avatar}"
                     val imageURL = URL(imageURLBase)
                     val connection: URLConnection = imageURL.openConnection()
@@ -172,15 +162,17 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
-                .setTitle("GPS 尚未開啟")
-                .setMessage("使用此功能需要開啟 GSP 定位功能")
-                .setPositiveButton("前往開啟",
+                .setTitle(getString(R.string.check_gps_title))
+                .setMessage(getString(R.string.check_gps_message))
+                .setPositiveButton(
+                    getString(R.string.navigate_to_open_setting),
                     DialogInterface.OnClickListener { _, _ ->
                         startActivityForResult(
                             Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
                         )
-                    })
-                .setNegativeButton("取消", null)
+                    }
+                )
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {
             getDeviceLocation()
@@ -195,14 +187,14 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
             )
         ) {
             AlertDialog.Builder(mContext)
-                .setMessage("此應用程式，需要位置權限才能正常使用")
-                .setPositiveButton("確定") { _, _ ->
+                .setMessage(getString(R.string.request_location_permission_message))
+                .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                     ActivityCompat.requestPermissions(
                         mContext as Activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         REQUEST_LOCATION_PERMISSION
                     )
                 }
-                .setNegativeButton("取消") { _, _ -> requestLocationPermission() }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> requestLocationPermission() }
                 .show()
         } else {
             ActivityCompat.requestPermissions(
@@ -213,7 +205,9 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -221,7 +215,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
             REQUEST_LOCATION_PERMISSION -> {
                 if (grantResults.isNotEmpty()) {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        //已獲取到權限
+                        // 已獲取到權限
                         locationPermissionGranted = true
                         checkGPSState()
                     }
@@ -242,7 +236,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    //These function about getting location should be in a dependent class
+    // These function about getting location should be in a dependent class
     private fun getLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 mContext,

@@ -6,7 +6,6 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.factory.ViewModelFactory
-import com.yuchen.howyo.util.Logger
 
 fun Activity.getVmFactory(): ViewModelFactory {
     val repository = (applicationContext as HowYoApplication).howYoRepository

@@ -21,7 +21,8 @@ class FriendItemFragment(
     private val viewModel by viewModels<FriendItemViewModel> { getVmFactory(friendType, userId) }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 

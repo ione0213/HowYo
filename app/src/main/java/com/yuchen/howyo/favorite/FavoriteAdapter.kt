@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.PlanDataItem
 import com.yuchen.howyo.databinding.ItemEmptyFavoriteBinding
-import com.yuchen.howyo.databinding.ItemEmptyPlanBinding
 import com.yuchen.howyo.databinding.ItemPlansFavoriteBinding
-import com.yuchen.howyo.home.HomeAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,8 +38,7 @@ class FavoriteAdapter(
     }
 
     class EmptyViewHolder(private var binding: ItemEmptyFavoriteBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {
         override fun areItemsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {

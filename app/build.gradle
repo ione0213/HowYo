@@ -6,7 +6,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-parcelize'
     id 'com.google.firebase.crashlytics'
-
+    id 'org.jlleitschuh.gradle.ktlint'
 }
 
 android {
@@ -133,4 +133,9 @@ dependencies {
 
     //3rd party swipe layout for recyclerView
     implementation "com.chauthai.swipereveallayout:swipe-reveal-layout:$version_swipereveallayout"
+}
+
+ktlint {
+    android.set(true)
+    outputColorName.set("RED")
 }

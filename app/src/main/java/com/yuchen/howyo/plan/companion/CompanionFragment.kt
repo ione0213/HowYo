@@ -12,7 +12,6 @@ import com.yuchen.howyo.databinding.FragmentCompanionBinding
 import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
-import com.yuchen.howyo.util.Logger
 
 class CompanionFragment : Fragment() {
 
@@ -24,7 +23,8 @@ class CompanionFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -34,7 +34,7 @@ class CompanionFragment : Fragment() {
 
         val adapter = CompanionAdapter(viewModel)
 
-        binding. recyclerCompanionFriends.adapter = adapter
+        binding.recyclerCompanionFriends.adapter = adapter
         binding.btnCompanionClose.setTouchDelegate()
 
         binding.edittextCompanionFriend.setOnKeyListener { v, keyCode, event ->

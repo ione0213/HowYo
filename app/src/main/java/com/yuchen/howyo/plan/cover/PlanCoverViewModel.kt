@@ -14,10 +14,10 @@ import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.CheckItemType
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Util.getString
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
+import kotlinx.coroutines.*
 
 class PlanCoverViewModel(
     private val howYoRepository: HowYoRepository,
@@ -34,7 +34,7 @@ class PlanCoverViewModel(
     val isNewPlan: LiveData<Boolean>
         get() = _isNewPlan
 
-     val _plan = MutableLiveData<Plan>().apply {
+    val _plan = MutableLiveData<Plan>().apply {
         when (argumentPlan) {
             null -> {
                 val today = Calendar.getInstance()
@@ -72,13 +72,13 @@ class PlanCoverViewModel(
 
     val endDateFromUser = MutableLiveData<Long>()
 
-    //Days list for updating days and schedules when plan is updated
+    // Days list for updating days and schedules when plan is updated
     private val _days = MutableLiveData<List<Day>>()
 
     val days: LiveData<List<Day>>
         get() = _days
 
-    //Schedules list for updating when plan is updated
+    // Schedules list for updating when plan is updated
     private val _schedules = MutableLiveData<List<Schedule>>()
 
     val schedules: LiveData<List<Schedule>>
@@ -184,7 +184,7 @@ class PlanCoverViewModel(
 
     private fun setInitData() {
 
-        //set the default value for duration of the plan
+        // set the default value for duration of the plan
         val calendar = Calendar.getInstance()
 
         startDateFromUser.value = plan.value?.startDate ?: calendar.timeInMillis
@@ -249,14 +249,12 @@ class PlanCoverViewModel(
                                         coverPhotoResult.add(deletePhoto(planPhoto.value!!.fileName!!))
                                     }
                                     else -> {
-
                                     }
                                 }
 
                                 coverPhotoResult.add(uploadCoverImg())
                             }
                             else -> {
-
                             }
                         }
                     }
@@ -379,8 +377,10 @@ class PlanCoverViewModel(
         val scheduleList = schedules.value?.toList()
 
         val newDayCount =
-            (endDateFromUser.value?.minus(startDateFromUser.value!!)
-                ?.div((60 * 60 * 24 * 1000)))?.toInt()?.plus(1)
+            (
+                endDateFromUser.value?.minus(startDateFromUser.value!!)
+                    ?.div((60 * 60 * 24 * 1000))
+                )?.toInt()?.plus(1)
 
         val differenceInDayCount = newDayCount?.minus(dayList?.size ?: 0)
 
@@ -456,7 +456,6 @@ class PlanCoverViewModel(
                             }
                         }
                         else -> {
-
                         }
                     }
 
@@ -516,8 +515,10 @@ class PlanCoverViewModel(
 
         val planId = planId.value
         val days =
-            (endDateFromUser.value?.minus(startDateFromUser.value!!)
-                ?.div((60 * 60 * 24 * 1000)))?.toInt()
+            (
+                endDateFromUser.value?.minus(startDateFromUser.value!!)
+                    ?.div((60 * 60 * 24 * 1000))
+                )?.toInt()
         val dayResults = mutableListOf<Boolean>()
 
         for (position in 0..days!!) {

@@ -12,9 +12,9 @@ import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.CheckItemType
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Util.getString
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.*
 
 class CopyPlanViewModel(
     private val howYoRepository: HowYoRepository,
@@ -64,19 +64,19 @@ class CopyPlanViewModel(
 
     val endDateFromUser = MutableLiveData<Long>()
 
-    //Days list for copying reference
+    // Days list for copying reference
     private val _days = MutableLiveData<List<Day>>()
 
     val days: LiveData<List<Day>>
         get() = _days
 
-    //New days list
+    // New days list
     private val _newDays = MutableLiveData<List<Day>>()
 
     val newDays: LiveData<List<Day>>
         get() = _newDays
 
-    //Schedules list for copying
+    // Schedules list for copying
     private val _schedules = MutableLiveData<List<Schedule>>()
 
     val schedules: LiveData<List<Schedule>>
@@ -169,7 +169,7 @@ class CopyPlanViewModel(
 
     private fun setInitData() {
 
-        //set the default value for duration of the plan
+        // set the default value for duration of the plan
         val calendar = Calendar.getInstance()
 
         startDateFromUser.value = plan.value?.startDate ?: calendar.timeInMillis
@@ -279,8 +279,10 @@ class CopyPlanViewModel(
 
         val planId = planId.value
         val days =
-            (endDateFromUser.value?.minus(startDateFromUser.value!!)
-                ?.div((60 * 60 * 24 * 1000)))?.toInt()
+            (
+                endDateFromUser.value?.minus(startDateFromUser.value!!)
+                    ?.div((60 * 60 * 24 * 1000))
+                )?.toInt()
         val dayResults = mutableListOf<Boolean>()
         val scheduleResults = mutableListOf<Boolean>()
         val daysData = mutableListOf<Pair<Day, Int>>()

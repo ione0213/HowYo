@@ -10,7 +10,6 @@ import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.CheckItemType
-import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getString
 import kotlinx.coroutines.*
 
@@ -20,7 +19,7 @@ class CheckOrShoppingListViewModel(
     private val argumentMainType: MainItemType
 ) : ViewModel() {
 
-    //Handle all check lists
+    // Handle all check lists
     var allCheckLists = MutableLiveData<List<CheckShoppingList>>()
 
     val planId: String
@@ -142,8 +141,6 @@ class CheckOrShoppingListViewModel(
                 }
             }
         }
-
-
     }
 
     private suspend fun deleteAllCheckShopList(): Boolean {

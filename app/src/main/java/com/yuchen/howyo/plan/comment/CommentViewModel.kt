@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class CommentViewModel(
@@ -23,7 +22,7 @@ class CommentViewModel(
     val user: LiveData<List<User>>
         get() = _users
 
-    //All comments of plan
+    // All comments of plan
     var allComments = MutableLiveData<List<Comment>>()
 
     private val _commentData = MutableLiveData<MutableList<CommentData>>()

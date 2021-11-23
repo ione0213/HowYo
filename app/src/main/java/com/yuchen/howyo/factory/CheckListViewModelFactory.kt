@@ -3,8 +3,8 @@ package com.yuchen.howyo.factory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.yuchen.howyo.data.source.HowYoRepository
-import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListViewModel
+import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
 
 class CheckListViewModelFactory(
     private val howYoRepository: HowYoRepository,

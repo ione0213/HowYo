@@ -11,12 +11,12 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
@@ -28,12 +28,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
-import com.yuchen.howyo.databinding.FragmentLocateBinding
 import com.yuchen.howyo.databinding.FragmentMapBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.plan.companion.locate.LocateFragmentArgs
-import com.yuchen.howyo.plan.companion.locate.LocateViewModel
-import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.REQUEST_ENABLE_GPS
 import com.yuchen.howyo.util.REQUEST_LOCATION_PERMISSION
 
@@ -53,7 +49,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mContext: Context
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -63,7 +60,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         mContext = HowYoApplication.instance
 
-        //Map
+        // Map
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
             HowYoApplication.instance
         )
@@ -104,7 +101,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         marker?.showInfoWindow()
 
-        //Disable touch in scrollView
+        // Disable touch in scrollView
 //        googleMap?.uiSettings?.isScrollGesturesEnabled = false
     }
 
@@ -127,15 +124,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
-                .setTitle("GPS 尚未開啟")
-                .setMessage("使用此功能需要開啟 GSP 定位功能")
-                .setPositiveButton("前往開啟",
+                .setTitle(getString(R.string.check_gps_title))
+                .setMessage(getString(R.string.check_gps_message))
+                .setPositiveButton(
+                    getString(R.string.navigate_to_open_setting),
                     DialogInterface.OnClickListener { _, _ ->
                         startActivityForResult(
                             Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
                         )
-                    })
-                .setNegativeButton("取消", null)
+                    }
+                )
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {
             getDeviceLocation()
@@ -150,14 +149,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             )
         ) {
             AlertDialog.Builder(mContext)
-                .setMessage("此應用程式，需要位置權限才能正常使用")
-                .setPositiveButton("確定") { _, _ ->
+                .setMessage(getString(R.string.request_location_permission_message))
+                .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                     ActivityCompat.requestPermissions(
                         mContext as Activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         REQUEST_LOCATION_PERMISSION
                     )
                 }
-                .setNegativeButton("取消") { _, _ -> requestLocationPermission() }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> requestLocationPermission() }
                 .show()
         } else {
             ActivityCompat.requestPermissions(

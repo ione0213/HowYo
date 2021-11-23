@@ -10,7 +10,6 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.profile.author.FollowType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class NotificationViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -20,16 +19,16 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     val currentUser: LiveData<User>
         get() = _currentUser
 
-    //Notification data
+    // Notification data
     var notifications = MutableLiveData<List<Notification>>()
 
-    //Plan data
+    // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>
         get() = _plans
 
-    //User data set
+    // User data set
     private val _userDataSet = MutableLiveData<Set<User>>()
 
     val userDataSet: LiveData<Set<User>>

@@ -24,10 +24,10 @@ class LocateViewModel(
     val plan: LiveData<Plan>
         get() = _plan
 
-    //Get user lists with companion id
+    // Get user lists with companion id
     var _companions = MutableLiveData<List<User>>()
 
-    val companions:LiveData<List<User>>
+    val companions: LiveData<List<User>>
         get() = _companions
 
     private var viewModelJob = Job()
@@ -45,7 +45,6 @@ class LocateViewModel(
     val status: LiveData<LoadApiStatus>
         get() = _status
 
-
     init {
         _status.value = LoadApiStatus.LOADING
     }
@@ -56,7 +55,7 @@ class LocateViewModel(
 
         plan.value?.authorId?.let { companionList?.add(it) }
 
-        companionList?.removeIf { it ==  UserManager.userId}
+        companionList?.removeIf { it == UserManager.userId }
 
         coroutineScope.launch {
 

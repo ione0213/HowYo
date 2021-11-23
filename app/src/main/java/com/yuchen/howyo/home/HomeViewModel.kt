@@ -23,19 +23,19 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val followingList: LiveData<List<String>>
         get() = _followingList
 
-    //Plan data
+    // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>
         get() = _plans
 
-    //User id set
+    // User id set
     private val _authorIds = MutableLiveData<Set<String>>()
 
     val authorIds: LiveData<Set<String>>
         get() = _authorIds
 
-    //User data set
+    // User data set
     private val _authorDataSet = MutableLiveData<Set<User>>()
 
     val authorDataSet: LiveData<Set<User>>
@@ -85,15 +85,15 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-                    when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
-                        is Result.Success -> {
-                            followingList = result.data.followingList?.toList() ?: listOf()
-                        }
-                        else -> {
-                            howYoRepository.signOut()
-                            UserManager.clear()
-                        }
+                when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
+                    is Result.Success -> {
+                        followingList = result.data.followingList?.toList() ?: listOf()
                     }
+                    else -> {
+                        howYoRepository.signOut()
+                        UserManager.clear()
+                    }
+                }
             }
 
             _followingList.value = followingList
@@ -132,7 +132,7 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 authorIds.value?.forEach { authorId ->
-                    when (val result = howYoRepository.getUser(authorId)){
+                    when (val result = howYoRepository.getUser(authorId)) {
                         is Result.Success -> {
                             authorDataList.add(result.data)
                         }

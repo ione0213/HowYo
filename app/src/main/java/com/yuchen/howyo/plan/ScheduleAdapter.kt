@@ -38,7 +38,6 @@ class ScheduleAdapter(
             viewModel: PlanViewModel
         ) {
 
-
             binding.layoutPlanScheduleContent.setOnClickListener {
                 onClickListener.onClick(
                     schedule
@@ -59,8 +58,7 @@ class ScheduleAdapter(
     }
 
     class EmptyViewHolder(private var binding: ItemEmptyScheduleBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<ScheduleDataItem>() {
         override fun areItemsTheSame(
@@ -103,8 +101,6 @@ class ScheduleAdapter(
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
-
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

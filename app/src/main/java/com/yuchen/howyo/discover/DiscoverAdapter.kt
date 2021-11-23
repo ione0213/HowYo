@@ -11,7 +11,7 @@ import com.yuchen.howyo.databinding.ItemPlansDiscoverBinding
 class DiscoverAdapter(
     private val onClickListener: OnClickListener,
     private val viewModel: DiscoverViewModel
-    ) :
+) :
     ListAdapter<Plan, DiscoverAdapter.PlanViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {

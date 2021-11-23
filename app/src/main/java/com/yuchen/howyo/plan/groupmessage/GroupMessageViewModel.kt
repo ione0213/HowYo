@@ -21,7 +21,7 @@ class GroupMessageViewModel(
     val plan: LiveData<Plan>
         get() = _plan
 
-    //All messages of plan
+    // All messages of plan
     var allGroupMessages = MutableLiveData<List<GroupMessage>>()
 
     private val _groupMessagesData = MutableLiveData<List<GroupMessageData>>()

@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.FragmentPaymentDetailBinding
 import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
@@ -29,7 +28,8 @@ class PaymentDetailFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -101,7 +101,6 @@ class PaymentDetailFragment : Fragment() {
                             viewModel.deletePayment()
                         }
                         .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-
                         }
                         .show()
                 }

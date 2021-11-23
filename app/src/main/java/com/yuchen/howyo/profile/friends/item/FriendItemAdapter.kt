@@ -21,7 +21,8 @@ class FriendItemAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            user: User, viewModel: FriendItemViewModel,
+            user: User,
+            viewModel: FriendItemViewModel,
             friendType: FriendFilter,
             userId: String
         ) {

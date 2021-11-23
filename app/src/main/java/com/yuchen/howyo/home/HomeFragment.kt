@@ -23,7 +23,8 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -35,7 +36,8 @@ class HomeFragment : Fragment() {
         val adapter = HomeAdapter(
             HomeAdapter.OnClickListener {
                 viewModel.navigateToPlan(it)
-            }, viewModel
+            },
+            viewModel
         )
 
         binding.recyclerHomePlans.adapter = adapter
@@ -115,7 +117,6 @@ class HomeFragment : Fragment() {
 
                 viewModel.onNotificationNavigated()
             }
-
         })
 
         return binding.root

@@ -52,7 +52,8 @@ class PlanCoverDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -154,7 +155,6 @@ class PlanCoverDialog : AppCompatDialogFragment() {
                                 findNavController().popBackStack()
                             }
                         }
-
                     }
                 }
             }
@@ -254,10 +254,12 @@ class PlanCoverDialog : AppCompatDialogFragment() {
 
     private fun rotateIfRequired(bitmap: Bitmap): Bitmap {
         val exif = ExifInterface(outputImage.path)
-        return when (exif.getAttributeInt(
-            ExifInterface.TAG_ORIENTATION,
-            ExifInterface.ORIENTATION_NORMAL
-        )) {
+        return when (
+            exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+        ) {
             ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90)
             ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180)
             ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270)

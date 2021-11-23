@@ -46,5 +46,4 @@ class MapViewModel(
     fun onLocateDone() {
         _status.value = LoadApiStatus.DONE
     }
-
 }

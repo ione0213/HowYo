@@ -11,11 +11,10 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.util.Logger
 import com.yuchen.howyo.util.Util.getString
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.*
 
 class DetailEditViewModel(
     private val howYoRepository: HowYoRepository,
@@ -169,8 +168,10 @@ class DetailEditViewModel(
                 HowYoApplication
                     .instance
                     .resources
-                    .getStringArray(R.array.schedule_type_list)[selectedScheduleTypePosition.value
-                    ?: 0]
+                    .getStringArray(R.array.schedule_type_list)[
+                    selectedScheduleTypePosition.value
+                        ?: 0
+                ]
             title = this@DetailEditViewModel.title.value
             when {
                 location?.first != 0.0 && location?.second != 0.0 -> {
@@ -178,7 +179,6 @@ class DetailEditViewModel(
                     longitude = location?.second
                 }
                 else -> {
-
                 }
             }
             startTime = this@DetailEditViewModel.startTime.value
@@ -225,10 +225,12 @@ class DetailEditViewModel(
 
                                     fileNameList.add(fileName)
 
-                                    when (val result =
-                                        uri?.let { imgUri ->
-                                            howYoRepository.uploadPhoto(imgUri, fileName)
-                                        }) {
+                                    when (
+                                        val result =
+                                            uri?.let { imgUri ->
+                                                howYoRepository.uploadPhoto(imgUri, fileName)
+                                            }
+                                    ) {
                                         is Result.Success -> {
                                             imageUrlList.add(result.data)
                                         }

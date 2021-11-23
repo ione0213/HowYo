@@ -11,7 +11,6 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.DrawerToggleType
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -89,7 +88,7 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
         _sharedToolbarTitle.value = ""
     }
 
-    //For shared fragment title
+    // For shared fragment title
     fun setSharedToolbarTitle(title: String) {
         _sharedToolbarTitle.value = title
     }

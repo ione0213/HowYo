@@ -18,37 +18,27 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.discover.DiscoverAdapter
 import com.yuchen.howyo.ext.*
-import com.yuchen.howyo.favorite.FavoriteAdapter
-import com.yuchen.howyo.home.HomeAdapter
-import com.yuchen.howyo.home.notification.NotificationAdapter
 import com.yuchen.howyo.plan.*
 import com.yuchen.howyo.plan.checkorshoppinglist.CheckOrShoppingListAdapter
 import com.yuchen.howyo.plan.checkorshoppinglist.MainItemType
-import com.yuchen.howyo.plan.companion.CompanionAdapter
 import com.yuchen.howyo.plan.companion.CompanionType
 import com.yuchen.howyo.plan.detail.edit.DetailEditImagesAdapter
 import com.yuchen.howyo.plan.detail.view.DetailImagesAdapter
 import com.yuchen.howyo.plan.findlocation.FindLocationDaysAdapter
-import com.yuchen.howyo.plan.groupmessage.GroupMessageAdapter
-import com.yuchen.howyo.plan.payment.PaymentAdapter
 import com.yuchen.howyo.profile.PlanAdapter
 import com.yuchen.howyo.profile.author.AuthorProfilePlanAdapter
 import com.yuchen.howyo.profile.author.FollowType
-import com.yuchen.howyo.profile.friends.item.FriendItemAdapter
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
-import com.yuchen.howyo.util.Logger
-import com.yuchen.howyo.util.Util.getColor
 import com.yuchen.howyo.util.Util.getString
-import kotlinx.coroutines.withTimeoutOrNull
 
-@SuppressLint("SetTextI18n")
 @BindingAdapter("startDate", "endDate")
 fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
-    text = "${starDate.toDate()} - ${endDate.toDate()}"
+    text = HowYoApplication.instance.getString(
+        R.string.duration_with_dash, starDate.toDate(), endDate.toDate()
+    )
 }
 
-@SuppressLint("SetTextI18n")
 @BindingAdapter("time")
 fun TextView.bindMsgTime(time: Long) {
 
@@ -77,7 +67,6 @@ fun TextView.bindDurationTime(schedule: Schedule) {
     }
 }
 
-@SuppressLint("SetTextI18n")
 @BindingAdapter("dateTime")
 fun TextView.bindCommentTime(time: Long) {
 
@@ -91,7 +80,11 @@ fun TextView.bindCommentTime(time: Long) {
 fun TextView.bindTimeToTime(fromTime: Long, toTime: Long) {
 
     when {
-        fromTime != 0L || toTime != 0L -> text = "${fromTime.toTime()} - ${toTime.toTime()}"
+        fromTime != 0L || toTime != 0L -> {
+            text = HowYoApplication.instance.getString(
+                R.string.duration_with_dash, fromTime.toTime(), toTime.toTime()
+            )
+        }
     }
 }
 
@@ -344,7 +337,7 @@ fun AppCompatButton.bindBtnWithPlanPhoto(planPhoto: SchedulePhoto?) {
             false -> {
                 when {
                     planPhoto.uri.toString() == getString(R.string.default_cover) &&
-                            planPhoto.isDeleted == true -> {
+                        planPhoto.isDeleted == true -> {
                         View.GONE
                     }
                     else -> View.VISIBLE
@@ -369,7 +362,6 @@ fun bindImageWithScheduleType(imageView: ImageView, scheduleType: String?) {
             }
         )
     }
-
 }
 
 @BindingAdapter("checkLists", "mainType")
@@ -388,11 +380,11 @@ fun RecyclerView.bindRecyclerViewWithCheckLists(
     }
 }
 
-//@BindingAdapter("payments")
-//fun bindRecyclerViewWithPayments(
+// @BindingAdapter("payments")
+// fun bindRecyclerViewWithPayments(
 //    recyclerView: RecyclerView,
 //    paymentLists: List<Payment>
-//) {
+// ) {
 //    paymentLists.let {
 //        recyclerView.adapter?.apply {
 //            when (this) {
@@ -402,7 +394,7 @@ fun RecyclerView.bindRecyclerViewWithCheckLists(
 //            }
 //        }
 //    }
-//}
+// }
 
 @BindingAdapter("plans")
 fun bindRecyclerViewWithPlans(
@@ -546,8 +538,8 @@ fun AppCompatButton.bindBtnForAuthor(plan: Plan?, accessType: AccessPlanType?) {
 
     visibility =
         when {
-            (plan?.authorId == userId || plan?.companionList?.contains(userId) == true)
-                    && accessType == AccessPlanType.VIEW -> {
+            (plan?.authorId == userId || plan?.companionList?.contains(userId) == true) &&
+                accessType == AccessPlanType.VIEW -> {
                 View.VISIBLE
             }
             else -> {

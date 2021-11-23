@@ -1,17 +1,14 @@
 package com.yuchen.howyo.plan.comment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentCommentBinding
 import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.plan.cover.PlanCoverDialogArgs
-import com.yuchen.howyo.plan.cover.PlanCoverViewModel
 
 class CommentFragment : Fragment() {
 
@@ -22,7 +19,8 @@ class CommentFragment : Fragment() {
         )
     }
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 

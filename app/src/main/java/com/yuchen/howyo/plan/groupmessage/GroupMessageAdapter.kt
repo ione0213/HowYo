@@ -77,7 +77,6 @@ class GroupMessageAdapter :
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

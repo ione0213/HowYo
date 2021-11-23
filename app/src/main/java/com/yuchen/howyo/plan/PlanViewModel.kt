@@ -18,7 +18,7 @@ class PlanViewModel(
     private val argumentAccessPlanType: AccessPlanType
 ) : ViewModel() {
 
-    //Plan data
+    // Plan data
     private var _plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
     }
@@ -29,26 +29,26 @@ class PlanViewModel(
     val accessType: AccessPlanType
         get() = argumentAccessPlanType
 
-    //live days list of plans
+    // live days list of plans
     var days = MutableLiveData<List<Day>>()
 
     var tempDays = mutableListOf<Day>()
 
-    //All Schedules of plan
+    // All Schedules of plan
     var allSchedules = MutableLiveData<List<Schedule>>()
 
-    //Schedule list of days
+    // Schedule list of days
     private val _schedules = MutableLiveData<List<Schedule>>()
 
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
-    //Comments list for deleting plan
+    // Comments list for deleting plan
     var comments = MutableLiveData<List<Comment>>()
 
     var tempSchedules = mutableListOf<Schedule>()
 
-    //Author data
+    // Author data
     private val _author = MutableLiveData<User>()
 
     val author: LiveData<User>
@@ -125,7 +125,6 @@ class PlanViewModel(
 
     val handleScheduleSuccess: LiveData<Boolean>
         get() = _handleScheduleSuccess
-
 
     // Handle navigation to detail
     private val _navigateToDetail = MutableLiveData<Schedule>()
@@ -325,15 +324,15 @@ class PlanViewModel(
             }
 
             when {
-                !daysResult.contains(false)
-                        && !scheduleResult.contains(false)
-                        && !commentResult.contains(false)
-                        && !planResult.contains(false)
-                        && !checkShopListResult.contains(false)
-                        && !photoResult.contains(false)
-                        && groupMsgResult
-                        && notificationResult
-                        &&paymentResult -> {
+                !daysResult.contains(false) &&
+                    !scheduleResult.contains(false) &&
+                    !commentResult.contains(false) &&
+                    !planResult.contains(false) &&
+                    !checkShopListResult.contains(false) &&
+                    !photoResult.contains(false) &&
+                    groupMsgResult &&
+                    notificationResult &&
+                    paymentResult -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
                 }
@@ -388,8 +387,10 @@ class PlanViewModel(
 
                 val newPlan = plan.value?.copy(privacy = type.value)
 
-                setPrivacyResult = when (val result =
-                    newPlan?.let { howYoRepository.updatePlan(it) }) {
+                setPrivacyResult = when (
+                    val result =
+                        newPlan?.let { howYoRepository.updatePlan(it) }
+                ) {
                     is Result.Success -> {
                         result.data
                     }
@@ -402,7 +403,7 @@ class PlanViewModel(
     }
 
     fun setDefaultSelectedDay() {
-        //Select first item of days by default
+        // Select first item of days by default
         selectedDayPosition.value = 0
     }
 
@@ -462,9 +463,9 @@ class PlanViewModel(
             }
 
             when {
-                !daysResult.contains(false)
-                        && !scheduleResult.contains(false)
-                        && updatePlanResult.value == true -> {
+                !daysResult.contains(false) &&
+                    !scheduleResult.contains(false) &&
+                    updatePlanResult.value == true -> {
                     _handleDaySuccess.value = true
                 }
             }
@@ -1055,8 +1056,10 @@ class PlanViewModel(
                     tempSchedules.forEach { tempSchedule ->
                         allSchedules.value?.forEach { oldSchedule ->
                             if (tempSchedule.id == oldSchedule.id &&
-                                (tempSchedule.startTime != oldSchedule.startTime ||
-                                        tempSchedule.endTime != oldSchedule.endTime)
+                                (
+                                    tempSchedule.startTime != oldSchedule.startTime ||
+                                        tempSchedule.endTime != oldSchedule.endTime
+                                    )
                             ) {
                                 schedulesResult.add(updateSchedule(tempSchedule))
                             }
@@ -1125,7 +1128,6 @@ class PlanViewModel(
         when (accessType) {
             AccessPlanType.EDIT -> _navigateToEditCover.value = _plan.value
             else -> {
-
             }
         }
     }

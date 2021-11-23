@@ -9,7 +9,6 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class CompanionViewModel(
@@ -22,7 +21,7 @@ class CompanionViewModel(
     val plan: LiveData<Plan>
         get() = _plan
 
-    //Current user data
+    // Current user data
     private var _user = MutableLiveData<User>()
 
     val user: LiveData<User>
