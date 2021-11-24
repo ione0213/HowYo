@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         binding.recyclerHomePlans.adapter = adapter
 
         binding.layoutSwipeRefreshHome.setOnRefreshListener {
-            viewModel.getPlansResult()
+            viewModel.fetchPlansResult()
         }
         viewModel.refreshStatus.observe(
             viewLifecycleOwner, {
@@ -71,14 +71,14 @@ class HomeFragment : Fragment() {
                 }
                 viewModel.setStatusDone()
                 binding.viewModel = viewModel
-                adapter.addEmptyAndPlan(viewModel.plans.value!!)
+                adapter.addPlanOrEmptyPage(viewModel.plans.value!!)
             }
         }
 
-        viewModel.followingList.observe(viewLifecycleOwner, {
+        viewModel.followingListOfCurrentUser.observe(viewLifecycleOwner, {
             it?.let {
                 if (it.isNotEmpty()) {
-                    viewModel.getPlansResult()
+                    viewModel.fetchPlansResult()
                 } else {
                     viewModel.setStatusDone()
                     if (!UserManager.isLoggedIn) {
@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            if (it.isEmpty()) adapter.addEmptyAndPlan(listOf())
+            if (it.isEmpty()) adapter.addPlanOrEmptyPage(listOf())
         })
 
         viewModel.navigateToPlan.observe(viewLifecycleOwner, {

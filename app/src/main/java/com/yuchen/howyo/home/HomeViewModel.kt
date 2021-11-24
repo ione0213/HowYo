@@ -13,15 +13,10 @@ import kotlinx.coroutines.*
 
 class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
 
-    private var _user = MutableLiveData<User>()
+    private var _followingListOfCurrentUser = MutableLiveData<List<String>>()
 
-    val user: LiveData<User>
-        get() = _user
-
-    private var _followingList = MutableLiveData<List<String>>()
-
-    val followingList: LiveData<List<String>>
-        get() = _followingList
+    val followingListOfCurrentUser: LiveData<List<String>>
+        get() = _followingListOfCurrentUser
 
     // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
@@ -96,17 +91,17 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 }
             }
 
-            _followingList.value = followingList
+            _followingListOfCurrentUser.value = followingList
         }
     }
 
-    fun getPlansResult() {
+    fun fetchPlansResult() {
 
         _status.value = LoadApiStatus.LOADING
 
         coroutineScope.launch {
 
-            val result = howYoRepository.getPlans(followingList.value ?: listOf())
+            val result = howYoRepository.getPlans(followingListOfCurrentUser.value ?: listOf())
             _plans.value = when (result) {
                 is Result.Success -> result.data
                 else -> null

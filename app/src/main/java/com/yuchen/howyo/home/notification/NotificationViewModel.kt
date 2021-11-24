@@ -63,20 +63,21 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
 
     init {
 
-        getLiveUserResult()
-        getLiveNotificationsResult()
+        fetchLiveCurrentUserResult()
+        fetchLiveNotificationsResult()
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveCurrentUserResult() {
 
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
-    fun getLiveNotificationsResult() {
+    private fun fetchLiveNotificationsResult() {
+
         notifications = howYoRepository.getLiveNotifications()
     }
 
-    fun getUserData() {
+    fun fetchUserData() {
 
         val userIds = mutableSetOf<String>()
         val userDataSet = mutableSetOf<User>()

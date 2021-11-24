@@ -34,7 +34,7 @@ class NotificationFragment : Fragment() {
 
         viewModel.notifications.observe(viewLifecycleOwner) {
             it?.let {
-                viewModel.getUserData()
+                viewModel.fetchUserData()
             }
         }
 
@@ -53,7 +53,7 @@ class NotificationFragment : Fragment() {
             it?.let {
                 if (it) {
 //                    viewModel.getLiveNotificationsResult()
-                    viewModel.getUserData()
+                    viewModel.fetchUserData()
                     viewModel.onSentNotification()
                 }
             }
