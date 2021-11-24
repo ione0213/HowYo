@@ -20,10 +20,10 @@ class ProfileViewModel(
     private val argumentUserId: String
 ) : ViewModel() {
 
-    private var _user = MutableLiveData<User>()
+    private var _currentUser = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val currentUser: LiveData<User>
+        get() = _currentUser
 
     // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
@@ -66,16 +66,16 @@ class ProfileViewModel(
 
     init {
 
-        getLiveUserResult()
-        getPlansResult()
+        fetchLiveCurrentUserResult()
+        fetchPlansResult()
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveCurrentUserResult() {
 
-        _user = howYoRepository.getLiveUser(argumentUserId ?: "")
+        _currentUser = howYoRepository.getLiveUser(argumentUserId ?: "")
     }
 
-    fun getPlansResult() {
+    private fun fetchPlansResult() {
 
         _status.value = LoadApiStatus.LOADING
 
@@ -101,11 +101,6 @@ class ProfileViewModel(
             }
         }
     }
-
-//    private fun getLivePlansResult() {
-//        plans = howYoRepository.getLivePlans(listOf(UserManager.userId ?: ""))
-//        setStatusDone()
-//    }
 
     fun navigateToPlan(plan: Plan) {
         _navigateToPlan.value = plan

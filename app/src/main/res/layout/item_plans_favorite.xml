@@ -41,7 +41,7 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_favorite_plan_avatar"
                     android:layout_width="@dimen/favorite_avatar"
-                    app:plan="@{plan}"
+                    app:userId="@{plan.authorId}"
                     app:authorData="@{viewModel.authorDataList}"
                     android:layout_height="@dimen/favorite_avatar"
                     android:layout_marginStart="@dimen/small_padding"
@@ -61,7 +61,7 @@
                     android:layout_marginStart="@dimen/small_padding"
                     android:elevation="1dp"
                     app:authorData="@{viewModel.authorDataList}"
-                    app:plan="@{plan}"
+                    app:userId="@{plan.authorId}"
                     android:maxLines="1"
                     android:layout_marginEnd="@dimen/small_padding"
                     app:layout_constraintEnd_toEndOf="parent"

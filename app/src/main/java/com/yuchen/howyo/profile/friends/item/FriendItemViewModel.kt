@@ -21,12 +21,12 @@ class FriendItemViewModel(
     val currentUser: LiveData<User>
         get() = _currentUser
 
-    private val _userId = MutableLiveData<String>().apply {
+    private val _currentUserId = MutableLiveData<String>().apply {
         value = argumentUserId
     }
 
-    val userId: LiveData<String>
-        get() = _userId
+    private val currentUserId: LiveData<String>
+        get() = _currentUserId
 
     private var _userIdList = MutableLiveData<List<String>>()
 
@@ -60,11 +60,11 @@ class FriendItemViewModel(
     }
 
     init {
-        getLiveUserResult()
-        getUserIdList()
+        fetchLiveCurrentUserResult()
+        fetchUserIdList()
     }
 
-    private fun getUserIdList() {
+    private fun fetchUserIdList() {
 
         var userIdList = listOf<String>()
         coroutineScope.launch {
@@ -87,7 +87,7 @@ class FriendItemViewModel(
         }
     }
 
-    fun getUserDataList() {
+    fun fetchUserDataList() {
 
         val userDataList = mutableSetOf<User>()
 
@@ -107,7 +107,7 @@ class FriendItemViewModel(
         }
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveCurrentUserResult() {
 
         _currentUser = howYoRepository.getLiveUser(argumentUserId)
     }
@@ -118,7 +118,7 @@ class FriendItemViewModel(
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
 
-        val currentUserId = userId.value
+        val currentUserId = currentUserId.value
 
         when {
             user.fansList?.contains(currentUserId) == true -> {
@@ -148,7 +148,7 @@ class FriendItemViewModel(
                 howYoRepository.deleteFollowNotification(user.id, currentUserId!!)
             }
 
-            getUserIdList()
+            fetchUserIdList()
         }
     }
 
@@ -158,7 +158,7 @@ class FriendItemViewModel(
         val newCurrentUser = currentUser.value
         val fansList = newCurrentUser?.fansList?.toMutableList()
 
-        val currentUserId = userId.value
+        val currentUserId = currentUserId.value
 
         when {
             user.followingList?.contains(currentUserId) == true -> {
@@ -188,7 +188,7 @@ class FriendItemViewModel(
                 howYoRepository.deleteFollowNotification(currentUserId!!, user.id)
             }
 
-            getUserIdList()
+            fetchUserIdList()
         }
     }
 

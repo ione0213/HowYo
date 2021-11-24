@@ -61,9 +61,9 @@ class PlanCoverViewModel(
     val planId: LiveData<String>
         get() = _planId
 
-    private val _planPhoto = MutableLiveData<SchedulePhoto>()
+    private val _planPhoto = MutableLiveData<PhotoData>()
 
-    val planPhoto: LiveData<SchedulePhoto>
+    val planPhotoData: LiveData<PhotoData>
         get() = _planPhoto
 
     val startDateFromUser = MutableLiveData<Long>()
@@ -194,7 +194,7 @@ class PlanCoverViewModel(
 
         endDateFromUser.value = plan.value?.endDate ?: calendar.timeInMillis
 
-        _planPhoto.value = SchedulePhoto(
+        _planPhoto.value = PhotoData(
             Uri.parse(getString(R.string.default_cover)),
             plan.value?.coverPhotoUrl,
             plan.value?.coverFileName
@@ -241,12 +241,12 @@ class PlanCoverViewModel(
                         coverPhotoResult.add(uploadCoverImg())
                     }
                     false -> {
-                        when (planPhoto.value?.isDeleted) {
+                        when (planPhotoData.value?.isDeleted) {
                             true -> {
 
                                 when {
-                                    planPhoto.value!!.fileName?.isNotEmpty() == true -> {
-                                        coverPhotoResult.add(deletePhoto(planPhoto.value!!.fileName!!))
+                                    planPhotoData.value!!.fileName?.isNotEmpty() == true -> {
+                                        coverPhotoResult.add(deletePhoto(planPhotoData.value!!.fileName!!))
                                     }
                                     else -> {
                                     }
@@ -270,7 +270,7 @@ class PlanCoverViewModel(
 
     private suspend fun uploadCoverImg(): Boolean {
 
-        val uri = planPhoto.value?.uri
+        val uri = planPhotoData.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
         val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
         var uploadResult = false
@@ -723,10 +723,10 @@ class PlanCoverViewModel(
 
     fun setCoverBitmap(photoUri: Uri?) {
 
-        val newPlanPhoto = SchedulePhoto(
+        val newPlanPhoto = PhotoData(
             photoUri,
             null,
-            planPhoto.value?.fileName,
+            planPhotoData.value?.fileName,
             true
         )
 
@@ -734,10 +734,10 @@ class PlanCoverViewModel(
     }
 
     fun resetCoverImg() {
-        val newPlanPhoto = SchedulePhoto(
+        val newPlanPhoto = PhotoData(
             Uri.parse(getString(R.string.default_cover)),
             null,
-            planPhoto.value?.fileName,
+            planPhotoData.value?.fileName,
             true
         )
 

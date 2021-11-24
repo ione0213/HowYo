@@ -126,7 +126,7 @@ class ScheduleAdapter(
         }
     }
 
-    fun addEmptyAndSchedule(list: List<Schedule>) {
+    fun addScheduleOrEmptyPage(list: List<Schedule>) {
         adapterScope.launch {
             val items = when (list.size) {
                 0 -> {

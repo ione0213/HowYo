@@ -32,7 +32,7 @@ class PlanViewModel(
     // live days list of plans
     var days = MutableLiveData<List<Day>>()
 
-    var tempDays = mutableListOf<Day>()
+    var movedDays = mutableListOf<Day>()
 
     // All Schedules of plan
     var allSchedules = MutableLiveData<List<Schedule>>()
@@ -46,7 +46,7 @@ class PlanViewModel(
     // Comments list for deleting plan
     var comments = MutableLiveData<List<Comment>>()
 
-    var tempSchedules = mutableListOf<Schedule>()
+    var movedSchedules = mutableListOf<Schedule>()
 
     // Author data
     private val _author = MutableLiveData<User>()
@@ -81,21 +81,6 @@ class PlanViewModel(
     val updatePrivacyResult: LiveData<Boolean>
         get() = _updatePrivacyResult
 
-    private val _planResult = MutableLiveData<Boolean>()
-
-    private val planResult: LiveData<Boolean>
-        get() = _planResult
-
-    private val _checkShopListResult = MutableLiveData<Boolean>()
-
-    private val checkShopListResult: LiveData<Boolean>
-        get() = _checkShopListResult
-
-    private val _checkListResult = MutableLiveData<Boolean>()
-
-    private val checkListResult: LiveData<Boolean>
-        get() = _checkListResult
-
     private val _dayResult = MutableLiveData<Boolean>()
 
     private val dayResult: LiveData<Boolean>
@@ -116,15 +101,15 @@ class PlanViewModel(
     val navigateToHomeAfterDeletingPlan: LiveData<Boolean>
         get() = _navigateToHomeAfterDeletingPlan
 
-    private val _handleDaySuccess = MutableLiveData<Boolean>()
+    private val _handleDayResult = MutableLiveData<Boolean>()
 
-    val handleDaySuccess: LiveData<Boolean>
-        get() = _handleDaySuccess
+    val handleDayResult: LiveData<Boolean>
+        get() = _handleDayResult
 
-    private val _handleScheduleSuccess = MutableLiveData<Boolean>()
+    private val _handleScheduleResult = MutableLiveData<Boolean>()
 
-    val handleScheduleSuccess: LiveData<Boolean>
-        get() = _handleScheduleSuccess
+    val handleScheduleResult: LiveData<Boolean>
+        get() = _handleScheduleResult
 
     // Handle navigation to detail
     private val _navigateToDetail = MutableLiveData<Schedule>()
@@ -233,11 +218,11 @@ class PlanViewModel(
 
     init {
 
-        getLivePlanResult()
+        fetchLivePlanResult()
         getLiveDaysResult()
         setDefaultSelectedDay()
         getLiveSchedulesResult()
-        getAuthorResult()
+        fetchAuthorResult()
         getLiveCommentsResult()
 //        getCommentsResult()
     }
@@ -246,7 +231,7 @@ class PlanViewModel(
         selectedDayPosition.value = position
     }
 
-    private fun getAuthorResult() {
+    private fun fetchAuthorResult() {
 
         val authorId = when (argumentPlan.id.isNotEmpty()) {
             true -> {
@@ -271,7 +256,7 @@ class PlanViewModel(
         }
     }
 
-    private fun getLivePlanResult() {
+    private fun fetchLivePlanResult() {
         when (argumentPlan.id.isNotEmpty()) {
             true -> {
                 _plan = howYoRepository.getLivePlan(plan.value?.id!!)
@@ -424,7 +409,7 @@ class PlanViewModel(
 
             when {
                 dayResult.value == true && updatePlanResult.value == true -> {
-                    _handleDaySuccess.value = true
+                    _handleDayResult.value = true
                 }
             }
         }
@@ -466,7 +451,7 @@ class PlanViewModel(
                 !daysResult.contains(false) &&
                     !scheduleResult.contains(false) &&
                     updatePlanResult.value == true -> {
-                    _handleDaySuccess.value = true
+                    _handleDayResult.value = true
                 }
             }
         }
@@ -587,7 +572,7 @@ class PlanViewModel(
 
             when {
                 !schedulesResult.contains(false) -> {
-                    _handleScheduleSuccess.value = true
+                    _handleScheduleResult.value = true
                 }
             }
         }
@@ -641,12 +626,12 @@ class PlanViewModel(
     fun moveDay(from: Int, to: Int) {
 
         val newDays = when {
-            tempDays.isNotEmpty() -> tempDays.toMutableList()
+            movedDays.isNotEmpty() -> movedDays.toMutableList()
             else -> days.value?.toMutableList()
         }
 
         val fullSchedules = when {
-            tempSchedules.isNotEmpty() -> tempSchedules.toMutableList()
+            movedSchedules.isNotEmpty() -> movedSchedules.toMutableList()
             else -> allSchedules.value?.toMutableList()
         }
 
@@ -879,11 +864,11 @@ class PlanViewModel(
         }
 
         if (newDays != null) {
-            tempDays = newDays.toMutableList()
+            movedDays = newDays.toMutableList()
         }
 
         if (fullSchedules != null) {
-            tempSchedules = fullSchedules.toMutableList()
+            movedSchedules = fullSchedules.toMutableList()
         }
     }
 
@@ -895,7 +880,7 @@ class PlanViewModel(
 
         withContext(Dispatchers.IO) {
 
-            tempDays.forEach { tempDay ->
+            movedDays.forEach { tempDay ->
                 days.value?.forEach { oldDay ->
                     if (tempDay.id == oldDay.id && tempDay.position != oldDay.position) {
                         daysResult.add(updateDay(tempDay))
@@ -904,17 +889,17 @@ class PlanViewModel(
             }
         }
 
-        _handleDaySuccess.value = !daysResult.contains(false)
+        _handleDayResult.value = !daysResult.contains(false)
     }
 
     fun onSubmitMoveDay() {
-        tempDays = mutableListOf()
+        movedDays = mutableListOf()
     }
 
     fun moveSchedule(from: Int, to: Int) {
 
         val newSchedules = when {
-            tempSchedules.isNotEmpty() -> tempSchedules.toMutableList()
+            movedSchedules.isNotEmpty() -> movedSchedules.toMutableList()
             else -> schedules.value?.toMutableList()
         }
 
@@ -1028,7 +1013,7 @@ class PlanViewModel(
             }
         }
         if (newSchedules != null) {
-            tempSchedules = newSchedules.toMutableList()
+            movedSchedules = newSchedules.toMutableList()
         }
     }
 
@@ -1041,7 +1026,7 @@ class PlanViewModel(
 
             when (type) {
                 HandleScheduleType.POSITION -> {
-                    tempSchedules.forEach { tempSchedule ->
+                    movedSchedules.forEach { tempSchedule ->
                         schedules.value?.forEach { schedule ->
                             when {
                                 tempSchedule.position != schedule.position -> {
@@ -1053,7 +1038,7 @@ class PlanViewModel(
                 }
                 HandleScheduleType.TIME -> {
 
-                    tempSchedules.forEach { tempSchedule ->
+                    movedSchedules.forEach { tempSchedule ->
                         allSchedules.value?.forEach { oldSchedule ->
                             if (tempSchedule.id == oldSchedule.id &&
                                 (
@@ -1069,11 +1054,11 @@ class PlanViewModel(
             }
         }
 
-        _handleScheduleSuccess.value = !schedulesResult.contains(false)
+        _handleScheduleResult.value = !schedulesResult.contains(false)
     }
 
     fun onSubmitMoveSchedule() {
-        tempSchedules = mutableListOf()
+        movedSchedules = mutableListOf()
     }
 
     fun checkDeletePlan() {

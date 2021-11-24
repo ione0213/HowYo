@@ -137,7 +137,7 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        viewModel.resetToolbar.observe(this, {
+        viewModel.isResetToolbar.observe(this, {
             it?.let {
 
                 if (it) {
@@ -153,7 +153,7 @@ class MainActivity : BaseActivity() {
             it?.let {
                 if (it) {
                     userLocateService?.subscribeToLocationUpdates()
-                    viewModel.onSetUserLocateServiceStatus()
+                    viewModel.resetUserLocateServiceStatus()
                 }
             }
         }
@@ -162,7 +162,7 @@ class MainActivity : BaseActivity() {
             it?.let {
                 if (it && isLoggedIn) {
                     getLocationPermission()
-                    viewModel.onSetIsAccessAppFirstTime()
+                    viewModel.resetIsAccessAppFirstTime()
                 }
             }
         }
@@ -295,8 +295,8 @@ class MainActivity : BaseActivity() {
 
         viewModel.userLocation.observe(this) {
             it?.let {
-                viewModel.updateUser(it)
-                viewModel.onSetUserLocation()
+                viewModel.updateUserLocation(it)
+                viewModel.onUpdateUserLocation()
             }
         }
     }
@@ -315,13 +315,13 @@ class MainActivity : BaseActivity() {
         super.onResume()
         if (viewModel.isAccessAppFirstTime.value != true) {
             registerLocationReceiver()
-            viewModel.onsetBroadcastRegistered()
+            viewModel.resetBroadcastStatus()
         }
     }
 
     private fun registerLocationReceiver() {
 
-        if (isLoggedIn && viewModel.isBroadcastUnRegistered.value != true) {
+        if (isLoggedIn && viewModel.isBroadcastRegistered.value != true) {
 
             LocalBroadcastManager.getInstance(this).registerReceiver(
                 howYoBroadcastReceiver,
@@ -339,7 +339,7 @@ class MainActivity : BaseActivity() {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 howYoBroadcastReceiver
             )
-            viewModel.onsetBroadcastRegistered()
+            viewModel.resetBroadcastStatus()
         }
         super.onPause()
     }

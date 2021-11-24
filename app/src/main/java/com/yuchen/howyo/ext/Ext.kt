@@ -4,6 +4,8 @@ import android.graphics.Rect
 import android.location.Location
 import android.view.TouchDelegate
 import android.view.View
+import com.yuchen.howyo.HowYoApplication
+import com.yuchen.howyo.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,7 +28,7 @@ fun View.setTouchDelegate() {
 /**
  * Transfer data form long to date string.
  */
-fun Long.toDate(): String {
+fun Long.toFullDate(): String {
     return SimpleDateFormat("yyyy/MM/dd").format(this)
 }
 
@@ -38,8 +40,8 @@ fun Long.toDateTime(): String {
     return SimpleDateFormat("yyyy/MM/dd HH:mm a").format(this)
 }
 
-fun Long.toWeekDay(): String {
-    return SimpleDateFormat("EE").format(this)
+fun Long.toDate(): String {
+    return SimpleDateFormat("MM/dd").format(this)
 }
 
 fun Long.toHour(): Int {
@@ -57,19 +59,19 @@ fun Long.toMinute(): Int {
 fun Long.displayTime(): String {
     val sec = (Calendar.getInstance().timeInMillis - this) / 1000
     return when {
-        sec < 60 -> sec.toString() + "秒前"
+        sec < 60 -> HowYoApplication.instance.getString(R.string.seconds_ago, sec.toString())
 
-        sec < 3600 -> (sec / 60).toString() + "分鐘前"
+        sec < 3600 -> HowYoApplication.instance.getString(R.string.minutes_ago, (sec / 60).toString())
 
-        sec < 86400 -> (sec / 3600).toString() + "小時前"
+        sec < 86400 -> HowYoApplication.instance.getString(R.string.hours_ago, (sec / 3660).toString())
 
-        sec < 604800 -> (sec / 86400).toString() + "天前"
+        sec < 604800 -> HowYoApplication.instance.getString(R.string.days_ago, (sec / 86400).toString())
 
-        sec < 2592000 -> (sec / 604800).toString() + "周前"
+        sec < 2592000 -> HowYoApplication.instance.getString(R.string.weeks_ago, (sec / 604800).toString())
 
-        sec < 31536000 -> (sec / 2592000).toString() + "月前"
+        sec < 31536000 -> HowYoApplication.instance.getString(R.string.months_ago, (sec / 2592000).toString())
 
-        else -> (sec / 31536000).toString() + "年前"
+        else -> HowYoApplication.instance.getString(R.string.years_ago, (sec / 31536000).toString())
     }
 }
 

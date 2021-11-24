@@ -5,6 +5,15 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nothing">nothing</string>
 
+    <!-- Display time-->
+    <string name="seconds_ago">%s秒前</string>
+    <string name="minutes_ago">%s分鐘前</string>
+    <string name="hours_ago">%s小時前</string>
+    <string name="days_ago">%s天前</string>
+    <string name="weeks_ago">%s周前</string>
+    <string name="months_ago">%s個月前</string>
+    <string name="years_ago">%s年前</string>
+
     <!-- General -->
     <string name="home">好友行程</string>
     <string name="discover">探索</string>

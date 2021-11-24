@@ -17,10 +17,10 @@ class PaymentViewModel(
     private val argumentPlan: Plan?
 ) : ViewModel() {
 
-    private var _user = MutableLiveData<User>()
+    private var _currentUser = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val currentUser: LiveData<User>
+        get() = _currentUser
 
     private val _plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
@@ -70,22 +70,22 @@ class PaymentViewModel(
     init {
 
         _status.value = LoadApiStatus.LOADING
-        getLiveUserResult()
-        getLivePayments()
-        getPlanMemberData()
+        fetchLiveUserResult()
+        fetchLivePayments()
+        fetchPlanMemberData()
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveUserResult() {
 
-        _user = howYoRepository.getLiveUser(UserManager.userId ?: "")
+        _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
-    private fun getLivePayments() {
+    private fun fetchLivePayments() {
 
         payments = howYoRepository.getLivePayments(plan.value?.id ?: "")
     }
 
-    private fun getPlanMemberData() {
+    private fun fetchPlanMemberData() {
 
         val userDataList = mutableSetOf<User>()
         val planMembers = mutableListOf(plan.value?.authorId)

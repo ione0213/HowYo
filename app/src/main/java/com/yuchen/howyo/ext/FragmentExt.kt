@@ -62,11 +62,11 @@ fun Fragment.getVmFactory(friendType: FriendFilter, userId: String): FriendItemV
 }
 
 fun Fragment.getVmFactory(
-    schedulePhoto: SchedulePhoto,
-    schedulePhotos: SchedulePhotos
+    photoData: PhotoData,
+    photos: Photos
 ): DetailEditImageViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return DetailEditImageViewModelFactory(repository, schedulePhoto, schedulePhotos)
+    return DetailEditImageViewModelFactory(repository, photoData, photos)
 }
 
 fun Fragment.getVmFactory(

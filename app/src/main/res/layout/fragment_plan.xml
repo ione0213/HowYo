@@ -398,7 +398,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:lockBtn="@{viewModel.plan.privacy}" />
+                    app:lockButton="@{viewModel.plan.privacy}" />
 
                 <ImageButton
                     android:id="@+id/button_plan_unlock"
@@ -412,7 +412,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:unlockBtn="@{viewModel.plan.privacy}" />
+                    app:unlockButton="@{viewModel.plan.privacy}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

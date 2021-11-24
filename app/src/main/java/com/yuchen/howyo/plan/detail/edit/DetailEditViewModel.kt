@@ -11,6 +11,7 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Util.getString
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,17 +40,17 @@ class DetailEditViewModel(
         value = argumentDay
     }
 
-    private val _photoDataList = MutableLiveData<MutableList<SchedulePhoto>>().apply {
-        val photoData = mutableListOf<SchedulePhoto>()
+    private val _photoDataList = MutableLiveData<MutableList<PhotoData>>().apply {
+        val photoData = mutableListOf<PhotoData>()
         argumentSchedule?.let {
             it.photoUrlList?.forEachIndexed { index, url ->
-                photoData.add(SchedulePhoto(url = url, fileName = it.photoFileNameList?.get(index)))
+                photoData.add(PhotoData(url = url, fileName = it.photoFileNameList?.get(index)))
             }
         }
         value = photoData
     }
 
-    val photoDataList: LiveData<MutableList<SchedulePhoto>>
+    val photoDataDataList: LiveData<MutableList<PhotoData>>
         get() = _photoDataList
 
     val notification = MutableLiveData<Boolean>()
@@ -94,9 +95,9 @@ class DetailEditViewModel(
         get() = _scheduleResult
 
     // Handle navigation to edit single image
-    private val _navigateToEditImage = MutableLiveData<SchedulePhoto>()
+    private val _navigateToEditImage = MutableLiveData<PhotoData>()
 
-    val navigateToEditImage: LiveData<SchedulePhoto>
+    val navigateToEditImage: LiveData<PhotoData>
         get() = _navigateToEditImage
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -141,8 +142,8 @@ class DetailEditViewModel(
     }
 
     fun setBitmap(uri: Uri) {
-        val photoData = photoDataList.value?.toMutableList()
-        photoData?.add(SchedulePhoto(uri = uri))
+        val photoData = photoDataDataList.value?.toMutableList()
+        photoData?.add(PhotoData(uri = uri))
         _photoDataList.value = photoData
     }
 
@@ -169,8 +170,8 @@ class DetailEditViewModel(
                     .instance
                     .resources
                     .getStringArray(R.array.schedule_type_list)[
-                    selectedScheduleTypePosition.value
-                        ?: 0
+                        selectedScheduleTypePosition.value
+                            ?: 0
                 ]
             title = this@DetailEditViewModel.title.value
             when {
@@ -198,7 +199,7 @@ class DetailEditViewModel(
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-                photoDataList.value?.forEach {
+                photoDataDataList.value?.forEach {
 
                     when (it.uri) {
                         null -> {
@@ -220,8 +221,9 @@ class DetailEditViewModel(
                                     val uri = it.uri
                                     val formatter =
                                         SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
+
                                     val fileName =
-                                        "userIdFromSharePreference_${formatter.format(Date())}"
+                                        "${UserManager.currentUserEmail}_${formatter.format(Date())}"
 
                                     fileNameList.add(fileName)
 
@@ -328,8 +330,8 @@ class DetailEditViewModel(
         _scheduleResult.value = null
     }
 
-    fun navigateToEditImage(schedulePhoto: SchedulePhoto) {
-        _navigateToEditImage.value = schedulePhoto
+    fun navigateToEditImage(photoData: PhotoData) {
+        _navigateToEditImage.value = photoData
     }
 
     fun onEditImageNavigated() {

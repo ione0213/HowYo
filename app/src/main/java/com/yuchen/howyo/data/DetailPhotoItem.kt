@@ -8,8 +8,8 @@ sealed class DetailPhotoItem {
         override val imgUrl = ""
     }
 
-    data class ImageData(val schedulePhoto: SchedulePhoto) : DetailPhotoItem() {
+    data class ImageData(val photoData: PhotoData) : DetailPhotoItem() {
         override val imgUrl: String
-            get() = schedulePhoto.url ?: ""
+            get() = photoData.url ?: ""
     }
 }

@@ -5,7 +5,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class SchedulePhoto(
+data class PhotoData(
     var uri: Uri? = null,
     val url: String? = null,
     val fileName: String? = null,
@@ -13,4 +13,4 @@ data class SchedulePhoto(
 ) : Parcelable
 
 @Parcelize
-class SchedulePhotos : ArrayList<SchedulePhoto>(), Parcelable
+class Photos : ArrayList<PhotoData>(), Parcelable

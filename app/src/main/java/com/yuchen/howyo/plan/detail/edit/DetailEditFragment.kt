@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.SchedulePhotos
+import com.yuchen.howyo.data.Photos
 import com.yuchen.howyo.databinding.FragmentDetailEditBinding
 import com.yuchen.howyo.ext.getVmFactory
 import java.util.*
@@ -104,8 +104,8 @@ class DetailEditFragment : Fragment() {
 
         viewModel.navigateToEditImage.observe(viewLifecycleOwner, {
             it?.let {
-                val schedulePhotos = SchedulePhotos()
-                viewModel.photoDataList.value?.forEach { schedulePhoto ->
+                val schedulePhotos = Photos()
+                viewModel.photoDataDataList.value?.forEach { schedulePhoto ->
                     schedulePhotos.add(schedulePhoto)
                 }
 

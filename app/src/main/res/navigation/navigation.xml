@@ -138,7 +138,7 @@
         <argument
             android:name="schedulePhoto"
             android:defaultValue="@null"
-            app:argType="com.yuchen.howyo.data.SchedulePhoto"
+            app:argType="com.yuchen.howyo.data.PhotoData"
             app:nullable="true" />
     </fragment>
     <fragment
@@ -148,10 +148,10 @@
         tools:layout="@layout/fragment_detail_edit_image">
         <argument
             android:name="schedulePhoto"
-            app:argType="com.yuchen.howyo.data.SchedulePhoto" />
+            app:argType="com.yuchen.howyo.data.PhotoData" />
         <argument
             android:name="schedulePhotos"
-            app:argType="com.yuchen.howyo.data.SchedulePhotos" />
+            app:argType="com.yuchen.howyo.data.Photos" />
         <action
             android:id="@+id/navigate_to_detail_edit_fragment"
             app:destination="@id/detailEditFragment"

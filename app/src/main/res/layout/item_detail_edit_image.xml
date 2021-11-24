@@ -11,7 +11,7 @@
 
         <variable
             name="schedulePhoto"
-            type="com.yuchen.howyo.data.SchedulePhoto" />
+            type="com.yuchen.howyo.data.PhotoData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

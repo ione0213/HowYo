@@ -63,17 +63,17 @@ class AuthorProfileViewModel(
 
     init {
 
-        getLiveUserResult()
-        getLivePlansResult()
+        fetchLiveUserResult()
+        fetchLivePlansResult()
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveUserResult() {
 
         _author = howYoRepository.getLiveUser(argumentUserId ?: "")
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
-    private fun getLivePlansResult() {
+    private fun fetchLivePlansResult() {
 
         plans = when (argumentUserId) {
             UserManager.userId -> {

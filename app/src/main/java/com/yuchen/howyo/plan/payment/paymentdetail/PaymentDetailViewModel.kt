@@ -42,9 +42,9 @@ class PaymentDetailViewModel(
     val payment: LiveData<Payment>
         get() = _payment
 
-    val item = MutableLiveData<String>()
+    val paymentItem = MutableLiveData<String>()
 
-    val type = MutableLiveData<String>()
+    val paymentType = MutableLiveData<String>()
 
     val amount = MutableLiveData<String>()
 
@@ -88,8 +88,8 @@ class PaymentDetailViewModel(
         when {
             payment.value != null -> {
                 payment.value.apply {
-                    item.value = this?.item ?: ""
-                    type.value = this?.type ?: ""
+                    paymentItem.value = this?.item ?: ""
+                    paymentType.value = this?.type ?: ""
                     amount.value = this?.amount?.toString()
 
                     val planMembers = mutableListOf(plan.value?.authorId)
@@ -104,10 +104,10 @@ class PaymentDetailViewModel(
     fun prepareSubmitPayment() {
 
         when {
-            item.value.isNullOrEmpty() -> {
+            paymentItem.value.isNullOrEmpty() -> {
                 _invalidPayment.value = INVALID_FORMAT_ITEM_EMPTY
             }
-            type.value.isNullOrEmpty() -> {
+            paymentType.value.isNullOrEmpty() -> {
                 _invalidPayment.value = INVALID_FORMAT_ITEM_TYPE_EMPTY
             }
             amount.value.isNullOrEmpty() || amount.value!!.toInt() == 0 -> {
@@ -139,8 +139,8 @@ class PaymentDetailViewModel(
                 plan.value?.companionList?.let { planMembers.addAll(it) }
 
                 val newPayment = payment.value?.copy(
-                    item = item.value,
-                    type = type.value,
+                    item = paymentItem.value,
+                    type = paymentType.value,
                     amount = amount.value?.toInt() ?: 0,
                     payer = selectedPaymentTypePosition.value?.let { planMembers[it] }
                 )
@@ -178,7 +178,7 @@ class PaymentDetailViewModel(
     }
 
     fun onTypeChanged(radioGroup: RadioGroup, id: Int) {
-        type.value = when (id) {
+        paymentType.value = when (id) {
             R.id.radio_self_payment -> PaymentType.SELF.type
             else -> PaymentType.SHARE.type
         }

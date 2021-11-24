@@ -36,8 +36,8 @@
                 android:layout_marginEnd="@dimen/middle_padding"
                 android:layout_marginBottom="@dimen/middle_padding"
                 android:theme="@style/InputTextColorTheme"
-                app:boxBackgroundColor="@{viewModel.invalidPayment != null? (TextUtils.isEmpty(viewModel.item) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
-                app:boxStrokeColor="@{viewModel.invalidPayment != null ? (TextUtils.isEmpty(viewModel.item) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
+                app:boxBackgroundColor="@{viewModel.invalidPayment != null? (TextUtils.isEmpty(viewModel.paymentItem) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
+                app:boxStrokeColor="@{viewModel.invalidPayment != null ? (TextUtils.isEmpty(viewModel.paymentItem) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -46,14 +46,14 @@
                     android:id="@+id/edittext_payment_detail_item"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/cover_plan_edittext"
-                    android:backgroundTint="@{viewModel.invalidPayment != null? (TextUtils.isEmpty(viewModel.item) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
+                    android:backgroundTint="@{viewModel.invalidPayment != null? (TextUtils.isEmpty(viewModel.paymentItem) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
                     android:hint="@string/payment_item"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="@={viewModel.item}"
+                    android:text="@={viewModel.paymentItem}"
                     android:textColor="@color/matcha_3"
-                    android:textColorHint="@{viewModel.invalidPayment != null ? (TextUtils.isEmpty(viewModel.item) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}" />
+                    android:textColorHint="@{viewModel.invalidPayment != null ? (TextUtils.isEmpty(viewModel.paymentItem) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -139,7 +139,7 @@
                         android:layout_height="60dp"
                         android:layout_marginEnd="@dimen/largest_padding"
                         android:background="@drawable/payment_type_selector"
-                        android:backgroundTint="@{viewModel.invalidPayment != null ? (viewModel.type == `` ? @color/scarlet : @color/transparent) : @color/transparent}"
+                        android:backgroundTint="@{viewModel.invalidPayment != null ? (viewModel.paymentType == `` ? @color/scarlet : @color/transparent) : @color/transparent}"
                         android:backgroundTintMode="screen"
                         android:button="@null"
                         android:fontFamily="@font/noto_sans"
@@ -154,7 +154,7 @@
                         android:layout_width="120dp"
                         android:layout_height="60dp"
                         android:background="@drawable/payment_type_selector"
-                        android:backgroundTint="@{viewModel.invalidPayment != null ? (viewModel.type == `` ? @color/scarlet : @color/transparent) : @color/transparent}"
+                        android:backgroundTint="@{viewModel.invalidPayment != null ? (viewModel.paymentType == `` ? @color/scarlet : @color/transparent) : @color/transparent}"
                         android:backgroundTintMode="screen"
                         android:button="@null"
                         android:fontFamily="@font/noto_sans"

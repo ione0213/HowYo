@@ -44,7 +44,7 @@ class SettingFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.user.observe(viewLifecycleOwner) {
+        viewModel.currentUser.observe(viewLifecycleOwner) {
             it?.let {
                 viewModel.setAvatarPhoto()
             }

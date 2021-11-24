@@ -15,10 +15,10 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
     val createUserResult: LiveData<String>
         get() = _createUserResult
 
-    private val _user = MutableLiveData<User>()
+    private val _currentUser = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    private val currentUser: LiveData<User>
+        get() = _currentUser
 
     private var viewModelJob = Job()
 
@@ -37,7 +37,7 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
                 when (val result = howYoRepository.createUser(user)) {
                     is Result.Success -> {
                         user.id = result.data
-                        _user.postValue(user)
+                        _currentUser.postValue(user)
                         _createUserResult.postValue(result.data!!)
                     }
                     else -> {
@@ -51,8 +51,8 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
     fun setUser() {
 
         UserManager.apply {
-            userId = user.value?.id
-            currentUserEmail = user.value?.email
+            userId = currentUser.value?.id
+            currentUserEmail = currentUser.value?.email
         }
     }
 }

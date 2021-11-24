@@ -71,7 +71,7 @@ class PlanFragment : Fragment() {
                     viewHolder?.itemView?.alpha = 0.5f
                 } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
                     when {
-                        !(viewModel.days.value === viewModel.tempDays) -> {
+                        !(viewModel.days.value === viewModel.movedDays) -> {
                             lifecycleScope.launch {
                                 viewModel.submitMovedDay()
                                 viewModel.submitMoveSchedule(HandleScheduleType.TIME)
@@ -131,7 +131,7 @@ class PlanFragment : Fragment() {
                     viewHolder?.itemView?.alpha = 0.5f
                 } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
                     when {
-                        !(viewModel.schedules.value === viewModel.tempSchedules) -> {
+                        !(viewModel.schedules.value === viewModel.movedSchedules) -> {
                             lifecycleScope.launch {
                                 viewModel.submitMoveSchedule(HandleScheduleType.POSITION)
                             }
@@ -308,7 +308,7 @@ class PlanFragment : Fragment() {
             }
         })
 
-        viewModel.handleDaySuccess.observe(viewLifecycleOwner, {
+        viewModel.handleDayResult.observe(viewLifecycleOwner, {
             it?.let {
                 when {
                     it -> {
@@ -337,7 +337,7 @@ class PlanFragment : Fragment() {
             }
         })
 
-        viewModel.handleScheduleSuccess.observe(viewLifecycleOwner, {
+        viewModel.handleScheduleResult.observe(viewLifecycleOwner, {
             it?.let {
                 when {
                     it -> {

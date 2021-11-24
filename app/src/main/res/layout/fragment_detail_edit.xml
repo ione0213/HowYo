@@ -45,12 +45,12 @@
                         android:layout_marginTop="@dimen/middle_padding"
                         android:layout_marginEnd="@dimen/middle_padding"
                         android:orientation="horizontal"
-                        android:visibility="@{viewModel.photoDataList.size == 0 ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.photoDataDataList.size == 0 ? View.GONE : View.VISIBLE}"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/button_detail_edit_close"
-                        app:photoData="@{viewModel.photoDataList}"
+                        app:photoData="@{viewModel.photoDataDataList}"
                         tools:listitem="@layout/item_detail_edit_image" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +60,7 @@
                         android:layout_marginStart="@dimen/large_padding"
                         android:layout_marginTop="@dimen/middle_padding"
                         android:layout_marginEnd="@dimen/large_padding"
-                        android:visibility="@{viewModel.photoDataList.size != 0 ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.photoDataDataList.size != 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/button_detail_edit_close">

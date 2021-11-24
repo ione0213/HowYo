@@ -37,7 +37,7 @@ class FriendItemFragment(
 
         viewModel.userIdList.observe(viewLifecycleOwner) {
             it?.let {
-                viewModel.getUserDataList()
+                viewModel.fetchUserDataList()
             }
         }
 
