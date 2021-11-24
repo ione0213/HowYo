@@ -8,14 +8,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.*
+import com.yuchen.howyo.data.Day
+import com.yuchen.howyo.data.PhotoData
+import com.yuchen.howyo.data.Plan
+import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Util.getString
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlinx.coroutines.*
+import java.util.Date
+import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailEditViewModel(
     private val howYoRepository: HowYoRepository,
@@ -134,7 +143,11 @@ class DetailEditViewModel(
                     refUrl.value = this?.refUrl ?: ""
 
                     val spinnerList =
-                        HowYoApplication.instance.resources.getStringArray(R.array.schedule_type_list)
+                        HowYoApplication
+                            .instance
+                            .resources
+                            .getStringArray(R.array.schedule_type_list)
+
                     selectedScheduleTypePosition.value = spinnerList.indexOf(this?.scheduleType)
                 }
             }
@@ -170,8 +183,8 @@ class DetailEditViewModel(
                     .instance
                     .resources
                     .getStringArray(R.array.schedule_type_list)[
-                        selectedScheduleTypePosition.value
-                            ?: 0
+                    selectedScheduleTypePosition.value
+                        ?: 0
                 ]
             title = this@DetailEditViewModel.title.value
             when {
@@ -220,10 +233,14 @@ class DetailEditViewModel(
                                 false -> {
                                     val uri = it.uri
                                     val formatter =
-                                        SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
+                                        SimpleDateFormat(
+                                            "yyyy_mm_dd_HH_mm_ss",
+                                            Locale.getDefault()
+                                        )
 
                                     val fileName =
-                                        "${UserManager.currentUserEmail}_${formatter.format(Date())}"
+                                        "${UserManager.currentUserEmail}_" +
+                                            formatter.format(Date())
 
                                     fileNameList.add(fileName)
 
