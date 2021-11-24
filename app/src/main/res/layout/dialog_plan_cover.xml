@@ -129,7 +129,7 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:background="@drawable/delete"
                     android:backgroundTint="@color/matcha_3"
-                    android:onClick="@{() -> viewModel.resetCoverImg()}"
+                    android:onClick="@{() -> viewModel.resetCoverPhoto()}"
                     app:layout_constraintEnd_toStartOf="@id/btn_plan_cover_select_photo"
                     app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_select_photo"
                     app:planPhoto="@{viewModel.planPhotoData}" />
@@ -157,7 +157,7 @@
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:text="@={viewModel._plan.title}"
+                        android:text="@={viewModel.plan.title}"
                         android:textColor="@color/matcha_3"
                         android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}" />

@@ -22,20 +22,20 @@ class CompanionViewModel(
         get() = _plan
 
     // Current user data
-    private var _user = MutableLiveData<User>()
+    private var _currentUser = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val currentUser: LiveData<User>
+        get() = _currentUser
 
     private val _friends = MutableLiveData<List<User>>()
 
     val friends: LiveData<List<User>>
         get() = _friends
 
-    private val _friendsForShow = MutableLiveData<List<User>>()
+    private val _friendsForDisplay = MutableLiveData<List<User>>()
 
-    val friendsForShow: LiveData<List<User>>
-        get() = _friendsForShow
+    val friendsForDisplay: LiveData<List<User>>
+        get() = _friendsForDisplay
 
     val keywords = MutableLiveData<String>()
 
@@ -62,7 +62,7 @@ class CompanionViewModel(
 
     init {
 
-        getLivePlanResult()
+        fetchLivePlanResult()
     }
 
     fun getCurrentUser() {
@@ -72,14 +72,14 @@ class CompanionViewModel(
             withContext(Dispatchers.IO) {
                 when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
                     is Result.Success -> {
-                        _user.postValue(result.data!!)
+                        _currentUser.postValue(result.data!!)
                     }
                 }
             }
         }
     }
 
-    private fun getLivePlanResult() {
+    private fun fetchLivePlanResult() {
 
         _status.value = LoadApiStatus.LOADING
 
@@ -90,13 +90,13 @@ class CompanionViewModel(
         }
     }
 
-    fun getFriendsData() {
+    fun fetchFriendsData() {
 
         val friendDataList = mutableListOf<User>()
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-                user.value?.followingList?.forEach { friendId ->
+                currentUser.value?.followingList?.forEach { friendId ->
 
                     when (val result = howYoRepository.getUser(friendId)) {
                         is Result.Success -> {
@@ -141,9 +141,9 @@ class CompanionViewModel(
         }
     }
 
-    fun setFriendsForShow() {
+    fun setFriendsForDisplay() {
 
-        _friendsForShow.value = friends.value?.toList()
+        _friendsForDisplay.value = friends.value?.toList()
     }
 
     fun filter() {
@@ -161,7 +161,7 @@ class CompanionViewModel(
             }
         }
 
-        _friendsForShow.value = newUsers
+        _friendsForDisplay.value = newUsers
     }
 
     fun setStatusDone() {

@@ -17,7 +17,4 @@ class FindLocationViewModel(
         get() = _days
 
     var selectedDayPosition = MutableLiveData<Int>()
-
-    init {
-    }
 }

@@ -45,12 +45,12 @@
                         android:layout_marginTop="@dimen/middle_padding"
                         android:layout_marginEnd="@dimen/middle_padding"
                         android:orientation="horizontal"
-                        android:visibility="@{viewModel.photoDataDataList.size == 0 ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.photoDataList.size == 0 ? View.GONE : View.VISIBLE}"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/button_detail_edit_close"
-                        app:photoData="@{viewModel.photoDataDataList}"
+                        app:photoData="@{viewModel.photoDataList}"
                         tools:listitem="@layout/item_detail_edit_image" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +60,7 @@
                         android:layout_marginStart="@dimen/large_padding"
                         android:layout_marginTop="@dimen/middle_padding"
                         android:layout_marginEnd="@dimen/large_padding"
-                        android:visibility="@{viewModel.photoDataDataList.size != 0 ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.photoDataList.size != 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/button_detail_edit_close">
@@ -369,7 +369,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
-            android:onClick="@{() -> viewModel.saveSchedule()}"
+            android:onClick="@{() -> viewModel.submitSchedule()}"
             android:text="@{viewModel.status != LoadApiStatus.LOADING ? @string/save_setting : @string/save_uploading}"
             android:textAlignment="center"
             app:backgroundTint="@color/matcha_5"

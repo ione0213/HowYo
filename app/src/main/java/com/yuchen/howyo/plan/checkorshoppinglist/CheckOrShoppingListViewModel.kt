@@ -20,7 +20,7 @@ class CheckOrShoppingListViewModel(
 ) : ViewModel() {
 
     // Handle all check lists
-    var allCheckLists = MutableLiveData<List<CheckShoppingList>>()
+    var allCheckAndShoppingLists = MutableLiveData<List<CheckShoppingList>>()
 
     val planId: String
         get() = argumentPlanId
@@ -30,10 +30,10 @@ class CheckOrShoppingListViewModel(
 
     val item = MutableLiveData<String>()
 
-    private val _isItemCreated = MutableLiveData<Boolean>()
+    private val _itemCreatedResult = MutableLiveData<Boolean>()
 
-    val isItemCreated: LiveData<Boolean>
-        get() = _isItemCreated
+    val itemCreatedResult: LiveData<Boolean>
+        get() = _itemCreatedResult
 
     private val _isResetItem = MutableLiveData<Boolean>()
 
@@ -72,11 +72,11 @@ class CheckOrShoppingListViewModel(
     }
 
     init {
-        getCheckShoppingListResult()
+        fetchCheckShoppingListResult()
     }
 
-    private fun getCheckShoppingListResult() {
-        allCheckLists = howYoRepository.getLiveCheckShopList(planId, mainType)
+    private fun fetchCheckShoppingListResult() {
+        allCheckAndShoppingLists = howYoRepository.getLiveCheckShopList(planId, mainType)
     }
 
     fun createItem(subType: String) {
@@ -92,7 +92,7 @@ class CheckOrShoppingListViewModel(
 
             val result = howYoRepository.createCheckShopList(item)
 
-            _isItemCreated.value = when (result) {
+            _itemCreatedResult.value = when (result) {
                 is Result.Success -> {
                     result.data
                 }
@@ -131,7 +131,7 @@ class CheckOrShoppingListViewModel(
 
             withContext(Dispatchers.IO) {
 
-                _isChkListDeleted.postValue(deleteAllCheckShopList())
+                _isChkListDeleted.postValue(deleteAllCheckAndShopList())
                 _isChkListReady.postValue(createDefaultCheckList())
             }
 
@@ -143,11 +143,11 @@ class CheckOrShoppingListViewModel(
         }
     }
 
-    private suspend fun deleteAllCheckShopList(): Boolean {
+    private suspend fun deleteAllCheckAndShopList(): Boolean {
 
         val deleteResult = mutableListOf<Boolean>()
 
-        allCheckLists.value?.forEach {
+        allCheckAndShoppingLists.value?.forEach {
             when (howYoRepository.deleteCheckShopList(it)) {
                 is Result.Success -> deleteResult.add(true)
                 else -> deleteResult.add(false)

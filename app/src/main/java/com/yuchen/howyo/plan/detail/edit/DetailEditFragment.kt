@@ -105,7 +105,7 @@ class DetailEditFragment : Fragment() {
         viewModel.navigateToEditImage.observe(viewLifecycleOwner, {
             it?.let {
                 val schedulePhotos = Photos()
-                viewModel.photoDataDataList.value?.forEach { schedulePhoto ->
+                viewModel.photoDataList.value?.forEach { schedulePhoto ->
                     schedulePhotos.add(schedulePhoto)
                 }
 

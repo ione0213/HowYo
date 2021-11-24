@@ -24,17 +24,17 @@ class PlanCoverViewModel(
     private val argumentPlan: Plan?
 ) : ViewModel() {
 
-    private var _user = MutableLiveData<User>()
+    private var _currentUser = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val currentUser: LiveData<User>
+        get() = _currentUser
 
     private val _isNewPlan = MutableLiveData<Boolean>()
 
     val isNewPlan: LiveData<Boolean>
         get() = _isNewPlan
 
-    val _plan = MutableLiveData<Plan>().apply {
+    val plan = MutableLiveData<Plan>().apply {
         when (argumentPlan) {
             null -> {
                 val today = Calendar.getInstance()
@@ -53,8 +53,8 @@ class PlanCoverViewModel(
         }
     }
 
-    val plan: LiveData<Plan>
-        get() = _plan
+//    val plan: LiveData<Plan>
+//        get() = _plan
 
     private val _planId = MutableLiveData<String>()
 
@@ -168,18 +168,20 @@ class PlanCoverViewModel(
     init {
 
         setInitData()
+
         plan.value?.id?.let {
-            getDaysResult()
-            getSchedulesResult()
+            fetchDaysResult()
+            fetchSchedulesResult()
         }
-        getLiveUserResult()
+
+        fetchLiveCurrentUserResult()
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveCurrentUserResult() {
 
         val userId = UserManager.userId
 
-        _user = howYoRepository.getLiveUser(userId ?: "")
+        _currentUser = howYoRepository.getLiveUser(userId ?: "")
     }
 
     private fun setInitData() {
@@ -238,7 +240,7 @@ class PlanCoverViewModel(
             withContext(Dispatchers.IO) {
                 when (plan.value?.id.isNullOrEmpty()) {
                     true -> {
-                        coverPhotoResult.add(uploadCoverImg())
+                        coverPhotoResult.add(uploadCoverPhoto())
                     }
                     false -> {
                         when (planPhotoData.value?.isDeleted) {
@@ -252,7 +254,7 @@ class PlanCoverViewModel(
                                     }
                                 }
 
-                                coverPhotoResult.add(uploadCoverImg())
+                                coverPhotoResult.add(uploadCoverPhoto())
                             }
                             else -> {
                             }
@@ -268,18 +270,18 @@ class PlanCoverViewModel(
         }
     }
 
-    private suspend fun uploadCoverImg(): Boolean {
+    private suspend fun uploadCoverPhoto(): Boolean {
 
         val uri = planPhotoData.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
         val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
         var uploadResult = false
 
-        _plan.value?.coverFileName = fileName
+        plan.value?.coverFileName = fileName
 
         when (val result = uri?.let { howYoRepository.uploadPhoto(it, fileName) }) {
             is Result.Success -> {
-                _plan.value?.coverPhotoUrl = result.data
+                plan.value?.coverPhotoUrl = result.data
                 uploadResult = true
             }
             else -> {
@@ -301,7 +303,7 @@ class PlanCoverViewModel(
 
         val plan = plan.value!!
 
-        plan.authorId = user.value?.id
+        plan.authorId = currentUser.value?.id
 
         coroutineScope.launch {
 
@@ -329,7 +331,7 @@ class PlanCoverViewModel(
 
         coroutineScope.launch {
 
-            val result = _plan.value?.let { howYoRepository.updatePlan(it) }
+            val result = plan.value?.let { howYoRepository.updatePlan(it) }
 
             _isPlanUpdated.value = when (result) {
                 is Result.Success -> {
@@ -659,7 +661,7 @@ class PlanCoverViewModel(
             else -> false
         }
 
-    private fun getDaysResult() {
+    private fun fetchDaysResult() {
 
         coroutineScope.launch {
 
@@ -671,7 +673,7 @@ class PlanCoverViewModel(
         }
     }
 
-    private fun getSchedulesResult() {
+    private fun fetchSchedulesResult() {
 
         coroutineScope.launch {
 
@@ -698,7 +700,7 @@ class PlanCoverViewModel(
     }
 
     fun onSelectedDate() {
-        _plan.value?.apply {
+        plan.value?.apply {
             startDate = startDateFromUser.value
             endDate = endDateFromUser.value
         }
@@ -733,7 +735,7 @@ class PlanCoverViewModel(
         _planPhoto.value = newPlanPhoto
     }
 
-    fun resetCoverImg() {
+    fun resetCoverPhoto() {
         val newPlanPhoto = PhotoData(
             Uri.parse(getString(R.string.default_cover)),
             null,

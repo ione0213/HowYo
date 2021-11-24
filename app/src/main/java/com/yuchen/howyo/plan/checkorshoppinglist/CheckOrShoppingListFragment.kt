@@ -38,7 +38,7 @@ class CheckOrShoppingListFragment : Fragment() {
         val adapter = CheckOrShoppingListAdapter(viewModel)
         binding.recyclerCheckList.adapter = adapter
 
-        viewModel.isItemCreated.observe(viewLifecycleOwner) {
+        viewModel.itemCreatedResult.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
                     viewModel.onCreatedItem()

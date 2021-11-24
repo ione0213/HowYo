@@ -24,8 +24,8 @@ class LocateViewModel(
     val plan: LiveData<Plan>
         get() = _plan
 
-    // Get user lists with companion id
-    var _companions = MutableLiveData<List<User>>()
+    // User lists with companion id
+    private var _companions = MutableLiveData<List<User>>()
 
     val companions: LiveData<List<User>>
         get() = _companions
@@ -49,7 +49,7 @@ class LocateViewModel(
         _status.value = LoadApiStatus.LOADING
     }
 
-    fun getCompanionsData() {
+    fun fetchCompanionsData() {
 
         val companionList = plan.value?.companionList?.toMutableSet()
 

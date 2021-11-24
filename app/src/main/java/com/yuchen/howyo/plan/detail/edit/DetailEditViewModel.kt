@@ -50,7 +50,7 @@ class DetailEditViewModel(
         value = photoData
     }
 
-    val photoDataDataList: LiveData<MutableList<PhotoData>>
+    val photoDataList: LiveData<MutableList<PhotoData>>
         get() = _photoDataList
 
     val notification = MutableLiveData<Boolean>()
@@ -142,12 +142,12 @@ class DetailEditViewModel(
     }
 
     fun setBitmap(uri: Uri) {
-        val photoData = photoDataDataList.value?.toMutableList()
+        val photoData = photoDataList.value?.toMutableList()
         photoData?.add(PhotoData(uri = uri))
         _photoDataList.value = photoData
     }
 
-    fun saveSchedule() {
+    fun submitSchedule() {
 
         val imageUrlList = mutableListOf<String>()
         val fileNameList = mutableListOf<String>()
@@ -199,7 +199,7 @@ class DetailEditViewModel(
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-                photoDataDataList.value?.forEach {
+                photoDataList.value?.forEach {
 
                     when (it.uri) {
                         null -> {

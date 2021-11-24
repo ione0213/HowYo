@@ -37,7 +37,7 @@ class GroupMessageFragment : Fragment() {
             it?.let {
                 when {
                     it -> {
-                        viewModel.onSubmittedComment()
+                        viewModel.onSubmittedMessage()
                     }
                 }
             }
@@ -45,7 +45,7 @@ class GroupMessageFragment : Fragment() {
 
         viewModel.allGroupMessages.observe(viewLifecycleOwner) {
             it?.let {
-                viewModel.getUsersResult()
+                viewModel.fetchUsersResult()
             }
         }
 

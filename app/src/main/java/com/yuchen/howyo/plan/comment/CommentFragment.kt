@@ -34,7 +34,7 @@ class CommentFragment : Fragment() {
 
         viewModel.allComments.observe(viewLifecycleOwner, {
             it?.let {
-                viewModel.getUsersResult()
+                viewModel.fetchUsersResult()
             }
         })
 

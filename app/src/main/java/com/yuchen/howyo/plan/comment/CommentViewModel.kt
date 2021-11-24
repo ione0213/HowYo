@@ -17,11 +17,6 @@ class CommentViewModel(
         value = argumentPlan
     }
 
-    private val _users = MutableLiveData<List<User>>()
-
-    val user: LiveData<List<User>>
-        get() = _users
-
     // All comments of plan
     var allComments = MutableLiveData<List<Comment>>()
 
@@ -49,14 +44,14 @@ class CommentViewModel(
 
     init {
 
-        getLiveCommentsResult()
+        fetchLiveCommentsResult()
     }
 
-    private fun getLiveCommentsResult() {
+    private fun fetchLiveCommentsResult() {
         allComments = plan.value?.id?.let { howYoRepository.getLiveComments(it) }!!
     }
 
-    fun getUsersResult() {
+    fun fetchUsersResult() {
 
         val commentData = mutableListOf<CommentData>()
 

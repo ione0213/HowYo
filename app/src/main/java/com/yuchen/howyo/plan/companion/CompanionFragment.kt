@@ -33,7 +33,6 @@ class CompanionFragment : Fragment() {
         binding.viewModel = viewModel
 
         val adapter = CompanionAdapter(viewModel)
-
         binding.recyclerCompanionFriends.adapter = adapter
         binding.btnCompanionClose.setTouchDelegate()
 
@@ -53,10 +52,10 @@ class CompanionFragment : Fragment() {
             }
         }
 
-        viewModel.user.observe(viewLifecycleOwner) {
+        viewModel.currentUser.observe(viewLifecycleOwner) {
 
             it?.let {
-                viewModel.getFriendsData()
+                viewModel.fetchFriendsData()
             }
         }
 
@@ -64,11 +63,11 @@ class CompanionFragment : Fragment() {
 
             it?.let {
                 viewModel.setStatusDone()
-                viewModel.setFriendsForShow()
+                viewModel.setFriendsForDisplay()
             }
         }
 
-        viewModel.friendsForShow.observe(viewLifecycleOwner) {
+        viewModel.friendsForDisplay.observe(viewLifecycleOwner) {
 
             adapter.submitList(it)
             binding.viewModel = viewModel

@@ -17,7 +17,6 @@ class CompanionAdapter(val viewModel: CompanionViewModel) : ListAdapter<User, Co
 
         fun bind(user: User) {
             binding.viewModel = viewModel
-//            binding.viewHolder = this
             user.let {
                 binding.user = it
                 binding.executePendingBindings()

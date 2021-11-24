@@ -48,14 +48,14 @@ class GroupMessageViewModel(
 
     init {
 
-        getLiveGroupMsgResult()
+        fetchLiveGroupMsgResult()
     }
 
-    private fun getLiveGroupMsgResult() {
+    private fun fetchLiveGroupMsgResult() {
         allGroupMessages = plan.value?.id?.let { howYoRepository.getLiveGroupMessages(it) }!!
     }
 
-    fun getUsersResult() {
+    fun fetchUsersResult() {
 
         val groupMsgData = mutableListOf<GroupMessageData>()
 
@@ -102,7 +102,7 @@ class GroupMessageViewModel(
         }
     }
 
-    fun onSubmittedComment() {
+    fun onSubmittedMessage() {
         message.value = null
     }
 }

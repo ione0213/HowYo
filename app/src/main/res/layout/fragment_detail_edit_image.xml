@@ -45,7 +45,7 @@
             android:layout_height="580dp"
             android:background="@drawable/ic_placeholder"
             android:scaleType="centerCrop"
-            app:imageData="@{viewModel.photoData}"
+            app:imageData="@{viewModel.schedulePhoto}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

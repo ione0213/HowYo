@@ -18,7 +18,7 @@ class DetailEditImageViewModel(
         value = argumentPhotoData
     }
 
-    val photoData: LiveData<PhotoData>
+    val schedulePhoto: LiveData<PhotoData>
         get() = _schedulePhoto
 
     // Images data from arguments
@@ -26,7 +26,7 @@ class DetailEditImageViewModel(
         value = argumentPhotos
     }
 
-    val photos: LiveData<Photos>
+    val schedulePhotos: LiveData<Photos>
         get() = _schedulePhotos
 
     // Handle leave edit image
@@ -36,9 +36,9 @@ class DetailEditImageViewModel(
         get() = _leaveEditImage
 
     fun deleteImage() {
-        _schedulePhotos.value?.forEach {
+        schedulePhotos.value?.forEach {
             when {
-                it === photoData.value -> {
+                it === schedulePhoto.value -> {
                     it.isDeleted = true
                     leaveEditImage()
                 }

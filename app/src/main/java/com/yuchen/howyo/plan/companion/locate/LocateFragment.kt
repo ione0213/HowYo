@@ -176,7 +176,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                 .show()
         } else {
             getDeviceLocation()
-            viewModel.getCompanionsData()
+            viewModel.fetchCompanionsData()
         }
     }
 
