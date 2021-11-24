@@ -148,20 +148,20 @@ class CompanionViewModel(
 
     fun filter() {
 
-        var newUsers = listOf<User>()
+        var filteredUsers = listOf<User>()
 
         when (keywords.value?.isEmpty()) {
             true -> {
-                newUsers = friends.value ?: listOf()
+                filteredUsers = friends.value ?: listOf()
             }
             false -> {
 
-                newUsers =
+                filteredUsers =
                     friends.value?.filter { it.id.contains(keywords.value ?: "") } ?: listOf()
             }
         }
 
-        _friendsForDisplay.value = newUsers
+        _friendsForDisplay.value = filteredUsers
     }
 
     fun setStatusDone() {

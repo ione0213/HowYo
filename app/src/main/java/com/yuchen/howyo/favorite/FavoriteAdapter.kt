@@ -89,7 +89,7 @@ class FavoriteAdapter(
         }
     }
 
-    fun addEmptyAndPlan(list: List<Plan>) {
+    fun addPlanOrEmptyPage(list: List<Plan>) {
         adapterScope.launch {
             val items = when (list.size) {
                 0 -> {

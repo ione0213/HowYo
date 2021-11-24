@@ -50,10 +50,11 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     init {
-        getLivePlansResult()
+
+        fetchLivePlansResult()
     }
 
-    private fun getLivePlansResult() {
+    private fun fetchLivePlansResult() {
 
         _status.value = LoadApiStatus.LOADING
         plans = howYoRepository.getLiveCollectedPublicPlans(listOf(UserManager.userId ?: ""))
@@ -78,7 +79,7 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
         _authorIds.value = authorIdSet
     }
 
-    fun getAuthorData() {
+    fun fetchAuthorData() {
 
         val authorDataList = mutableSetOf<User>()
 

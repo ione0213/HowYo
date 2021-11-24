@@ -12,10 +12,10 @@ import kotlinx.coroutines.*
 
 class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
 
-    private val _plansForShow = MutableLiveData<List<Plan>>()
+    private val _plansForDisplay = MutableLiveData<List<Plan>>()
 
-    val plansForShow: LiveData<List<Plan>>
-        get() = _plansForShow
+    val plansForDisplay: LiveData<List<Plan>>
+        get() = _plansForDisplay
 
     // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
@@ -65,10 +65,10 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
 
     init {
 
-        getPlansResult()
+        fetchPlansResult()
     }
 
-    fun getPlansResult() {
+    fun fetchPlansResult() {
 
         _status.value = LoadApiStatus.LOADING
 
@@ -93,7 +93,7 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
         _authorIds.value = authorIdSet
     }
 
-    fun getAuthorData() {
+    fun fetchAuthorData() {
 
         val authorDataList = mutableSetOf<User>()
 
@@ -127,23 +127,23 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
 
     fun setPlansForShow() {
 
-        _plansForShow.value = plans.value?.toList()
+        _plansForDisplay.value = plans.value?.toList()
     }
 
     fun filter() {
 
-        var newPlans = listOf<Plan>()
+        var filteredPlans = listOf<Plan>()
 
         when (keywords.value?.isEmpty()) {
             true -> {
-                newPlans = plans.value ?: listOf()
+                filteredPlans = plans.value ?: listOf()
             }
             false -> {
-                newPlans =
+                filteredPlans =
                     plans.value?.filter { it.title?.contains(keywords.value ?: "") ?: false } ?: listOf()
             }
         }
 
-        _plansForShow.value = newPlans
+        _plansForDisplay.value = filteredPlans
     }
 }

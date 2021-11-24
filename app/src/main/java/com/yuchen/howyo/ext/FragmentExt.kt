@@ -31,11 +31,6 @@ fun Fragment.getVmFactory(
     return EditDetailViewModelFactory(repository, schedule, plan, day)
 }
 
-// fun Fragment.getVmFactory(days: List<Day>): FindLocationViewModelFactory {
-//    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-//    return FindLocationViewModelFactory(repository, days)
-// }
-
 fun Fragment.getVmFactory(plan: Plan?): PlanContentViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PlanContentViewModelFactory(repository, plan)

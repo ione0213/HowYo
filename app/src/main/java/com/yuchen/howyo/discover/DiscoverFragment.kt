@@ -39,7 +39,7 @@ class DiscoverFragment : Fragment() {
         binding.recyclerDiscoverPlans.adapter = adapter
 
         binding.layoutSwipeRefreshDiscover.setOnRefreshListener {
-            viewModel.getPlansResult()
+            viewModel.fetchPlansResult()
         }
         viewModel.refreshStatus.observe(
             viewLifecycleOwner, {
@@ -66,7 +66,7 @@ class DiscoverFragment : Fragment() {
 
         viewModel.authorIds.observe(viewLifecycleOwner) {
             it?.let {
-                viewModel.getAuthorData()
+                viewModel.fetchAuthorData()
             }
         }
 
@@ -78,7 +78,7 @@ class DiscoverFragment : Fragment() {
             }
         }
 
-        viewModel.plansForShow.observe(viewLifecycleOwner) {
+        viewModel.plansForDisplay.observe(viewLifecycleOwner) {
 
             adapter.submitList(it)
             binding.viewModel = viewModel

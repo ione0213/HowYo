@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.databinding.FragmentFavoriteBinding
 import com.yuchen.howyo.ext.getVmFactory
@@ -47,7 +46,7 @@ class FavoriteFragment : Fragment() {
 
         viewModel.authorIds.observe(viewLifecycleOwner) {
             it?.let {
-                viewModel.getAuthorData()
+                viewModel.fetchAuthorData()
             }
         }
 
@@ -67,7 +66,7 @@ class FavoriteFragment : Fragment() {
 
                 viewModel.setStatusDone()
                 binding.viewModel = viewModel
-                adapter.addEmptyAndPlan(viewModel.plans.value!!)
+                adapter.addPlanOrEmptyPage(viewModel.plans.value!!)
             }
         }
 
