@@ -16,17 +16,14 @@ class FriendItemAdapter(
     private val friendType: FriendFilter,
     private val userId: String
 ) : ListAdapter<User, FriendItemAdapter.FriendViewHolder>(DiffCallback) {
-
     class FriendViewHolder(private var binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(
             user: User,
             viewModel: FriendItemViewModel,
             friendType: FriendFilter,
             userId: String
         ) {
-
             binding.btnFriendUnfollow.visibility = when (friendType) {
                 FriendFilter.FOLLOWING -> {
                     when (userId) {

@@ -31,13 +31,14 @@ import com.yuchen.howyo.signin.UserManager
 import java.io.File
 
 class CopyPlanDialog : AppCompatDialogFragment() {
-
     private lateinit var binding: DialogCopyPlanBinding
+
     private val viewModel by viewModels<CopyPlanViewModel> {
         getVmFactory(
             CopyPlanDialogArgs.fromBundle(requireArguments()).plan
         )
     }
+
     private val takePhoto = 0x00
     private val fromAlbum = 0x01
     lateinit var imageUri: Uri
@@ -53,7 +54,6 @@ class CopyPlanDialog : AppCompatDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = DialogCopyPlanBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -61,26 +61,32 @@ class CopyPlanDialog : AppCompatDialogFragment() {
 
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        viewModel.leave.observe(viewLifecycleOwner, {
+        viewModel.leave.observe(viewLifecycleOwner) {
             it?.let {
-                this.dismiss()
-                viewModel.onLeaveCompleted()
+                if (it) {
+                    this.dismiss()
+                    viewModel.onLeaveCompleted()
+                }
             }
-        })
+        }
 
-        viewModel.takePhoto.observe(viewLifecycleOwner, {
+        viewModel.takePhoto.observe(viewLifecycleOwner) {
             it?.let {
-                takePhoto()
-                viewModel.onTookPhoto()
+                if (it) {
+                    takePhoto()
+                    viewModel.onTookPhoto()
+                }
             }
-        })
+        }
 
-        viewModel.selectPhoto.observe(viewLifecycleOwner, {
+        viewModel.selectPhoto.observe(viewLifecycleOwner) {
             it?.let {
-                selectPhoto()
-                viewModel.onSelectedPhoto()
+                if (it) {
+                    selectPhoto()
+                    viewModel.onSelectedPhoto()
+                }
             }
-        })
+        }
 
         viewModel.isSavePlan.observe(viewLifecycleOwner) {
             it?.let {
@@ -92,32 +98,27 @@ class CopyPlanDialog : AppCompatDialogFragment() {
             }
         }
 
-        viewModel.isCoverPhotoReady.observe(viewLifecycleOwner, {
+        viewModel.isCoverPhotoReady.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) viewModel.createPlan()
             }
-        })
+        }
 
-        viewModel.planId.observe(viewLifecycleOwner, {
+        viewModel.planId.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it.isNotEmpty() -> viewModel.createRelatedCollection()
+                if (it.isNotEmpty()) {
+                    viewModel.createRelatedCollection()
                 }
             }
-        })
+        }
 
         viewModel.isRelatedDataReady.observe(viewLifecycleOwner, {
             it?.let {
-//                if (it) viewModel.getNewDaysResult()
-                findNavController().navigate(
-                    NavigationDirections.navToProfileFragment(UserManager.userId!!)
-                )
-            }
-        })
-
-        viewModel.newDays.observe(viewLifecycleOwner, {
-            it?.let {
-//                viewModel.copySchedules()
+                if (it) {
+                    findNavController().navigate(
+                        NavigationDirections.navToProfileFragment(UserManager.userId!!)
+                    )
+                }
             }
         })
 
@@ -138,16 +139,13 @@ class CopyPlanDialog : AppCompatDialogFragment() {
 
     override fun dismiss() {
         binding.layoutCopyPlanCover.startAnimation(
-            AnimationUtils.loadAnimation(
-                context,
-                R.anim.anim_slide_down
-            )
+            AnimationUtils.loadAnimation(context, R.anim.anim_slide_down)
         )
+
         Handler().postDelayed({ super.dismiss() }, 200)
     }
 
     private fun takePhoto() {
-
         outputImage = File(activity?.externalCacheDir, "output_image.jpg")
 
         if (outputImage.exists()) {
@@ -182,8 +180,8 @@ class CopyPlanDialog : AppCompatDialogFragment() {
         when (requestCode) {
             takePhoto -> {
                 if (resultCode == Activity.RESULT_OK) {
-
                     viewModel.setCoverBitmap(imageUri)
+
                     binding.imgCopyPlanCover.setImageBitmap(
                         rotateIfRequired(
                             BitmapFactory.decodeStream(
@@ -195,9 +193,7 @@ class CopyPlanDialog : AppCompatDialogFragment() {
             }
             fromAlbum -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-
                     data.data?.let { uri ->
-
                         viewModel.setCoverBitmap(uri)
                         binding.imgCopyPlanCover.setImageBitmap(getBitmapFromUri(uri))
                     }
@@ -208,6 +204,7 @@ class CopyPlanDialog : AppCompatDialogFragment() {
 
     private fun rotateIfRequired(bitmap: Bitmap): Bitmap {
         val exif = ExifInterface(outputImage.path)
+
         return when (
             exif.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
@@ -224,9 +221,12 @@ class CopyPlanDialog : AppCompatDialogFragment() {
     private fun rotateBitmap(bitmap: Bitmap, degree: Int): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(degree.toFloat())
+
         val rotatedBitmap =
             Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+
         bitmap.recycle()
+
         return rotatedBitmap
     }
 

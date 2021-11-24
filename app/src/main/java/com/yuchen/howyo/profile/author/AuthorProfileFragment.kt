@@ -15,7 +15,6 @@ import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 
 class AuthorProfileFragment : Fragment() {
-
     private lateinit var binding: FragmentAuthorProfileBinding
     val viewModel by viewModels<AuthorProfileViewModel> {
         getVmFactory(
@@ -33,10 +32,8 @@ class AuthorProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentAuthorProfileBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         binding.recyclerAuthorProfilePlans.adapter = AuthorProfilePlanAdapter(
@@ -46,35 +43,29 @@ class AuthorProfileFragment : Fragment() {
         )
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        viewModel.author.observe(viewLifecycleOwner, {
+        viewModel.author.observe(viewLifecycleOwner) {
             it?.let {
                 mainViewModel.setSharedToolbarTitle(it.name ?: "")
             }
-        })
+        }
 
-        viewModel.navigateToPlan.observe(viewLifecycleOwner, {
+        viewModel.navigateToPlan.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToPlanFragment(
-                        it,
-                        AccessPlanType.VIEW
-                    )
+                    NavigationDirections.navToPlanFragment(it, AccessPlanType.VIEW)
                 )
                 viewModel.onPlanNavigated()
             }
-        })
+        }
 
-        viewModel.navigateToFriends.observe(viewLifecycleOwner, {
+        viewModel.navigateToFriends.observe(viewLifecycleOwner) {
             it?.let {
-
                 findNavController().navigate(
-                    NavigationDirections.navToFriendsFragment(
-                        it, viewModel.author.value?.id!!
-                    )
+                    NavigationDirections.navToFriendsFragment(it, viewModel.author.value?.id!!)
                 )
                 viewModel.onFriendNavigated()
             }
-        })
+        }
 
         return binding.root
     }

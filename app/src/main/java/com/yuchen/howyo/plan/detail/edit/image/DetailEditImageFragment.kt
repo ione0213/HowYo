@@ -11,8 +11,8 @@ import com.yuchen.howyo.databinding.FragmentDetailEditImageBinding
 import com.yuchen.howyo.ext.getVmFactory
 
 class DetailEditImageFragment : Fragment() {
-
     private lateinit var binding: FragmentDetailEditImageBinding
+
     private val viewModel by viewModels<DetailEditImageViewModel> {
         getVmFactory(
             DetailEditImageFragmentArgs.fromBundle(requireArguments()).schedulePhoto,
@@ -25,17 +25,14 @@ class DetailEditImageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentDetailEditImageBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
-        viewModel.leaveEditImage.observe(viewLifecycleOwner, {
+        viewModel.leaveEditImage.observe(viewLifecycleOwner) {
             it?.let {
-                if (it) {
-                    findNavController().popBackStack()
-                }
+                if (it) findNavController().popBackStack()
             }
-        })
+        }
 
         return binding.root
     }

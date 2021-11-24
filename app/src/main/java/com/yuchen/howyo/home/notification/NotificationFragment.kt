@@ -13,7 +13,6 @@ import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 
 class NotificationFragment : Fragment() {
-
     private lateinit var binding: FragmentNotificationBinding
     val viewModel by viewModels<NotificationViewModel> { getVmFactory() }
 
@@ -22,14 +21,11 @@ class NotificationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentNotificationBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         val adapter = NotificationAdapter(viewModel)
-
         binding.recyclerNotifications.adapter = adapter
 
         viewModel.notifications.observe(viewLifecycleOwner) {
@@ -52,7 +48,6 @@ class NotificationFragment : Fragment() {
         viewModel.sendNotificationResult.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
-//                    viewModel.getLiveNotificationsResult()
                     viewModel.fetchUserData()
                     viewModel.onSentNotification()
                 }
@@ -69,10 +64,7 @@ class NotificationFragment : Fragment() {
         viewModel.navigateToPlan.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToPlanFragment(
-                        it,
-                        AccessPlanType.VIEW
-                    )
+                    NavigationDirections.navToPlanFragment(it, AccessPlanType.VIEW)
                 )
 
                 viewModel.onPlanNavigated()

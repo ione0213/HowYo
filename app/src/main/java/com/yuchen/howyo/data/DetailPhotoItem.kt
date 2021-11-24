@@ -1,7 +1,6 @@
 package com.yuchen.howyo.data
 
 sealed class DetailPhotoItem {
-
     abstract val imgUrl: String
 
     object AddBtn : DetailPhotoItem() {

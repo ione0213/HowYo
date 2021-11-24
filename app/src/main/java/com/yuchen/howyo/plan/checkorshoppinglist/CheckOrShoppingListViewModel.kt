@@ -18,7 +18,6 @@ class CheckOrShoppingListViewModel(
     private val argumentPlanId: String,
     private val argumentMainType: MainItemType
 ) : ViewModel() {
-
     // Handle all check lists
     var allCheckAndShoppingLists = MutableLiveData<List<CheckShoppingList>>()
 
@@ -80,7 +79,6 @@ class CheckOrShoppingListViewModel(
     }
 
     fun createItem(subType: String) {
-
         val item = CheckShoppingList(
             planId = planId,
             mainType = mainType.value,
@@ -89,16 +87,11 @@ class CheckOrShoppingListViewModel(
         )
 
         coroutineScope.launch {
-
             val result = howYoRepository.createCheckShopList(item)
 
             _itemCreatedResult.value = when (result) {
-                is Result.Success -> {
-                    result.data
-                }
-                else -> {
-                    null
-                }
+                is Result.Success -> result.data
+                else -> null
             }
         }
     }
@@ -108,7 +101,6 @@ class CheckOrShoppingListViewModel(
     }
 
     fun deleteItem(item: CheckShoppingList) {
-
         coroutineScope.launch {
             howYoRepository.deleteCheckShopList(item)
         }
@@ -124,13 +116,10 @@ class CheckOrShoppingListViewModel(
     }
 
     fun resetCheckList() {
-
         _status.value = LoadApiStatus.LOADING
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
-
                 _isChkListDeleted.postValue(deleteAllCheckAndShopList())
                 _isChkListReady.postValue(createDefaultCheckList())
             }
@@ -144,7 +133,6 @@ class CheckOrShoppingListViewModel(
     }
 
     private suspend fun deleteAllCheckAndShopList(): Boolean {
-
         val deleteResult = mutableListOf<Boolean>()
 
         allCheckAndShoppingLists.value?.forEach {
@@ -158,7 +146,6 @@ class CheckOrShoppingListViewModel(
     }
 
     private suspend fun createDefaultCheckList(): Boolean {
-
         val planId = planId
         val subTypeList = HowYoApplication.instance.resources.getStringArray(R.array.check_list)
         val checkListResults = mutableListOf<Boolean>()
@@ -168,7 +155,6 @@ class CheckOrShoppingListViewModel(
             when (subType) {
                 getString(R.string.necessary) -> {
                     CheckItemType.NECESSARY.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -181,7 +167,6 @@ class CheckOrShoppingListViewModel(
                 }
                 getString(R.string.clothe) -> {
                     CheckItemType.CLOTHE.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -194,7 +179,6 @@ class CheckOrShoppingListViewModel(
                 }
                 getString(R.string.wash) -> {
                     CheckItemType.WASH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -207,7 +191,6 @@ class CheckOrShoppingListViewModel(
                 }
                 getString(R.string.electronic) -> {
                     CheckItemType.ELECTRONIC.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -220,7 +203,6 @@ class CheckOrShoppingListViewModel(
                 }
                 getString(R.string.health) -> {
                     CheckItemType.HEALTH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -233,7 +215,6 @@ class CheckOrShoppingListViewModel(
                 }
                 getString(R.string.other) -> {
                     CheckItemType.OTHER.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -259,7 +240,6 @@ class CheckOrShoppingListViewModel(
         }
 
     fun setCheck(checkShoppingList: CheckShoppingList, isChecked: Boolean) {
-
         checkShoppingList.check = isChecked
 
         coroutineScope.launch {

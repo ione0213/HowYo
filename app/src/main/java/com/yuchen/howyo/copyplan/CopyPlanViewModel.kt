@@ -20,33 +20,23 @@ class CopyPlanViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
-    private val _isNewPlan = MutableLiveData<Boolean>()
-
-    val isNewPlan: LiveData<Boolean>
-        get() = _isNewPlan
-
-    val _plan = MutableLiveData<Plan>().apply {
-        when (argumentPlan) {
+    val plan = MutableLiveData<Plan>().apply {
+        value = when (argumentPlan) {
             null -> {
                 val today = Calendar.getInstance()
                 val tomorrow = Calendar.getInstance()
+
                 tomorrow.add(Calendar.DAY_OF_YEAR, 1)
 
-                value = Plan(
+                Plan(
                     coverFileName = "",
                     startDate = today.timeInMillis,
                     endDate = tomorrow.timeInMillis
                 )
             }
-            else -> {
-                value = argumentPlan
-            }
+            else -> argumentPlan
         }
     }
-
-    val plan: LiveData<Plan>
-        get() = _plan
 
     private val _planId = MutableLiveData<String>()
 
@@ -55,7 +45,7 @@ class CopyPlanViewModel(
 
     private val _planPhoto = MutableLiveData<PhotoData>()
 
-    val planPhotoData: LiveData<PhotoData>
+    val planPhoto: LiveData<PhotoData>
         get() = _planPhoto
 
     val startDateFromUser = MutableLiveData<Long>()
@@ -69,12 +59,6 @@ class CopyPlanViewModel(
 
     val days: LiveData<List<Day>>
         get() = _days
-
-    // New days list
-    private val _newDays = MutableLiveData<List<Day>>()
-
-    val newDays: LiveData<List<Day>>
-        get() = _newDays
 
     // Schedules list for copying
     private val _schedules = MutableLiveData<List<Schedule>>()
@@ -159,16 +143,15 @@ class CopyPlanViewModel(
     }
 
     init {
-
         setInitData()
+
         plan.value?.id?.let {
-            getFromDaysResult()
-            getSchedulesResult()
+            fetchFromDaysResult()
+            fetchSchedulesResult()
         }
     }
 
     private fun setInitData() {
-
         // set the default value for duration of the plan
         val calendar = Calendar.getInstance()
 
@@ -182,24 +165,12 @@ class CopyPlanViewModel(
         _planPhoto.value = PhotoData(
             Uri.parse(getString(R.string.default_cover))
         )
-
-        _isNewPlan.value = when (argumentPlan) {
-            null -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
     }
 
     fun prepareSubmitPlan() {
-
         when {
             plan.value?.title.isNullOrEmpty() -> _invalidPlan.value = INVALID_FORMAT_TITLE_EMPTY
-            else -> {
-                savePlan()
-            }
+            else -> savePlan()
         }
     }
 
@@ -212,7 +183,6 @@ class CopyPlanViewModel(
     }
 
     fun handlePlanCover() {
-
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
             _isCoverPhotoReady.value = uploadCoverImg()
@@ -220,28 +190,25 @@ class CopyPlanViewModel(
     }
 
     private suspend fun uploadCoverImg(): Boolean {
-
-        val uri = planPhotoData.value?.uri
+        val uri = planPhoto.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
         val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
         var uploadResult = false
 
-        _plan.value?.coverFileName = fileName
+        plan.value?.coverFileName = fileName
 
         when (val result = uri?.let { howYoRepository.uploadPhoto(it, fileName) }) {
             is Result.Success -> {
-                _plan.value?.coverPhotoUrl = result.data
+                plan.value?.coverPhotoUrl = result.data
                 uploadResult = true
             }
-            else -> {
-                uploadResult = true
-            }
+            else -> uploadResult = true
         }
+
         return uploadResult
     }
 
     fun createPlan() {
-
         val plan = plan.value
         val newPlan = plan?.copy(
             id = "",
@@ -254,41 +221,29 @@ class CopyPlanViewModel(
         )
 
         coroutineScope.launch {
-
             val result = newPlan?.let { howYoRepository.createPlan(it) }
 
             _planId.value = when (result) {
-                is Result.Success -> {
-                    result.data
-                }
-                is Result.Fail -> {
-                    null
-                }
-                is Result.Error -> {
-                    null
-                }
-                else -> {
-                    null
-                }
+                is Result.Success -> result.data
+                is Result.Fail -> null
+                is Result.Error -> null
+                else -> null
             }
+
             _isCoverPhotoReady.value = null
         }
     }
 
     private suspend fun createDays(): Boolean {
-
         val planId = planId.value
         val days =
-            (
-                endDateFromUser.value?.minus(startDateFromUser.value!!)
-                    ?.div((60 * 60 * 24 * 1000))
-                )?.toInt()
+            (endDateFromUser.value?.minus(startDateFromUser.value!!)?.div((60 * 60 * 24 * 1000)))
+                ?.toInt()
         val dayResults = mutableListOf<Boolean>()
         val scheduleResults = mutableListOf<Boolean>()
         val daysData = mutableListOf<Pair<Day, Int>>()
 
         for (position in 0..days!!) {
-
             val result = howYoRepository.createDay(position, planId!!)
 
             if (result is Result.Success) {
@@ -310,7 +265,6 @@ class CopyPlanViewModel(
     fun createRelatedCollection() {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-
                 _isDaysReady.postValue(createDays()!!)
                 _isChkListReady.postValue(createDefaultCheckList()!!)
             }
@@ -324,7 +278,6 @@ class CopyPlanViewModel(
     }
 
     private suspend fun createDefaultCheckList(): Boolean {
-
         val planId = planId.value
         val subTypeList = HowYoApplication.instance.resources.getStringArray(R.array.check_list)
         val checkListResults = mutableListOf<Boolean>()
@@ -334,7 +287,6 @@ class CopyPlanViewModel(
             when (subType) {
                 getString(R.string.necessary) -> {
                     CheckItemType.NECESSARY.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -347,7 +299,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.clothe) -> {
                     CheckItemType.CLOTHE.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -360,7 +311,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.wash) -> {
                     CheckItemType.WASH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -373,7 +323,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.electronic) -> {
                     CheckItemType.ELECTRONIC.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -386,7 +335,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.health) -> {
                     CheckItemType.HEALTH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -399,7 +347,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.other) -> {
                     CheckItemType.OTHER.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -425,7 +372,6 @@ class CopyPlanViewModel(
         }
 
     private suspend fun copySchedules(list: List<Pair<Day, Int>>): Boolean {
-
         val schedulesResult = mutableListOf<Boolean>()
         val scheduleList = mutableListOf<Schedule>()
 
@@ -455,11 +401,10 @@ class CopyPlanViewModel(
             else -> false
         }
 
-    private fun getFromDaysResult() {
-
+    private fun fetchFromDaysResult() {
         coroutineScope.launch {
-
             val result = howYoRepository.getDays(plan.value?.id!!)
+
             _days.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -467,23 +412,10 @@ class CopyPlanViewModel(
         }
     }
 
-    fun getNewDaysResult() {
-
+    private fun fetchSchedulesResult() {
         coroutineScope.launch {
-
-            val result = planId.value?.let { howYoRepository.getDays(it) }
-            _newDays.value = when (result) {
-                is Result.Success -> result.data
-                else -> null
-            }
-        }
-    }
-
-    private fun getSchedulesResult() {
-
-        coroutineScope.launch {
-
             val result = howYoRepository.getSchedules(plan.value?.id!!)
+
             _schedules.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -518,11 +450,10 @@ class CopyPlanViewModel(
     }
 
     fun setCoverBitmap(photoUri: Uri?) {
-
         val newPlanPhoto = PhotoData(
             photoUri,
             null,
-            planPhotoData.value?.fileName,
+            planPhoto.value?.fileName,
             true
         )
 
@@ -538,7 +469,6 @@ class CopyPlanViewModel(
     }
 
     companion object {
-
         const val INVALID_FORMAT_TITLE_EMPTY = 0x11
     }
 }

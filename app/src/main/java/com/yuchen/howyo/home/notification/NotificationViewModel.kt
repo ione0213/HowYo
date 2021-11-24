@@ -13,7 +13,6 @@ import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.*
 
 class NotificationViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
     private var _currentUser = MutableLiveData<User>()
 
     val currentUser: LiveData<User>
@@ -62,23 +61,19 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     }
 
     init {
-
         fetchLiveCurrentUserResult()
         fetchLiveNotificationsResult()
     }
 
     private fun fetchLiveCurrentUserResult() {
-
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
     private fun fetchLiveNotificationsResult() {
-
         notifications = howYoRepository.getLiveNotifications()
     }
 
     fun fetchUserData() {
-
         val userIds = mutableSetOf<String>()
         val userDataSet = mutableSetOf<User>()
 
@@ -87,13 +82,10 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
         }
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 userIds.forEach { userId ->
                     when (val result = howYoRepository.getUser(userId)) {
-                        is Result.Success -> {
-                            userDataSet.add(result.data)
-                        }
+                        is Result.Success -> userDataSet.add(result.data)
                     }
                 }
             }
@@ -164,7 +156,8 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
                         else -> false
                     }
                 } else {
-                    when (val result = howYoRepository.deleteFollowNotification(user.id, currentUserId!!)) {
+                    when (val result =
+                        howYoRepository.deleteFollowNotification(user.id, currentUserId!!)) {
                         is Result.Success -> result.data
                         else -> false
                     }
@@ -182,10 +175,8 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     }
 
     fun navigateToPlan(planId: String) {
-
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-
                 _navigateToPlan.postValue(
                     when (val result = howYoRepository.getPlan(planId)) {
                         is Result.Success -> result.data

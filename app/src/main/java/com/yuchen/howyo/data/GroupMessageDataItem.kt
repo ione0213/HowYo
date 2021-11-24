@@ -1,7 +1,6 @@
 package com.yuchen.howyo.data
 
 sealed class GroupMessageDataItem {
-
     abstract val createdTime: Long
 
     data class MessageSelf(val groupMessageData: GroupMessageData) : GroupMessageDataItem() {

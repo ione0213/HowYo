@@ -12,7 +12,6 @@ import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.*
 
 class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
     // Plan data
     var plans = MutableLiveData<List<Plan>>()
 
@@ -50,12 +49,10 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     init {
-
         fetchLivePlansResult()
     }
 
     private fun fetchLivePlansResult() {
-
         _status.value = LoadApiStatus.LOADING
         plans = howYoRepository.getLiveCollectedPublicPlans(listOf(UserManager.userId ?: ""))
     }
@@ -69,7 +66,6 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun setAuthorIdSet() {
-
         val authorIdSet = mutableSetOf<String>()
 
         plans.value?.forEach {
@@ -80,16 +76,13 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun fetchAuthorData() {
-
         val authorDataList = mutableSetOf<User>()
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 authorIds.value?.forEach { authorId ->
                     when (val result = howYoRepository.getUser(authorId)) {
-                        is Result.Success -> {
-                            authorDataList.add(result.data)
-                        }
+                        is Result.Success -> authorDataList.add(result.data)
                     }
                 }
             }

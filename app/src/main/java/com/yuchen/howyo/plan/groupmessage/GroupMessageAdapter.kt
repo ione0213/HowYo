@@ -17,14 +17,11 @@ import kotlinx.coroutines.withContext
 
 class GroupMessageAdapter :
     ListAdapter<GroupMessageDataItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class SendChatViewHolder(private var binding: ItemChatBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(groupMessageData: GroupMessageData) {
-
             binding.groupMessageData = groupMessageData
             binding.executePendingBindings()
         }
@@ -32,9 +29,7 @@ class GroupMessageAdapter :
 
     class ReceiveChatViewHolder(private var binding: ItemChatReceiveBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(groupMessageData: GroupMessageData) {
-
             binding.groupMessageData = groupMessageData
             binding.executePendingBindings()
         }
@@ -80,7 +75,6 @@ class GroupMessageAdapter :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is SendChatViewHolder -> {
                 holder.bind((getItem(position) as GroupMessageDataItem.MessageSelf).groupMessageData)
@@ -99,9 +93,7 @@ class GroupMessageAdapter :
     }
 
     fun checkMessageOwner(list: List<GroupMessageData>) {
-
         adapterScope.launch {
-
             val groupMsgDataItems: MutableList<GroupMessageDataItem> = mutableListOf()
 
             list.forEach {

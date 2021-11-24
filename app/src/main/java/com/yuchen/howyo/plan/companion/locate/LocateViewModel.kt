@@ -15,7 +15,6 @@ class LocateViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
     // Plan data from arguments, get companion list here
     private val _plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
@@ -50,7 +49,6 @@ class LocateViewModel(
     }
 
     fun fetchCompanionsData() {
-
         val companionList = plan.value?.companionList?.toMutableSet()
 
         plan.value?.authorId?.let { companionList?.add(it) }
@@ -58,7 +56,6 @@ class LocateViewModel(
         companionList?.removeIf { it == UserManager.userId }
 
         coroutineScope.launch {
-
             val result = howYoRepository.getUsers(companionList?.toList() ?: listOf())
             _companions.value = when (result) {
                 is Result.Success -> result.data

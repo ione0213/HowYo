@@ -83,7 +83,7 @@
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
                         android:src="@drawable/sample_cover"
-                        app:imageData="@{viewModel.planPhotoData}"
+                        app:imageData="@{viewModel.planPhoto}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -133,7 +133,7 @@
                     android:onClick="@{() -> viewModel.resetCoverImg()}"
                     app:layout_constraintEnd_toStartOf="@id/btn_copy_plan_cover_select_photo"
                     app:layout_constraintTop_toTopOf="@+id/btn_copy_plan_cover_select_photo"
-                    app:planPhoto="@{viewModel.planPhotoData}" />
+                    app:planPhoto="@{viewModel.planPhoto}" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_copy_plan_title"
@@ -159,7 +159,7 @@
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:text="@={viewModel._plan.title}"
+                        android:text="@={viewModel.plan.title}"
                         android:textColor="@color/matcha_3"
                         android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}" />
                 </com.google.android.material.textfield.TextInputLayout>

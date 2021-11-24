@@ -12,7 +12,6 @@ import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.*
 
 class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
     private var _followingListOfCurrentUser = MutableLiveData<List<String>>()
 
     val followingListOfCurrentUser: LiveData<List<String>>
@@ -73,10 +72,9 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     private fun getUserResult() {
-
         var followingList = listOf<String>()
-        coroutineScope.launch {
 
+        coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
@@ -96,12 +94,12 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     fun fetchPlansResult() {
-
         _status.value = LoadApiStatus.LOADING
 
         coroutineScope.launch {
+            val result =
+                howYoRepository.getPlans(followingListOfCurrentUser.value ?: listOf())
 
-            val result = howYoRepository.getPlans(followingListOfCurrentUser.value ?: listOf())
             _plans.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -110,7 +108,6 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     fun setAuthorIdSet() {
-
         val authorIdSet = mutableSetOf<String>()
 
         plans.value?.forEach {
@@ -121,7 +118,6 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     fun getAuthorData() {
-
         val authorDataList = mutableSetOf<User>()
 
         coroutineScope.launch {

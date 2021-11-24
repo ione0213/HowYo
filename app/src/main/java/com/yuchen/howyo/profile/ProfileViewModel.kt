@@ -19,7 +19,6 @@ class ProfileViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentUserId: String
 ) : ViewModel() {
-
     private var _currentUser = MutableLiveData<User>()
 
     val currentUser: LiveData<User>
@@ -65,35 +64,32 @@ class ProfileViewModel(
     }
 
     init {
-
         fetchLiveCurrentUserResult()
         fetchPlansResult()
     }
 
     private fun fetchLiveCurrentUserResult() {
-
         _currentUser = howYoRepository.getLiveUser(argumentUserId ?: "")
     }
 
     private fun fetchPlansResult() {
-
         _status.value = LoadApiStatus.LOADING
 
         val planResults = mutableSetOf<Plan>()
 
         coroutineScope.launch {
-
             val result = howYoRepository.getAllPlans()
+
             _plans.value = when (result) {
                 is Result.Success -> {
-
                     result.data.filter { it.authorId == UserManager.userId }.forEach {
                         planResults.add(it)
                     }
 
-                    result.data.filter { it.companionList?.contains(UserManager.userId!!) ?: false }.forEach {
-                        planResults.add(it)
-                    }
+                    result.data.filter { it.companionList?.contains(UserManager.userId!!) ?: false }
+                        .forEach {
+                            planResults.add(it)
+                        }
 
                     planResults.toList()
                 }

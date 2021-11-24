@@ -21,10 +21,8 @@ import com.yuchen.howyo.databinding.FragmentFindLocationBinding
 import com.yuchen.howyo.ext.getVmFactory
 
 class FindLocationFragment : Fragment(), OnMapReadyCallback {
-
     private var googleMap: GoogleMap? = null
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
-
     private lateinit var binding: FragmentFindLocationBinding
     val viewModel by viewModels<FindLocationViewModel> { getVmFactory() }
 
@@ -33,14 +31,13 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentFindLocationBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
+
         binding.recyclerFindLocationDays.adapter = FindLocationDaysAdapter(viewModel)
 
-        binding.edittextFindLocationSearch.setOnEditorActionListener { v, actionId, event ->
+        binding.edittextFindLocationSearch.setOnEditorActionListener { _, actionId, event ->
             when {
                 actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
                     event.action == KeyEvent.ACTION_DOWN || event.action == KeyEvent.KEYCODE_ENTER
@@ -69,7 +66,6 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
     private fun geoLocate() {
         val geocoder = Geocoder(context)
 
-        val list: List<Address> =
-            geocoder.getFromLocationName(binding.edittextFindLocationSearch.text.toString(), 1)
+        geocoder.getFromLocationName(binding.edittextFindLocationSearch.text.toString(), 1)
     }
 }

@@ -14,8 +14,8 @@ import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
 
 class CompanionFragment : Fragment() {
-
     private lateinit var binding: FragmentCompanionBinding
+
     private val viewModel by viewModels<CompanionViewModel> {
         getVmFactory(
             CompanionFragmentArgs.fromBundle(requireArguments()).plan
@@ -27,13 +27,13 @@ class CompanionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentCompanionBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         val adapter = CompanionAdapter(viewModel)
         binding.recyclerCompanionFriends.adapter = adapter
+
         binding.btnCompanionClose.setTouchDelegate()
 
         binding.edittextCompanionFriend.setOnKeyListener { v, keyCode, event ->
@@ -46,21 +46,18 @@ class CompanionFragment : Fragment() {
         }
 
         viewModel.plan.observe(viewLifecycleOwner) {
-
             it?.let {
                 viewModel.getCurrentUser()
             }
         }
 
         viewModel.currentUser.observe(viewLifecycleOwner) {
-
             it?.let {
                 viewModel.fetchFriendsData()
             }
         }
 
         viewModel.friends.observe(viewLifecycleOwner) {
-
             it?.let {
                 viewModel.setStatusDone()
                 viewModel.setFriendsForDisplay()
@@ -68,16 +65,16 @@ class CompanionFragment : Fragment() {
         }
 
         viewModel.friendsForDisplay.observe(viewLifecycleOwner) {
-
             adapter.submitList(it)
             binding.viewModel = viewModel
         }
 
         viewModel.leave.observe(viewLifecycleOwner) {
-
             it?.let {
-                findNavController().popBackStack()
-                viewModel.onLeaveCompleted()
+                if (it) {
+                    findNavController().popBackStack()
+                    viewModel.onLeaveCompleted()
+                }
             }
         }
 

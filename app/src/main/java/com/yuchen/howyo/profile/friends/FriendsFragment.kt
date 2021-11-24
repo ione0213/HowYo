@@ -9,13 +9,11 @@ import com.google.android.material.tabs.TabLayout
 import com.yuchen.howyo.databinding.FragmentFriendsBinding
 
 class FriendsFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         val tabTypePosition =
             when (FriendsFragmentArgs.fromBundle(requireArguments()).tabType) {
                 FriendFilter.FANS -> 0
@@ -25,6 +23,7 @@ class FriendsFragment : Fragment() {
 
         FragmentFriendsBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
+
             viewpagerFriend.let {
                 tabsFriend.setupWithViewPager(it)
                 it.adapter = FriendAdapter(
@@ -32,8 +31,11 @@ class FriendsFragment : Fragment() {
                 )
                 it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabsFriend))
             }
+
             tabsFriend.setScrollPosition(tabTypePosition, 0f, true)
+
             viewpagerFriend.currentItem = tabTypePosition
+
             return@onCreateView root
         }
     }

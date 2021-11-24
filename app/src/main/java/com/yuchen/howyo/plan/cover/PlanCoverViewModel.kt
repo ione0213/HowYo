@@ -23,7 +23,6 @@ class PlanCoverViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
     private var _currentUser = MutableLiveData<User>()
 
     val currentUser: LiveData<User>
@@ -35,26 +34,21 @@ class PlanCoverViewModel(
         get() = _isNewPlan
 
     val plan = MutableLiveData<Plan>().apply {
-        when (argumentPlan) {
+        value = when (argumentPlan) {
             null -> {
                 val today = Calendar.getInstance()
                 val tomorrow = Calendar.getInstance()
                 tomorrow.add(Calendar.DAY_OF_YEAR, 1)
 
-                value = Plan(
+                Plan(
                     coverFileName = "",
                     startDate = today.timeInMillis,
                     endDate = tomorrow.timeInMillis
                 )
             }
-            else -> {
-                value = argumentPlan
-            }
+            else -> argumentPlan
         }
     }
-
-//    val plan: LiveData<Plan>
-//        get() = _plan
 
     private val _planId = MutableLiveData<String>()
 
@@ -166,7 +160,6 @@ class PlanCoverViewModel(
     }
 
     init {
-
         setInitData()
 
         plan.value?.id?.let {
@@ -178,14 +171,12 @@ class PlanCoverViewModel(
     }
 
     private fun fetchLiveCurrentUserResult() {
-
         val userId = UserManager.userId
 
         _currentUser = howYoRepository.getLiveUser(userId ?: "")
     }
 
     private fun setInitData() {
-
         // set the default value for duration of the plan
         val calendar = Calendar.getInstance()
 
@@ -203,22 +194,15 @@ class PlanCoverViewModel(
         )
 
         _isNewPlan.value = when (argumentPlan) {
-            null -> {
-                true
-            }
-            else -> {
-                false
-            }
+            null -> true
+            else -> false
         }
     }
 
     fun prepareSubmitPlan() {
-
         when {
             plan.value?.title.isNullOrEmpty() -> _invalidPlan.value = INVALID_FORMAT_TITLE_EMPTY
-            else -> {
-                savePlan()
-            }
+            else -> savePlan()
         }
     }
 
@@ -231,7 +215,6 @@ class PlanCoverViewModel(
     }
 
     fun handlePlanCover() {
-
         val coverPhotoResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
@@ -239,43 +222,42 @@ class PlanCoverViewModel(
 
             withContext(Dispatchers.IO) {
                 when (plan.value?.id.isNullOrEmpty()) {
-                    true -> {
-                        coverPhotoResult.add(uploadCoverPhoto())
-                    }
+                    true -> coverPhotoResult.add(uploadCoverPhoto())
                     false -> {
                         when (planPhotoData.value?.isDeleted) {
                             true -> {
-
                                 when {
                                     planPhotoData.value!!.fileName?.isNotEmpty() == true -> {
-                                        coverPhotoResult.add(deletePhoto(planPhotoData.value!!.fileName!!))
+                                        coverPhotoResult.add(
+                                            deletePhoto(planPhotoData.value!!.fileName!!)
+                                        )
                                     }
                                     else -> {
+
                                     }
                                 }
 
                                 coverPhotoResult.add(uploadCoverPhoto())
                             }
                             else -> {
+
                             }
                         }
                     }
                 }
             }
+
             when {
-                !coverPhotoResult.contains(false) -> {
-                    _isCoverPhotoReady.value = true
-                }
+                !coverPhotoResult.contains(false) -> _isCoverPhotoReady.value = true
             }
         }
     }
 
     private suspend fun uploadCoverPhoto(): Boolean {
-
         val uri = planPhotoData.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
         val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
-        var uploadResult = false
+        val uploadResult: Boolean
 
         plan.value?.coverFileName = fileName
 
@@ -284,82 +266,58 @@ class PlanCoverViewModel(
                 plan.value?.coverPhotoUrl = result.data
                 uploadResult = true
             }
-            else -> {
-                uploadResult = true
-            }
+            else -> uploadResult = true
         }
+
         return uploadResult
     }
 
     private suspend fun deletePhoto(fileName: String): Boolean =
         when (val result = howYoRepository.deletePhoto(fileName)) {
-            is Result.Success -> {
-                result.data
-            }
+            is Result.Success -> result.data
             else -> false
         }
 
     fun createPlan() {
-
         val plan = plan.value!!
 
         plan.authorId = currentUser.value?.id
 
         coroutineScope.launch {
-
             val result = howYoRepository.createPlan(plan)
 
             _planId.value = when (result) {
-                is Result.Success -> {
-                    result.data
-                }
-                is Result.Fail -> {
-                    null
-                }
-                is Result.Error -> {
-                    null
-                }
-                else -> {
-                    null
-                }
+                is Result.Success -> result.data
+                is Result.Fail -> null
+                is Result.Error -> null
+                else -> null
             }
+
             _isCoverPhotoReady.value = null
         }
     }
 
     fun updatePlan() {
-
         coroutineScope.launch {
-
             val result = plan.value?.let { howYoRepository.updatePlan(it) }
 
             _isPlanUpdated.value = when (result) {
-                is Result.Success -> {
-                    result.data
-                }
-                else -> {
-                    false
-                }
+                is Result.Success -> result.data
+                else -> false
             }
         }
     }
 
     private suspend fun updateSchedule(schedule: Schedule): Boolean {
-
         return when (val result = howYoRepository.updateSchedule(schedule)) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> {
-                false
-            }
+            is Result.Success -> result.data
+            else -> false
         }
     }
 
     fun createRelatedCollection() {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-
                 _isDaysReady.postValue(createDays()!!)
                 _isChkListReady.postValue(createDefaultCheckList()!!)
             }
@@ -374,15 +332,12 @@ class PlanCoverViewModel(
     }
 
     fun updateRelatedCollection() {
-
         val dayList = days.value?.toList()
         val scheduleList = schedules.value?.toList()
 
         val newDayCount =
-            (
-                endDateFromUser.value?.minus(startDateFromUser.value!!)
-                    ?.div((60 * 60 * 24 * 1000))
-                )?.toInt()?.plus(1)
+            (endDateFromUser.value?.minus(startDateFromUser.value!!)?.div((60 * 60 * 24 * 1000)))
+                ?.toInt()?.plus(1)
 
         val differenceInDayCount = newDayCount?.minus(dayList?.size ?: 0)
 
@@ -390,13 +345,12 @@ class PlanCoverViewModel(
         val dayResults = mutableListOf<Boolean>()
 
         if (differenceInDayCount != null) {
-
             coroutineScope.launch {
                 withContext(Dispatchers.IO) {
-
                     when {
                         plan.value?.startDate != previousStartDate.value -> {
                             val days = dayList?.sortedBy { it.position }
+
                             days?.forEach { day ->
                                 scheduleList?.filter { it.dayId == day.id }
                                     ?.forEach { schedule ->
@@ -458,6 +412,7 @@ class PlanCoverViewModel(
                             }
                         }
                         else -> {
+
                         }
                     }
 
@@ -467,7 +422,6 @@ class PlanCoverViewModel(
                                 dayList?.maxByOrNull { it.position }!!.position
 
                             for (position in 1..differenceInDayCount) {
-
                                 val result =
                                     plan.value?.id?.let {
                                         howYoRepository.createDay(
@@ -514,17 +468,14 @@ class PlanCoverViewModel(
     }
 
     private suspend fun createDays(): Boolean {
-
         val planId = planId.value
         val days =
-            (
-                endDateFromUser.value?.minus(startDateFromUser.value!!)
-                    ?.div((60 * 60 * 24 * 1000))
-                )?.toInt()
+            (endDateFromUser.value?.minus(startDateFromUser.value!!)?.div((60 * 60 * 24 * 1000)))
+                ?.toInt()
+
         val dayResults = mutableListOf<Boolean>()
 
         for (position in 0..days!!) {
-
             val result = howYoRepository.createDay(position, planId!!)
 
             if (result is Result.Success) {
@@ -533,35 +484,24 @@ class PlanCoverViewModel(
                 dayResults.add(false)
             }
         }
+
         return !dayResults.contains(false)
     }
 
-    private suspend fun deleteDay(day: Day): Boolean {
-
-        return when (val result = howYoRepository.deleteDay(day)) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> {
-                false
-            }
+    private suspend fun deleteDay(day: Day): Boolean =
+        when (val result = howYoRepository.deleteDay(day)) {
+            is Result.Success -> result.data
+            else -> false
         }
-    }
 
-    private suspend fun deleteSchedule(schedule: Schedule): Boolean {
-
-        return when (val result = howYoRepository.deleteSchedule(schedule)) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> {
-                false
-            }
+    private suspend fun deleteSchedule(schedule: Schedule): Boolean =
+        when (val result = howYoRepository.deleteSchedule(schedule)) {
+            is Result.Success -> result.data
+            else -> false
         }
-    }
+
 
     private suspend fun createDefaultCheckList(): Boolean {
-
         val planId = planId.value
         val subTypeList = HowYoApplication.instance.resources.getStringArray(R.array.check_list)
         val checkListResults = mutableListOf<Boolean>()
@@ -571,7 +511,6 @@ class PlanCoverViewModel(
             when (subType) {
                 getString(R.string.necessary) -> {
                     CheckItemType.NECESSARY.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -584,7 +523,6 @@ class PlanCoverViewModel(
                 }
                 getString(R.string.clothe) -> {
                     CheckItemType.CLOTHE.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -597,7 +535,6 @@ class PlanCoverViewModel(
                 }
                 getString(R.string.wash) -> {
                     CheckItemType.WASH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -610,7 +547,6 @@ class PlanCoverViewModel(
                 }
                 getString(R.string.electronic) -> {
                     CheckItemType.ELECTRONIC.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -623,7 +559,6 @@ class PlanCoverViewModel(
                 }
                 getString(R.string.health) -> {
                     CheckItemType.HEALTH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -636,7 +571,6 @@ class PlanCoverViewModel(
                 }
                 getString(R.string.other) -> {
                     CheckItemType.OTHER.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -662,9 +596,7 @@ class PlanCoverViewModel(
         }
 
     private fun fetchDaysResult() {
-
         coroutineScope.launch {
-
             val result = howYoRepository.getDays(plan.value?.id!!)
             _days.value = when (result) {
                 is Result.Success -> result.data
@@ -674,9 +606,7 @@ class PlanCoverViewModel(
     }
 
     private fun fetchSchedulesResult() {
-
         coroutineScope.launch {
-
             val result = howYoRepository.getSchedules(plan.value?.id!!)
             _schedules.value = when (result) {
                 is Result.Success -> result.data
@@ -704,6 +634,7 @@ class PlanCoverViewModel(
             startDate = startDateFromUser.value
             endDate = endDateFromUser.value
         }
+
         _selectDate.value = null
     }
 
@@ -724,7 +655,6 @@ class PlanCoverViewModel(
     }
 
     fun setCoverBitmap(photoUri: Uri?) {
-
         val newPlanPhoto = PhotoData(
             photoUri,
             null,
@@ -747,7 +677,6 @@ class PlanCoverViewModel(
     }
 
     companion object {
-
         const val INVALID_FORMAT_TITLE_EMPTY = 0x11
     }
 }

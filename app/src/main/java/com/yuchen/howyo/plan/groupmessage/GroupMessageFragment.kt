@@ -10,7 +10,6 @@ import com.yuchen.howyo.databinding.FragmentGroupMessageBinding
 import com.yuchen.howyo.ext.getVmFactory
 
 class GroupMessageFragment : Fragment() {
-
     private lateinit var binding: FragmentGroupMessageBinding
     private val viewModel by viewModels<GroupMessageViewModel> {
         getVmFactory(
@@ -23,23 +22,16 @@ class GroupMessageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentGroupMessageBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         val adapter = GroupMessageAdapter()
-
         binding.recyclerGroupMsg.adapter = adapter
 
         viewModel.groupMsgResult.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it -> {
-                        viewModel.onSubmittedMessage()
-                    }
-                }
+                if (it) viewModel.onSubmittedMessage()
             }
         }
 
@@ -52,7 +44,6 @@ class GroupMessageFragment : Fragment() {
         viewModel.groupMessages.observe(viewLifecycleOwner) {
             it?.let {
                 adapter.checkMessageOwner(it)
-//                adapter.notifyDataSetChanged()
                 binding.recyclerGroupMsg.smoothScrollToPosition(it.size.plus(1))
             }
         }

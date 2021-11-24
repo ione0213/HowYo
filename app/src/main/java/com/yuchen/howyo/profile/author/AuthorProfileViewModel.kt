@@ -20,7 +20,6 @@ class AuthorProfileViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentUserId: String
 ) : ViewModel() {
-
     private var _author = MutableLiveData<User>()
 
     val author: LiveData<User>
@@ -62,26 +61,20 @@ class AuthorProfileViewModel(
     }
 
     init {
-
         fetchLiveUserResult()
         fetchLivePlansResult()
     }
 
     private fun fetchLiveUserResult() {
-
         _author = howYoRepository.getLiveUser(argumentUserId ?: "")
+
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
     private fun fetchLivePlansResult() {
-
         plans = when (argumentUserId) {
-            UserManager.userId -> {
-                howYoRepository.getLivePlans(listOf(argumentUserId))
-            }
-            else -> {
-                howYoRepository.getLivePublicPlans(listOf(argumentUserId))
-            }
+            UserManager.userId -> howYoRepository.getLivePlans(listOf(argumentUserId))
+            else -> howYoRepository.getLivePublicPlans(listOf(argumentUserId))
         }
 
         setStatusDone()
@@ -108,7 +101,6 @@ class AuthorProfileViewModel(
     }
 
     fun setFollow(type: FollowType) {
-
         val newAuthor = author.value
         val fansList = newAuthor?.fansList?.toMutableList()
 
@@ -169,10 +161,13 @@ class AuthorProfileViewModel(
         coroutineScope.launch {
             _author.value?.let { howYoRepository.updateUser(it) }
             _currentUser.value?.let { howYoRepository.updateUser(it) }
+
             if (type == FollowType.FOLLOW) {
                 howYoRepository.createNotification(notification)
             } else {
-                author.value?.let { howYoRepository.deleteFollowNotification(it.id, currentUserId!!) }
+                author.value?.let {
+                    howYoRepository.deleteFollowNotification(it.id, currentUserId!!)
+                }
             }
         }
     }

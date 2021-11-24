@@ -12,7 +12,6 @@ class DetailEditImageViewModelFactory(
     private val photoData: PhotoData,
     private val photos: Photos
 ) : ViewModelProvider.Factory {
-
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {

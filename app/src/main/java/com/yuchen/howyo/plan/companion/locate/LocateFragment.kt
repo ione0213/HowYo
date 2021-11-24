@@ -47,13 +47,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LocateFragment : Fragment(), OnMapReadyCallback {
-
     private lateinit var binding: FragmentLocateBinding
+
     private val viewModel by viewModels<LocateViewModel> {
         getVmFactory(
             LocateFragmentArgs.fromBundle(requireArguments()).plan
         )
     }
+
     private var googleMap: GoogleMap? = null
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private var locationPermissionGranted = false
@@ -69,7 +70,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentLocateBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -87,13 +87,13 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
             mapFragment.getMapAsync(this)
         }
 
-        viewModel.companions.observe(viewLifecycleOwner, {
+        viewModel.companions.observe(viewLifecycleOwner) {
             it?.let {
                 when {
                     it.isNotEmpty() -> locateCompanion()
                 }
             }
-        })
+        }
 
         return binding.root
     }
@@ -114,22 +114,20 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
         } else {
             requestLocationPermission()
         }
-//        getDeviceLocation()
+
         googleMap?.isMyLocationEnabled = true
     }
 
     private fun locateCompanion() {
         viewModel.companions.value?.forEach {
-
             lifecycleScope.launch {
-
                 val bmp: Bitmap
                 val options = BitmapFactory.Options()
+
                 // Resize image as 1 / 5
                 options.inSampleSize = 1
 
                 withContext(Dispatchers.IO) {
-
                     // Load avatar as icon of map marker
                     val imageURLBase = "${it.avatar}"
                     val imageURL = URL(imageURLBase)
@@ -146,8 +144,6 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                                 it.longitude ?: 0.0
                             )
                         )
-//                        .title(it.id)
-//                        .title(it.name).icon(BitmapDescriptorFactory.fromBitmap(bmp))
                         .title(it.name).icon(
                             BitmapDescriptorFactory.fromBitmap(
                                 getMarkerBitmapFromView(it, bmp)!!
@@ -215,7 +211,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
             REQUEST_LOCATION_PERMISSION -> {
                 if (grantResults.isNotEmpty()) {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        // 已獲取到權限
+                        // Got permission
                         locationPermissionGranted = true
                         checkGPSState()
                     }
@@ -291,12 +287,14 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
 
     private fun getMarkerBitmapFromView(user: User, bitmap: Bitmap): Bitmap? {
         val iconGenerator = IconGenerator(mContext)
-        val markerView: View = LayoutInflater.from(mContext).inflate(R.layout.layout_avatar_in_map, null)
+        val markerView: View =
+            LayoutInflater.from(mContext).inflate(R.layout.layout_avatar_in_map, null)
         val imgMarker = markerView.findViewById<ImageView>(R.id.img_map_user_avatar)
+
         imgMarker.setImageBitmap(bitmap)
-//            .setImageResource()
         iconGenerator.setContentView(markerView)
         iconGenerator.setBackground(null)
+
         return iconGenerator.makeIcon("")
     }
 }

@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.databinding.ItemCompanionBinding
 
-class CompanionAdapter(val viewModel: CompanionViewModel) : ListAdapter<User, CompanionAdapter.FriendViewHolder>(DiffCallback) {
-
+class CompanionAdapter(val viewModel: CompanionViewModel) :
+    ListAdapter<User, CompanionAdapter.FriendViewHolder>(DiffCallback) {
     class FriendViewHolder(
         private var binding: ItemCompanionBinding,
         private val viewModel: CompanionViewModel
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(user: User) {
             binding.viewModel = viewModel
+
             user.let {
                 binding.user = it
                 binding.executePendingBindings()

@@ -1,7 +1,6 @@
 package com.yuchen.howyo.data
 
 sealed class CheckListItem {
-
     abstract val id: String
 
     data class Title(val title: String) : CheckListItem() {

@@ -16,7 +16,6 @@ class FriendItemFragment(
     private val friendType: FriendFilter,
     private val userId: String
 ) : Fragment() {
-
     private lateinit var binding: FragmentFriendItemBinding
     private val viewModel by viewModels<FriendItemViewModel> { getVmFactory(friendType, userId) }
 
@@ -25,14 +24,11 @@ class FriendItemFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentFriendItemBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         val adapter = FriendItemAdapter(viewModel, friendType, userId)
-
         binding.recyclerFriends.adapter = adapter
 
         viewModel.userIdList.observe(viewLifecycleOwner) {

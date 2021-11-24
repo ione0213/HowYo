@@ -12,7 +12,6 @@ class CommentViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
     private val plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
     }
@@ -43,7 +42,6 @@ class CommentViewModel(
     }
 
     init {
-
         fetchLiveCommentsResult()
     }
 
@@ -52,11 +50,9 @@ class CommentViewModel(
     }
 
     fun fetchUsersResult() {
-
         val commentData = mutableListOf<CommentData>()
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 allComments.value?.forEach { comment ->
                     when (val result = comment.userId?.let { howYoRepository.getUser(it) }) {
@@ -79,7 +75,6 @@ class CommentViewModel(
     }
 
     fun submitComment() {
-
         val comment = Comment(
             planId = plan.value?.id,
             userId = UserManager.userId,
@@ -87,7 +82,6 @@ class CommentViewModel(
         )
 
         coroutineScope.launch {
-
             val result = howYoRepository.createComment(comment)
 
             _commentResult.value = when (result) {

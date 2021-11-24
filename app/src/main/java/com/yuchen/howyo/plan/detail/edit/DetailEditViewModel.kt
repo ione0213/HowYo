@@ -32,7 +32,6 @@ class DetailEditViewModel(
     private val argumentPlan: Plan?,
     private val argumentDay: Day?
 ) : ViewModel() {
-
     // Detail data from arguments
     private val _schedule = MutableLiveData<Schedule>().apply {
         value = argumentSchedule
@@ -51,11 +50,13 @@ class DetailEditViewModel(
 
     private val _photoDataList = MutableLiveData<MutableList<PhotoData>>().apply {
         val photoData = mutableListOf<PhotoData>()
+
         argumentSchedule?.let {
             it.photoUrlList?.forEachIndexed { index, url ->
                 photoData.add(PhotoData(url = url, fileName = it.photoFileNameList?.get(index)))
             }
         }
+
         value = photoData
     }
 
@@ -125,7 +126,6 @@ class DetailEditViewModel(
     }
 
     init {
-
         setData()
     }
 
@@ -157,13 +157,14 @@ class DetailEditViewModel(
     fun setBitmap(uri: Uri) {
         val photoData = photoDataList.value?.toMutableList()
         photoData?.add(PhotoData(uri = uri))
+
         _photoDataList.value = photoData
     }
 
     fun submitSchedule() {
-
         val imageUrlList = mutableListOf<String>()
         val fileNameList = mutableListOf<String>()
+
         val location = when (address.value?.isNotEmpty()) {
             true -> {
                 getLatitudeAndLongitude()
@@ -183,8 +184,7 @@ class DetailEditViewModel(
                     .instance
                     .resources
                     .getStringArray(R.array.schedule_type_list)[
-                    selectedScheduleTypePosition.value
-                        ?: 0
+                        selectedScheduleTypePosition.value ?: 0
                 ]
             title = this@DetailEditViewModel.title.value
             when {
@@ -193,12 +193,13 @@ class DetailEditViewModel(
                     longitude = location?.second
                 }
                 else -> {
+
                 }
             }
             startTime = this@DetailEditViewModel.startTime.value
             endTime = this@DetailEditViewModel.endTime.value
             when {
-                this@DetailEditViewModel.budget.value?.isNullOrEmpty() == false -> {
+                this@DetailEditViewModel.budget.value?.isEmpty() == false -> {
                     budget = this@DetailEditViewModel.budget.value?.toInt()
                 }
             }
@@ -208,12 +209,10 @@ class DetailEditViewModel(
         }
 
         coroutineScope.launch {
-
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
                 photoDataList.value?.forEach {
-
                     when (it.uri) {
                         null -> {
                             when (it.isDeleted) {
@@ -240,7 +239,7 @@ class DetailEditViewModel(
 
                                     val fileName =
                                         "${UserManager.currentUserEmail}_" +
-                                            formatter.format(Date())
+                                                formatter.format(Date())
 
                                     fileNameList.add(fileName)
 
@@ -271,17 +270,13 @@ class DetailEditViewModel(
                     when {
                         newSchedule.id.isNullOrEmpty() -> {
                             when (val result = howYoRepository.createSchedule(newSchedule)) {
-                                is Result.Success -> {
-                                    result.data
-                                }
+                                is Result.Success -> result.data
                                 else -> false
                             }
                         }
                         else -> {
                             when (val result = howYoRepository.updateSchedule(newSchedule)) {
-                                is Result.Success -> {
-                                    result.data
-                                }
+                                is Result.Success -> result.data
                                 else -> false
                             }
                         }
@@ -292,18 +287,14 @@ class DetailEditViewModel(
     }
 
     private fun getLatitudeAndLongitude(): Pair<Double, Double> {
-
         val geocoder = Geocoder(HowYoApplication.instance)
 
         val list: List<Address> =
             geocoder.getFromLocationName(address.value ?: "", 1)
+
         return when (list.isEmpty()) {
-            true -> {
-                Pair(0.0, 0.0)
-            }
-            else -> {
-                Pair(list.first().latitude, list.first().longitude)
-            }
+            true -> Pair(0.0, 0.0)
+            else -> Pair(list.first().latitude, list.first().longitude)
         }
     }
 
@@ -333,12 +324,8 @@ class DetailEditViewModel(
 
     fun setTimeValue(type: String, data: Long) {
         when (type) {
-            getString(R.string.detail_edit_schedule_start_time) -> {
-                startTime.value = data
-            }
-            else -> {
-                endTime.value = data
-            }
+            getString(R.string.detail_edit_schedule_start_time) -> startTime.value = data
+            else -> endTime.value = data
         }
     }
 

@@ -10,7 +10,6 @@ class PaymentViewModelFactory(
     private val howYoRepository: HowYoRepository,
     private val plan: Plan
 ) : ViewModelProvider.Factory {
-
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {

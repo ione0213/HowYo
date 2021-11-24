@@ -1,7 +1,6 @@
 package com.yuchen.howyo.data
 
 sealed class NotificationItem {
-
     abstract val id: String
 
     data class FollowItem(val notification: Notification) : NotificationItem() {

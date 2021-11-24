@@ -16,13 +16,11 @@ import kotlinx.coroutines.withContext
 
 class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
     ListAdapter<DetailPhotoItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class ImageViewHolder(private var binding: ItemDetailEditImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(photoData: PhotoData) {
-
             photoData.let {
                 binding.schedulePhoto = it
                 binding.executePendingBindings()
@@ -76,7 +74,6 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is AddViewHolder -> {
                 holder.bind()
@@ -97,9 +94,11 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
     fun addPhotoAndBtn(list: List<PhotoData>) {
         adapterScope.launch {
             val detailPhotoItems: MutableList<DetailPhotoItem> = mutableListOf()
+
             list.forEach {
                 detailPhotoItems.add(DetailPhotoItem.ImageData(it))
             }
+
             when {
                 list.size < 3 -> detailPhotoItems.add(DetailPhotoItem.AddBtn)
             }

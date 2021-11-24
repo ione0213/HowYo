@@ -11,7 +11,6 @@ class FriendItemViewModelFactory(
     private val friendType: FriendFilter,
     private val userId: String,
 ) : ViewModelProvider.Factory {
-
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {

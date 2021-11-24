@@ -11,7 +11,6 @@ import com.yuchen.howyo.network.LoadApiStatus
 import kotlinx.coroutines.*
 
 class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
     private val _plansForDisplay = MutableLiveData<List<Plan>>()
 
     val plansForDisplay: LiveData<List<Plan>>
@@ -64,17 +63,15 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     init {
-
         fetchPlansResult()
     }
 
     fun fetchPlansResult() {
-
         _status.value = LoadApiStatus.LOADING
 
         coroutineScope.launch {
-
             val result = howYoRepository.getAllPublicPlans()
+
             _plans.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -83,7 +80,6 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun setAuthorIdSet() {
-
         val authorIdSet = mutableSetOf<String>()
 
         plans.value?.forEach {
@@ -94,16 +90,13 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun fetchAuthorData() {
-
         val authorDataList = mutableSetOf<User>()
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 authorIds.value?.forEach { authorId ->
                     when (val result = howYoRepository.getUser(authorId)) {
-                        is Result.Success -> {
-                            authorDataList.add(result.data)
-                        }
+                        is Result.Success -> authorDataList.add(result.data)
                     }
                 }
             }
@@ -126,21 +119,18 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun setPlansForShow() {
-
         _plansForDisplay.value = plans.value?.toList()
     }
 
     fun filter() {
-
         var filteredPlans = listOf<Plan>()
 
         when (keywords.value?.isEmpty()) {
-            true -> {
-                filteredPlans = plans.value ?: listOf()
-            }
+            true -> filteredPlans = plans.value ?: listOf()
             false -> {
                 filteredPlans =
-                    plans.value?.filter { it.title?.contains(keywords.value ?: "") ?: false } ?: listOf()
+                    plans.value?.filter { it.title?.contains(keywords.value ?: "") ?: false }
+                        ?: listOf()
             }
         }
 

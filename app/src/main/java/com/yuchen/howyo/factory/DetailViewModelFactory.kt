@@ -15,7 +15,6 @@ class DetailViewModelFactory(
     private val day: Day?,
     private val schedule: Schedule?
 ) : ViewModelProvider.Factory {
-
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {

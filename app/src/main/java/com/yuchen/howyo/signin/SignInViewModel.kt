@@ -9,7 +9,6 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import kotlinx.coroutines.*
 
 class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
     private val _createUserResult = MutableLiveData<String>()
 
     val createUserResult: LiveData<String>
@@ -31,7 +30,6 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
     }
 
     fun createUser(user: User) {
-
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 when (val result = howYoRepository.createUser(user)) {
@@ -49,7 +47,6 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
     }
 
     fun setUser() {
-
         UserManager.apply {
             userId = currentUser.value?.id
             currentUserEmail = currentUser.value?.email

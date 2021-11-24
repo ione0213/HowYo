@@ -12,7 +12,6 @@ class DetailEditImageViewModel(
     private val argumentPhotoData: PhotoData?,
     private val argumentPhotos: Photos?
 ) : ViewModel() {
-
     // Image data from arguments
     private val _schedulePhoto = MutableLiveData<PhotoData>().apply {
         value = argumentPhotoData
@@ -26,7 +25,7 @@ class DetailEditImageViewModel(
         value = argumentPhotos
     }
 
-    val schedulePhotos: LiveData<Photos>
+    private val schedulePhotos: LiveData<Photos>
         get() = _schedulePhotos
 
     // Handle leave edit image

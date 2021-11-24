@@ -15,7 +15,6 @@ class CompanionViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
     private var _plan = MutableLiveData<Plan>()
 
     val plan: LiveData<Plan>
@@ -61,47 +60,35 @@ class CompanionViewModel(
     }
 
     init {
-
         fetchLivePlanResult()
     }
 
     fun getCurrentUser() {
-
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
-                    is Result.Success -> {
-                        _currentUser.postValue(result.data!!)
-                    }
+                    is Result.Success -> _currentUser.postValue(result.data!!)
                 }
             }
         }
     }
 
     private fun fetchLivePlanResult() {
-
         _status.value = LoadApiStatus.LOADING
 
         when (argumentPlan?.id?.isNotEmpty()) {
-            true -> {
-                _plan = howYoRepository.getLivePlan(argumentPlan.id)
-            }
+            true -> _plan = howYoRepository.getLivePlan(argumentPlan.id)
         }
     }
 
     fun fetchFriendsData() {
-
         val friendDataList = mutableListOf<User>()
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 currentUser.value?.followingList?.forEach { friendId ->
-
                     when (val result = howYoRepository.getUser(friendId)) {
-                        is Result.Success -> {
-                            friendDataList.add(result.data)
-                        }
+                        is Result.Success -> friendDataList.add(result.data)
                     }
                 }
             }
@@ -111,7 +98,6 @@ class CompanionViewModel(
     }
 
     fun setCompanion(userId: String, type: CompanionType) {
-
         val newPlan = plan.value
         val companionList = newPlan?.companionList?.toMutableList()
 
@@ -142,20 +128,15 @@ class CompanionViewModel(
     }
 
     fun setFriendsForDisplay() {
-
         _friendsForDisplay.value = friends.value?.toList()
     }
 
     fun filter() {
-
         var filteredUsers = listOf<User>()
 
         when (keywords.value?.isEmpty()) {
-            true -> {
-                filteredUsers = friends.value ?: listOf()
-            }
+            true -> filteredUsers = friends.value ?: listOf()
             false -> {
-
                 filteredUsers =
                     friends.value?.filter { it.id.contains(keywords.value ?: "") } ?: listOf()
             }

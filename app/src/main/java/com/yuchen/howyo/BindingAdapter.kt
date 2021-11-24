@@ -33,7 +33,6 @@ import com.yuchen.howyo.util.Util.getString
 
 @BindingAdapter("startDate", "endDate")
 fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
-
     text = HowYoApplication.instance.getString(
         R.string.duration_with_dash, starDate.toFullDate(), endDate.toFullDate()
     )
@@ -41,7 +40,6 @@ fun TextView.bindJourneyDate(starDate: Long, endDate: Long) {
 
 @BindingAdapter("time")
 fun TextView.bindTime(time: Long) {
-
     when {
         time != 0L -> text = time.toTime()
     }
@@ -49,19 +47,17 @@ fun TextView.bindTime(time: Long) {
 
 @BindingAdapter("schedule")
 fun TextView.bindScheduleTimeDuration(schedule: Schedule) {
-
     val startTime = schedule.startTime
     val endTime = schedule.endTime
 
     when {
         startTime != null && endTime != null -> {
             if (endTime > startTime) {
-                text =
-                    HowYoApplication.instance.getString(
-                        R.string.schedule_time_duration,
-                        (endTime - startTime).toHourString(),
-                        (endTime - startTime).toMinuteString()
-                    )
+                text = HowYoApplication.instance.getString(
+                    R.string.schedule_time_duration,
+                    (endTime - startTime).toHourString(),
+                    (endTime - startTime).toMinuteString()
+                )
             }
         }
     }
@@ -69,7 +65,6 @@ fun TextView.bindScheduleTimeDuration(schedule: Schedule) {
 
 @BindingAdapter("dateTime")
 fun TextView.bindTimeWithAgoFormat(time: Long) {
-
     when {
         time != 0L -> text = time.displayTime()
     }
@@ -77,7 +72,6 @@ fun TextView.bindTimeWithAgoFormat(time: Long) {
 
 @BindingAdapter("fromTime", "toTime")
 fun TextView.bindTimeToTime(fromTime: Long, toTime: Long) {
-
     when {
         fromTime != 0L || toTime != 0L -> {
             text = HowYoApplication.instance.getString(
@@ -98,9 +92,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
         CurrentFragmentType.SETTING,
         CurrentFragmentType.GROUP_MESSAGE,
         CurrentFragmentType.COMMENT,
-        CurrentFragmentType.SIGNIN -> {
-            View.GONE
-        }
+        CurrentFragmentType.SIGNIN -> View.GONE
         else -> View.VISIBLE
     }
 }
@@ -108,10 +100,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
 @BindingAdapter("currentFragmentTypeForToolbar")
 fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
     visibility = when (currentFragmentType) {
-        CurrentFragmentType.PLAN,
-        CurrentFragmentType.SIGNIN -> {
-            View.GONE
-        }
+        CurrentFragmentType.PLAN, CurrentFragmentType.SIGNIN -> View.GONE
         else -> View.VISIBLE
     }
 }
@@ -125,9 +114,7 @@ fun TextView.bindToolbarTitle(
         CurrentFragmentType.CHECK_OR_SHOPPING_LIST,
         CurrentFragmentType.PROFILE,
         CurrentFragmentType.AUTHOR_PROFILE,
-        CurrentFragmentType.FRIENDS -> {
-            sharedFragmentTitle
-        }
+        CurrentFragmentType.FRIENDS -> sharedFragmentTitle
         else -> currentFragmentTypeForText.value
     }
 }
@@ -137,12 +124,8 @@ fun RecyclerView.bindRecyclerViewWithDays(days: List<Day>?) {
     days?.let {
         adapter?.apply {
             when (this) {
-                is PlanDaysAdapter -> {
-                    submitDays(it)
-                }
-                is FindLocationDaysAdapter -> {
-                    submitList(it)
-                }
+                is PlanDaysAdapter -> submitDays(it)
+                is FindLocationDaysAdapter -> submitList(it)
             }
         }
     }
@@ -151,6 +134,7 @@ fun RecyclerView.bindRecyclerViewWithDays(days: List<Day>?) {
 @BindingAdapter("day", "firstDate")
 fun TextView.bindDayText(day: Int, firstDate: Long?) {
     val date = firstDate?.plus((1000 * 60 * 60 * 24 * day))
+
     text = HowYoApplication.instance.getString(R.string.day, day.plus(1), date?.toDate())
 }
 
@@ -182,6 +166,7 @@ fun bindRecyclerViewWithPhotoData(
     photoData: List<PhotoData>?
 ) {
     val schedulePhotosDisplay = photoData?.filter { it.isDeleted != true }
+
     schedulePhotosDisplay?.let {
         recyclerView.adapter?.apply {
             when (this) {
@@ -195,6 +180,7 @@ fun bindRecyclerViewWithPhotoData(
 fun bindPlanAuthorAvatar(imageView: ImageView, imgUrl: String?) {
     imgUrl?.let {
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+
         Glide.with(imageView.context)
             .load(imgUri)
             .apply(
@@ -210,6 +196,7 @@ fun bindPlanAuthorAvatar(imageView: ImageView, imgUrl: String?) {
 fun bindPlanAuthorAvatar(imageView: ShapeableImageView, imgUrl: String?) {
     imgUrl?.let {
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+
         Glide.with(imageView.context)
             .load(imgUri)
             .apply(
@@ -222,10 +209,12 @@ fun bindPlanAuthorAvatar(imageView: ShapeableImageView, imgUrl: String?) {
 }
 
 @BindingAdapter("userId", "authorData")
-fun bindPlanAuthorAvatar(imageView: ShapeableImageView, userId: String?, authorDataList: Set<User>?) {
-
+fun bindPlanAuthorAvatar(
+    imageView: ShapeableImageView,
+    userId: String?,
+    authorDataList: Set<User>?
+) {
     userId?.let {
-
         val imgUrl = authorDataList?.first { it.id == userId }?.avatar
 
         imgUrl?.let {
@@ -244,9 +233,7 @@ fun bindPlanAuthorAvatar(imageView: ShapeableImageView, userId: String?, authorD
 
 @BindingAdapter("userId", "authorData")
 fun bindNickName(textView: TextView, userId: String?, authorDataList: Set<User>?) {
-
     userId?.let {
-
         val user = authorDataList?.first { it.id == userId }
 
         textView.text = user?.name
@@ -255,10 +242,11 @@ fun bindNickName(textView: TextView, userId: String?, authorDataList: Set<User>?
 
 @BindingAdapter("imageData")
 fun bindImageWithData(imageView: ImageView, photoData: PhotoData?) {
-    photoData?.let { photoData ->
+    photoData?.let { photo ->
         when {
-            photoData.url?.isNotEmpty() == true -> {
-                val imgUri = photoData.url.toUri().buildUpon().scheme("https").build()
+            photo.url?.isNotEmpty() == true -> {
+                val imgUri = photo.url.toUri().buildUpon().scheme("https").build()
+
                 Glide.with(imageView.context)
                     .load(imgUri)
                     .apply(
@@ -270,11 +258,11 @@ fun bindImageWithData(imageView: ImageView, photoData: PhotoData?) {
             }
             else -> {
                 when {
-                    !photoData.uri.toString().contains("drawable") -> {
+                    !photo.uri.toString().contains("drawable") -> {
                         imageView.setImageBitmap(
                             HowYoApplication.instance
                                 .contentResolver
-                                ?.openFileDescriptor(photoData.uri!!, "r")?.use {
+                                ?.openFileDescriptor(photo.uri!!, "r")?.use {
                                     BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
                                 }
                         )
@@ -290,21 +278,18 @@ fun bindImageWithData(imageView: ImageView, photoData: PhotoData?) {
 
 @BindingAdapter("planPhoto")
 fun AppCompatButton.bindDeleteButtonWithPlanPhoto(planPhotoData: PhotoData?) {
-
     planPhotoData?.let {
         visibility = when (planPhotoData.url.isNullOrEmpty()) {
             true -> {
                 when {
-                    planPhotoData.uri.toString() == getString(R.string.default_cover) -> {
-                        View.GONE
-                    }
+                    planPhotoData.uri.toString() == getString(R.string.default_cover) -> View.GONE
                     else -> View.VISIBLE
                 }
             }
             false -> {
                 when {
                     planPhotoData.uri.toString() == getString(R.string.default_cover) &&
-                        planPhotoData.isDeleted == true -> {
+                            planPhotoData.isDeleted == true -> {
                         View.GONE
                     }
                     else -> View.VISIBLE
@@ -316,7 +301,6 @@ fun AppCompatButton.bindDeleteButtonWithPlanPhoto(planPhotoData: PhotoData?) {
 
 @BindingAdapter("scheduleType")
 fun bindImageWithScheduleType(imageView: ImageView, scheduleType: String?) {
-
     scheduleType?.let { type ->
         imageView.setImageResource(
             when (type) {
@@ -339,9 +323,7 @@ fun RecyclerView.bindRecyclerViewWithCheckLists(
     checkLists.let {
         adapter?.apply {
             when (this) {
-                is CheckOrShoppingListAdapter -> {
-                    addTitleAndItem(it, mainItemType)
-                }
+                is CheckOrShoppingListAdapter -> addTitleAndItem(it, mainItemType)
             }
         }
     }
@@ -355,15 +337,9 @@ fun bindRecyclerViewWithPlans(
     plans?.let {
         recyclerView.adapter?.apply {
             when (this) {
-                is PlanAdapter -> {
-                    submitList(it)
-                }
-                is DiscoverAdapter -> {
-                    submitList(it)
-                }
-                is AuthorProfilePlanAdapter -> {
-                    submitList(it)
-                }
+                is PlanAdapter -> submitList(it)
+                is DiscoverAdapter -> submitList(it)
+                is AuthorProfilePlanAdapter -> submitList(it)
             }
         }
     }
@@ -380,7 +356,6 @@ fun TextView.bindPlanPrivacyStatus(privacy: String?) {
 
 @BindingAdapter("lockButton", "accessType")
 fun ImageButton.bindPlanLockButton(privacy: String?, accessType: AccessPlanType?) {
-
     visibility = when (accessType) {
         AccessPlanType.EDIT -> {
             when (privacy) {
@@ -435,7 +410,6 @@ fun ImageButton.bindHeartButton(plan: Plan?, type: LikeType?, accessType: Access
 fun ImageButton.bindFavoriteButton(plan: Plan?, type: FavoriteType?, accessType: AccessPlanType?) {
     visibility = when (accessType) {
         AccessPlanType.VIEW -> {
-
             when (type) {
                 FavoriteType.COLLECT -> {
                     when {
@@ -484,13 +458,12 @@ fun AppCompatButton.bindFollowButton(user: User?, type: FollowType?) {
 
 @BindingAdapter("buttonForAuthor", "accessType")
 fun AppCompatButton.bindButtonForPlanMembers(plan: Plan?, accessType: AccessPlanType?) {
-
     val userId = UserManager.userId ?: ""
 
     visibility =
         when {
             (plan?.authorId == userId || plan?.companionList?.contains(userId) == true) &&
-                accessType == AccessPlanType.VIEW -> {
+                    accessType == AccessPlanType.VIEW -> {
                 View.VISIBLE
             }
             else -> {
@@ -501,7 +474,6 @@ fun AppCompatButton.bindButtonForPlanMembers(plan: Plan?, accessType: AccessPlan
 
 @BindingAdapter("companionButton", "user", "companionType")
 fun AppCompatButton.bindCompanionButton(plan: Plan?, user: User?, companionType: CompanionType) {
-
     when (companionType) {
         CompanionType.ADD -> {
             visibility = when (plan?.companionList?.contains(user?.id)) {
@@ -522,7 +494,6 @@ fun AppCompatButton.bindCompanionButton(plan: Plan?, user: User?, companionType:
 
 @BindingAdapter("groupPlan")
 fun AppCompatButton.bindGroupPlanIcon(plan: Plan?) {
-
     if (plan != null) {
         visibility = when (plan.companionList?.contains(UserManager.userId)) {
             true -> View.VISIBLE

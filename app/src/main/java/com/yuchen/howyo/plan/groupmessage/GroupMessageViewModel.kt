@@ -12,7 +12,6 @@ class GroupMessageViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
     // Plan data from arguments
     private val _plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
@@ -47,7 +46,6 @@ class GroupMessageViewModel(
     }
 
     init {
-
         fetchLiveGroupMsgResult()
     }
 
@@ -56,11 +54,9 @@ class GroupMessageViewModel(
     }
 
     fun fetchUsersResult() {
-
         val groupMsgData = mutableListOf<GroupMessageData>()
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 allGroupMessages.value?.forEach { message ->
                     when (val result = message.userId?.let { howYoRepository.getUser(it) }) {
@@ -84,7 +80,6 @@ class GroupMessageViewModel(
     }
 
     fun submitMessage() {
-
         val message = GroupMessage(
             planId = plan.value?.id,
             userId = UserManager.userId,
@@ -92,7 +87,6 @@ class GroupMessageViewModel(
         )
 
         coroutineScope.launch {
-
             val result = howYoRepository.createGroupMessage(message)
 
             _groupMsgResult.value = when (result) {

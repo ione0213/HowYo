@@ -1,7 +1,6 @@
 package com.yuchen.howyo.data
 
 sealed class Result<out R> {
-
     data class Success<out T>(val data: T) : Result<T>()
     data class Fail(val error: String) : Result<Nothing>()
     data class Error(val exception: Exception) : Result<Nothing>()
@@ -16,5 +15,6 @@ sealed class Result<out R> {
         }
     }
 }
+
 val Result<*>.succeeded
     get() = this is Result.Success && data != null

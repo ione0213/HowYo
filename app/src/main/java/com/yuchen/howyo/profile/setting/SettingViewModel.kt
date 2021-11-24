@@ -15,7 +15,6 @@ import java.util.*
 import kotlinx.coroutines.*
 
 class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
     var currentUser = MutableLiveData<User>()
 
     private val _avatarPhoto = MutableLiveData<PhotoData>()
@@ -54,18 +53,16 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
     }
 
     init {
-
         fetchLiveCurrentUserResult()
     }
 
     private fun fetchLiveCurrentUserResult() {
-
         _status.value = LoadApiStatus.LOADING
+
         this.currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
     fun setAvatarPhoto() {
-
         _avatarPhoto.value = PhotoData(
             null,
             this.currentUser.value?.avatar,
@@ -92,7 +89,6 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
     }
 
     fun setAvatarBitmap(photoUri: Uri?) {
-
         val newPlanPhoto = PhotoData(
             photoUri,
             null,
@@ -104,7 +100,6 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
     }
 
     fun handleAvatar() {
-
         val avatarPhotoResult = mutableListOf<Boolean>()
 
         coroutineScope.launch {
@@ -118,37 +113,34 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
                                 avatarPhotoResult.add(deletePhoto(avatarPhotoData.value!!.fileName!!))
                             }
                             else -> {
+
                             }
                         }
 
                         avatarPhotoResult.add(uploadAvatarImg())
                     }
                     else -> {
+
                     }
                 }
             }
             when {
-                !avatarPhotoResult.contains(false) -> {
-                    _isAvatarPhotoReady.value = true
-                }
+                !avatarPhotoResult.contains(false) -> _isAvatarPhotoReady.value = true
             }
         }
     }
 
     private suspend fun deletePhoto(fileName: String): Boolean =
         when (val result = howYoRepository.deletePhoto(fileName)) {
-            is Result.Success -> {
-                result.data
-            }
+            is Result.Success -> result.data
             else -> false
         }
 
     private suspend fun uploadAvatarImg(): Boolean {
-
         val uri = avatarPhotoData.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
         val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
-        var uploadResult = false
+        val uploadResult: Boolean
 
         this.currentUser.value?.fileName = fileName
 
@@ -157,17 +149,13 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
                 this.currentUser.value?.avatar = result.data
                 uploadResult = true
             }
-            else -> {
-                uploadResult = true
-            }
+            else -> uploadResult = true
         }
         return uploadResult
     }
 
     fun updateUser() {
-
         coroutineScope.launch {
-
             this@SettingViewModel.currentUser.value?.let { howYoRepository.updateUser(it) }
 
             _status.value = LoadApiStatus.DONE

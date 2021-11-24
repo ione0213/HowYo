@@ -15,7 +15,6 @@ import com.yuchen.howyo.signin.SignInViewModel
 class ViewModelFactory constructor(
     private val howYoRepository: HowYoRepository
 ) : ViewModelProvider.NewInstanceFactory() {
-
     override fun <T : ViewModel> create(modelClass: Class<T>) =
         with(modelClass) {
             when {

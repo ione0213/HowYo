@@ -21,7 +21,6 @@ import com.yuchen.howyo.ext.getVmFactory
 import java.io.File
 
 class SettingFragment : Fragment() {
-
     private lateinit var binding: FragmentSettingBinding
     val viewModel by viewModels<SettingViewModel> { getVmFactory() }
     private val takePhoto = 0x00
@@ -39,7 +38,6 @@ class SettingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -50,19 +48,19 @@ class SettingFragment : Fragment() {
             }
         }
 
-        viewModel.selectPhoto.observe(viewLifecycleOwner, {
+        viewModel.selectPhoto.observe(viewLifecycleOwner) {
             it?.let {
                 selectPhoto()
                 viewModel.onSelectedPhoto()
             }
-        })
+        }
 
-        viewModel.takePhoto.observe(viewLifecycleOwner, {
+        viewModel.takePhoto.observe(viewLifecycleOwner) {
             it?.let {
                 takePhoto()
                 viewModel.onTookPhoto()
             }
-        })
+        }
 
         viewModel.isAvatarPhotoReady.observe(viewLifecycleOwner) {
             it?.let {
@@ -77,19 +75,18 @@ class SettingFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
+
         menu.findItem(R.id.save).isVisible = true
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
-            R.id.save -> {
-                viewModel.handleAvatar()
-            }
+            R.id.save -> viewModel.handleAvatar()
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -103,7 +100,6 @@ class SettingFragment : Fragment() {
     }
 
     private fun takePhoto() {
-
         outputImage = File(activity?.externalCacheDir, "output_image.jpg")
 
         if (outputImage.exists()) {
@@ -129,8 +125,8 @@ class SettingFragment : Fragment() {
         when (requestCode) {
             takePhoto -> {
                 if (resultCode == Activity.RESULT_OK) {
-
                     viewModel.setAvatarBitmap(imageUri)
+
                     binding.imgProfileSettingAvatar.setImageBitmap(
                         rotateIfRequired(
                             BitmapFactory.decodeStream(
@@ -142,9 +138,7 @@ class SettingFragment : Fragment() {
             }
             fromAlbum -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-
                     data.data?.let { uri ->
-
                         viewModel.setAvatarBitmap(uri)
                         binding.imgProfileSettingAvatar.setImageBitmap(getBitmapFromUri(uri))
                     }
@@ -178,7 +172,9 @@ class SettingFragment : Fragment() {
         matrix.postRotate(degree.toFloat())
         val rotatedBitmap =
             Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+
         bitmap.recycle()
+
         return rotatedBitmap
     }
 }

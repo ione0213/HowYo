@@ -15,7 +15,6 @@ import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 
 class DiscoverFragment : Fragment() {
-
     private lateinit var binding: FragmentDiscoverBinding
     val viewModel by viewModels<DiscoverViewModel> { getVmFactory() }
 
@@ -24,10 +23,8 @@ class DiscoverFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentDiscoverBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         val adapter = DiscoverAdapter(
@@ -41,13 +38,12 @@ class DiscoverFragment : Fragment() {
         binding.layoutSwipeRefreshDiscover.setOnRefreshListener {
             viewModel.fetchPlansResult()
         }
-        viewModel.refreshStatus.observe(
-            viewLifecycleOwner, {
-                it?.let {
-                    binding.layoutSwipeRefreshDiscover.isRefreshing = it
-                }
+        viewModel.refreshStatus.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.layoutSwipeRefreshDiscover.isRefreshing = it
             }
-        )
+        }
+
 
         binding.edittextDiscoverSearch.setOnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -55,6 +51,7 @@ class DiscoverFragment : Fragment() {
                 viewModel.filter()
                 return@setOnKeyListener true
             }
+
             return@setOnKeyListener false
         }
 
@@ -72,32 +69,25 @@ class DiscoverFragment : Fragment() {
 
         viewModel.authorDataSet.observe(viewLifecycleOwner) {
             it?.let {
-
                 viewModel.setStatusDone()
                 viewModel.setPlansForShow()
             }
         }
 
         viewModel.plansForDisplay.observe(viewLifecycleOwner) {
-
             adapter.submitList(it)
             binding.viewModel = viewModel
         }
 
-        viewModel.navigateToPlan.observe(viewLifecycleOwner, {
-
+        viewModel.navigateToPlan.observe(viewLifecycleOwner) {
             it?.let {
-
                 findNavController().navigate(
-                    NavigationDirections.navToPlanFragment(
-                        it,
-                        AccessPlanType.VIEW
-                    )
+                    NavigationDirections.navToPlanFragment(it, AccessPlanType.VIEW)
                 )
 
                 viewModel.onPlanNavigated()
             }
-        })
+        }
 
         return binding.root
     }

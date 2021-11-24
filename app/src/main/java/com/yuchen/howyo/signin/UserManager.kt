@@ -4,7 +4,6 @@ import android.content.Context
 import com.yuchen.howyo.HowYoApplication
 
 object UserManager {
-
     private const val USER_DATA = "user_data"
     private const val CURRENT_USER = "current_user"
     private const val USER_ID = "user_id"

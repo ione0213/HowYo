@@ -47,6 +47,7 @@ class MainActivity : BaseActivity() {
     private val userLocateServiceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
+
             val binder = service as UserLocateService.LocalBinder
             userLocateService = binder.service
             userLocateServiceBound = true
@@ -54,6 +55,7 @@ class MainActivity : BaseActivity() {
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
+
             userLocateService = null
             userLocateServiceBound = false
             viewModel.setUserLocateServiceStatus(userLocateServiceBound)
@@ -107,39 +109,39 @@ class MainActivity : BaseActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         setTheme(R.style.Theme_HowYo)
+
         super.onCreate(savedInstanceState)
+
         mContext = this
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         howYoBroadcastReceiver = HowYoBroadcastReceiver()
 
-        viewModel.navigateToHomeByBottomNav.observe(
-            this,
-            {
-                it?.let {
-                    binding.bottomNavView.selectedItemId = R.id.navigation_home
-                    viewModel.onHomeNavigated()
-                }
+        viewModel.navigateToHomeByBottomNav.observe(this) {
+            it?.let {
+                binding.bottomNavView.selectedItemId = R.id.navigation_home
+                viewModel.onHomeNavigated()
             }
-        )
+        }
 
-        viewModel.currentFragmentType.observe(this, {
+        viewModel.currentFragmentType.observe(this) {
             it?.let {
                 when {
-                    it != CurrentFragmentType.SIGNIN && !isLoggedIn
-                    -> {
-                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navToSignInFragment())
+                    it != CurrentFragmentType.SIGNIN && !isLoggedIn -> {
+                        findNavController(R.id.myNavHostFragment)
+                            .navigate(NavigationDirections.navToSignInFragment())
                     }
                 }
             }
-        })
+        }
 
-        viewModel.isResetToolbar.observe(this, {
+        viewModel.isResetToolbar.observe(this) {
             it?.let {
-
                 if (it) {
                     setupToolbar()
                     setupDrawer()
@@ -147,7 +149,7 @@ class MainActivity : BaseActivity() {
                     viewModel.onResetToolbar()
                 }
             }
-        })
+        }
 
         viewModel.isUserLocateServiceReady.observe(this) {
             it?.let {
@@ -203,14 +205,11 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupToolbar() {
-
         binding.toolbar.setPadding(0, statusBarHeight, 0, 0)
 
         launch {
-
             val dpi = resources.displayMetrics.densityDpi.toFloat()
             val dpiMultiple = dpi / DisplayMetrics.DENSITY_DEFAULT
-
             val cutoutHeight = getCutoutHeight()
 
             Logger.i("====== ${Build.MODEL} ======")
@@ -247,7 +246,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupDrawer() {
-
         // set up toolbar
         val navController = this.findNavController(R.id.myNavHostFragment)
         setSupportActionBar(binding.toolbar)
@@ -265,33 +263,30 @@ class MainActivity : BaseActivity() {
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         ) {
+
         }
 
         // Observe current drawer toggle to set the navigation icon and behavior
-        viewModel.currentDrawerToggleType.observe(
-            this,
-            { type ->
+        viewModel.currentDrawerToggleType.observe(this) { type ->
+            actionBarDrawerToggle?.isDrawerIndicatorEnabled = type.indicatorEnabled
+            supportActionBar?.setDisplayHomeAsUpEnabled(!type.indicatorEnabled)
 
-                actionBarDrawerToggle?.isDrawerIndicatorEnabled = type.indicatorEnabled
-                supportActionBar?.setDisplayHomeAsUpEnabled(!type.indicatorEnabled)
+            when (type) {
+                DrawerToggleType.BACK -> {
+                    binding.toolbar.setNavigationIcon(R.drawable.toolbar_back)
+                }
+                else -> {
+                }
+            }
 
+            actionBarDrawerToggle?.setToolbarNavigationClickListener {
                 when (type) {
-                    DrawerToggleType.BACK -> {
-                        binding.toolbar.setNavigationIcon(R.drawable.toolbar_back)
-                    }
+                    DrawerToggleType.BACK -> onBackPressed()
                     else -> {
                     }
                 }
-
-                actionBarDrawerToggle?.setToolbarNavigationClickListener {
-                    when (type) {
-                        DrawerToggleType.BACK -> onBackPressed()
-                        else -> {
-                        }
-                    }
-                }
             }
-        )
+        }
 
         viewModel.userLocation.observe(this) {
             it?.let {
@@ -320,9 +315,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun registerLocationReceiver() {
-
         if (isLoggedIn && viewModel.isBroadcastRegistered.value != true) {
-
             LocalBroadcastManager.getInstance(this).registerReceiver(
                 howYoBroadcastReceiver,
                 IntentFilter(
@@ -336,11 +329,11 @@ class MainActivity : BaseActivity() {
 
     override fun onPause() {
         if (isLoggedIn) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(
-                howYoBroadcastReceiver
-            )
+            LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(howYoBroadcastReceiver)
             viewModel.resetBroadcastStatus()
         }
+
         super.onPause()
     }
 
@@ -354,9 +347,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-
         viewModel.resetSharedToolbarTitle()
         viewModel.resetToolbar()
+
         super.onBackPressed()
     }
 
@@ -368,6 +361,7 @@ class MainActivity : BaseActivity() {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             locationPermissionGranted = true
+
             checkGPSState()
         } else {
             requestLocationPermission()
@@ -419,6 +413,7 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         when (requestCode) {
             REQUEST_LOCATION_PERMISSION -> {
                 getLocationPermission()
@@ -431,6 +426,7 @@ class MainActivity : BaseActivity() {
 
     private fun checkGPSState() {
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(mContext)
                 .setTitle(getString(R.string.check_gps_title))
@@ -446,14 +442,12 @@ class MainActivity : BaseActivity() {
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {
-
             bindService()
             registerLocationReceiver()
         }
     }
 
     private inner class HowYoBroadcastReceiver : BroadcastReceiver() {
-
         override fun onReceive(context: Context, intent: Intent) {
             val location = intent.getParcelableExtra<Location>(
                 UserLocateService.EXTRA_LOCATION

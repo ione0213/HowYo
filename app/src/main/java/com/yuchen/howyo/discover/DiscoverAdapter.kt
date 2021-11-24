@@ -13,16 +13,13 @@ class DiscoverAdapter(
     private val viewModel: DiscoverViewModel
 ) :
     ListAdapter<Plan, DiscoverAdapter.PlanViewHolder>(DiffCallback) {
-
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
         fun onClick(plan: Plan) = clickListener(plan)
     }
 
     class PlanViewHolder(private var binding: ItemPlansDiscoverBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(plan: Plan, onClickListener: OnClickListener) {
-
             binding.root.setOnClickListener { onClickListener.onClick(plan) }
             binding.plan = plan
             binding.executePendingBindings()

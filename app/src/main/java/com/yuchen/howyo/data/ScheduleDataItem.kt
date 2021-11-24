@@ -1,7 +1,6 @@
 package com.yuchen.howyo.data
 
 sealed class ScheduleDataItem {
-
     abstract val id: String
 
     object EmptySchedule : ScheduleDataItem() {

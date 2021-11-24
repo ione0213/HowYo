@@ -85,7 +85,6 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     init {
-
         resetSharedToolbarTitle()
     }
 
@@ -147,9 +146,7 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     fun updateUserLocation(location: Location) {
-
         coroutineScope.launch {
-
             var user: User?
 
             withContext(Dispatchers.IO) {
@@ -170,7 +167,6 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     private suspend fun fetchUserResult(): User {
-
         var user = User()
 
         when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {

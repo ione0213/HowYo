@@ -41,16 +41,7 @@ class UserLocateService : Service() {
 
     private var currentLocation: Location? = null
 
-    private val howYoRepository = (HowYoApplication.instance).howYoRepository
-
-    private var job = Job()
-
-    private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
-
     override fun onCreate() {
-
-        Logger.d("service onCreate()")
-
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -75,25 +66,11 @@ class UserLocateService : Service() {
                 val intent = Intent(ACTION_HOW_YO_LOCATION_BROADCAST)
                 intent.putExtra(EXTRA_LOCATION, currentLocation)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-
-                if (serviceRunningInForeground) {
-                    notificationManager.notify(
-                        NOTIFICATION_ID,
-                        generateNotification(currentLocation)
-                    )
-                }
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
-    }
-
     override fun onBind(intent: Intent?): IBinder? {
-
-        Logger.d("service onBind()")
         stopForeground(true)
         serviceRunningInForeground = false
         configurationChange = false
@@ -101,25 +78,10 @@ class UserLocateService : Service() {
     }
 
     override fun onRebind(intent: Intent) {
-        Logger.d("service onRebind()")
         stopForeground(true)
         serviceRunningInForeground = false
         configurationChange = false
         super.onRebind(intent)
-    }
-
-    override fun onUnbind(intent: Intent): Boolean {
-
-        Logger.d("service onUnbind")
-
-        if (!configurationChange) {
-//            Logger.d("Start foreground service")
-//            val notification = generateNotification(currentLocation)
-//            startForeground(NOTIFICATION_ID, notification)
-//            serviceRunningInForeground = true
-        }
-
-        return true
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -128,7 +90,6 @@ class UserLocateService : Service() {
     }
 
     fun subscribeToLocationUpdates() {
-
         startService(Intent(applicationContext, UserLocateService::class.java))
 
         try {
@@ -136,99 +97,8 @@ class UserLocateService : Service() {
                 locationRequest, locationCallback, Looper.getMainLooper()
             )
         } catch (unlikely: SecurityException) {
+
         }
-    }
-
-    fun unsubscribeToLocationUpdates() {
-
-        try {
-            val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-            removeTask.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    stopSelf()
-                }
-            }
-        } catch (unlikely: SecurityException) {
-        }
-    }
-
-    private fun generateNotification(location: Location?): Notification {
-
-        updateUserLocation(location)
-
-        Logger.d("generateNotification()")
-
-        val titleText = getString(R.string.app_name)
-
-        val notificationChannel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID, titleText, NotificationManager.IMPORTANCE_LOW
-        )
-
-        notificationManager.createNotificationChannel(notificationChannel)
-
-        val bigTextStyle = NotificationCompat.BigTextStyle()
-            .bigText(getString(R.string.locating) + location.toText())
-            .setBigContentTitle(titleText)
-
-        val launchActivityIntent = Intent(this, MainActivity::class.java)
-
-        val activityPendingIntent = PendingIntent.getActivity(
-            this, 0, launchActivityIntent, 0
-        )
-
-        val notificationCompatBuilder =
-            NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
-
-        return notificationCompatBuilder
-            .setStyle(bigTextStyle)
-            .setContentTitle(titleText)
-            .setContentText(getString(R.string.locating))
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setOngoing(true)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .addAction(
-                R.drawable.resize_arrow, getString(R.string.back_to_app),
-                activityPendingIntent
-            )
-            .build()
-    }
-
-    private fun updateUserLocation(location: Location?) {
-
-        coroutineScope.launch {
-            var user: User?
-
-            withContext(Dispatchers.IO) {
-                user = getUserResult()
-            }
-
-            user?.apply {
-                latitude = location?.latitude
-                longitude = location?.longitude
-            }
-
-            withContext(Dispatchers.IO) {
-                user?.let { howYoRepository.updateUser(it) }
-            }
-        }
-    }
-
-    private suspend fun getUserResult(): User {
-
-        var user = User()
-
-        when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
-            is Result.Success -> {
-                user = result.data
-            }
-            else -> {
-                howYoRepository.signOut()
-                UserManager.clear()
-            }
-        }
-
-        return user
     }
 
     inner class LocalBinder : Binder() {
@@ -237,7 +107,6 @@ class UserLocateService : Service() {
     }
 
     companion object {
-
         private const val PACKAGE_NAME = "com.yuchen.howyo"
 
         internal const val ACTION_HOW_YO_LOCATION_BROADCAST =

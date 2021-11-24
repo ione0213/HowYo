@@ -11,7 +11,6 @@ class CheckListViewModelFactory(
     private val planId: String,
     private val mainType: MainItemType
 ) : ViewModelProvider.Factory {
-
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {

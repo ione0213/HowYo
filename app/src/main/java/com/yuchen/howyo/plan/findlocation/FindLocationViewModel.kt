@@ -8,9 +8,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 
 class FindLocationViewModel(
     private val howYoRepository: HowYoRepository,
-//    private val argumentDays: List<Day>
 ) : ViewModel() {
-
     private val _days = MutableLiveData<List<Day>>()
 
     val days: LiveData<List<Day>>

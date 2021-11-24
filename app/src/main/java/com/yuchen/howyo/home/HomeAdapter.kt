@@ -19,7 +19,6 @@ class HomeAdapter(
     private val viewModel: HomeViewModel
 ) :
     ListAdapter<PlanDataItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
@@ -28,9 +27,7 @@ class HomeAdapter(
 
     class PlanViewHolder(private var binding: ItemPlansHomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(plan: Plan, onClickListener: OnClickListener) {
-
             binding.root.setOnClickListener { onClickListener.onClick(plan) }
             binding.plan = plan
             binding.executePendingBindings()
@@ -74,7 +71,6 @@ class HomeAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is PlanViewHolder -> {
                 holder.bind((getItem(position) as PlanDataItem.PlanItem).plan, onClickListener)
@@ -92,13 +88,10 @@ class HomeAdapter(
     fun addPlanOrEmptyPage(list: List<Plan>) {
         adapterScope.launch {
             val items = when (list.size) {
-                0 -> {
-                    listOf(PlanDataItem.EmptySchedule)
-                }
-                else -> {
-                    list.map { PlanDataItem.PlanItem(it) }
-                }
+                0 -> listOf(PlanDataItem.EmptySchedule)
+                else -> list.map { PlanDataItem.PlanItem(it) }
             }
+
             withContext(Dispatchers.Main) {
                 submitList(items)
             }

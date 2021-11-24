@@ -9,13 +9,10 @@ import com.yuchen.howyo.data.CommentData
 import com.yuchen.howyo.databinding.ItemCommentBinding
 
 class CommentAdapter : ListAdapter<CommentData, CommentAdapter.CommentViewHolder>(DiffCallback) {
-
     class CommentViewHolder(
         private var binding: ItemCommentBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(commentData: CommentData) {
-
             commentData.let {
                 binding.commentData = it
                 binding.executePendingBindings()

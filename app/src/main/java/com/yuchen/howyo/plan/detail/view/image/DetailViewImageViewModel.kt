@@ -9,7 +9,6 @@ class DetailViewImageViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentImageUrl: String?
 ) : ViewModel() {
-
     // Image data from arguments
     private val _imageUrl = MutableLiveData<String>().apply {
         value = argumentImageUrl

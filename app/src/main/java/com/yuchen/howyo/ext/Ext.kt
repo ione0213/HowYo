@@ -60,25 +60,34 @@ fun Long.displayTime(): String {
     val sec = (Calendar.getInstance().timeInMillis - this) / 1000
     return when {
         sec < 60 -> HowYoApplication.instance.getString(R.string.seconds_ago, sec.toString())
-
-        sec < 3600 -> HowYoApplication.instance.getString(R.string.minutes_ago, (sec / 60).toString())
-
-        sec < 86400 -> HowYoApplication.instance.getString(R.string.hours_ago, (sec / 3660).toString())
-
-        sec < 604800 -> HowYoApplication.instance.getString(R.string.days_ago, (sec / 86400).toString())
-
-        sec < 2592000 -> HowYoApplication.instance.getString(R.string.weeks_ago, (sec / 604800).toString())
-
-        sec < 31536000 -> HowYoApplication.instance.getString(R.string.months_ago, (sec / 2592000).toString())
-
+        sec < 3600 -> HowYoApplication.instance.getString(
+            R.string.minutes_ago,
+            (sec / 60).toString()
+        )
+        sec < 86400 -> HowYoApplication.instance.getString(
+            R.string.hours_ago,
+            (sec / 3660).toString()
+        )
+        sec < 604800 -> HowYoApplication.instance.getString(
+            R.string.days_ago,
+            (sec / 86400).toString()
+        )
+        sec < 2592000 -> HowYoApplication.instance.getString(
+            R.string.weeks_ago,
+            (sec / 604800).toString()
+        )
+        sec < 31536000 -> HowYoApplication.instance.getString(
+            R.string.months_ago,
+            (sec / 2592000).toString()
+        )
         else -> HowYoApplication.instance.getString(R.string.years_ago, (sec / 31536000).toString())
     }
 }
 
-fun Location?.toText(): String {
-    return if (this != null) {
+fun Location?.toText(): String =
+    if (this != null) {
         "($latitude, $longitude)"
     } else {
         "Unknown location"
     }
-}
+

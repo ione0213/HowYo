@@ -18,22 +18,18 @@ import kotlinx.coroutines.withContext
 
 class PlanDaysAdapter(val viewModel: PlanViewModel) :
     ListAdapter<DayItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
-
     private lateinit var context: Context
 
     class DayViewHolder(
         private var binding: ItemPlanDayBinding,
         private val viewModel: PlanViewModel
     ) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-
         val isSelected: LiveData<Boolean> = Transformations.map(viewModel.selectedDayPosition) {
             it == adapterPosition
         }
 
         fun bind(day: Day) {
-
             val isTrueSelected = (adapterPosition == viewModel.selectedDayPosition.value)
             binding.lifecycleOwner = this
             binding.viewModel = viewModel
@@ -66,9 +62,7 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
         private val binding: ItemPlanDayAddBinding,
         private val viewModel: PlanViewModel
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind() {
-
             binding.viewModel = viewModel
             binding.executePendingBindings()
         }
@@ -89,6 +83,7 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
+
         return when (viewType) {
             ITEM_VIEW_DAY -> {
                 DayViewHolder(
@@ -129,13 +124,10 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
     }
 
     fun submitDays(days: List<Day>) {
-
         adapterScope.launch {
-
             val dayItems: MutableList<DayItem> = mutableListOf()
 
             days.forEach {
-
                 dayItems.add(DayItem.FullDayItem(it))
             }
 

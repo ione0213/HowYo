@@ -14,7 +14,6 @@ import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 
 class FavoriteFragment : Fragment() {
-
     private lateinit var binding: FragmentFavoriteBinding
     val viewModel by viewModels<FavoriteViewModel> { getVmFactory() }
 
@@ -23,10 +22,8 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         val adapter = FavoriteAdapter(
@@ -35,7 +32,6 @@ class FavoriteFragment : Fragment() {
             },
             viewModel
         )
-
         binding.recyclerFavoritePlans.adapter = adapter
 
         viewModel.plans.observe(viewLifecycleOwner) {
@@ -52,8 +48,8 @@ class FavoriteFragment : Fragment() {
 
         viewModel.authorDataList.observe(viewLifecycleOwner) {
             it?.let {
-
                 val gridLayoutManager = GridLayoutManager(context, 2)
+
                 gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
                         return when (viewModel.plans.value?.size) {
@@ -62,25 +58,26 @@ class FavoriteFragment : Fragment() {
                         }
                     }
                 }
+
                 binding.recyclerFavoritePlans.layoutManager = gridLayoutManager
 
                 viewModel.setStatusDone()
+
                 binding.viewModel = viewModel
+
                 adapter.addPlanOrEmptyPage(viewModel.plans.value!!)
             }
         }
 
-        viewModel.navigateToPlan.observe(viewLifecycleOwner, {
+        viewModel.navigateToPlan.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToPlanFragment(
-                        it,
-                        AccessPlanType.VIEW
-                    )
+                    NavigationDirections.navToPlanFragment(it, AccessPlanType.VIEW)
                 )
+
                 viewModel.onPlanNavigated()
             }
-        })
+        }
 
         return binding.root
     }

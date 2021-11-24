@@ -11,8 +11,8 @@ import com.yuchen.howyo.databinding.FragmentDetailViewImageBinding
 import com.yuchen.howyo.ext.getVmFactory
 
 class DetailViewImageFragment : Fragment() {
-
     private lateinit var binding: FragmentDetailViewImageBinding
+
     private val viewModel by viewModels<DetailViewImageViewModel> {
         getVmFactory(
             DetailViewImageFragmentArgs.fromBundle(requireArguments()).imageUrl
@@ -24,7 +24,6 @@ class DetailViewImageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentDetailViewImageBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 

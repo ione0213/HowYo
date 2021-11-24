@@ -15,7 +15,6 @@ class FriendItemViewModel(
     private val friendType: FriendFilter,
     private val argumentUserId: String
 ) : ViewModel() {
-
     private var _currentUser = MutableLiveData<User>()
 
     val currentUser: LiveData<User>
@@ -65,10 +64,9 @@ class FriendItemViewModel(
     }
 
     private fun fetchUserIdList() {
-
         var userIdList = listOf<String>()
-        coroutineScope.launch {
 
+        coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
@@ -88,7 +86,6 @@ class FriendItemViewModel(
     }
 
     fun fetchUserDataList() {
-
         val userDataList = mutableSetOf<User>()
 
         coroutineScope.launch {
@@ -103,21 +100,19 @@ class FriendItemViewModel(
             }
 
             _userList.value = userDataList.toList()
+
             _status.value = LoadApiStatus.DONE
         }
     }
 
     private fun fetchLiveCurrentUserResult() {
-
         _currentUser = howYoRepository.getLiveUser(argumentUserId)
     }
 
     fun unFollow(user: User) {
         val fansList = user.fansList?.toMutableList()
-
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
-
         val currentUserId = currentUserId.value
 
         when {
@@ -140,9 +135,7 @@ class FriendItemViewModel(
         _currentUser.value = newCurrentUser!!
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
-
                 howYoRepository.updateUser(user)
                 _currentUser.value?.let { howYoRepository.updateUser(it) }
                 howYoRepository.deleteFollowNotification(user.id, currentUserId!!)
@@ -154,10 +147,8 @@ class FriendItemViewModel(
 
     fun removeFans(user: User) {
         val followingList = user.followingList?.toMutableList()
-
         val newCurrentUser = currentUser.value
         val fansList = newCurrentUser?.fansList?.toMutableList()
-
         val currentUserId = currentUserId.value
 
         when {
@@ -180,9 +171,7 @@ class FriendItemViewModel(
         _currentUser.value = newCurrentUser!!
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
-
                 howYoRepository.updateUser(user)
                 _currentUser.value?.let { howYoRepository.updateUser(it) }
                 howYoRepository.deleteFollowNotification(currentUserId!!, user.id)

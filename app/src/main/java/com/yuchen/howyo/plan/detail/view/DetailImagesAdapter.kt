@@ -9,7 +9,6 @@ import com.yuchen.howyo.databinding.ItemDetailImageBinding
 
 class DetailImagesAdapter(private val viewModel: DetailViewModel) :
     ListAdapter<String, DetailImagesAdapter.ImageViewHolder>(DiffCallback) {
-
     class ImageViewHolder(private var binding: ItemDetailImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageUrl: String) {

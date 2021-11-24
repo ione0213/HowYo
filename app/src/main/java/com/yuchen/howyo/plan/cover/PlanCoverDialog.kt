@@ -34,13 +34,14 @@ import java.io.File
 const val TAG = "DATE_PICKER"
 
 class PlanCoverDialog : AppCompatDialogFragment() {
-
     private lateinit var binding: DialogPlanCoverBinding
+
     private val viewModel by viewModels<PlanCoverViewModel> {
         getVmFactory(
             PlanCoverDialogArgs.fromBundle(requireArguments()).plan
         )
     }
+
     private val takePhoto = 0x00
     private val fromAlbum = 0x01
     lateinit var imageUri: Uri
@@ -56,7 +57,6 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = DialogPlanCoverBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -64,34 +64,40 @@ class PlanCoverDialog : AppCompatDialogFragment() {
 
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        viewModel.leave.observe(viewLifecycleOwner, {
+        viewModel.leave.observe(viewLifecycleOwner) {
             it?.let {
-                this.dismiss()
-                viewModel.onLeaveCompleted()
+                if (it) {
+                    this.dismiss()
+                    viewModel.onLeaveCompleted()
+                }
             }
-        })
+        }
 
-        viewModel.selectDate.observe(viewLifecycleOwner, {
+        viewModel.selectDate.observe(viewLifecycleOwner) {
             it?.let {
                 when {
                     it -> showDateRangePicker()
                 }
             }
-        })
+        }
 
-        viewModel.takePhoto.observe(viewLifecycleOwner, {
+        viewModel.takePhoto.observe(viewLifecycleOwner) {
             it?.let {
-                takePhoto()
-                viewModel.onTookPhoto()
+                if (it) {
+                    takePhoto()
+                    viewModel.onTookPhoto()
+                }
             }
-        })
+        }
 
-        viewModel.selectPhoto.observe(viewLifecycleOwner, {
+        viewModel.selectPhoto.observe(viewLifecycleOwner) {
             it?.let {
-                selectPhoto()
-                viewModel.onSelectedPhoto()
+                if (it) {
+                    selectPhoto()
+                    viewModel.onSelectedPhoto()
+                }
             }
-        })
+        }
 
         viewModel.isSavePlan.observe(viewLifecycleOwner) {
             it?.let {
@@ -103,62 +109,46 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             }
         }
 
-        viewModel.isCoverPhotoReady.observe(viewLifecycleOwner, {
+        viewModel.isCoverPhotoReady.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it -> {
-                        when (viewModel.plan.value?.id.isNullOrEmpty()) {
-                            true -> {
-                                viewModel.createPlan()
-                            }
-                            false -> {
-                                viewModel.updatePlan()
-                            }
-                        }
+                if (it) {
+                    when (viewModel.plan.value?.id.isNullOrEmpty()) {
+                        true -> viewModel.createPlan()
+                        false -> viewModel.updatePlan()
                     }
                 }
             }
-        })
+        }
 
-        viewModel.planId.observe(viewLifecycleOwner, {
+        viewModel.planId.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it.isNotEmpty() -> viewModel.createRelatedCollection()
-                }
+                if (it.isNotEmpty()) viewModel.createRelatedCollection()
             }
-        })
+        }
 
-        viewModel.isPlanUpdated.observe(viewLifecycleOwner, {
+        viewModel.isPlanUpdated.observe(viewLifecycleOwner) {
             it?.let {
-                when (it) {
-                    true -> {
-                        viewModel.updateRelatedCollection()
-                    }
-                }
+                if (it) viewModel.updateRelatedCollection()
             }
-        })
+        }
 
-        viewModel.isAllDataReady.observe(viewLifecycleOwner, {
+        viewModel.isAllDataReady.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it -> {
-                        when (viewModel.isNewPlan.value) {
-                            true -> {
-                                findNavController().navigate(
-                                    NavigationDirections.navToPlanFragment(
-                                        viewModel.plan.value,
-                                        AccessPlanType.EDIT
-                                    )
+                if (it) {
+                    when (viewModel.isNewPlan.value) {
+                        true -> {
+                            findNavController().navigate(
+                                NavigationDirections.navToPlanFragment(
+                                    viewModel.plan.value,
+                                    AccessPlanType.EDIT
                                 )
-                            }
-                            false -> {
-                                findNavController().popBackStack()
-                            }
+                            )
                         }
+                        false -> findNavController().popBackStack()
                     }
                 }
             }
-        })
+        }
 
         return binding.root
     }
@@ -170,11 +160,11 @@ class PlanCoverDialog : AppCompatDialogFragment() {
                 R.anim.anim_slide_down
             )
         )
+
         Handler().postDelayed({ super.dismiss() }, 200)
     }
 
     private fun showDateRangePicker() {
-
         val dateRangePicker =
             MaterialDatePicker.Builder.dateRangePicker()
                 .setTitleText(getString(R.string.select_plan_duration))
@@ -193,7 +183,6 @@ class PlanCoverDialog : AppCompatDialogFragment() {
     }
 
     private fun takePhoto() {
-
         outputImage = File(activity?.externalCacheDir, "output_image.jpg")
 
         if (outputImage.exists()) {
@@ -228,8 +217,8 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         when (requestCode) {
             takePhoto -> {
                 if (resultCode == Activity.RESULT_OK) {
-
                     viewModel.setCoverBitmap(imageUri)
+
                     binding.imgPlanCover.setImageBitmap(
                         rotateIfRequired(
                             BitmapFactory.decodeStream(
@@ -241,9 +230,7 @@ class PlanCoverDialog : AppCompatDialogFragment() {
             }
             fromAlbum -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-
                     data.data?.let { uri ->
-
                         viewModel.setCoverBitmap(uri)
                         binding.imgPlanCover.setImageBitmap(getBitmapFromUri(uri))
                     }
@@ -254,6 +241,7 @@ class PlanCoverDialog : AppCompatDialogFragment() {
 
     private fun rotateIfRequired(bitmap: Bitmap): Bitmap {
         val exif = ExifInterface(outputImage.path)
+
         return when (
             exif.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
@@ -272,7 +260,9 @@ class PlanCoverDialog : AppCompatDialogFragment() {
         matrix.postRotate(degree.toFloat())
         val rotatedBitmap =
             Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+
         bitmap.recycle()
+
         return rotatedBitmap
     }
 

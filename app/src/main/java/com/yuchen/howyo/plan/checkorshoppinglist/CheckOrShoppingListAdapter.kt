@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
 class CheckOrShoppingListAdapter(
     private val checkOrShoppingListViewModel: CheckOrShoppingListViewModel
 ) : ListAdapter<CheckListItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class CheckItemViewHolder(
@@ -28,11 +27,12 @@ class CheckOrShoppingListAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(checkShoppingList: CheckShoppingList) {
-
             binding.checkboxCheckList.setOnCheckedChangeListener { buttonView, isChecked ->
                 viewModelOrShopping.setCheck(checkShoppingList, isChecked)
             }
+
             binding.viewModel = viewModelOrShopping
+
             checkShoppingList.let {
                 binding.checkShoppingList = it
                 binding.executePendingBindings()
@@ -98,7 +98,6 @@ class CheckOrShoppingListAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is TitleViewHolder -> {
                 holder.bind((getItem(position) as CheckListItem.Title).title)
@@ -121,9 +120,7 @@ class CheckOrShoppingListAdapter(
     }
 
     fun addTitleAndItem(list: List<CheckShoppingList>?, mainItemType: MainItemType) {
-
         adapterScope.launch {
-
             val checkListItems: MutableList<CheckListItem> = mutableListOf()
 
             when (mainItemType) {
@@ -133,7 +130,6 @@ class CheckOrShoppingListAdapter(
                             if (list != null) {
                                 when {
                                     list.any { it.subType == subType } -> {
-
                                         checkListItems.add(
                                             CheckListItem.Title(
                                                 when (subType) {

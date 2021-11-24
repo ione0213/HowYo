@@ -7,7 +7,6 @@ import com.yuchen.howyo.profile.friends.item.FriendItemFragment
 
 class FriendAdapter(fragmentManager: FragmentManager, userId: String) :
     FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
     private val currentUserId = userId
 
     override fun getItem(position: Int): Fragment {
