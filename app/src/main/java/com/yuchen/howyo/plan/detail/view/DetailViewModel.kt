@@ -39,33 +39,33 @@ class DetailViewModel(
         get() = _schedule
 
     // Handle navigation to edit schedule
-    private val _navigateToEditSchedule = MutableLiveData<Schedule>()
+    private val _navigateToEditSchedule = MutableLiveData<Schedule?>()
 
-    val navigateToEditSchedule: LiveData<Schedule>
+    val navigateToEditSchedule: LiveData<Schedule?>
         get() = _navigateToEditSchedule
 
     // Handle navigation to view map
-    private val _navigateToViewMap = MutableLiveData<Schedule>()
+    private val _navigateToViewMap = MutableLiveData<Schedule?>()
 
-    val navigateToViewMap: LiveData<Schedule>
+    val navigateToViewMap: LiveData<Schedule?>
         get() = _navigateToViewMap
 
     // Handle navigation to view single image
-    private val _navigateToViewImage = MutableLiveData<String>()
+    private val _navigateToViewImage = MutableLiveData<String?>()
 
-    val navigateToViewImage: LiveData<String>
+    val navigateToViewImage: LiveData<String?>
         get() = _navigateToViewImage
 
     // Handle navigation to open url
-    private val _navigateToUrl = MutableLiveData<String>()
+    private val _navigateToUrl = MutableLiveData<String?>()
 
-    val navigateToUrl: LiveData<String>
+    val navigateToUrl: LiveData<String?>
         get() = _navigateToUrl
 
     // Handle leave view detail
-    private val _leaveViewDetail = MutableLiveData<Boolean>()
+    private val _leaveViewDetail = MutableLiveData<Boolean?>()
 
-    val leaveViewDetail: LiveData<Boolean>
+    val leaveViewDetail: LiveData<Boolean?>
         get() = _leaveViewDetail
 
     fun navigateToEditSchedule() {

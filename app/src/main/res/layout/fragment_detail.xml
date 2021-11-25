@@ -39,10 +39,12 @@
                     android:layout_height="@dimen/plan_img_btn"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginTop="@dimen/large_padding"
-                    android:onClick="@{() -> viewModel.leaveViewDetail()}"
                     android:background="@drawable/icons_44px_back01"
+                    android:contentDescription="@string/content_desc_back"
+                    android:onClick="@{() -> viewModel.leaveViewDetail()}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_edit"
@@ -50,14 +52,15 @@
                     android:layout_height="@dimen/plan_img_btn"
                     android:layout_marginTop="@dimen/large_padding"
                     android:layout_marginEnd="@dimen/middle_padding"
-                    android:layout_marginBottom="@dimen/middle_padding"
                     android:background="@drawable/edit"
-                    app:buttonForAuthor="@{viewModel.plan}"
-                    app:accessType="@{AccessPlanType.VIEW}"
+                    android:contentDescription="@string/content_desc_edit"
                     android:backgroundTint="@{viewModel.schedule.photoUrlList.size == 0 ? @color/matcha_3 : @color/matcha_6}"
                     android:onClick="@{() -> viewModel.navigateToEditSchedule()}"
+                    app:accessType="@{AccessPlanType.VIEW}"
+                    app:buttonForPlanMembers="@{viewModel.plan}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_detail_images"
@@ -82,7 +85,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_detail_images"
                     app:layout_goneMarginTop="96dp"
-                    app:scheduleType="@{viewModel.schedule.scheduleType}" />
+                    app:scheduleType="@{viewModel.schedule.scheduleType}"
+                    android:contentDescription="@string/content_desc_schedule_type_icon" />
 
                 <TextView
                     android:id="@+id/text_detail_title"
@@ -114,7 +118,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_detail_title">
 
-                    <fragment
+                    <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/map_detail_destination"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="0dp"
@@ -132,22 +136,26 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/small_padding"
+                    android:contentDescription="@string/content_desc_expand"
                     android:background="@drawable/resize_arrow"
                     android:onClick="@{() -> viewModel.navigateToViewMap()}"
                     android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="@+id/layout_detail_destination"
-                    app:layout_constraintTop_toTopOf="@id/layout_detail_destination" />
+                    app:layout_constraintTop_toTopOf="@id/layout_detail_destination"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/img_detail_time"
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
+                    android:contentDescription="@string/content_desc_schedule_time"
                     android:layout_marginTop="@dimen/standard_padding"
                     android:background="@drawable/clock"
                     android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout_detail_destination" />
+                    app:layout_constraintTop_toBottomOf="@+id/layout_detail_destination"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <TextView
                     android:id="@+id/text_detail_time"
@@ -254,6 +262,7 @@
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
                     android:background="@drawable/hyperlink"
+                    android:contentDescription="@string/content_desc_url_icon"
                     android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_budge" />
@@ -283,11 +292,11 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:layout_marginBottom="@dimen/standard_padding"
                     android:background="@drawable/bell"
                     android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/img_detail_url" />
+                    app:layout_constraintTop_toBottomOf="@+id/img_detail_url"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_detail_notification"

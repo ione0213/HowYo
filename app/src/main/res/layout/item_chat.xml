@@ -20,19 +20,20 @@
 
         <TextView
             android:id="@+id/textview_chat_sent_time"
-            android:layout_width="wrap_content"
             style="@style/TextStyle3_matcha_3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/small_padding"
             app:layout_constraintBottom_toBottomOf="@+id/textview_chat_sent"
             app:layout_constraintEnd_toStartOf="@+id/textview_chat_sent"
             app:time="@{groupMessageData.createdTime}"
+            tools:ignore="TextContrastCheck"
             tools:text="06:30 下午" />
 
         <TextView
             android:id="@+id/textview_chat_sent"
-            android:layout_width="wrap_content"
             style="@style/TextStyle2_matcha_6"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:background="@drawable/shape_bubble_received"
@@ -44,6 +45,7 @@
             android:text="@{groupMessageData.message}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextContrastCheck"
             tools:text="This is a received message keep the text going so we can see" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

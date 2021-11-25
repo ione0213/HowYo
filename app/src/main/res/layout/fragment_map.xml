@@ -20,12 +20,14 @@
             android:layout_height="@dimen/plan_img_btn"
             android:layout_marginStart="@dimen/middle_padding"
             android:layout_marginTop="@dimen/large_padding"
-            android:onClick="@{() -> viewModel.leaveMap()}"
+            android:contentDescription="@string/content_desc_back"
             android:background="@drawable/icons_44px_back01"
+            android:onClick="@{() -> viewModel.leaveMap()}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map_view_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"

@@ -34,9 +34,9 @@ class CheckOrShoppingListViewModel(
     val itemCreatedResult: LiveData<Boolean>
         get() = _itemCreatedResult
 
-    private val _isResetItem = MutableLiveData<Boolean>()
+    private val _isResetItem = MutableLiveData<Boolean?>()
 
-    val isResetItem: LiveData<Boolean>
+    val isResetItem: LiveData<Boolean?>
         get() = _isResetItem
 
     private val _isChkListDeleted = MutableLiveData<Boolean>()

@@ -18,11 +18,11 @@ class PlanViewModel(
     private val argumentAccessPlanType: AccessPlanType
 ) : ViewModel() {
     // Plan data
-    private var _plan = MutableLiveData<Plan>().apply {
+    private var _plan = MutableLiveData<Plan?>().apply {
         value = argumentPlan
     }
 
-    val plan: LiveData<Plan>
+    val plan: LiveData<Plan?>
         get() = _plan
 
     val accessType: AccessPlanType
@@ -43,7 +43,7 @@ class PlanViewModel(
         get() = _schedules
 
     // Comments list for deleting plan
-    var comments = MutableLiveData<List<Comment>>()
+    private var comments = MutableLiveData<List<Comment>>()
 
     var movedSchedules = mutableListOf<Schedule>()
 
@@ -55,24 +55,24 @@ class PlanViewModel(
 
     var selectedDayPosition = MutableLiveData<Int>()
 
-    private val _deletingPlan = MutableLiveData<Plan>()
+    private val _deletingPlan = MutableLiveData<Plan?>()
 
-    val deletingPlan: LiveData<Plan>
+    val deletingPlan: LiveData<Plan?>
         get() = _deletingPlan
 
-    private val _deletingDay = MutableLiveData<Day>()
+    private val _deletingDay = MutableLiveData<Day?>()
 
-    val deletingDay: LiveData<Day>
+    val deletingDay: LiveData<Day?>
         get() = _deletingDay
 
-    private val _deletingSchedule = MutableLiveData<Schedule>()
+    private val _deletingSchedule = MutableLiveData<Schedule?>()
 
-    val deletingSchedule: LiveData<Schedule>
+    val deletingSchedule: LiveData<Schedule?>
         get() = _deletingSchedule
 
-    private val _updatePrivacy = MutableLiveData<PlanPrivacy>()
+    private val _updatePrivacy = MutableLiveData<PlanPrivacy?>()
 
-    val updatePrivacy: LiveData<PlanPrivacy>
+    val updatePrivacy: LiveData<PlanPrivacy?>
         get() = _updatePrivacy
 
     private val _updatePrivacyResult = MutableLiveData<Boolean>()
@@ -85,19 +85,14 @@ class PlanViewModel(
     private val dayResult: LiveData<Boolean>
         get() = _dayResult
 
-    private val _photoResult = MutableLiveData<Boolean>()
-
-    private val photoResult: LiveData<Boolean>
-        get() = _photoResult
-
     private val _updatePlanResult = MutableLiveData<Boolean>()
 
     private val updatePlanResult: LiveData<Boolean>
         get() = _updatePlanResult
 
-    private val _navigateToHomeAfterDeletingPlan = MutableLiveData<Boolean>()
+    private val _navigateToHomeAfterDeletingPlan = MutableLiveData<Boolean?>()
 
-    val navigateToHomeAfterDeletingPlan: LiveData<Boolean>
+    val navigateToHomeAfterDeletingPlan: LiveData<Boolean?>
         get() = _navigateToHomeAfterDeletingPlan
 
     private val _handleDayResult = MutableLiveData<Boolean>()
@@ -111,87 +106,81 @@ class PlanViewModel(
         get() = _handleScheduleResult
 
     // Handle navigation to detail
-    private val _navigateToDetail = MutableLiveData<Schedule>()
+    private val _navigateToDetail = MutableLiveData<Schedule?>()
 
-    val navigateToDetail: LiveData<Schedule>
+    val navigateToDetail: LiveData<Schedule?>
         get() = _navigateToDetail
 
     // Handle navigation to add schedule
-    private val _navigateToAddSchedule = MutableLiveData<Day>()
+    private val _navigateToAddSchedule = MutableLiveData<Day?>()
 
-    val navigateToAddSchedule: LiveData<Day>
+    val navigateToAddSchedule: LiveData<Day?>
         get() = _navigateToAddSchedule
 
     // Handle navigation to map mode
-    private val _navigateToMapMode = MutableLiveData<List<Day>>()
+    private val _navigateToMapMode = MutableLiveData<List<Day>?>()
 
-    val navigateToMapMode: LiveData<List<Day>>
+    val navigateToMapMode: LiveData<List<Day>?>
         get() = _navigateToMapMode
 
     // Handle navigation to companion
-    private val _navigateToCompanion = MutableLiveData<Boolean>()
+    private val _navigateToCompanion = MutableLiveData<Boolean?>()
 
-    val navigateToCompanion: LiveData<Boolean>
+    val navigateToCompanion: LiveData<Boolean?>
         get() = _navigateToCompanion
 
     // Handle navigation to group message
-    private val _navigateToGroupMessage = MutableLiveData<Plan>()
+    private val _navigateToGroupMessage = MutableLiveData<Plan?>()
 
-    val navigateToGroupMessage: LiveData<Plan>
+    val navigateToGroupMessage: LiveData<Plan?>
         get() = _navigateToGroupMessage
 
     // Handle navigation to locating companion
-    private val _navigateToLocateCompanion = MutableLiveData<Plan>()
+    private val _navigateToLocateCompanion = MutableLiveData<Plan?>()
 
-    val navigateToLocateCompanion: LiveData<Plan>
+    val navigateToLocateCompanion: LiveData<Plan?>
         get() = _navigateToLocateCompanion
 
     // Handle navigation to comment
-    private val _navigateToComment = MutableLiveData<Plan>()
+    private val _navigateToComment = MutableLiveData<Plan?>()
 
-    val navigateToComment: LiveData<Plan>
+    val navigateToComment: LiveData<Plan?>
         get() = _navigateToComment
 
     // Handle navigation to check or shopping list
-    private val _navigateToCheckOrShoppingList = MutableLiveData<MainItemType>()
+    private val _navigateToCheckOrShoppingList = MutableLiveData<MainItemType?>()
 
-    val navigateToCheckOrShoppingList: LiveData<MainItemType>
+    val navigateToCheckOrShoppingList: LiveData<MainItemType?>
         get() = _navigateToCheckOrShoppingList
 
     // Handle navigation to payment
-    private val _navigateToPayment = MutableLiveData<Plan>()
+    private val _navigateToPayment = MutableLiveData<Plan?>()
 
-    val navigateToPayment: LiveData<Plan>
+    val navigateToPayment: LiveData<Plan?>
         get() = _navigateToPayment
 
-    // Handle navigation to group msg
-    private val _navigateToGroupMsg = MutableLiveData<Plan>()
-
-    val navigateToGroupMsg: LiveData<Plan>
-        get() = _navigateToGroupMsg
-
     // Handle navigation to edit mode
-    private val _navigateToEditPlan = MutableLiveData<Plan>()
+    private val _navigateToEditPlan = MutableLiveData<Plan?>()
 
-    val navigateToEditPlan: LiveData<Plan>
+    val navigateToEditPlan: LiveData<Plan?>
         get() = _navigateToEditPlan
 
     // Handle navigation to edit cover
-    private val _navigateToEditCover = MutableLiveData<Plan>()
+    private val _navigateToEditCover = MutableLiveData<Plan?>()
 
-    val navigateToEditCover: LiveData<Plan>
+    val navigateToEditCover: LiveData<Plan?>
         get() = _navigateToEditCover
 
     // Handle navigation to copy plan
-    private val _navigateToCopyPlan = MutableLiveData<Plan>()
+    private val _navigateToCopyPlan = MutableLiveData<Plan?>()
 
-    val navigateToCopyPlan: LiveData<Plan>
+    val navigateToCopyPlan: LiveData<Plan?>
         get() = _navigateToCopyPlan
 
     // Handle navigation to author profile
-    private val _navigateToAuthorProfile = MutableLiveData<String>()
+    private val _navigateToAuthorProfile = MutableLiveData<String?>()
 
-    val navigateToAuthorProfile: LiveData<String>
+    val navigateToAuthorProfile: LiveData<String?>
         get() = _navigateToAuthorProfile
 
     // Handle leave plan

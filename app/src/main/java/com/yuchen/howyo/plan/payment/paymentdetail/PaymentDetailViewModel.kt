@@ -55,14 +55,14 @@ class PaymentDetailViewModel(
     val invalidPayment: LiveData<Int>
         get() = _invalidPayment
 
-    private val _isSavePayment = MutableLiveData<Boolean>()
+    private val _isSavePayment = MutableLiveData<Boolean?>()
 
-    val isSavePayment: LiveData<Boolean>
+    val isSavePayment: LiveData<Boolean?>
         get() = _isSavePayment
 
-    private val _paymentResult = MutableLiveData<Boolean>()
+    private val _paymentResult = MutableLiveData<Boolean?>()
 
-    val paymentResult: LiveData<Boolean>
+    val paymentResult: LiveData<Boolean?>
         get() = _paymentResult
 
     private val _status = MutableLiveData<LoadApiStatus>()

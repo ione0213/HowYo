@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -23,17 +23,18 @@
             android:layout_width="@dimen/plan_img_btn"
             android:layout_height="@dimen/plan_img_btn"
             android:layout_marginStart="@dimen/middle_padding"
-            android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginEnd="@dimen/middle_padding"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/plus"
             android:backgroundTint="@color/matcha_3"
+            android:contentDescription="@string/content_desc_add_day"
             android:onClick="@{() -> viewModel.addNewDay()}"
             android:visibility="@{viewModel.accessType == AccessPlanType.EDIT ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

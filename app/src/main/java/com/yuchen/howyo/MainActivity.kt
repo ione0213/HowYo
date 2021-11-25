@@ -130,7 +130,7 @@ class MainActivity : BaseActivity() {
         viewModel.currentFragmentType.observe(this) {
             it?.let {
                 when {
-                    it != CurrentFragmentType.SIGNIN && !isLoggedIn -> {
+                    it != CurrentFragmentType.SIGN_IN && !isLoggedIn -> {
                         findNavController(R.id.myNavHostFragment)
                             .navigate(NavigationDirections.navToSignInFragment())
                     }
@@ -195,7 +195,7 @@ class MainActivity : BaseActivity() {
                 R.id.paymentDetailFragment -> CurrentFragmentType.PAYMENT_DETAIL
                 R.id.friendsFragment -> CurrentFragmentType.FRIENDS
                 R.id.settingFragment -> CurrentFragmentType.SETTING
-                R.id.signInFragment -> CurrentFragmentType.SIGNIN
+                R.id.signInFragment -> CurrentFragmentType.SIGN_IN
                 R.id.commentFragment -> CurrentFragmentType.COMMENT
                 else -> viewModel.currentFragmentType.value
             }
@@ -430,13 +430,12 @@ class MainActivity : BaseActivity() {
                 .setTitle(getString(R.string.check_gps_title))
                 .setMessage(getString(R.string.check_gps_message))
                 .setPositiveButton(
-                    getString(R.string.navigate_to_open_setting),
-                    DialogInterface.OnClickListener { _, _ ->
-                        startActivityForResult(
-                            Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
-                        )
-                    }
-                )
+                    getString(R.string.navigate_to_open_setting)
+                ) { _, _ ->
+                    startActivityForResult(
+                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
+                    )
+                }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {

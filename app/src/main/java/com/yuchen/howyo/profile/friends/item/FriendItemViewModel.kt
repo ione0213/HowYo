@@ -40,9 +40,9 @@ class FriendItemViewModel(
     private val _status = MutableLiveData<LoadApiStatus>()
 
     // Handle navigation to user profile
-    private val _navigateToUserProfile = MutableLiveData<String>()
+    private val _navigateToUserProfile = MutableLiveData<String?>()
 
-    val navigateToUserProfile: LiveData<String>
+    val navigateToUserProfile: LiveData<String?>
         get() = _navigateToUserProfile
 
     val status: LiveData<LoadApiStatus>

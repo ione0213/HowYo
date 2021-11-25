@@ -31,21 +31,21 @@ class ProfileViewModel(
         get() = _plans
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     // Handle navigation to setting
-    private val _navigateToSetting = MutableLiveData<Boolean>()
+    private val _navigateToSetting = MutableLiveData<Boolean?>()
 
-    val navigateToSetting: LiveData<Boolean>
+    val navigateToSetting: LiveData<Boolean?>
         get() = _navigateToSetting
 
     // Handle navigation to friends
-    private val _navigateToFriends = MutableLiveData<FriendFilter>()
+    private val _navigateToFriends = MutableLiveData<FriendFilter?>()
 
-    val navigateToFriends: LiveData<FriendFilter>
+    val navigateToFriends: LiveData<FriendFilter?>
         get() = _navigateToFriends
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -69,7 +69,7 @@ class ProfileViewModel(
     }
 
     private fun fetchLiveCurrentUserResult() {
-        _currentUser = howYoRepository.getLiveUser(argumentUserId ?: "")
+        _currentUser = howYoRepository.getLiveUser(argumentUserId)
     }
 
     private fun fetchPlansResult() {

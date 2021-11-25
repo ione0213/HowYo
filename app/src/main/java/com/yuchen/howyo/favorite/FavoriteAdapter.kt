@@ -34,7 +34,7 @@ class FavoriteAdapter(
         }
     }
 
-    class EmptyViewHolder(private var binding: ItemEmptyFavoriteBinding) :
+    class EmptyViewHolder(binding: ItemEmptyFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {

@@ -3,11 +3,10 @@ package com.yuchen.howyo.plan.companion.locate
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.*
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -39,12 +38,12 @@ import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.util.REQUEST_ENABLE_GPS
 import com.yuchen.howyo.util.REQUEST_LOCATION_PERMISSION
 import com.yuchen.howyo.util.Util.isInternetConnected
-import java.io.InputStream
-import java.net.URL
-import java.net.URLConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.InputStream
+import java.net.URL
+import java.net.URLConnection
 
 class LocateFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentLocateBinding
@@ -145,9 +144,11 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                             )
                         )
                         .title(it.name).icon(
-                            BitmapDescriptorFactory.fromBitmap(
-                                getMarkerBitmapFromView(it, bmp)
-                            )
+                            getMarkerBitmapFromView(it, bmp)?.let { bitmap ->
+                                BitmapDescriptorFactory.fromBitmap(
+                                    bitmap
+                                )
+                            }
                         )
                 )
             }
@@ -161,13 +162,12 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                 .setTitle(getString(R.string.check_gps_title))
                 .setMessage(getString(R.string.check_gps_message))
                 .setPositiveButton(
-                    getString(R.string.navigate_to_open_setting),
-                    DialogInterface.OnClickListener { _, _ ->
-                        startActivityForResult(
-                            Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
-                        )
-                    }
-                )
+                    getString(R.string.navigate_to_open_setting)
+                ) { _, _ ->
+                    startActivityForResult(
+                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
+                    )
+                }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {

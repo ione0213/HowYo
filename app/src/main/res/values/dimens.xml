@@ -55,7 +55,7 @@
 
     <!-- Comment-->
     <dimen name="comment_avatar">56dp</dimen>
-    <dimen name="cardview_radius">10dp</dimen>
+    <dimen name="card_view_radius">10dp</dimen>
 
     <!-- Companion-->
     <dimen name="companion_avatar">36dp</dimen>

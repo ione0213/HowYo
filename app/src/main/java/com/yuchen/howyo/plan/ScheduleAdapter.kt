@@ -54,7 +54,7 @@ class ScheduleAdapter(
         }
     }
 
-    class EmptyViewHolder(private var binding: ItemEmptyScheduleBinding) :
+    class EmptyViewHolder(binding: ItemEmptyScheduleBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<ScheduleDataItem>() {

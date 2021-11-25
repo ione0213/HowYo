@@ -43,35 +43,35 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val sharedToolbarTitle: LiveData<String>
         get() = _sharedToolbarTitle
 
-    private val _isResetToolbar = MutableLiveData<Boolean>()
+    private val _isResetToolbar = MutableLiveData<Boolean?>()
 
-    val isResetToolbar: LiveData<Boolean>
+    val isResetToolbar: LiveData<Boolean?>
         get() = _isResetToolbar
 
     // Handle navigation to home by bottom nav directly which includes icon change
-    private val _navigateToHomeByBottomNav = MutableLiveData<Boolean>()
+    private val _navigateToHomeByBottomNav = MutableLiveData<Boolean?>()
 
-    val navigateToHomeByBottomNav: LiveData<Boolean>
+    val navigateToHomeByBottomNav: LiveData<Boolean?>
         get() = _navigateToHomeByBottomNav
 
-    private val _userLocation = MutableLiveData<Location>()
+    private val _userLocation = MutableLiveData<Location?>()
 
-    val userLocation: LiveData<Location>
+    val userLocation: LiveData<Location?>
         get() = _userLocation
 
-    private val _isAccessAppFirstTime = MutableLiveData<Boolean>()
+    private val _isAccessAppFirstTime = MutableLiveData<Boolean?>()
 
-    val isAccessAppFirstTime: LiveData<Boolean>
+    val isAccessAppFirstTime: LiveData<Boolean?>
         get() = _isAccessAppFirstTime
 
-    private val _isUserLocateServiceReady = MutableLiveData<Boolean>()
+    private val _isUserLocateServiceReady = MutableLiveData<Boolean?>()
 
-    val isUserLocateServiceReady: LiveData<Boolean>
+    val isUserLocateServiceReady: LiveData<Boolean?>
         get() = _isUserLocateServiceReady
 
-    private val _isBroadcastRegistered = MutableLiveData<Boolean>()
+    private val _isBroadcastRegistered = MutableLiveData<Boolean?>()
 
-    val isBroadcastRegistered: LiveData<Boolean>
+    val isBroadcastRegistered: LiveData<Boolean?>
         get() = _isBroadcastRegistered
 
     private var viewModelJob = Job()

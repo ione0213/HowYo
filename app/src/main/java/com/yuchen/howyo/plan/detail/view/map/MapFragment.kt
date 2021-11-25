@@ -3,7 +3,6 @@ package com.yuchen.howyo.plan.detail.view.map
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -127,13 +126,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 .setTitle(getString(R.string.check_gps_title))
                 .setMessage(getString(R.string.check_gps_message))
                 .setPositiveButton(
-                    getString(R.string.navigate_to_open_setting),
-                    DialogInterface.OnClickListener { _, _ ->
-                        startActivityForResult(
-                            Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
-                        )
-                    }
-                )
+                    getString(R.string.navigate_to_open_setting)
+                ) { _, _ ->
+                    startActivityForResult(
+                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS
+                    )
+                }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {

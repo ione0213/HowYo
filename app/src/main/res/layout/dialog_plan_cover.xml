@@ -60,10 +60,12 @@
                     android:background="@drawable/icons_24px_close"
                     android:backgroundTint="@color/matcha_3"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
+                    android:contentDescription="@string/content_desc_close"
                     android:onClick="@{() -> viewModel.leave()}"
                     app:layout_constraintBottom_toTopOf="@+id/layout_dialog_plan_cover_empty_image"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_dialog_plan_cover_empty_image"
@@ -89,7 +91,8 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintVertical_bias="0.0"
+                        android:contentDescription="@string/content_desc_cover_photo" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -102,10 +105,12 @@
                     android:background="@drawable/camera"
                     android:backgroundTint="@color/matcha_3"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
+                    android:contentDescription="@string/content_desc_take_photo"
                     android:onClick="@{() -> viewModel.takePhoto()}"
                     app:layout_constraintBottom_toTopOf="@+id/layout_plan_title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout_dialog_plan_cover_empty_image" />
+                    app:layout_constraintTop_toBottomOf="@+id/layout_dialog_plan_cover_empty_image"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_plan_cover_select_photo"
@@ -117,10 +122,12 @@
                     android:background="@drawable/image"
                     android:backgroundTint="@color/matcha_3"
                     android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
+                    android:contentDescription="@string/content_desc_browse_album"
                     android:onClick="@{() -> viewModel.selectPhoto()}"
                     app:layout_constraintBottom_toBottomOf="@+id/btn_plan_cover_take_photo"
                     app:layout_constraintEnd_toStartOf="@+id/btn_plan_cover_take_photo"
-                    app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_take_photo" />
+                    app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_take_photo"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_plan_cover_delete"
@@ -129,10 +136,12 @@
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:background="@drawable/delete"
                     android:backgroundTint="@color/matcha_3"
+                    android:contentDescription="@string/content_desc_reset_cover"
                     android:onClick="@{() -> viewModel.resetCoverPhoto()}"
                     app:layout_constraintEnd_toStartOf="@id/btn_plan_cover_select_photo"
                     app:layout_constraintTop_toTopOf="@+id/btn_plan_cover_select_photo"
-                    app:planPhoto="@{viewModel.planPhotoData}" />
+                    app:planPhoto="@{viewModel.planPhotoData}"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_plan_title"
@@ -153,14 +162,16 @@
                         android:id="@+id/edittext_plan_title"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/cover_plan_edittext"
+                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
                         android:hint="@string/plan_name"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@={viewModel.plan.title}"
                         android:textColor="@color/matcha_3"
-                        android:backgroundTint="@{viewModel.invalidPlan != null? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
-                        android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}" />
+                        android:textColorHint="@{viewModel.invalidPlan != null ? (TextUtils.isEmpty(viewModel.plan.title) ? @color/scarlet : @color/gray_646464) : @color/gray_646464}"
+                        tools:ignore="TextContrastCheck"
+                        tools:text="高雄" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -186,7 +197,9 @@
                         android:singleLine="true"
                         android:textColor="@color/matcha_3"
                         app:endDate="@{viewModel.endDateFromUser}"
-                        app:startDate="@{viewModel.startDateFromUser}" />
+                        app:startDate="@{viewModel.startDateFromUser}"
+                        tools:ignore="TextContrastCheck"
+                        tools:text="2021/10/01 - 2021/10/10" />
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -198,6 +211,7 @@
                 android:layout_margin="@dimen/middle_padding"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:contentDescription="@string/content_desc_submit_plan"
                 android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:elevation="0dp"
                 android:onClick="@{() -> viewModel.prepareSubmitPlan()}"

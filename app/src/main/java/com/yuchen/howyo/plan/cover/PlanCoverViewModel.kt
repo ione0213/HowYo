@@ -79,15 +79,15 @@ class PlanCoverViewModel(
         get() = _schedules
 
     // Handle the submit plan
-    private val _isSavePlan = MutableLiveData<Boolean>()
+    private val _isSavePlan = MutableLiveData<Boolean?>()
 
-    val isSavePlan: LiveData<Boolean>
+    val isSavePlan: LiveData<Boolean?>
         get() = _isSavePlan
 
     // Handle the plan cover is ready or not
-    private val _isCoverPhotoReady = MutableLiveData<Boolean>()
+    private val _isCoverPhotoReady = MutableLiveData<Boolean?>()
 
-    val isCoverPhotoReady: LiveData<Boolean>
+    val isCoverPhotoReady: LiveData<Boolean?>
         get() = _isCoverPhotoReady
 
     private val _isPlanUpdated = MutableLiveData<Boolean>()
@@ -114,27 +114,27 @@ class PlanCoverViewModel(
         get() = _isAllDataReady
 
     // Handle leave plan cover
-    private val _leave = MutableLiveData<Boolean>()
+    private val _leave = MutableLiveData<Boolean?>()
 
-    val leave: LiveData<Boolean>
+    val leave: LiveData<Boolean?>
         get() = _leave
 
     // Handle open date range picker
-    private val _selectDate = MutableLiveData<Boolean>()
+    private val _selectDate = MutableLiveData<Boolean?>()
 
-    val selectDate: LiveData<Boolean>
+    val selectDate: LiveData<Boolean?>
         get() = _selectDate
 
     // Handle add the cover photo by camera
-    private val _takePhoto = MutableLiveData<Boolean>()
+    private val _takePhoto = MutableLiveData<Boolean?>()
 
-    val takePhoto: LiveData<Boolean>
+    val takePhoto: LiveData<Boolean?>
         get() = _takePhoto
 
     // Handle add the cover photo by selecting
-    private val _selectPhoto = MutableLiveData<Boolean>()
+    private val _selectPhoto = MutableLiveData<Boolean?>()
 
-    val selectPhoto: LiveData<Boolean>
+    val selectPhoto: LiveData<Boolean?>
         get() = _selectPhoto
 
     // status: The internal MutableLiveData that stores the status of the most recent request

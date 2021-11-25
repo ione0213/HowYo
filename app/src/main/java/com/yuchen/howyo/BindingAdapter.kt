@@ -92,7 +92,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
         CurrentFragmentType.SETTING,
         CurrentFragmentType.GROUP_MESSAGE,
         CurrentFragmentType.COMMENT,
-        CurrentFragmentType.SIGNIN -> View.GONE
+        CurrentFragmentType.SIGN_IN -> View.GONE
         else -> View.VISIBLE
     }
 }
@@ -100,7 +100,7 @@ fun BottomNavigationView.bindBottomView(currentFragmentType: CurrentFragmentType
 @BindingAdapter("currentFragmentTypeForToolbar")
 fun Toolbar.bindToolbar(currentFragmentType: CurrentFragmentType) {
     visibility = when (currentFragmentType) {
-        CurrentFragmentType.PLAN, CurrentFragmentType.SIGNIN -> View.GONE
+        CurrentFragmentType.PLAN, CurrentFragmentType.SIGN_IN -> View.GONE
         else -> View.VISIBLE
     }
 }
@@ -458,7 +458,7 @@ fun AppCompatButton.bindFollowButton(user: User?, type: FollowType?) {
     }
 }
 
-@BindingAdapter("buttonForAuthor", "accessType")
+@BindingAdapter("buttonForPlanMembers", "accessType")
 fun AppCompatButton.bindButtonForPlanMembers(plan: Plan?, accessType: AccessPlanType?) {
     val userId = UserManager.userId ?: ""
 
@@ -466,6 +466,21 @@ fun AppCompatButton.bindButtonForPlanMembers(plan: Plan?, accessType: AccessPlan
         when {
             (plan?.authorId == userId || plan?.companionList?.contains(userId) == true) &&
                     accessType == AccessPlanType.VIEW -> {
+                View.VISIBLE
+            }
+            else -> {
+                View.GONE
+            }
+        }
+}
+
+@BindingAdapter("buttonForAuthor", "accessType")
+fun AppCompatButton.bindButtonForAuthor(plan: Plan?, accessType: AccessPlanType?) {
+    val userId = UserManager.userId ?: ""
+
+    visibility =
+        when {
+            plan?.authorId == userId && accessType == AccessPlanType.EDIT -> {
                 View.VISIBLE
             }
             else -> {

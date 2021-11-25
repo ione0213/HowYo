@@ -29,7 +29,7 @@
             android:background="@color/white"
             android:elevation="5dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/cardview_radius"
+            app:cardCornerRadius="@dimen/card_view_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,13 +80,15 @@
                     android:layout_marginEnd="@dimen/standard_padding"
                     android:background="@drawable/plus"
                     android:backgroundTint="@color/matcha_3"
+                    android:contentDescription="@string/content_desc_add_companion"
                     android:onClick="@{() -> viewModel.setCompanion(user.id, CompanionType.ADD)}"
                     app:companionButton="@{viewModel.plan}"
                     app:companionType="@{CompanionType.ADD}"
                     app:layout_constraintBottom_toBottomOf="@+id/text_companion_user_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/text_companion_user_name"
-                    app:user="@{user}" />
+                    app:user="@{user}"
+                    tools:ignore="TouchTargetSizeCheck,DuplicateClickableBoundsCheck" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_companion_remove"
@@ -95,13 +97,15 @@
                     android:layout_marginEnd="@dimen/standard_padding"
                     android:background="@drawable/remove"
                     android:backgroundTint="@color/matcha_3"
+                    android:contentDescription="@string/content_desc_remove_companion"
                     android:onClick="@{() -> viewModel.setCompanion(user.id, CompanionType.REMOVE)}"
                     app:companionButton="@{viewModel.plan}"
                     app:companionType="@{CompanionType.REMOVE}"
                     app:layout_constraintBottom_toBottomOf="@+id/text_companion_user_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/text_companion_user_name"
-                    app:user="@{user}" />
+                    app:user="@{user}"
+                    tools:ignore="TouchTargetSizeCheck" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

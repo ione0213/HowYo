@@ -65,15 +65,15 @@ class CopyPlanViewModel(
         get() = _schedules
 
     // Handle the submit plan
-    private val _isSavePlan = MutableLiveData<Boolean>()
+    private val _isSavePlan = MutableLiveData<Boolean?>()
 
-    val isSavePlan: LiveData<Boolean>
+    val isSavePlan: LiveData<Boolean?>
         get() = _isSavePlan
 
     // Handle the plan data is ready or not
-    private val _isCoverPhotoReady = MutableLiveData<Boolean>()
+    private val _isCoverPhotoReady = MutableLiveData<Boolean?>()
 
-    val isCoverPhotoReady: LiveData<Boolean>
+    val isCoverPhotoReady: LiveData<Boolean?>
         get() = _isCoverPhotoReady
 
     // Handle the days data is ready or not
@@ -95,21 +95,21 @@ class CopyPlanViewModel(
         get() = _isRelatedDataReady
 
     // Handle leave plan cover
-    private val _leave = MutableLiveData<Boolean>()
+    private val _leave = MutableLiveData<Boolean?>()
 
-    val leave: LiveData<Boolean>
+    val leave: LiveData<Boolean?>
         get() = _leave
 
     // Handle add the cover photo by camera
-    private val _takePhoto = MutableLiveData<Boolean>()
+    private val _takePhoto = MutableLiveData<Boolean?>()
 
-    val takePhoto: LiveData<Boolean>
+    val takePhoto: LiveData<Boolean?>
         get() = _takePhoto
 
     // Handle add the cover photo by selecting
-    private val _selectPhoto = MutableLiveData<Boolean>()
+    private val _selectPhoto = MutableLiveData<Boolean?>()
 
-    val selectPhoto: LiveData<Boolean>
+    val selectPhoto: LiveData<Boolean?>
         get() = _selectPhoto
 
     // status: The internal MutableLiveData that stores the status of the most recent request
@@ -184,7 +184,7 @@ class CopyPlanViewModel(
         val uri = planPhoto.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
         val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
-        var uploadResult = false
+        val uploadResult: Boolean
 
         plan.value?.coverFileName = fileName
 

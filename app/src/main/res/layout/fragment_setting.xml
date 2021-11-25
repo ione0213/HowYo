@@ -22,8 +22,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.GONE : View.VISIBLE}">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/img_profile_setting_avatar"
@@ -43,25 +43,26 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="@dimen/small_padding"
-                android:layout_marginEnd="@dimen/middle_padding"
-                android:layout_marginBottom="@dimen/small_padding"
                 android:background="@drawable/image"
                 android:backgroundTint="@color/matcha_3"
                 android:onClick="@{() -> viewModel.selectPhoto()}"
+                android:contentDescription="@string/content_desc_browse_album"
                 app:layout_constraintStart_toStartOf="@+id/img_profile_setting_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/img_profile_setting_avatar" />
+                app:layout_constraintTop_toBottomOf="@+id/img_profile_setting_avatar"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_profile_setting_take_photo"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="@dimen/small_padding"
-                android:layout_marginBottom="@dimen/small_padding"
                 android:background="@drawable/camera"
                 android:backgroundTint="@color/matcha_3"
+                android:contentDescription="@string/content_desc_take_photo"
                 android:onClick="@{() -> viewModel.takePhoto()}"
                 app:layout_constraintEnd_toEndOf="@+id/img_profile_setting_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/img_profile_setting_avatar" />
+                app:layout_constraintTop_toBottomOf="@+id/img_profile_setting_avatar"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/text_profile_setting_user_name"
@@ -70,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_padding"
                 android:layout_marginTop="@dimen/standard_padding"
-                android:text="@string/profile_modify_nick_name"
+                android:text="@string/user_name"
                 android:textStyle="bold"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -83,13 +84,17 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/small_padding"
+                android:hint="@string/profile_modify_nick_name"
+                android:inputType="text"
                 android:maxLines="1"
                 android:text="@={viewModel.currentUser.name}"
                 android:textColor="@color/matcha_3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/text_profile_setting_user_name"
-                app:layout_constraintTop_toBottomOf="@+id/text_profile_setting_user_name" />
+                app:layout_constraintTop_toBottomOf="@+id/text_profile_setting_user_name"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck"
+                android:importantForAutofill="no" />
 
             <TextView
                 android:id="@+id/text_profile_setting_information"
@@ -111,18 +116,23 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/small_padding"
+                android:autofillHints="@string/user_info"
+                android:hint="@string/user_info"
+                android:inputType="text"
+                android:importantForAutofill="no"
                 android:text="@={viewModel.currentUser.introduction}"
                 android:textColor="@color/matcha_3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/text_profile_setting_information"
-                app:layout_constraintTop_toBottomOf="@+id/text_profile_setting_information" />
+                app:layout_constraintTop_toBottomOf="@+id/text_profile_setting_information"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"
-            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}"
             android:layout_height="wrap_content"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

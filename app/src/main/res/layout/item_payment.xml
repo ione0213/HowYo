@@ -23,7 +23,7 @@
             android:background="@color/white"
             android:elevation="10dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/cardview_radius"
+            app:cardCornerRadius="@dimen/card_view_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,11 +40,13 @@
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginBottom="@dimen/small_padding"
+                    android:contentDescription="@string/content_desc_money_icon"
                     android:background="@drawable/coin"
                     android:backgroundTint="@color/matcha_3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <TextView
                     android:id="@+id/text_payment_amount"
@@ -81,16 +83,16 @@
                     android:layout_marginBottom="@dimen/middle_padding"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textAlignment="textStart"
                     android:text="@{payment.item}"
+                    android:textAlignment="textStart"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/view_payment_separation"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    tools:text="拉麵"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/view_payment_separation"
-                    app:layout_constraintTop_toTopOf="@+id/view_payment_separation" />
+                    app:layout_constraintTop_toTopOf="@+id/view_payment_separation"
+                    tools:text="拉麵" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

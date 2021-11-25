@@ -562,7 +562,7 @@ class PlanFragment : Fragment() {
 
                 activity?.invalidateOptionsMenu()
 
-                findNavController().popBackStack()
+                viewModel.leavePlan()
             }
         }
 

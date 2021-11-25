@@ -23,9 +23,11 @@
             android:layout_marginStart="@dimen/middle_padding"
             android:layout_marginTop="@dimen/large_padding"
             android:background="@drawable/icons_44px_back01"
+            android:contentDescription="@string/content_desc_back"
             android:onClick="@{() -> viewModel.leaveEditImage()}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_detail_edit_image_delete"
@@ -34,22 +36,25 @@
             android:layout_marginTop="@dimen/large_padding"
             android:layout_marginEnd="@dimen/middle_padding"
             android:background="@drawable/delete"
+            android:contentDescription="@string/content_desc_delete_schedule_photo"
             android:onClick="@{() -> viewModel.deleteImage()}"
-
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageView
             android:id="@+id/image_detail_edit_image_image"
             android:layout_width="match_parent"
             android:layout_height="580dp"
             android:background="@drawable/ic_placeholder"
+            android:contentDescription="@string/content_desc_schedule_image"
             android:scaleType="centerCrop"
             app:imageData="@{viewModel.schedulePhoto}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ImageContrastCheck"
             tools:src="@drawable/ic_placeholder" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

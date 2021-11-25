@@ -15,9 +15,9 @@ class CompanionViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-    private var _plan = MutableLiveData<Plan>()
+    private var _plan = MutableLiveData<Plan?>()
 
-    val plan: LiveData<Plan>
+    val plan: LiveData<Plan?>
         get() = _plan
 
     // Current user data
@@ -39,9 +39,9 @@ class CompanionViewModel(
     val keywords = MutableLiveData<String>()
 
     // Handle leave companion
-    private val _leave = MutableLiveData<Boolean>()
+    private val _leave = MutableLiveData<Boolean?>()
 
-    val leave: LiveData<Boolean>
+    val leave: LiveData<Boolean?>
         get() = _leave
 
     private val _status = MutableLiveData<LoadApiStatus>()

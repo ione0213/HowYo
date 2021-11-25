@@ -33,21 +33,21 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     val userDataSet: LiveData<Set<User>>
         get() = _userDataSet
 
-    private val _sendNotificationResult = MutableLiveData<Boolean>()
+    private val _sendNotificationResult = MutableLiveData<Boolean?>()
 
-    val sendNotificationResult: LiveData<Boolean>
+    val sendNotificationResult: LiveData<Boolean?>
         get() = _sendNotificationResult
 
     // Handle navigation to user profile
-    private val _navigateToUserProfile = MutableLiveData<String>()
+    private val _navigateToUserProfile = MutableLiveData<String?>()
 
-    val navigateToUserProfile: LiveData<String>
+    val navigateToUserProfile: LiveData<String?>
         get() = _navigateToUserProfile
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     private var viewModelJob = Job()

@@ -24,7 +24,7 @@ class CommentViewModel(
     val commentData: LiveData<MutableList<CommentData>>
         get() = _commentData
 
-    var message = MutableLiveData<String>()
+    var message = MutableLiveData<String?>()
 
     private val _commentResult = MutableLiveData<Boolean>()
 

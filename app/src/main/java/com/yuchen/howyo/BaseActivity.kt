@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection", "SpellCheckingInspection")
+
 package com.yuchen.howyo
 
 import android.graphics.Color

@@ -24,8 +24,8 @@
                 android:layout_height="@dimen/profile_friend_tab"
                 app:tabIndicatorColor="@color/matcha_5"
                 app:tabSelectedTextColor="@color/matcha_3"
+                android:contentDescription="@string/content_desc_friend_tab"
                 app:tabTextColor="@color/matcha_5">
-
             </com.google.android.material.tabs.TabLayout>
 
         </androidx.viewpager.widget.ViewPager>

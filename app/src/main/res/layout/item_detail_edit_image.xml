@@ -22,19 +22,20 @@
             android:id="@+id/image_detail_image"
             android:layout_width="@dimen/width_detail_gallery_small"
             android:layout_height="@dimen/height_detail_gallery_small"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:layout_marginBottom="@dimen/small_padding"
             android:background="@drawable/ic_placeholder"
+            android:onClick="@{() -> viewModel.navigateToEditImage(schedulePhoto)}"
             android:scaleType="centerCrop"
             app:imageData="@{schedulePhoto}"
-            android:onClick="@{() -> viewModel.navigateToEditImage(schedulePhoto)}"
-            app:shapeAppearanceOverlay="@style/circle2"
-            tools:src="@drawable/ic_placeholder"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="@dimen/small_padding"
-            android:layout_marginBottom="@dimen/small_padding"
-            android:layout_marginStart="@dimen/small_padding"
-            android:layout_marginEnd="@dimen/small_padding"/>
+            app:shapeAppearanceOverlay="@style/circle2"
+            tools:ignore="ImageContrastCheck"
+            tools:src="@drawable/ic_placeholder" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

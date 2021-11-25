@@ -1,6 +1,5 @@
 package com.yuchen.howyo.plan.findlocation
 
-import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.view.KeyEvent

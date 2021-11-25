@@ -53,7 +53,8 @@
                     android:singleLine="true"
                     android:text="@={viewModel.paymentItem}"
                     android:textColor="@color/matcha_3"
-                    android:textColorHint="@{viewModel.invalidPayment != null ? (TextUtils.isEmpty(viewModel.paymentItem) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}" />
+                    android:textColorHint="@{viewModel.invalidPayment != null ? (TextUtils.isEmpty(viewModel.paymentItem) ? @color/scarlet : @color/matcha_3) : @color/matcha_3}"
+                    tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -83,7 +84,8 @@
                     android:singleLine="true"
                     android:text="@={viewModel.amount}"
                     android:textColor="@color/matcha_3"
-                    android:textColorHint="@{viewModel.invalidPayment != null ? @color/scarlet : @color/matcha_3}" />
+                    android:textColorHint="@{viewModel.invalidPayment != null ? @color/scarlet : @color/matcha_3}"
+                    tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -110,6 +112,7 @@
                 android:prompt="@string/payment_select_payer"
                 android:selectedItemPosition="@={viewModel.selectedPaymentTypePosition}"
                 android:spinnerMode="dialog"
+                android:contentDescription="@string/content_desc_payer"
                 app:layout_constraintEnd_toEndOf="@+id/layout_payment_detail_amount"
                 app:layout_constraintStart_toStartOf="@+id/layout_payment_detail_amount"
                 app:layout_constraintTop_toBottomOf="@id/text_payment_detail_type" />
@@ -147,7 +150,8 @@
                         android:text="@string/payment_type_self"
                         android:textAlignment="center"
                         android:textColor="@drawable/payment_type_text_selector"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:ignore="TextContrastCheck" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/radio_share_payment"
@@ -162,7 +166,8 @@
                         android:text="@string/payment_type_share"
                         android:textAlignment="center"
                         android:textColor="@drawable/payment_type_text_selector"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:ignore="TextContrastCheck" />
                 </RadioGroup>
             </LinearLayout>
 
@@ -174,6 +179,7 @@
                 android:layout_margin="@dimen/middle_padding"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:contentDescription="@string/content_desc_submit_payment"
                 android:onClick="@{() -> viewModel.prepareSubmitPayment()}"
                 android:text="@string/plan_save"
                 android:textAlignment="center"
@@ -182,7 +188,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:maxImageSize="36dp"
-                app:tint="@color/matcha_6" />
+                app:tint="@color/matcha_6"
+                tools:ignore="TextContrastCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.airbnb.lottie.LottieAnimationView

@@ -9,7 +9,7 @@ sealed class CheckListItem {
 
     data class CheckItem(val item: CheckShoppingList) : CheckListItem() {
         override val id: String
-            get() = item.id ?: ""
+            get() = item.id
     }
     data class AddBtn(val subType: String) : CheckListItem() {
         override val id: String

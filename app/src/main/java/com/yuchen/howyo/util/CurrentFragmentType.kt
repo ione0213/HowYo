@@ -21,5 +21,5 @@ enum class CurrentFragmentType(val value: String) {
     FRIENDS(""),
     SETTING(getString(R.string.setting)),
     COMMENT(getString(R.string.comment)),
-    SIGNIN("")
+    SIGN_IN("")
 }

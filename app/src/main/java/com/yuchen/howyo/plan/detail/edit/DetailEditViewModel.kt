@@ -82,32 +82,32 @@ class DetailEditViewModel(
     val selectedScheduleTypePosition = MutableLiveData<Int>()
 
     // Handle leave edit detail
-    private val _leaveEditDetail = MutableLiveData<Boolean>()
+    private val _leaveEditDetail = MutableLiveData<Boolean?>()
 
-    val leaveEditDetail: LiveData<Boolean>
+    val leaveEditDetail: LiveData<Boolean?>
         get() = _leaveEditDetail
 
     // Handle add the photo by selecting
-    private val _selectPhoto = MutableLiveData<Boolean>()
+    private val _selectPhoto = MutableLiveData<Boolean?>()
 
-    val selectPhoto: LiveData<Boolean>
+    val selectPhoto: LiveData<Boolean?>
         get() = _selectPhoto
 
     // Handle setting time
-    private val _setTime = MutableLiveData<String>()
+    private val _setTime = MutableLiveData<String?>()
 
-    val setTime: LiveData<String>
+    val setTime: LiveData<String?>
         get() = _setTime
 
-    private val _scheduleResult = MutableLiveData<Boolean>()
+    private val _scheduleResult = MutableLiveData<Boolean?>()
 
-    val scheduleResult: LiveData<Boolean>
+    val scheduleResult: LiveData<Boolean?>
         get() = _scheduleResult
 
     // Handle navigation to edit single image
-    private val _navigateToEditImage = MutableLiveData<PhotoData>()
+    private val _navigateToEditImage = MutableLiveData<PhotoData?>()
 
-    val navigateToEditImage: LiveData<PhotoData>
+    val navigateToEditImage: LiveData<PhotoData?>
         get() = _navigateToEditImage
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -268,7 +268,7 @@ class DetailEditViewModel(
             withContext(Dispatchers.IO) {
                 _scheduleResult.postValue(
                     when {
-                        newSchedule.id.isNullOrEmpty() -> {
+                        newSchedule.id.isEmpty() -> {
                             when (val result = howYoRepository.createSchedule(newSchedule)) {
                                 is Result.Success -> result.data
                                 else -> false

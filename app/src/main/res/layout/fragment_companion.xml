@@ -22,10 +22,12 @@
             android:layout_marginTop="@dimen/standard_padding"
             android:layout_marginEnd="@dimen/middle_padding"
             android:background="@drawable/icons_24px_close"
+            android:contentDescription="@string/content_desc_close"
             android:onClick="@{() -> viewModel.leave()}"
             app:layout_constraintBottom_toTopOf="@+id/layout_companion_search"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <RelativeLayout
             android:id="@+id/layout_companion_search"
@@ -46,9 +48,11 @@
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/small_padding"
+                android:contentDescription="@string/content_desc_search_icon"
                 android:elevation="1dp"
                 android:src="@drawable/search"
-                app:tint="@color/matcha_5" />
+                app:tint="@color/matcha_5"
+                tools:ignore="ImageContrastCheck" />
 
             <EditText
                 android:id="@+id/edittext_companion_friend"
@@ -58,11 +62,14 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/small_padding"
                 android:layout_toEndOf="@+id/img_companion_search"
+                android:autofillHints="@string/search"
                 android:background="@color/gray_f5f5f5"
                 android:hint="@string/search"
+                android:inputType="text"
                 android:maxLines="1"
                 android:text="@={viewModel.keywords}"
-                android:textAlignment="textStart" />
+                android:textAlignment="textStart"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView

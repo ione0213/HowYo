@@ -78,10 +78,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/middle_padding"
                 android:text="@{String.valueOf(viewModel.shouldPay)}"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toEndOf="@+id/text_payment_should_pay"
                 app:layout_constraintTop_toTopOf="@+id/text_payment_should_pay"
+                tools:ignore="TextContrastCheck"
                 tools:text="987" />
 
             <androidx.recyclerview.widget.RecyclerView

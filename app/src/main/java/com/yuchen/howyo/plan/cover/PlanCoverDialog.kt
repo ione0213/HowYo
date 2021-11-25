@@ -5,7 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -44,8 +44,8 @@ class PlanCoverDialog : AppCompatDialogFragment() {
 
     private val takePhoto = 0x00
     private val fromAlbum = 0x01
-    lateinit var imageUri: Uri
-    lateinit var outputImage: File
+    private lateinit var imageUri: Uri
+    private lateinit var outputImage: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

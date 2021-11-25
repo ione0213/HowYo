@@ -33,7 +33,7 @@ class GroupMessageViewModel(
     val groupMsgResult: LiveData<Boolean>
         get() = _groupMsgResult
 
-    var message = MutableLiveData<String>()
+    var message = MutableLiveData<String?>()
 
     private var viewModelJob = Job()
 

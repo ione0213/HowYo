@@ -26,7 +26,7 @@
             android:background="@color/white"
             android:elevation="5dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/cardview_radius"
+            app:cardCornerRadius="@dimen/card_view_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,15 +62,15 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:onClick="@{() -> viewModel.navigateToUserProfile(notification.fromUserId)}"
-                    app:authorData="@{viewModel.userDataSet}"
-                    app:userId="@{notification.fromUserId}"
                     android:textAlignment="viewStart"
                     android:textStyle="bold"
+                    app:authorData="@{viewModel.userDataSet}"
                     app:layout_constraintEnd_toStartOf="@+id/img_home_plan_cover"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/img_notify_like_avatar"
                     app:layout_constraintTop_toTopOf="@+id/img_notify_like_avatar"
+                    app:userId="@{notification.fromUserId}"
                     tools:text="traveller" />
 
                 <TextView
@@ -81,11 +81,11 @@
                     android:layout_marginTop="@dimen/small_padding"
                     android:text="@string/notification_like_msg"
                     android:textAlignment="viewStart"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/img_notify_like_avatar"
                     app:layout_constraintStart_toStartOf="@+id/text_notify_like_user_name"
-                    app:layout_constraintTop_toBottomOf="@+id/text_notify_like_user_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_notify_like_user_name"
+                    tools:ignore="TextContrastCheck" />
 
                 <TextView
                     android:id="@+id/textview_notify_like_time"
@@ -96,6 +96,7 @@
                     app:dateTime="@{notification.createdTime}"
                     app:layout_constraintStart_toEndOf="@+id/text_notify_like_msg"
                     app:layout_constraintTop_toTopOf="@+id/text_notify_like_msg"
+                    tools:ignore="TextContrastCheck"
                     tools:text="06:30 下午" />
 
                 <ImageView
@@ -104,17 +105,16 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="@dimen/middle_padding"
                     android:layout_marginEnd="@dimen/small_padding"
+                    android:contentDescription="@string/content_desc_cover_photo"
+                    android:onClick="@{() -> viewModel.navigateToPlan(notification.planId)}"
                     android:scaleType="centerCrop"
                     app:imageUrl="@{notification.planCoverUrl}"
                     app:layout_constraintBottom_toBottomOf="@+id/img_notify_like_avatar"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:onClick="@{() -> viewModel.navigateToPlan(notification.planId)}"
-
                     app:layout_constraintTop_toTopOf="@+id/img_notify_like_avatar"
                     app:layout_goneMarginStart="@dimen/small_padding"
                     app:shapeAppearanceOverlay="@style/circle"
                     tools:src="@drawable/sample_cover" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

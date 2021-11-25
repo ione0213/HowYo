@@ -45,6 +45,7 @@
                         android:layout_marginTop="@dimen/middle_padding"
                         android:layout_marginEnd="@dimen/middle_padding"
                         android:orientation="horizontal"
+                        android:contentDescription="@string/content_desc_edit_schedule_photo"
                         android:visibility="@{viewModel.photoDataList.size == 0 ? View.GONE : View.VISIBLE}"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +81,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:shapeAppearanceOverlay="@style/circle2" />
+                            app:shapeAppearanceOverlay="@style/circle2"
+                            tools:ignore="ImageContrastCheck" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -90,9 +92,11 @@
                         android:layout_marginStart="@dimen/middle_padding"
                         android:layout_marginTop="@dimen/large_padding"
                         android:background="@drawable/icons_44px_back01"
+                        android:contentDescription="@string/content_desc_back"
                         android:onClick="@{() -> viewModel.leaveEditDetail()}"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="TouchTargetSizeCheck" />
 
                     <TextView
                         android:id="@+id/text_detail_edit_type"
@@ -117,6 +121,7 @@
                         android:layout_marginStart="@dimen/middle_padding"
                         android:layout_marginEnd="@dimen/middle_padding"
                         android:prompt="@string/select_schedule_type"
+                        android:contentDescription="@string/content_desc_select_schedule_type"
                         android:selectedItemPosition="@={viewModel.selectedScheduleTypePosition}"
                         android:spinnerMode="dialog"
                         app:layout_constraintBottom_toBottomOf="@id/text_detail_edit_type"
@@ -170,7 +175,8 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.title}"
-                            android:textColor="@color/matcha_3" />
+                            android:textColor="@color/matcha_3"
+                            tools:ignore="TextContrastCheck" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -194,7 +200,8 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.address}"
-                            android:textColor="@color/matcha_3" />
+                            android:textColor="@color/matcha_3"
+                            tools:ignore="TextContrastCheck" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -220,7 +227,8 @@
                             android:onClick="@{() -> viewModel.setTime(@string/detail_edit_schedule_start_time)}"
                             android:singleLine="true"
                             android:textColor="@color/matcha_3"
-                            app:time="@{viewModel.startTime}" />
+                            app:time="@{viewModel.startTime}"
+                            tools:ignore="TextContrastCheck" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -246,7 +254,8 @@
                             android:onClick="@{() -> viewModel.setTime(@string/detail_edit_schedule_end_time)}"
                             android:singleLine="true"
                             android:textColor="@color/matcha_3"
-                            app:time="@{viewModel.endTime}" />
+                            app:time="@{viewModel.endTime}"
+                            tools:ignore="TextContrastCheck" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -271,7 +280,8 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.remark}"
-                            android:textColor="@color/matcha_3" />
+                            android:textColor="@color/matcha_3"
+                            tools:ignore="TextContrastCheck" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -296,7 +306,8 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@={viewModel.budget}"
-                            android:textColor="@color/matcha_3" />
+                            android:textColor="@color/matcha_3"
+                            tools:ignore="TextContrastCheck" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -368,6 +379,7 @@
             android:layout_margin="@dimen/middle_padding"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
+            android:contentDescription="@string/content_desc_submit_plan"
             android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
             android:onClick="@{() -> viewModel.submitSchedule()}"
             android:text="@{viewModel.status != LoadApiStatus.LOADING ? @string/save_setting : @string/save_uploading}"

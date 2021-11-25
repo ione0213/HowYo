@@ -36,15 +36,15 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
         get() = _authorDataSet
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     // Handle navigation to notification
-    private val _navigateToNotification = MutableLiveData<Boolean>()
+    private val _navigateToNotification = MutableLiveData<Boolean?>()
 
-    val navigateToNotification: LiveData<Boolean>
+    val navigateToNotification: LiveData<Boolean?>
         get() = _navigateToNotification
 
     private val _status = MutableLiveData<LoadApiStatus>()

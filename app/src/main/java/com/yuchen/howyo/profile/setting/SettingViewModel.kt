@@ -22,14 +22,14 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
     val avatarPhotoData: LiveData<PhotoData>
         get() = _avatarPhoto
 
-    private val _selectPhoto = MutableLiveData<Boolean>()
+    private val _selectPhoto = MutableLiveData<Boolean?>()
 
-    val selectPhoto: LiveData<Boolean>
+    val selectPhoto: LiveData<Boolean?>
         get() = _selectPhoto
 
-    private val _takePhoto = MutableLiveData<Boolean>()
+    private val _takePhoto = MutableLiveData<Boolean?>()
 
-    val takePhoto: LiveData<Boolean>
+    val takePhoto: LiveData<Boolean?>
         get() = _takePhoto
 
     private val _isAvatarPhotoReady = MutableLiveData<Boolean>()

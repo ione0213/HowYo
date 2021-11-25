@@ -34,7 +34,7 @@ class HomeAdapter(
         }
     }
 
-    class EmptyViewHolder(private var binding: ItemEmptyPlanBinding) :
+    class EmptyViewHolder(binding: ItemEmptyPlanBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {

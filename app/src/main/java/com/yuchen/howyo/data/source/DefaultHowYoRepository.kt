@@ -54,7 +54,7 @@ class DefaultHowYoRepository(
         return remoteDataSource.getPlan(planId)
     }
 
-    override fun getLivePlan(planId: String): MutableLiveData<Plan> {
+    override fun getLivePlan(planId: String): MutableLiveData<Plan?> {
         return remoteDataSource.getLivePlan(planId)
     }
 

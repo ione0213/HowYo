@@ -42,15 +42,15 @@ class PaymentViewModel(
         get() = _planMembersData
 
     // Handle navigation to payment detail
-    private val _navigateToPaymentDetail = MutableLiveData<Boolean>()
+    private val _navigateToPaymentDetail = MutableLiveData<Boolean?>()
 
-    val navigateToPaymentDetail: LiveData<Boolean>
+    val navigateToPaymentDetail: LiveData<Boolean?>
         get() = _navigateToPaymentDetail
 
     // Handle navigation to edit exist payment detail
-    private val _navigateToEditExistPaymentDetail = MutableLiveData<Payment>()
+    private val _navigateToEditExistPaymentDetail = MutableLiveData<Payment?>()
 
-    val navigateToEditExistPaymentDetail: LiveData<Payment>
+    val navigateToEditExistPaymentDetail: LiveData<Payment?>
         get() = _navigateToEditExistPaymentDetail
 
     private val _status = MutableLiveData<LoadApiStatus>()

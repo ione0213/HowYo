@@ -28,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/map_locate_companion"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"

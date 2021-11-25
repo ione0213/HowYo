@@ -34,15 +34,15 @@ class AuthorProfileViewModel(
     var plans = MutableLiveData<List<Plan>>()
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     // Handle navigation to friends
-    private val _navigateToFriends = MutableLiveData<FriendFilter>()
+    private val _navigateToFriends = MutableLiveData<FriendFilter?>()
 
-    val navigateToFriends: LiveData<FriendFilter>
+    val navigateToFriends: LiveData<FriendFilter?>
         get() = _navigateToFriends
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -66,7 +66,7 @@ class AuthorProfileViewModel(
     }
 
     private fun fetchLiveUserResult() {
-        _author = howYoRepository.getLiveUser(argumentUserId ?: "")
+        _author = howYoRepository.getLiveUser(argumentUserId)
 
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }

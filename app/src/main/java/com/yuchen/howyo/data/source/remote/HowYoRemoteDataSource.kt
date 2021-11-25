@@ -360,9 +360,9 @@ object HowYoRemoteDataSource : HowYoDataSource {
             }
     }
 
-    override fun getLivePlan(planId: String): MutableLiveData<Plan> {
+    override fun getLivePlan(planId: String): MutableLiveData<Plan?> {
 
-        val liveData = MutableLiveData<Plan>()
+        val liveData = MutableLiveData<Plan?>()
 
         FirebaseFirestore.getInstance()
             .collection(PATH_PLANS)
@@ -861,7 +861,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                             }
                             else -> {
                                 lastSchedule = task.result.last().toObject(Schedule::class.java)
-                                schedule.position = lastSchedule.position?.plus(1)
+                                schedule.position = lastSchedule.position.plus(1)
                             }
                         }
 

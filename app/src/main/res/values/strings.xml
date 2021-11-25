@@ -15,7 +15,6 @@
     <string name="years_ago">%s年前</string>
 
     <!-- General -->
-    <string name="home">好友行程</string>
     <string name="discover">探索</string>
     <string name="favorite">收藏行程</string>
     <string name="notification">通知</string>
@@ -23,6 +22,8 @@
     <string name="group_message">群組聊天</string>
     <string name="check_list">行李清單</string>
     <string name="new_item">新增項目</string>
+    <string name="user_name">暱稱</string>
+    <string name="user_info">個人簡介</string>
     <string name="payment">款項清單</string>
     <string name="add_payment">新增款項</string>
     <string name="delete">刪除</string>
@@ -32,7 +33,6 @@
     <string name="setting">設定</string>
     <string name="comment">評論</string>
     <string name="save_setting">儲存</string>
-    <string name="rest_check_item">重置</string>
     <string name="save_uploading">建立中</string>
     <string name="confirm">確定</string>
     <string name="cancel">取消</string>
@@ -104,9 +104,8 @@
     <string name="following_tab">following</string>
     <string name="profile_fans">%d\n紛絲</string>
     <string name="profile_plans">%d\n行程</string>
-    <string name="profile_modify_nick_name">暱稱</string>
-    <string name="profile_modify_info">個人簡介</string>
-    <string name="profile_group_plan">旅遊群組</string>
+    <string name="profile_modify_nick_name">顯示名稱</string>
+    <string name="profile_modify_info">簡介</string>
     <string name="profile_follow_cancel">取消追蹤</string>
     <string name="profile_fans_remove">移除</string>
 
@@ -209,5 +208,58 @@
         <item>太陽眼鏡</item>
         <item>防曬乳</item>
     </string-array>
+
+    <!-- Content Description-->
+    <string name="content_desc_cover_photo">cover photo</string>
+    <string name="content_desc_submit_message">submit group message</string>
+    <string name="content_desc_search_icon">search icon</string>
+    <string name="content_desc_schedule_type_icon">schedule type icon</string>
+    <string name="content_desc_schedule_image">schedule image</string>
+    <string name="content_desc_nav_to_companion">navigate to companion</string>
+    <string name="content_desc_nav_to_map_mode">navigate to map mode</string>
+    <string name="content_desc_add_new_schedule">add new schedule</string>
+    <string name="content_desc_lock_plan">lock plan</string>
+    <string name="content_desc_unlock_plan">unlock plan</string>
+    <string name="content_desc_like_plan">like plan</string>
+    <string name="content_desc_unlike_plan">unlike plan</string>
+    <string name="content_desc_nav_to_comment">navigate to comment page</string>
+    <string name="content_desc_collect_plan">collect plan</string>
+    <string name="content_desc_not_collect_plan">not collect plan</string>
+    <string name="content_desc_nav_to_copy_plan">navigate to copy plan page</string>
+    <string name="content_desc_add_image">add image</string>
+    <string name="content_desc_add_schedule_image">add schedule image</string>
+    <string name="content_desc_delete_day">delete one of play days</string>
+    <string name="content_desc_delete_schedule_photo">delete one of the schedule photos</string>
+    <string name="content_desc_like_count">like counts</string>
+    <string name="content_desc_app_logo">app logo</string>
+    <string name="content_desc_submit_plan">submit plan</string>
+    <string name="content_desc_submit_schedule">submit schedule</string>
+    <string name="content_desc_browse_album">browse album</string>
+    <string name="content_desc_reset_cover">reset cover</string>
+    <string name="content_desc_take_photo">take photo</string>
+    <string name="content_desc_close">close</string>
+    <string name="content_desc_back">back</string>
+    <string name="content_desc_expand">expand</string>
+    <string name="content_desc_schedule_time">schedule time</string>
+    <string name="content_desc_url_icon">url icon</string>
+    <string name="content_desc_edit">edit</string>
+    <string name="content_desc_edit_schedule_photo">edit schedule photo</string>
+    <string name="content_desc_select_schedule_type">select schedule type</string>
+    <string name="content_desc_friend_tab">friend tabs</string>
+    <string name="content_desc_payer">payer</string>
+    <string name="content_desc_submit_payment">submit payment</string>
+    <string name="content_desc_shopping_list">shopping list</string>
+    <string name="content_desc_check_list">luggage list</string>
+    <string name="content_desc_share_plan">share plan</string>
+    <string name="content_desc_edit_plan">edit plan</string>
+    <string name="content_desc_companion_location">companion location</string>
+    <string name="content_desc_nav_to_payment">navigate to payment</string>
+    <string name="content_desc_nav_to_group_message">navigate to group message</string>
+    <string name="content_desc_add_item">add shopping or luggage item</string>
+    <string name="content_desc_delete_item">delete shopping or luggage item</string>
+    <string name="content_desc_add_companion">add companion</string>
+    <string name="content_desc_remove_companion">remove companion</string>
+    <string name="content_desc_money_icon">money icon</string>
+    <string name="content_desc_add_day">add a day in the plan</string>
 
 </resources>

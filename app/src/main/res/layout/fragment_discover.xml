@@ -49,9 +49,11 @@
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/small_padding"
+                    android:contentDescription="@string/content_desc_search_icon"
                     android:elevation="1dp"
                     android:src="@drawable/search"
-                    app:tint="@color/matcha_5" />
+                    app:tint="@color/matcha_5"
+                    tools:ignore="ImageContrastCheck" />
 
                 <EditText
                     android:id="@+id/edittext_discover_search"
@@ -61,11 +63,14 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_toEndOf="@+id/img_discover_search"
+                    android:autofillHints="@string/search"
                     android:background="@color/gray_f5f5f5"
                     android:hint="@string/search"
                     android:maxLines="1"
                     android:text="@={viewModel.keywords}"
-                    android:textAlignment="textStart" />
+                    android:textAlignment="textStart"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck"
+                    android:inputType="text" />
             </RelativeLayout>
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

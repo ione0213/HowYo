@@ -37,9 +37,9 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     val keywords = MutableLiveData<String>()
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     private val _status = MutableLiveData<LoadApiStatus>()

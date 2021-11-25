@@ -30,28 +30,31 @@
 
         <TextView
             android:id="@+id/textview_chat_received_name"
-            android:layout_width="wrap_content"
             style="@style/TextStyle3_matcha_3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
             android:text="@{groupMessageData.userName}"
             app:layout_constraintStart_toEndOf="@+id/img_chat_received_avatar"
             app:layout_constraintTop_toTopOf="@+id/img_chat_received_avatar"
+            tools:ignore="TextContrastCheck"
             tools:text="Mark" />
 
         <TextView
             android:id="@+id/textview_chat_received_time"
+            style="@style/TextStyle3_matcha_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
-            style="@style/TextStyle3_matcha_3"
-            app:layout_constraintStart_toEndOf="@+id/textview_chat_received_msg"
             app:layout_constraintBottom_toBottomOf="@+id/textview_chat_received_msg"
+            app:layout_constraintStart_toEndOf="@+id/textview_chat_received_msg"
             app:time="@{groupMessageData.createdTime}"
+            tools:ignore="TextContrastCheck"
             tools:text="06:30 下午" />
 
         <TextView
             android:id="@+id/textview_chat_received_msg"
+            style="@style/TextStyle2_matcha_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_bubble_sent"
@@ -60,10 +63,10 @@
             android:paddingTop="@dimen/small_padding"
             android:paddingEnd="@dimen/small_padding"
             android:paddingBottom="@dimen/small_padding"
-            style="@style/TextStyle2_matcha_3"
             android:text="@{groupMessageData.message}"
             app:layout_constraintStart_toStartOf="@+id/textview_chat_received_name"
             app:layout_constraintTop_toBottomOf="@+id/textview_chat_received_name"
+            tools:ignore="TextContrastCheck"
             tools:text="This is a sent message keep the text going so we can see" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

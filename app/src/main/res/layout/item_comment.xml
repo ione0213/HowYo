@@ -38,6 +38,7 @@
             android:text="@{commentData.userName}"
             android:ellipsize="marquee"
             android:maxLines="1"
+            tools:ignore="TextContrastCheck"
             android:maxWidth="100dp"
             app:layout_constraintStart_toEndOf="@+id/img_comment_avatar"
             app:layout_constraintTop_toTopOf="@+id/img_comment_avatar"
@@ -52,6 +53,7 @@
             app:dateTime="@{commentData.createdTime}"
             app:layout_constraintStart_toEndOf="@+id/textview_comment__name"
             app:layout_constraintTop_toTopOf="@+id/textview_comment__name"
+            tools:ignore="TextContrastCheck"
             tools:text="06:30 下午" />
 
         <TextView
@@ -62,6 +64,7 @@
             android:maxWidth="300dp"
             android:textAlignment="textStart"
             android:paddingBottom="@dimen/small_padding"
+            tools:ignore="TextContrastCheck"
             android:text="@{commentData.comment}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textview_comment__name"

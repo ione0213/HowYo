@@ -27,27 +27,32 @@
             android:layout_marginStart="@dimen/standard_padding"
             android:layout_marginTop="@dimen/small_padding"
             android:layout_marginBottom="@dimen/small_padding"
-            android:backgroundTint="@color/matcha_3"
             android:background="@drawable/plus"
+            android:backgroundTint="@color/matcha_3"
+            android:contentDescription="@string/content_desc_add_item"
             android:onClick="@{() -> viewModel.createItem(subType)}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <EditText
             android:id="@+id/edittext_check_list_add_item"
             style="@style/TextStyle2_matcha_3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/new_item"
             android:layout_marginStart="@dimen/small_padding"
-            android:textAlignment="viewStart"
+            android:autofillHints="@string/new_item"
+            android:hint="@string/new_item"
+            android:inputType="text"
             android:text="@={viewModel.item}"
+            android:textAlignment="viewStart"
             app:layout_constraintBottom_toBottomOf="@+id/img_check_list_checked"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/img_check_list_checked"
             app:layout_constraintTop_toTopOf="@+id/img_check_list_checked"
+            tools:ignore="TextContrastCheck"
             tools:text="護照" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
