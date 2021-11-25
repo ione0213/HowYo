@@ -112,27 +112,15 @@ class CopyPlanDialog : AppCompatDialogFragment() {
             }
         }
 
-        viewModel.isRelatedDataReady.observe(viewLifecycleOwner, {
+        viewModel.isRelatedDataReady.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
                     findNavController().navigate(
-                        NavigationDirections.navToProfileFragment(UserManager.userId!!)
+                        NavigationDirections.navToProfileFragment(UserManager.userId ?: "")
                     )
                 }
             }
-        })
-
-        viewModel.isCopyFinished.observe(viewLifecycleOwner, {
-            it?.let {
-                when {
-                    it -> {
-                        findNavController().navigate(
-                            NavigationDirections.navToProfileFragment(UserManager.userId!!)
-                        )
-                    }
-                }
-            }
-        })
+        }
 
         return binding.root
     }

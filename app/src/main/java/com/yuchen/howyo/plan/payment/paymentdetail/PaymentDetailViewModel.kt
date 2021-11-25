@@ -16,7 +16,7 @@ import kotlinx.coroutines.*
 class PaymentDetailViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPayment: Payment?,
-    private val argumentPlan: Plan
+    private val argumentPlan: Plan?
 ) : ViewModel() {
 
     private val _plan = MutableLiveData<Plan>().apply {
@@ -30,7 +30,7 @@ class PaymentDetailViewModel(
         value = when (argumentPayment) {
             null -> {
                 Payment(
-                    planId = argumentPlan.id
+                    planId = argumentPlan?.id
                 )
             }
             else -> {
@@ -110,7 +110,7 @@ class PaymentDetailViewModel(
             paymentType.value.isNullOrEmpty() -> {
                 _invalidPayment.value = INVALID_FORMAT_ITEM_TYPE_EMPTY
             }
-            amount.value.isNullOrEmpty() || amount.value!!.toInt() == 0 -> {
+            amount.value.isNullOrEmpty() || amount.value?.toInt() == 0 -> {
                 _invalidPayment.value = INVALID_FORMAT_AMOUNT_EMPTY
             }
             else -> {

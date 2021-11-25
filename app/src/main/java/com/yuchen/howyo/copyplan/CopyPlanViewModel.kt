@@ -50,8 +50,6 @@ class CopyPlanViewModel(
 
     val startDateFromUser = MutableLiveData<Long>()
 
-    private val previousStartDate = MutableLiveData<Long>()
-
     val endDateFromUser = MutableLiveData<Long>()
 
     // Days list for copying reference
@@ -95,12 +93,6 @@ class CopyPlanViewModel(
 
     val isRelatedDataReady: LiveData<Boolean>
         get() = _isRelatedDataReady
-
-    // Handle the copying is ready or not
-    private val _isCopyFinished = MutableLiveData<Boolean>()
-
-    val isCopyFinished: LiveData<Boolean>
-        get() = _isCopyFinished
 
     // Handle leave plan cover
     private val _leave = MutableLiveData<Boolean>()
@@ -156,7 +148,6 @@ class CopyPlanViewModel(
         val calendar = Calendar.getInstance()
 
         startDateFromUser.value = plan.value?.startDate ?: calendar.timeInMillis
-        previousStartDate.value = startDateFromUser.value!!.toLong()
 
         calendar.add(Calendar.DAY_OF_YEAR, 1)
 
@@ -237,14 +228,15 @@ class CopyPlanViewModel(
     private suspend fun createDays(): Boolean {
         val planId = planId.value
         val days =
-            (endDateFromUser.value?.minus(startDateFromUser.value!!)?.div((60 * 60 * 24 * 1000)))
-                ?.toInt()
+            (startDateFromUser.value?.let { startDate ->
+                endDateFromUser.value?.minus(startDate)?.div((60 * 60 * 24 * 1000))
+            })?.toInt() ?: 0
         val dayResults = mutableListOf<Boolean>()
         val scheduleResults = mutableListOf<Boolean>()
         val daysData = mutableListOf<Pair<Day, Int>>()
 
-        for (position in 0..days!!) {
-            val result = howYoRepository.createDay(position, planId!!)
+        for (position in 0..days) {
+            val result = planId?.let { howYoRepository.createDay(position, it) }
 
             if (result is Result.Success) {
                 dayResults.add(true)
@@ -265,8 +257,8 @@ class CopyPlanViewModel(
     fun createRelatedCollection() {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-                _isDaysReady.postValue(createDays()!!)
-                _isChkListReady.postValue(createDefaultCheckList()!!)
+                _isDaysReady.postValue(createDays())
+                _isChkListReady.postValue(createDefaultCheckList())
             }
 
             when {
@@ -403,7 +395,7 @@ class CopyPlanViewModel(
 
     private fun fetchFromDaysResult() {
         coroutineScope.launch {
-            val result = howYoRepository.getDays(plan.value?.id!!)
+            val result = howYoRepository.getDays(plan.value?.id ?: "")
 
             _days.value = when (result) {
                 is Result.Success -> result.data
@@ -414,7 +406,7 @@ class CopyPlanViewModel(
 
     private fun fetchSchedulesResult() {
         coroutineScope.launch {
-            val result = howYoRepository.getSchedules(plan.value?.id!!)
+            val result = howYoRepository.getSchedules(plan.value?.id ?: "")
 
             _schedules.value = when (result) {
                 is Result.Success -> result.data

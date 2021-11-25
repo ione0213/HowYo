@@ -5,7 +5,7 @@ sealed class DayItem {
 
     data class FullDayItem(val day: Day) : DayItem() {
         override val id: String
-            get() = day.id!!
+            get() = day.id
     }
 
     object AddBtn : DayItem() {

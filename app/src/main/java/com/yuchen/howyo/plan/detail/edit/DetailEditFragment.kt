@@ -73,9 +73,9 @@ class DetailEditFragment : Fragment() {
                 val hour = c.get(Calendar.HOUR_OF_DAY)
                 val minute = c.get(Calendar.MINUTE)
 
-                c.timeInMillis = viewModel.plan.value?.startDate!!.plus(
+                c.timeInMillis = viewModel.plan.value?.startDate?.plus(
                     (1000 * 60 * 60 * 24 * (viewModel.day.value?.position ?: 0))
-                )
+                ) ?: 0L
 
                 val picker = TimePickerDialog(
                     context,
@@ -85,14 +85,7 @@ class DetailEditFragment : Fragment() {
                         c.set(Calendar.HOUR_OF_DAY, sHour)
                         c.set(Calendar.MINUTE, sMinute)
 
-                        when (it) {
-                            getString(R.string.detail_edit_schedule_start_time) -> {
-                                viewModel.setTimeValue(it, c.timeInMillis)
-                            }
-                            getString(R.string.detail_edit_schedule_end_time) -> {
-                                viewModel.setTimeValue(it, c.timeInMillis)
-                            }
-                        }
+                        viewModel.setTimeValue(it, c.timeInMillis)
                     },
                     hour,
                     minute,

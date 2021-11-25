@@ -53,23 +53,22 @@ class PaymentFragment : Fragment() {
 
         viewModel.navigateToPaymentDetail.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it -> {
-                        val users = Users()
-                        viewModel.planMembersData.value?.forEach { user ->
-                            users.add(user)
-                        }
+                if (it) {
+                    val users = Users()
 
-                        findNavController().navigate(
-                            NavigationDirections.navToPaymentDetailFragment(
-                                null,
-                                viewModel.plan.value!!,
-                                users
-                            )
-                        )
-
-                        viewModel.onPaymentDetailNavigated()
+                    viewModel.planMembersData.value?.forEach { user ->
+                        users.add(user)
                     }
+
+                    findNavController().navigate(
+                        NavigationDirections.navToPaymentDetailFragment(
+                            null,
+                            viewModel.plan.value,
+                            users
+                        )
+                    )
+
+                    viewModel.onPaymentDetailNavigated()
                 }
             }
         }
@@ -84,7 +83,7 @@ class PaymentFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToPaymentDetailFragment(
                         it,
-                        viewModel.plan.value!!,
+                        viewModel.plan.value,
                         users
                     )
                 )

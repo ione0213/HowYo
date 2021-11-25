@@ -181,7 +181,7 @@ class PlanCoverViewModel(
         val calendar = Calendar.getInstance()
 
         startDateFromUser.value = plan.value?.startDate ?: calendar.timeInMillis
-        previousStartDate.value = startDateFromUser.value!!.toLong()
+        previousStartDate.value = startDateFromUser.value?.toLong()
 
         calendar.add(Calendar.DAY_OF_YEAR, 1)
 
@@ -227,9 +227,9 @@ class PlanCoverViewModel(
                         when (planPhotoData.value?.isDeleted) {
                             true -> {
                                 when {
-                                    planPhotoData.value!!.fileName?.isNotEmpty() == true -> {
+                                    planPhotoData.value?.fileName?.isNotEmpty() == true -> {
                                         coverPhotoResult.add(
-                                            deletePhoto(planPhotoData.value!!.fileName!!)
+                                            deletePhoto(planPhotoData.value?.fileName ?: "")
                                         )
                                     }
                                     else -> {
@@ -279,12 +279,12 @@ class PlanCoverViewModel(
         }
 
     fun createPlan() {
-        val plan = plan.value!!
+        val plan = plan.value
 
-        plan.authorId = currentUser.value?.id
+        plan?.authorId = currentUser.value?.id
 
         coroutineScope.launch {
-            val result = howYoRepository.createPlan(plan)
+            val result = plan?.let { howYoRepository.createPlan(it) }
 
             _planId.value = when (result) {
                 is Result.Success -> result.data
@@ -318,8 +318,8 @@ class PlanCoverViewModel(
     fun createRelatedCollection() {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-                _isDaysReady.postValue(createDays()!!)
-                _isChkListReady.postValue(createDefaultCheckList()!!)
+                _isDaysReady.postValue(createDays())
+                _isChkListReady.postValue(createDefaultCheckList())
             }
 
             when {
@@ -336,8 +336,9 @@ class PlanCoverViewModel(
         val scheduleList = schedules.value?.toList()
 
         val newDayCount =
-            (endDateFromUser.value?.minus(startDateFromUser.value!!)?.div((60 * 60 * 24 * 1000)))
-                ?.toInt()?.plus(1)
+            (startDateFromUser.value?.let { startDate ->
+                endDateFromUser.value?.minus(startDate)?.div((60 * 60 * 24 * 1000))
+            })?.toInt()?.plus(1)
 
         val differenceInDayCount = newDayCount?.minus(dayList?.size ?: 0)
 
@@ -369,18 +370,18 @@ class PlanCoverViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
 
                                         val date = Calendar.getInstance()
-                                        date.timeInMillis = plan.value?.startDate!!.plus(
+                                        date.timeInMillis = plan.value?.startDate?.plus(
                                             (1000 * 60 * 60 * 24 * day.position)
-                                        )
+                                        ) ?: 0L
 
                                         when {
-                                            schedule.startTime != 0L -> {
+                                            schedule.startTime != 0L && schedule.startTime != null -> {
 
                                                 val hour = schedule.startTime?.toHour() ?: 0
                                                 val minute = schedule.startTime?.toMinute() ?: 0
@@ -388,13 +389,12 @@ class PlanCoverViewModel(
                                                 date.set(Calendar.HOUR_OF_DAY, hour)
                                                 date.set(Calendar.MINUTE, minute)
 
-                                                newSchedule.startTime =
-                                                    date.timeInMillis
+                                                newSchedule.startTime = date.timeInMillis
                                             }
                                         }
 
                                         when {
-                                            schedule.endTime != 0L -> {
+                                            schedule.endTime != 0L && schedule.startTime != null -> {
 
                                                 val hour = schedule.endTime?.toHour() ?: 0
                                                 val minute = schedule.endTime?.toMinute() ?: 0
@@ -402,8 +402,7 @@ class PlanCoverViewModel(
                                                 date.set(Calendar.HOUR_OF_DAY, hour)
                                                 date.set(Calendar.MINUTE, minute)
 
-                                                newSchedule.endTime =
-                                                    date.timeInMillis
+                                                newSchedule.endTime = date.timeInMillis
                                             }
                                         }
 
@@ -419,14 +418,16 @@ class PlanCoverViewModel(
                     when {
                         differenceInDayCount > 0 -> {
                             val lastPosition =
-                                dayList?.maxByOrNull { it.position }!!.position
+                                dayList?.maxByOrNull { it.position }?.position
 
                             for (position in 1..differenceInDayCount) {
                                 val result =
                                     plan.value?.id?.let {
-                                        howYoRepository.createDay(
-                                            lastPosition.plus(position), it
-                                        )
+                                        lastPosition?.let { lastPosition ->
+                                            howYoRepository.createDay(
+                                                lastPosition.plus(position), it
+                                            )
+                                        }
                                     }
 
                                 if (result is Result.Success) {
@@ -470,13 +471,14 @@ class PlanCoverViewModel(
     private suspend fun createDays(): Boolean {
         val planId = planId.value
         val days =
-            (endDateFromUser.value?.minus(startDateFromUser.value!!)?.div((60 * 60 * 24 * 1000)))
-                ?.toInt()
+            (startDateFromUser.value?.let {
+                endDateFromUser.value?.minus(it)?.div((60 * 60 * 24 * 1000))
+            })?.toInt() ?: 0
 
         val dayResults = mutableListOf<Boolean>()
 
-        for (position in 0..days!!) {
-            val result = howYoRepository.createDay(position, planId!!)
+        for (position in 0..days) {
+            val result = planId?.let { howYoRepository.createDay(position, it) }
 
             if (result is Result.Success) {
                 dayResults.add(true)
@@ -597,7 +599,7 @@ class PlanCoverViewModel(
 
     private fun fetchDaysResult() {
         coroutineScope.launch {
-            val result = howYoRepository.getDays(plan.value?.id!!)
+            val result = howYoRepository.getDays(plan.value?.id ?: "")
             _days.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -607,7 +609,7 @@ class PlanCoverViewModel(
 
     private fun fetchSchedulesResult() {
         coroutineScope.launch {
-            val result = howYoRepository.getSchedules(plan.value?.id!!)
+            val result = howYoRepository.getSchedules(plan.value?.id ?: "")
             _schedules.value = when (result) {
                 is Result.Success -> result.data
                 else -> null

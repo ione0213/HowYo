@@ -70,7 +70,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                                     .set(user)
                                     .addOnCompleteListener { createUserTask ->
                                         if (createUserTask.isSuccessful) {
-                                            continuation.resume(Result.Success(user.id!!))
+                                            continuation.resume(Result.Success(user.id))
                                         } else {
                                             createUserTask.exception?.let {
                                                 Logger.w("[${this::class.simpleName}] Error creating user. ${it.message}")
@@ -210,7 +210,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                                 val list = mutableListOf<User>()
 
                                 if (task.result != null) {
-                                    for (document in task.result!!) {
+                                    for (document in task.result) {
                                         Logger.d(document.id + " => " + document.data)
 
                                         val user = document.toObject(User::class.java)
@@ -404,7 +404,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                                 val list = mutableListOf<Plan>()
 
                                 if (task.result != null) {
-                                    for (document in task.result!!) {
+                                    for (document in task.result) {
                                         Logger.d(document.id + " => " + document.data)
 
                                         val plan = document.toObject(Plan::class.java)
@@ -444,7 +444,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                     val list = mutableListOf<Plan>()
 
                     if (task.result != null) {
-                        for (document in task.result!!) {
+                        for (document in task.result) {
                             Logger.d(document.id + " => " + document.data)
 
                             val plan = document.toObject(Plan::class.java)
@@ -484,7 +484,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                         val list = mutableListOf<Plan>()
 
                         if (task.result != null) {
-                            for (document in task.result!!) {
+                            for (document in task.result) {
                                 Logger.d(document.id + " => " + document.data)
 
                                 val plan = document.toObject(Plan::class.java)
@@ -696,6 +696,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 planId,
                 position = position
             )
+
             document
                 .set(day)
                 .addOnCompleteListener { task ->
@@ -794,11 +795,14 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 }
 
                 val list = mutableListOf<Day>()
-                for (document in snapshot!!) {
-                    Logger.d(document.id + " => " + document.data)
 
-                    val day = document.toObject(Day::class.java)
-                    list.add(day)
+                if (snapshot != null) {
+                    for (document in snapshot) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val day = document.toObject(Day::class.java)
+                        list.add(day)
+                    }
                 }
 
                 liveData.value = list
@@ -817,13 +821,15 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val list = mutableListOf<Day>()
-                        for (document in task.result!!) {
-                            Logger.d(document.id + " => " + document.data)
+                        if (task.result.size() != 0) {
+                            for (document in task.result) {
+                                Logger.d(document.id + " => " + document.data)
 
-                            val day = document.toObject(Day::class.java)
-                            list.add(day)
+                                val day = document.toObject(Day::class.java)
+                                list.add(day)
+                            }
+                            continuation.resume(Result.Success(list))
                         }
-                        continuation.resume(Result.Success(list))
                     } else {
                         task.exception?.let {
 
@@ -923,7 +929,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)
-                .document(schedule.id!!)
+                .document(schedule.id)
                 .set(schedule)
                 .addOnSuccessListener {
                     Logger.i("Update: $schedule")
@@ -940,7 +946,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
             FirebaseFirestore.getInstance()
                 .collection(PATH_SCHEDULES)
-                .document(schedule.id!!)
+                .document(schedule.id)
                 .delete()
                 .addOnSuccessListener {
                     Logger.i("Delete: $schedule")
@@ -961,7 +967,7 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
                 list.forEach { schedule ->
 
-                    val document = db.collection(PATH_SCHEDULES).document(schedule.id!!)
+                    val document = db.collection(PATH_SCHEDULES).document(schedule.id)
 
                     batch.delete(document)
                 }
@@ -984,7 +990,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         }
 
     override fun getLiveSchedules(planId: String): MutableLiveData<List<Schedule>> {
-
         val liveData = MutableLiveData<List<Schedule>>()
 
         FirebaseFirestore.getInstance()
@@ -1001,7 +1006,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 val list = mutableListOf<Schedule>()
                 if (snapshot != null) {
                     for (document in snapshot) {
-
                         val schedule = document.toObject(Schedule::class.java)
                         list.add(schedule)
                     }
@@ -1022,13 +1026,15 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val list = mutableListOf<Schedule>()
-                        for (document in task.result!!) {
-                            Logger.d(document.id + " => " + document.data)
+                        if (task.result.size() != 0) {
+                            for (document in task.result) {
+                                Logger.d(document.id + " => " + document.data)
 
-                            val schedule = document.toObject(Schedule::class.java)
-                            list.add(schedule)
+                                val schedule = document.toObject(Schedule::class.java)
+                                list.add(schedule)
+                            }
+                            continuation.resume(Result.Success(list))
                         }
-                        continuation.resume(Result.Success(list))
                     } else {
                         task.exception?.let {
 
@@ -1302,13 +1308,16 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val list = mutableListOf<Comment>()
-                        for (document in task.result!!) {
-                            Logger.d(document.id + " => " + document.data)
 
-                            val comment = document.toObject(Comment::class.java)
-                            list.add(comment)
+                        if (task.result != null) {
+                            for (document in task.result) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val comment = document.toObject(Comment::class.java)
+                                list.add(comment)
+                            }
+                            continuation.resume(Result.Success(list))
                         }
-                        continuation.resume(Result.Success(list))
                     } else {
                         task.exception?.let {
 
@@ -1329,7 +1338,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
             .whereEqualTo(KEY_PLAN_ID, planId)
             .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->
-
                 Logger.i("addSnapshotListener detect")
 
                 exception?.let {
@@ -1471,21 +1479,16 @@ object HowYoRemoteDataSource : HowYoDataSource {
 
     override suspend fun updateNotificationWithBatch(list: List<Notification>): Result<Boolean> =
         suspendCoroutine { continuation ->
-
             val db = FirebaseFirestore.getInstance()
 
             db.runBatch { batch ->
-
                 list.forEach { notification ->
-
-                    val document = db.collection(PATH_NOTIFICATION).document(notification.id!!)
+                    val document = db.collection(PATH_NOTIFICATION).document(notification.id)
 
                     batch.set(document, notification)
                 }
             }.addOnCompleteListener { task ->
-
                 if (task.isSuccessful) {
-
                     continuation.resume(Result.Success(true))
                 } else {
                     task.exception?.let {
@@ -1505,7 +1508,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         fromUserId: String
     ): Result<Boolean> =
         suspendCoroutine { continuation ->
-
             val deleteResults = mutableListOf<Boolean>()
 
             FirebaseFirestore.getInstance()
@@ -1517,13 +1519,10 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         if (task.result.size() != 0) {
-                            Logger.i("task .result:${task.result}")
                             task.result.forEach {
-
                                 val db = FirebaseFirestore.getInstance()
 
                                 db.runBatch { batch ->
-
                                     val document =
                                         db.collection(PATH_NOTIFICATION).document(it.id)
 
@@ -1567,7 +1566,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
                 .set(payment)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-
                         continuation.resume(Result.Success(true))
                     } else {
                         task.exception?.let {
@@ -1651,7 +1649,6 @@ object HowYoRemoteDataSource : HowYoDataSource {
         type: DeleteDataType
     ): Result<Boolean> =
         suspendCoroutine { continuation ->
-
             val collectionName = when (type) {
                 DeleteDataType.DAYS -> PATH_DAYS
                 DeleteDataType.SCHEDULES -> PATH_SCHEDULES

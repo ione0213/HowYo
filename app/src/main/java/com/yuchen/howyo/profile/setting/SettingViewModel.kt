@@ -109,8 +109,12 @@ class SettingViewModel(private val howYoRepository: HowYoRepository) : ViewModel
                 when (avatarPhotoData.value?.isDeleted) {
                     true -> {
                         when {
-                            avatarPhotoData.value!!.fileName?.isNotEmpty() == true -> {
-                                avatarPhotoResult.add(deletePhoto(avatarPhotoData.value!!.fileName!!))
+                            avatarPhotoData.value?.fileName?.isNotEmpty() == true -> {
+                                avatarPhotoResult.add(
+                                    deletePhoto(
+                                        avatarPhotoData.value?.fileName ?: ""
+                                    )
+                                )
                             }
                             else -> {
 

@@ -61,7 +61,7 @@ class AuthorProfileFragment : Fragment() {
         viewModel.navigateToFriends.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToFriendsFragment(it, viewModel.author.value?.id!!)
+                    NavigationDirections.navToFriendsFragment(it, viewModel.author.value?.id ?: "")
                 )
                 viewModel.onFriendNavigated()
             }

@@ -146,7 +146,7 @@ class LocateFragment : Fragment(), OnMapReadyCallback {
                         )
                         .title(it.name).icon(
                             BitmapDescriptorFactory.fromBitmap(
-                                getMarkerBitmapFromView(it, bmp)!!
+                                getMarkerBitmapFromView(it, bmp)
                             )
                         )
                 )

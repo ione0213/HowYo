@@ -61,7 +61,7 @@ class FriendItemAdapter(
     }
 
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, viewModel, friendType, userId)
+        holder.bind(getItem(position), viewModel, friendType, userId)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {

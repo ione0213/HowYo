@@ -14,7 +14,7 @@ import kotlinx.coroutines.*
 
 class PlanViewModel(
     private val howYoRepository: HowYoRepository,
-    private val argumentPlan: Plan,
+    private val argumentPlan: Plan?,
     private val argumentAccessPlanType: AccessPlanType
 ) : ViewModel() {
     // Plan data
@@ -229,7 +229,7 @@ class PlanViewModel(
     }
 
     private fun fetchAuthorResult() {
-        val authorId = when (argumentPlan.id.isNotEmpty()) {
+        val authorId = when (argumentPlan?.id?.isNotEmpty()) {
             true -> argumentPlan.authorId
             else -> null
         }
@@ -248,8 +248,8 @@ class PlanViewModel(
     }
 
     private fun fetchLivePlanResult() {
-        when (argumentPlan.id.isNotEmpty()) {
-            true -> _plan = howYoRepository.getLivePlan(plan.value?.id!!)
+        when (argumentPlan?.id?.isNotEmpty()) {
+            true -> _plan = howYoRepository.getLivePlan(argumentPlan.id)
         }
     }
 
@@ -286,7 +286,7 @@ class PlanViewModel(
                     deleteDataListsWithBatch(plan.id, DeleteDataType.CHECK_SHOP_LIST)
                 )
 
-                planResult.add(deletePlan(plan)!!)
+                deletePlan(plan)?.let { planResult.add(it) }
                 deletePhoto(plan.coverFileName)?.let { photoResult.add(it) }
 
                 groupMsgResult = deleteDataListsWithBatch(plan.id, DeleteDataType.GROUP_MSG)
@@ -368,7 +368,7 @@ class PlanViewModel(
     }
 
     private fun getLiveDaysResult() {
-        days = howYoRepository.getLiveDays(argumentPlan.id)
+        days = howYoRepository.getLiveDays(argumentPlan?.id ?: "")
     }
 
     fun addNewDay() {
@@ -376,8 +376,8 @@ class PlanViewModel(
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-                _dayResult.postValue(addDay()!!)
-                _updatePlanResult.postValue(updatePlan(HandleDayType.NEW)!!)
+                _dayResult.postValue(addDay())
+                _updatePlanResult.postValue(updatePlan(HandleDayType.NEW))
             }
 
             when {
@@ -398,11 +398,11 @@ class PlanViewModel(
             withContext(Dispatchers.IO) {
                 days.value?.forEach {
                     when {
-                        it.position!! > day.position!! -> {
-                            val newDay = Day(it.id, it.planId, it.position!! - 1)
+                        it.position > day.position -> {
+                            val newDay = Day(it.id, it.planId, it.position - 1)
                             daysResult.add(updateDay(newDay))
                         }
-                        it.position!! == day.position!! -> daysResult.add(deleteDay(it))
+                        it.position == day.position -> daysResult.add(deleteDay(it))
                     }
                 }
 
@@ -410,7 +410,7 @@ class PlanViewModel(
                     scheduleResult.add(deleteSchedule(schedule))
                 }
 
-                _updatePlanResult.postValue(updatePlan(HandleDayType.DELETE)!!)
+                _updatePlanResult.postValue(updatePlan(HandleDayType.DELETE))
             }
 
             when {
@@ -424,10 +424,10 @@ class PlanViewModel(
     }
 
     private suspend fun addDay(): Boolean {
-        val newPosition = days.value?.maxByOrNull { it.position!! }!!.position?.plus(1)
+        val newPosition = days.value?.maxByOrNull { it.position }?.position?.plus(1)
         val planId = plan.value?.id
 
-        return when (howYoRepository.createDay(newPosition!!, planId!!)) {
+        return when (newPosition?.let { howYoRepository.createDay(it, planId ?: "") }) {
             is Result.Success -> true
             else -> false
         }
@@ -481,7 +481,7 @@ class PlanViewModel(
             withContext(Dispatchers.IO) {
                 scheduleList?.forEach {
                     when {
-                        it.position!! > schedule.position!! -> {
+                        it.position > schedule.position -> {
                             val newSchedule = Schedule(
                                 it.id,
                                 it.planId,
@@ -497,14 +497,14 @@ class PlanViewModel(
                                 it.budget,
                                 it.refUrl,
                                 it.notification,
-                                it.position!! - 1,
+                                it.position - 1,
                                 it.address,
                                 it.remark
                             )
 
                             schedulesResult.add(updateSchedule(newSchedule))
                         }
-                        it.position!! == schedule.position!! -> {
+                        it.position == schedule.position -> {
                             schedulesResult.add(deleteSchedule(it))
                         }
                     }
@@ -518,7 +518,7 @@ class PlanViewModel(
     }
 
     private fun getLiveSchedulesResult() {
-        allSchedules = howYoRepository.getLiveSchedules(argumentPlan.id)
+        allSchedules = howYoRepository.getLiveSchedules(argumentPlan?.id ?: "")
 
         setStatusDone()
     }
@@ -564,15 +564,15 @@ class PlanViewModel(
             true -> {
                 newDays?.forEachIndexed { index, day ->
                     when {
-                        day.position!! < to || day.position!! > from -> {
+                        day.position < to || day.position > from -> {
 
                         }
-                        day.position!! >= to && day.position!! != from -> {
-                            val newDay = Day(day.id, day.planId, day.position!! + 1)
+                        day.position >= to && day.position != from -> {
+                            val newDay = Day(day.id, day.planId, day.position + 1)
 
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -590,7 +590,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -609,17 +609,17 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
                         }
-                        day.position!! == from -> {
+                        day.position == from -> {
                             val newDay = Day(day.id, day.planId, to)
 
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -637,7 +637,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -658,7 +658,7 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
@@ -669,15 +669,15 @@ class PlanViewModel(
             false -> {
                 newDays?.forEachIndexed { index, day ->
                     when {
-                        day.position!! < from || day.position!! > to -> {
+                        day.position < from || day.position > to -> {
 
                         }
-                        day.position!! > from -> {
-                            val newDay = Day(day.id, day.planId, day.position!! - 1)
+                        day.position > from -> {
+                            val newDay = Day(day.id, day.planId, day.position - 1)
 
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -695,7 +695,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -716,17 +716,17 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
                         }
-                        day.position!! == from -> {
+                        day.position == from -> {
                             val newDay = Day(day.id, day.planId, to)
 
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -744,7 +744,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -765,7 +765,7 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
@@ -816,10 +816,10 @@ class PlanViewModel(
             true -> {
                 newSchedules?.forEachIndexed { index, schedule ->
                     when {
-                        schedule.position!! < to || schedule.position!! > from -> {
+                        schedule.position < to || schedule.position > from -> {
 
                         }
-                        schedule.position!! >= to && schedule.position!! != from -> {
+                        schedule.position >= to && schedule.position != from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -835,14 +835,14 @@ class PlanViewModel(
                                 schedule.budget,
                                 schedule.refUrl,
                                 schedule.notification,
-                                schedule.position!! + 1,
+                                schedule.position + 1,
                                 schedule.address,
                                 schedule.remark
                             )
 
                             newSchedules[index] = newSchedule
                         }
-                        schedule.position!! == from -> {
+                        schedule.position == from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -871,10 +871,10 @@ class PlanViewModel(
             false -> {
                 newSchedules?.forEachIndexed { index, schedule ->
                     when {
-                        schedule.position!! < from || schedule.position!! > to -> {
+                        schedule.position < from || schedule.position > to -> {
 
                         }
-                        schedule.position!! > from -> {
+                        schedule.position > from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -890,14 +890,14 @@ class PlanViewModel(
                                 schedule.budget,
                                 schedule.refUrl,
                                 schedule.notification,
-                                schedule.position!! - 1,
+                                schedule.position - 1,
                                 schedule.address,
                                 schedule.remark
                             )
 
                             newSchedules[index] = newSchedule
                         }
-                        schedule.position!! == from -> {
+                        schedule.position == from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -1198,7 +1198,8 @@ class PlanViewModel(
     }
 
     private fun getLiveCommentsResult() {
-        comments = argumentPlan.id.let { howYoRepository.getLiveComments(it) }
+        comments = argumentPlan?.id?.let { howYoRepository.getLiveComments(it) }
+            ?: MutableLiveData<List<Comment>>()
     }
 
     private suspend fun deleteDataListsWithBatch(planId: String, type: DeleteDataType): Boolean =

@@ -46,7 +46,8 @@ class CommentViewModel(
     }
 
     private fun fetchLiveCommentsResult() {
-        allComments = plan.value?.id?.let { howYoRepository.getLiveComments(it) }!!
+        allComments = plan.value?.id?.let { howYoRepository.getLiveComments(it) }
+            ?: MutableLiveData<List<Comment>>()
     }
 
     fun fetchUsersResult() {

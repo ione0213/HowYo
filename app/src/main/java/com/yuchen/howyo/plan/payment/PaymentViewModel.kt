@@ -94,7 +94,7 @@ class PaymentViewModel(
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 planMembers.forEach { userId ->
-                    when (val result = howYoRepository.getUser(userId!!)) {
+                    when (val result = howYoRepository.getUser(userId ?: "")) {
                         is Result.Success -> {
                             userDataList.add(result.data)
                         }

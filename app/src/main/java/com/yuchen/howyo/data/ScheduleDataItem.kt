@@ -9,6 +9,6 @@ sealed class ScheduleDataItem {
 
     data class ScheduleItem(val schedule: Schedule) : ScheduleDataItem() {
         override val id: String
-            get() = schedule.id!!
+            get() = schedule.id
     }
 }

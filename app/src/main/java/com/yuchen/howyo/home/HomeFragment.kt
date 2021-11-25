@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
             it?.let {
                 viewModel.setStatusDone()
                 binding.viewModel = viewModel
-                adapter.addPlanOrEmptyPage(viewModel.plans.value!!)
+                adapter.addPlanOrEmptyPage(viewModel.plans.value ?: listOf())
             }
         }
 

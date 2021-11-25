@@ -88,9 +88,7 @@ class MainActivity : BaseActivity() {
                 R.id.navigation_profile -> {
 
                     findNavController(R.id.myNavHostFragment).navigate(
-                        NavigationDirections.navToProfileFragment(
-                            UserManager.userId!!
-                        )
+                        NavigationDirections.navToProfileFragment(UserManager.userId ?: "")
                     )
                     return@OnNavigationItemSelectedListener true
                 }

@@ -68,12 +68,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.findFragmentById(R.id.map_view_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        viewModel.leaveMap.observe(viewLifecycleOwner, {
+        viewModel.leaveMap.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) findNavController().popBackStack()
                 viewModel.onLeaveMap()
             }
-        })
+        }
 
         return binding.root
     }

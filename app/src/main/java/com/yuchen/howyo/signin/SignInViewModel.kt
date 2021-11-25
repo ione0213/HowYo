@@ -9,9 +9,9 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import kotlinx.coroutines.*
 
 class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-    private val _createUserResult = MutableLiveData<String>()
+    private val _createUserResult = MutableLiveData<String?>()
 
-    val createUserResult: LiveData<String>
+    val createUserResult: LiveData<String?>
         get() = _createUserResult
 
     private val _currentUser = MutableLiveData<User>()
@@ -36,7 +36,7 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
                     is Result.Success -> {
                         user.id = result.data
                         _currentUser.postValue(user)
-                        _createUserResult.postValue(result.data!!)
+                        _createUserResult.postValue(result.data)
                     }
                     else -> {
                         _createUserResult.value = null

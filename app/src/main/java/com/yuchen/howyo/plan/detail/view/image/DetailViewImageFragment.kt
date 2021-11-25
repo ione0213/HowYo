@@ -27,13 +27,13 @@ class DetailViewImageFragment : Fragment() {
         binding = FragmentDetailViewImageBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
-        viewModel.leaveViewImage.observe(viewLifecycleOwner, {
+        viewModel.leaveViewImage.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
                     findNavController().popBackStack()
                 }
             }
-        })
+        }
 
         return binding.root
     }

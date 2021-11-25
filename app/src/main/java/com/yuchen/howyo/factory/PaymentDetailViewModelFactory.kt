@@ -10,7 +10,7 @@ import com.yuchen.howyo.plan.payment.paymentdetail.PaymentDetailViewModel
 class PaymentDetailViewModelFactory(
     private val howYoRepository: HowYoRepository,
     private val payment: Payment?,
-    private val plan: Plan
+    private val plan: Plan?
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {

@@ -260,11 +260,13 @@ fun bindImageWithData(imageView: ImageView, photoData: PhotoData?) {
                 when {
                     !photo.uri.toString().contains("drawable") -> {
                         imageView.setImageBitmap(
-                            HowYoApplication.instance
-                                .contentResolver
-                                ?.openFileDescriptor(photo.uri!!, "r")?.use {
-                                    BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
-                                }
+                            photo.uri?.let { uri ->
+                                HowYoApplication.instance
+                                    .contentResolver
+                                    ?.openFileDescriptor(uri, "r")?.use {
+                                        BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+                                    }
+                            }
                         )
                     }
                     else -> {

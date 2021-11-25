@@ -58,7 +58,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.findFragmentById(R.id.map_detail_destination) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
+        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
                     NavigationDirections.navToDetailEditFragment()
@@ -68,7 +68,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 )
                 viewModel.onEditScheduleNavigated()
             }
-        })
+        }
 
         viewModel.navigateToViewMap.observe(viewLifecycleOwner) {
             it?.let {

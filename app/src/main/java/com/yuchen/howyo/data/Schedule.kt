@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Schedule(
-    var id: String? = "",
+    var id: String = "",
     @get:PropertyName("plan_id")
     @set:PropertyName("plan_id")
     var planId: String? = "",
@@ -36,7 +36,7 @@ data class Schedule(
     @set:PropertyName("ref_rul")
     var refUrl: String? = "",
     var notification: Boolean? = null,
-    var position: Int? = -1,
+    var position: Int = -1,
     var address: String? = "",
     var remark: String? = ""
 ) : Parcelable

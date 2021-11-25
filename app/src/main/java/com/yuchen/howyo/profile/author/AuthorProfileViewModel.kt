@@ -107,7 +107,7 @@ class AuthorProfileViewModel(
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
 
-        val currentUserId = UserManager.userId
+        val currentUserId = UserManager.userId ?: ""
 
         val notification = Notification(
             toUserId = author.value?.id,
@@ -119,9 +119,7 @@ class AuthorProfileViewModel(
             FollowType.FOLLOW -> {
                 when {
                     newAuthor?.fansList?.contains(currentUserId) != true -> {
-                        if (currentUserId != null) {
-                            fansList?.add(currentUserId)
-                        }
+                        fansList?.add(currentUserId)
                     }
                 }
 
@@ -136,9 +134,7 @@ class AuthorProfileViewModel(
             FollowType.UNFOLLOW -> {
                 when {
                     newAuthor?.fansList?.contains(currentUserId) == true -> {
-                        if (currentUserId != null) {
-                            fansList?.removeAt(fansList.indexOf(currentUserId))
-                        }
+                        fansList?.removeAt(fansList.indexOf(currentUserId))
                     }
                 }
 
@@ -155,8 +151,8 @@ class AuthorProfileViewModel(
         newAuthor?.fansList = fansList
         newCurrentUser?.followingList = followingList
 
-        _author.value = newAuthor!!
-        _currentUser.value = newCurrentUser!!
+        newAuthor?.let { _author.value = it }
+        newCurrentUser?.let { _currentUser.value = it }
 
         coroutineScope.launch {
             _author.value?.let { howYoRepository.updateUser(it) }
@@ -166,7 +162,7 @@ class AuthorProfileViewModel(
                 howYoRepository.createNotification(notification)
             } else {
                 author.value?.let {
-                    howYoRepository.deleteFollowNotification(it.id, currentUserId!!)
+                    howYoRepository.deleteFollowNotification(it.id, currentUserId)
                 }
             }
         }

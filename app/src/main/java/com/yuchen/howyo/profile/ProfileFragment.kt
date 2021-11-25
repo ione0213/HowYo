@@ -68,7 +68,7 @@ class ProfileFragment : Fragment() {
         viewModel.navigateToFriends.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToFriendsFragment(it, UserManager.userId!!)
+                    NavigationDirections.navToFriendsFragment(it, UserManager.userId ?: "")
                 )
                 viewModel.onFriendNavigated()
             }

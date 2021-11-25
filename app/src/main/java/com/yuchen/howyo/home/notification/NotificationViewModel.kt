@@ -100,7 +100,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
 
-        val currentUserId = UserManager.userId
+        val currentUserId = UserManager.userId ?: ""
 
         val notification = Notification(
             toUserId = user.id,
@@ -112,9 +112,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
             FollowType.FOLLOW -> {
                 when {
                     user.fansList?.contains(currentUserId) != true -> {
-                        if (currentUserId != null) {
-                            fansList?.add(currentUserId)
-                        }
+                        fansList?.add(currentUserId)
                     }
                 }
 
@@ -127,9 +125,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
             FollowType.UNFOLLOW -> {
                 when {
                     user.fansList?.contains(currentUserId) == true -> {
-                        if (currentUserId != null) {
-                            fansList?.removeAt(fansList.indexOf(currentUserId))
-                        }
+                        fansList?.removeAt(fansList.indexOf(currentUserId))
                     }
                 }
 
@@ -144,7 +140,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
         user.fansList = fansList
         newCurrentUser?.followingList = followingList
 
-        _currentUser.value = newCurrentUser!!
+        newCurrentUser?.let { _currentUser.value = it }
 
         coroutineScope.launch {
             howYoRepository.updateUser(user)
@@ -157,7 +153,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
                     }
                 } else {
                     when (val result =
-                        howYoRepository.deleteFollowNotification(user.id, currentUserId!!)) {
+                        howYoRepository.deleteFollowNotification(user.id, currentUserId)) {
                         is Result.Success -> result.data
                         else -> false
                     }

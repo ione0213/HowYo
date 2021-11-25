@@ -9,7 +9,7 @@ import com.yuchen.howyo.plan.PlanViewModel
 
 class PlanViewModelFactory(
     private val howYoRepository: HowYoRepository,
-    private val plan: Plan,
+    private val plan: Plan?,
     private val accessPlanType: AccessPlanType
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>) =

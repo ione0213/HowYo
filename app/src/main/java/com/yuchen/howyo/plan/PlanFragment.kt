@@ -27,7 +27,7 @@ class PlanFragment : Fragment() {
     private lateinit var binding: FragmentPlanBinding
     val viewModel by viewModels<PlanViewModel> {
         getVmFactory(
-            PlanFragmentArgs.fromBundle(requireArguments()).plan!!,
+            PlanFragmentArgs.fromBundle(requireArguments()).plan,
             PlanFragmentArgs.fromBundle(requireArguments()).accessType
         )
     }
@@ -48,7 +48,7 @@ class PlanFragment : Fragment() {
 
                 return when {
                     // Prevent moving to the position which is out of days range
-                    from != to && to <= viewModel.days.value?.size!!.minus(1) -> {
+                    from != to && to <= viewModel.days.value?.size?.minus(1) ?: 1 -> {
                         viewModel.moveDay(from, to)
                         adapter.notifyItemMoved(from, to)
                         true
@@ -107,7 +107,7 @@ class PlanFragment : Fragment() {
 
                 return when {
                     // Prevent moving to the position which is out of schedules range
-                    from != to && to <= viewModel.schedules.value?.size!!.minus(1) -> {
+                    from != to && to <= viewModel.schedules.value?.size?.minus(1) ?: 1 -> {
                         viewModel.moveSchedule(from, to)
                         adapter.notifyItemMoved(from, to)
                         true
@@ -195,7 +195,7 @@ class PlanFragment : Fragment() {
         binding.appBar.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { barLayout, verticalOffset ->
                 if (scrollRange == -1) {
-                    scrollRange = barLayout?.totalScrollRange!!
+                    scrollRange = barLayout?.totalScrollRange ?: 0
                 }
                 if (scrollRange + verticalOffset == 0) {
                     binding.collapsingToolbar.setCollapsedTitleTextColor(getColor(R.color.matcha_6))
@@ -286,11 +286,11 @@ class PlanFragment : Fragment() {
             }
         }
 
-        viewModel.updatePrivacyResult.observe(viewLifecycleOwner, {
+        viewModel.updatePrivacyResult.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) viewModel.onUpdatedPrivacy()
             }
-        })
+        }
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         viewModel.navigateToHomeAfterDeletingPlan.observe(viewLifecycleOwner) {
@@ -346,10 +346,10 @@ class PlanFragment : Fragment() {
                         findNavController().navigate(
                             NavigationDirections.navToDetailFragment(
                                 it,
-                                viewModel.plan.value!!,
+                                viewModel.plan.value,
                                 viewModel.selectedDayPosition.value?.let { position ->
                                     viewModel.days.value?.get(position)
-                                }!!
+                                }
                             )
                         )
                     }
@@ -428,7 +428,7 @@ class PlanFragment : Fragment() {
             it?.let {
                 if (it) {
                     findNavController().navigate(
-                        NavigationDirections.navToCompanionFragment(viewModel.plan.value!!)
+                        NavigationDirections.navToCompanionFragment(viewModel.plan.value)
                     )
 
                     resetToolbar()
@@ -526,8 +526,8 @@ class PlanFragment : Fragment() {
     }
 
     private fun setToolbar() {
-        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.planToolbar)
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as AppCompatActivity?)?.setSupportActionBar(binding.planToolbar)
+        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

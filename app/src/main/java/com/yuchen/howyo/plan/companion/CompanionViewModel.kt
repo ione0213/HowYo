@@ -21,9 +21,9 @@ class CompanionViewModel(
         get() = _plan
 
     // Current user data
-    private var _currentUser = MutableLiveData<User>()
+    private var _currentUser = MutableLiveData<User?>()
 
-    val currentUser: LiveData<User>
+    val currentUser: LiveData<User?>
         get() = _currentUser
 
     private val _friends = MutableLiveData<List<User>>()
@@ -67,7 +67,7 @@ class CompanionViewModel(
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
-                    is Result.Success -> _currentUser.postValue(result.data!!)
+                    is Result.Success -> _currentUser.postValue(result.data)
                 }
             }
         }
@@ -120,7 +120,7 @@ class CompanionViewModel(
 
         newPlan?.companionList = companionList
 
-        _plan.value = newPlan!!
+        _plan.value = newPlan
 
         coroutineScope.launch {
             _plan.value?.let { howYoRepository.updatePlan(it) }

@@ -113,13 +113,11 @@ class FriendItemViewModel(
         val fansList = user.fansList?.toMutableList()
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
-        val currentUserId = currentUserId.value
+        val currentUserId = currentUserId.value ?: ""
 
         when {
             user.fansList?.contains(currentUserId) == true -> {
-                if (currentUserId != null) {
-                    fansList?.removeAt(fansList.indexOf(currentUserId))
-                }
+                fansList?.removeAt(fansList.indexOf(currentUserId))
             }
         }
 
@@ -132,13 +130,13 @@ class FriendItemViewModel(
         user.fansList = fansList
         newCurrentUser?.followingList = followingList
 
-        _currentUser.value = newCurrentUser!!
+        newCurrentUser?.let { _currentUser.value = it }
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 howYoRepository.updateUser(user)
                 _currentUser.value?.let { howYoRepository.updateUser(it) }
-                howYoRepository.deleteFollowNotification(user.id, currentUserId!!)
+                howYoRepository.deleteFollowNotification(user.id, currentUserId)
             }
 
             fetchUserIdList()
@@ -149,13 +147,11 @@ class FriendItemViewModel(
         val followingList = user.followingList?.toMutableList()
         val newCurrentUser = currentUser.value
         val fansList = newCurrentUser?.fansList?.toMutableList()
-        val currentUserId = currentUserId.value
+        val currentUserId = currentUserId.value ?: ""
 
         when {
             user.followingList?.contains(currentUserId) == true -> {
-                if (currentUserId != null) {
-                    followingList?.removeAt(followingList.indexOf(currentUserId))
-                }
+                followingList?.removeAt(followingList.indexOf(currentUserId))
             }
         }
 
@@ -168,13 +164,13 @@ class FriendItemViewModel(
         user.followingList = followingList
         newCurrentUser?.fansList = fansList
 
-        _currentUser.value = newCurrentUser!!
+        newCurrentUser.let { _currentUser.value = it }
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 howYoRepository.updateUser(user)
                 _currentUser.value?.let { howYoRepository.updateUser(it) }
-                howYoRepository.deleteFollowNotification(currentUserId!!, user.id)
+                howYoRepository.deleteFollowNotification(currentUserId, user.id)
             }
 
             fetchUserIdList()

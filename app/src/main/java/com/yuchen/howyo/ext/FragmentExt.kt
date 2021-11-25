@@ -36,7 +36,7 @@ fun Fragment.getVmFactory(plan: Plan?): PlanContentViewModelFactory {
     return PlanContentViewModelFactory(repository, plan)
 }
 
-fun Fragment.getVmFactory(plan: Plan, accessPlanType: AccessPlanType): PlanViewModelFactory {
+fun Fragment.getVmFactory(plan: Plan?, accessPlanType: AccessPlanType): PlanViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PlanViewModelFactory(repository, plan, accessPlanType)
 }
@@ -46,7 +46,7 @@ fun Fragment.getVmFactory(planId: String, mainType: MainItemType): CheckListView
     return CheckListViewModelFactory(repository, planId, mainType)
 }
 
-fun Fragment.getVmFactory(payment: Payment?, plan: Plan): PaymentDetailViewModelFactory {
+fun Fragment.getVmFactory(payment: Payment?, plan: Plan?): PaymentDetailViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PaymentDetailViewModelFactory(repository, payment, plan)
 }

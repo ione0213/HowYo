@@ -86,7 +86,7 @@ class ProfileViewModel(
                         planResults.add(it)
                     }
 
-                    result.data.filter { it.companionList?.contains(UserManager.userId!!) ?: false }
+                    result.data.filter { it.companionList?.contains(UserManager.userId) ?: false }
                         .forEach {
                             planResults.add(it)
                         }

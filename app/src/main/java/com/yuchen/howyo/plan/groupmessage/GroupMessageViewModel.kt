@@ -50,7 +50,9 @@ class GroupMessageViewModel(
     }
 
     private fun fetchLiveGroupMsgResult() {
-        allGroupMessages = plan.value?.id?.let { howYoRepository.getLiveGroupMessages(it) }!!
+        allGroupMessages =
+            plan.value?.id?.let { howYoRepository.getLiveGroupMessages(it) }
+                ?: MutableLiveData<List<GroupMessage>>()
     }
 
     fun fetchUsersResult() {
