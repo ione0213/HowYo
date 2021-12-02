@@ -13,10 +13,8 @@ import com.yuchen.howyo.databinding.FragmentProfileBinding
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.plan.AccessPlanType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 
 class ProfileFragment : Fragment() {
-
     private lateinit var binding: FragmentProfileBinding
     val viewModel by viewModels<ProfileViewModel> {
         getVmFactory(
@@ -30,13 +28,12 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         binding.recyclerProfilePlans.adapter = PlanAdapter(
@@ -46,64 +43,53 @@ class ProfileFragment : Fragment() {
         )
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        viewModel.user.observe(viewLifecycleOwner, {
+        viewModel.currentUser.observe(viewLifecycleOwner) {
             it?.let {
                 mainViewModel.setSharedToolbarTitle(it.name ?: "")
             }
-        })
+        }
 
-        viewModel.navigateToPlan.observe(viewLifecycleOwner, {
+        viewModel.navigateToPlan.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToPlanFragment(
-                        it,
-                        AccessPlanType.VIEW
-                    )
+                    NavigationDirections.navToPlanFragment(it, AccessPlanType.VIEW)
                 )
                 viewModel.onPlanNavigated()
             }
-        })
+        }
 
-        viewModel.navigateToSetting.observe(viewLifecycleOwner, {
+        viewModel.navigateToSetting.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it -> {
-                        findNavController().navigate(NavigationDirections.navToSettingFragment())
-                    }
-                }
+                if (it) findNavController().navigate(NavigationDirections.navToSettingFragment())
                 viewModel.onSettingNavigated()
             }
-        })
+        }
 
-        viewModel.navigateToFriends.observe(viewLifecycleOwner, {
+        viewModel.navigateToFriends.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToFriendsFragment(
-                        it,
-                        UserManager.userId!!
-                    )
+                    NavigationDirections.navToFriendsFragment(it, UserManager.userId ?: "")
                 )
                 viewModel.onFriendNavigated()
             }
-        })
+        }
 
         return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
         inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
+
         menu.findItem(R.id.setting).isVisible = true
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
-            R.id.setting -> {
-                viewModel.navigateToSetting()
-            }
+            R.id.setting -> viewModel.navigateToSetting()
         }
+
         return super.onOptionsItemSelected(item)
     }
 }

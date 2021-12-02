@@ -12,86 +12,68 @@ import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.CheckItemType
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Util.getString
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.*
 
 class CopyPlanViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
-    private val _isNewPlan = MutableLiveData<Boolean>()
-
-    val isNewPlan: LiveData<Boolean>
-        get() = _isNewPlan
-
-    val _plan = MutableLiveData<Plan>().apply {
-        when (argumentPlan) {
+    val plan = MutableLiveData<Plan>().apply {
+        value = when (argumentPlan) {
             null -> {
                 val today = Calendar.getInstance()
                 val tomorrow = Calendar.getInstance()
+
                 tomorrow.add(Calendar.DAY_OF_YEAR, 1)
 
-                value = Plan(
+                Plan(
                     coverFileName = "",
                     startDate = today.timeInMillis,
                     endDate = tomorrow.timeInMillis
                 )
             }
-            else -> {
-                value = argumentPlan
-            }
+            else -> argumentPlan
         }
     }
-
-    val plan: LiveData<Plan>
-        get() = _plan
 
     private val _planId = MutableLiveData<String>()
 
     val planId: LiveData<String>
         get() = _planId
 
-    private val _planPhoto = MutableLiveData<SchedulePhoto>()
+    private val _planPhoto = MutableLiveData<PhotoData>()
 
-    val planPhoto: LiveData<SchedulePhoto>
+    val planPhoto: LiveData<PhotoData>
         get() = _planPhoto
 
     val startDateFromUser = MutableLiveData<Long>()
 
-    private val previousStartDate = MutableLiveData<Long>()
-
     val endDateFromUser = MutableLiveData<Long>()
 
-    //Days list for copying reference
+    // Days list for copying reference
     private val _days = MutableLiveData<List<Day>>()
 
     val days: LiveData<List<Day>>
         get() = _days
 
-    //New days list
-    private val _newDays = MutableLiveData<List<Day>>()
-
-    val newDays: LiveData<List<Day>>
-        get() = _newDays
-
-    //Schedules list for copying
+    // Schedules list for copying
     private val _schedules = MutableLiveData<List<Schedule>>()
 
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
     // Handle the submit plan
-    private val _isSavePlan = MutableLiveData<Boolean>()
+    private val _isSavePlan = MutableLiveData<Boolean?>()
 
-    val isSavePlan: LiveData<Boolean>
+    val isSavePlan: LiveData<Boolean?>
         get() = _isSavePlan
 
     // Handle the plan data is ready or not
-    private val _isCoverPhotoReady = MutableLiveData<Boolean>()
+    private val _isCoverPhotoReady = MutableLiveData<Boolean?>()
 
-    val isCoverPhotoReady: LiveData<Boolean>
+    val isCoverPhotoReady: LiveData<Boolean?>
         get() = _isCoverPhotoReady
 
     // Handle the days data is ready or not
@@ -112,28 +94,22 @@ class CopyPlanViewModel(
     val isRelatedDataReady: LiveData<Boolean>
         get() = _isRelatedDataReady
 
-    // Handle the copying is ready or not
-    private val _isCopyFinished = MutableLiveData<Boolean>()
-
-    val isCopyFinished: LiveData<Boolean>
-        get() = _isCopyFinished
-
     // Handle leave plan cover
-    private val _leave = MutableLiveData<Boolean>()
+    private val _leave = MutableLiveData<Boolean?>()
 
-    val leave: LiveData<Boolean>
+    val leave: LiveData<Boolean?>
         get() = _leave
 
     // Handle add the cover photo by camera
-    private val _takePhoto = MutableLiveData<Boolean>()
+    private val _takePhoto = MutableLiveData<Boolean?>()
 
-    val takePhoto: LiveData<Boolean>
+    val takePhoto: LiveData<Boolean?>
         get() = _takePhoto
 
     // Handle add the cover photo by selecting
-    private val _selectPhoto = MutableLiveData<Boolean>()
+    private val _selectPhoto = MutableLiveData<Boolean?>()
 
-    val selectPhoto: LiveData<Boolean>
+    val selectPhoto: LiveData<Boolean?>
         get() = _selectPhoto
 
     // status: The internal MutableLiveData that stores the status of the most recent request
@@ -159,47 +135,33 @@ class CopyPlanViewModel(
     }
 
     init {
-
         setInitData()
+
         plan.value?.id?.let {
-            getFromDaysResult()
-            getSchedulesResult()
+            fetchFromDaysResult()
+            fetchSchedulesResult()
         }
     }
 
     private fun setInitData() {
-
-        //set the default value for duration of the plan
+        // set the default value for duration of the plan
         val calendar = Calendar.getInstance()
 
         startDateFromUser.value = plan.value?.startDate ?: calendar.timeInMillis
-        previousStartDate.value = startDateFromUser.value!!.toLong()
 
         calendar.add(Calendar.DAY_OF_YEAR, 1)
 
         endDateFromUser.value = plan.value?.endDate ?: calendar.timeInMillis
 
-        _planPhoto.value = SchedulePhoto(
+        _planPhoto.value = PhotoData(
             Uri.parse(getString(R.string.default_cover))
         )
-
-        _isNewPlan.value = when (argumentPlan) {
-            null -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
     }
 
     fun prepareSubmitPlan() {
-
         when {
             plan.value?.title.isNullOrEmpty() -> _invalidPlan.value = INVALID_FORMAT_TITLE_EMPTY
-            else -> {
-                savePlan()
-            }
+            else -> savePlan()
         }
     }
 
@@ -212,7 +174,6 @@ class CopyPlanViewModel(
     }
 
     fun handlePlanCover() {
-
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
             _isCoverPhotoReady.value = uploadCoverImg()
@@ -220,28 +181,25 @@ class CopyPlanViewModel(
     }
 
     private suspend fun uploadCoverImg(): Boolean {
-
         val uri = planPhoto.value?.uri
         val formatter = SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
         val fileName = "${UserManager.currentUserEmail}_${formatter.format(Date())}"
-        var uploadResult = false
+        val uploadResult: Boolean
 
-        _plan.value?.coverFileName = fileName
+        plan.value?.coverFileName = fileName
 
         when (val result = uri?.let { howYoRepository.uploadPhoto(it, fileName) }) {
             is Result.Success -> {
-                _plan.value?.coverPhotoUrl = result.data
+                plan.value?.coverPhotoUrl = result.data
                 uploadResult = true
             }
-            else -> {
-                uploadResult = true
-            }
+            else -> uploadResult = true
         }
+
         return uploadResult
     }
 
     fun createPlan() {
-
         val plan = plan.value
         val newPlan = plan?.copy(
             id = "",
@@ -254,40 +212,31 @@ class CopyPlanViewModel(
         )
 
         coroutineScope.launch {
-
             val result = newPlan?.let { howYoRepository.createPlan(it) }
 
             _planId.value = when (result) {
-                is Result.Success -> {
-                    result.data
-                }
-                is Result.Fail -> {
-                    null
-                }
-                is Result.Error -> {
-                    null
-                }
-                else -> {
-                    null
-                }
+                is Result.Success -> result.data
+                is Result.Fail -> null
+                is Result.Error -> null
+                else -> null
             }
+
             _isCoverPhotoReady.value = null
         }
     }
 
     private suspend fun createDays(): Boolean {
-
         val planId = planId.value
         val days =
-            (endDateFromUser.value?.minus(startDateFromUser.value!!)
-                ?.div((60 * 60 * 24 * 1000)))?.toInt()
+            (startDateFromUser.value?.let { startDate ->
+                endDateFromUser.value?.minus(startDate)?.div((60 * 60 * 24 * 1000))
+            })?.toInt() ?: 0
         val dayResults = mutableListOf<Boolean>()
         val scheduleResults = mutableListOf<Boolean>()
         val daysData = mutableListOf<Pair<Day, Int>>()
 
-        for (position in 0..days!!) {
-
-            val result = howYoRepository.createDay(position, planId!!)
+        for (position in 0..days) {
+            val result = planId?.let { howYoRepository.createDay(position, it) }
 
             if (result is Result.Success) {
                 dayResults.add(true)
@@ -308,9 +257,8 @@ class CopyPlanViewModel(
     fun createRelatedCollection() {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-
-                _isDaysReady.postValue(createDays()!!)
-                _isChkListReady.postValue(createDefaultCheckList()!!)
+                _isDaysReady.postValue(createDays())
+                _isChkListReady.postValue(createDefaultCheckList())
             }
 
             when {
@@ -322,7 +270,6 @@ class CopyPlanViewModel(
     }
 
     private suspend fun createDefaultCheckList(): Boolean {
-
         val planId = planId.value
         val subTypeList = HowYoApplication.instance.resources.getStringArray(R.array.check_list)
         val checkListResults = mutableListOf<Boolean>()
@@ -332,7 +279,6 @@ class CopyPlanViewModel(
             when (subType) {
                 getString(R.string.necessary) -> {
                     CheckItemType.NECESSARY.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -345,7 +291,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.clothe) -> {
                     CheckItemType.CLOTHE.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -358,7 +303,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.wash) -> {
                     CheckItemType.WASH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -371,7 +315,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.electronic) -> {
                     CheckItemType.ELECTRONIC.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -384,7 +327,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.health) -> {
                     CheckItemType.HEALTH.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -397,7 +339,6 @@ class CopyPlanViewModel(
                 }
                 getString(R.string.other) -> {
                     CheckItemType.OTHER.list.forEach { item ->
-
                         val newItem = CheckShoppingList(
                             planId = planId,
                             mainType = getString(R.string.check),
@@ -423,7 +364,6 @@ class CopyPlanViewModel(
         }
 
     private suspend fun copySchedules(list: List<Pair<Day, Int>>): Boolean {
-
         val schedulesResult = mutableListOf<Boolean>()
         val scheduleList = mutableListOf<Schedule>()
 
@@ -453,11 +393,10 @@ class CopyPlanViewModel(
             else -> false
         }
 
-    private fun getFromDaysResult() {
-
+    private fun fetchFromDaysResult() {
         coroutineScope.launch {
+            val result = howYoRepository.getDays(plan.value?.id ?: "")
 
-            val result = howYoRepository.getDays(plan.value?.id!!)
             _days.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -465,23 +404,10 @@ class CopyPlanViewModel(
         }
     }
 
-    fun getNewDaysResult() {
-
+    private fun fetchSchedulesResult() {
         coroutineScope.launch {
+            val result = howYoRepository.getSchedules(plan.value?.id ?: "")
 
-            val result = planId.value?.let { howYoRepository.getDays(it) }
-            _newDays.value = when (result) {
-                is Result.Success -> result.data
-                else -> null
-            }
-        }
-    }
-
-    private fun getSchedulesResult() {
-
-        coroutineScope.launch {
-
-            val result = howYoRepository.getSchedules(plan.value?.id!!)
             _schedules.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -516,8 +442,7 @@ class CopyPlanViewModel(
     }
 
     fun setCoverBitmap(photoUri: Uri?) {
-
-        val newPlanPhoto = SchedulePhoto(
+        val newPlanPhoto = PhotoData(
             photoUri,
             null,
             planPhoto.value?.fileName,
@@ -528,7 +453,7 @@ class CopyPlanViewModel(
     }
 
     fun resetCoverImg() {
-        val newPlanPhoto = SchedulePhoto(
+        val newPlanPhoto = PhotoData(
             Uri.parse(getString(R.string.default_cover))
         )
 
@@ -536,7 +461,6 @@ class CopyPlanViewModel(
     }
 
     companion object {
-
         const val INVALID_FORMAT_TITLE_EMPTY = 0x11
     }
 }

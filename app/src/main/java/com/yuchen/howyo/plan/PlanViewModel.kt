@@ -14,41 +14,40 @@ import kotlinx.coroutines.*
 
 class PlanViewModel(
     private val howYoRepository: HowYoRepository,
-    private val argumentPlan: Plan,
+    private val argumentPlan: Plan?,
     private val argumentAccessPlanType: AccessPlanType
 ) : ViewModel() {
-
-    //Plan data
-    private var _plan = MutableLiveData<Plan>().apply {
+    // Plan data
+    private var _plan = MutableLiveData<Plan?>().apply {
         value = argumentPlan
     }
 
-    val plan: LiveData<Plan>
+    val plan: LiveData<Plan?>
         get() = _plan
 
     val accessType: AccessPlanType
         get() = argumentAccessPlanType
 
-    //live days list of plans
+    // live days list of plans
     var days = MutableLiveData<List<Day>>()
 
-    var tempDays = mutableListOf<Day>()
+    var movedDays = mutableListOf<Day>()
 
-    //All Schedules of plan
+    // All Schedules of plan
     var allSchedules = MutableLiveData<List<Schedule>>()
 
-    //Schedule list of days
+    // Schedule list of days
     private val _schedules = MutableLiveData<List<Schedule>>()
 
     val schedules: LiveData<List<Schedule>>
         get() = _schedules
 
-    //Comments list for deleting plan
-    var comments = MutableLiveData<List<Comment>>()
+    // Comments list for deleting plan
+    private var comments = MutableLiveData<List<Comment>>()
 
-    var tempSchedules = mutableListOf<Schedule>()
+    var movedSchedules = mutableListOf<Schedule>()
 
-    //Author data
+    // Author data
     private val _author = MutableLiveData<User>()
 
     val author: LiveData<User>
@@ -56,24 +55,24 @@ class PlanViewModel(
 
     var selectedDayPosition = MutableLiveData<Int>()
 
-    private val _deletingPlan = MutableLiveData<Plan>()
+    private val _deletingPlan = MutableLiveData<Plan?>()
 
-    val deletingPlan: LiveData<Plan>
+    val deletingPlan: LiveData<Plan?>
         get() = _deletingPlan
 
-    private val _deletingDay = MutableLiveData<Day>()
+    private val _deletingDay = MutableLiveData<Day?>()
 
-    val deletingDay: LiveData<Day>
+    val deletingDay: LiveData<Day?>
         get() = _deletingDay
 
-    private val _deletingSchedule = MutableLiveData<Schedule>()
+    private val _deletingSchedule = MutableLiveData<Schedule?>()
 
-    val deletingSchedule: LiveData<Schedule>
+    val deletingSchedule: LiveData<Schedule?>
         get() = _deletingSchedule
 
-    private val _updatePrivacy = MutableLiveData<PlanPrivacy>()
+    private val _updatePrivacy = MutableLiveData<PlanPrivacy?>()
 
-    val updatePrivacy: LiveData<PlanPrivacy>
+    val updatePrivacy: LiveData<PlanPrivacy?>
         get() = _updatePrivacy
 
     private val _updatePrivacyResult = MutableLiveData<Boolean>()
@@ -81,134 +80,107 @@ class PlanViewModel(
     val updatePrivacyResult: LiveData<Boolean>
         get() = _updatePrivacyResult
 
-    private val _planResult = MutableLiveData<Boolean>()
-
-    private val planResult: LiveData<Boolean>
-        get() = _planResult
-
-    private val _checkShopListResult = MutableLiveData<Boolean>()
-
-    private val checkShopListResult: LiveData<Boolean>
-        get() = _checkShopListResult
-
-    private val _checkListResult = MutableLiveData<Boolean>()
-
-    private val checkListResult: LiveData<Boolean>
-        get() = _checkListResult
-
     private val _dayResult = MutableLiveData<Boolean>()
 
     private val dayResult: LiveData<Boolean>
         get() = _dayResult
-
-    private val _photoResult = MutableLiveData<Boolean>()
-
-    private val photoResult: LiveData<Boolean>
-        get() = _photoResult
 
     private val _updatePlanResult = MutableLiveData<Boolean>()
 
     private val updatePlanResult: LiveData<Boolean>
         get() = _updatePlanResult
 
-    private val _navigateToHomeAfterDeletingPlan = MutableLiveData<Boolean>()
+    private val _navigateToHomeAfterDeletingPlan = MutableLiveData<Boolean?>()
 
-    val navigateToHomeAfterDeletingPlan: LiveData<Boolean>
+    val navigateToHomeAfterDeletingPlan: LiveData<Boolean?>
         get() = _navigateToHomeAfterDeletingPlan
 
-    private val _handleDaySuccess = MutableLiveData<Boolean>()
+    private val _handleDayResult = MutableLiveData<Boolean>()
 
-    val handleDaySuccess: LiveData<Boolean>
-        get() = _handleDaySuccess
+    val handleDayResult: LiveData<Boolean>
+        get() = _handleDayResult
 
-    private val _handleScheduleSuccess = MutableLiveData<Boolean>()
+    private val _handleScheduleResult = MutableLiveData<Boolean>()
 
-    val handleScheduleSuccess: LiveData<Boolean>
-        get() = _handleScheduleSuccess
-
+    val handleScheduleResult: LiveData<Boolean>
+        get() = _handleScheduleResult
 
     // Handle navigation to detail
-    private val _navigateToDetail = MutableLiveData<Schedule>()
+    private val _navigateToDetail = MutableLiveData<Schedule?>()
 
-    val navigateToDetail: LiveData<Schedule>
+    val navigateToDetail: LiveData<Schedule?>
         get() = _navigateToDetail
 
     // Handle navigation to add schedule
-    private val _navigateToAddSchedule = MutableLiveData<Day>()
+    private val _navigateToAddSchedule = MutableLiveData<Day?>()
 
-    val navigateToAddSchedule: LiveData<Day>
+    val navigateToAddSchedule: LiveData<Day?>
         get() = _navigateToAddSchedule
 
     // Handle navigation to map mode
-    private val _navigateToMapMode = MutableLiveData<List<Day>>()
+    private val _navigateToMapMode = MutableLiveData<List<Day>?>()
 
-    val navigateToMapMode: LiveData<List<Day>>
+    val navigateToMapMode: LiveData<List<Day>?>
         get() = _navigateToMapMode
 
     // Handle navigation to companion
-    private val _navigateToCompanion = MutableLiveData<Boolean>()
+    private val _navigateToCompanion = MutableLiveData<Boolean?>()
 
-    val navigateToCompanion: LiveData<Boolean>
+    val navigateToCompanion: LiveData<Boolean?>
         get() = _navigateToCompanion
 
     // Handle navigation to group message
-    private val _navigateToGroupMessage = MutableLiveData<Plan>()
+    private val _navigateToGroupMessage = MutableLiveData<Plan?>()
 
-    val navigateToGroupMessage: LiveData<Plan>
+    val navigateToGroupMessage: LiveData<Plan?>
         get() = _navigateToGroupMessage
 
     // Handle navigation to locating companion
-    private val _navigateToLocateCompanion = MutableLiveData<Plan>()
+    private val _navigateToLocateCompanion = MutableLiveData<Plan?>()
 
-    val navigateToLocateCompanion: LiveData<Plan>
+    val navigateToLocateCompanion: LiveData<Plan?>
         get() = _navigateToLocateCompanion
 
     // Handle navigation to comment
-    private val _navigateToComment = MutableLiveData<Plan>()
+    private val _navigateToComment = MutableLiveData<Plan?>()
 
-    val navigateToComment: LiveData<Plan>
+    val navigateToComment: LiveData<Plan?>
         get() = _navigateToComment
 
     // Handle navigation to check or shopping list
-    private val _navigateToCheckOrShoppingList = MutableLiveData<MainItemType>()
+    private val _navigateToCheckOrShoppingList = MutableLiveData<MainItemType?>()
 
-    val navigateToCheckOrShoppingList: LiveData<MainItemType>
+    val navigateToCheckOrShoppingList: LiveData<MainItemType?>
         get() = _navigateToCheckOrShoppingList
 
     // Handle navigation to payment
-    private val _navigateToPayment = MutableLiveData<Plan>()
+    private val _navigateToPayment = MutableLiveData<Plan?>()
 
-    val navigateToPayment: LiveData<Plan>
+    val navigateToPayment: LiveData<Plan?>
         get() = _navigateToPayment
 
-    // Handle navigation to group msg
-    private val _navigateToGroupMsg = MutableLiveData<Plan>()
-
-    val navigateToGroupMsg: LiveData<Plan>
-        get() = _navigateToGroupMsg
-
     // Handle navigation to edit mode
-    private val _navigateToEditPlan = MutableLiveData<Plan>()
+    private val _navigateToEditPlan = MutableLiveData<Plan?>()
 
-    val navigateToEditPlan: LiveData<Plan>
+    val navigateToEditPlan: LiveData<Plan?>
         get() = _navigateToEditPlan
 
     // Handle navigation to edit cover
-    private val _navigateToEditCover = MutableLiveData<Plan>()
+    private val _navigateToEditCover = MutableLiveData<Plan?>()
 
-    val navigateToEditCover: LiveData<Plan>
+    val navigateToEditCover: LiveData<Plan?>
         get() = _navigateToEditCover
 
     // Handle navigation to copy plan
-    private val _navigateToCopyPlan = MutableLiveData<Plan>()
+    private val _navigateToCopyPlan = MutableLiveData<Plan?>()
 
-    val navigateToCopyPlan: LiveData<Plan>
+    val navigateToCopyPlan: LiveData<Plan?>
         get() = _navigateToCopyPlan
 
     // Handle navigation to author profile
-    private val _navigateToAuthorProfile = MutableLiveData<String>()
+    private val _navigateToAuthorProfile = MutableLiveData<String?>()
 
-    val navigateToAuthorProfile: LiveData<String>
+    val navigateToAuthorProfile: LiveData<String?>
         get() = _navigateToAuthorProfile
 
     // Handle leave plan
@@ -233,38 +205,30 @@ class PlanViewModel(
     }
 
     init {
-
-        getLivePlanResult()
+        fetchLivePlanResult()
         getLiveDaysResult()
         setDefaultSelectedDay()
         getLiveSchedulesResult()
-        getAuthorResult()
+        fetchAuthorResult()
         getLiveCommentsResult()
-//        getCommentsResult()
     }
 
     fun selectDay(position: Int) {
         selectedDayPosition.value = position
     }
 
-    private fun getAuthorResult() {
-
-        val authorId = when (argumentPlan.id.isNotEmpty()) {
-            true -> {
-                argumentPlan.authorId
-            }
+    private fun fetchAuthorResult() {
+        val authorId = when (argumentPlan?.id?.isNotEmpty()) {
+            true -> argumentPlan.authorId
             else -> null
         }
 
         when {
             authorId?.isNotEmpty() == true -> {
                 coroutineScope.launch {
-
                     _author.value =
                         when (val result = authorId.let { howYoRepository.getUser(it) }) {
-                            is Result.Success -> {
-                                result.data
-                            }
+                            is Result.Success -> result.data
                             else -> null
                         }
                 }
@@ -272,16 +236,13 @@ class PlanViewModel(
         }
     }
 
-    private fun getLivePlanResult() {
-        when (argumentPlan.id.isNotEmpty()) {
-            true -> {
-                _plan = howYoRepository.getLivePlan(plan.value?.id!!)
-            }
+    private fun fetchLivePlanResult() {
+        when (argumentPlan?.id?.isNotEmpty()) {
+            true -> _plan = howYoRepository.getLivePlan(argumentPlan.id)
         }
     }
 
     fun delExistPlan(plan: Plan) {
-
         val planResult = mutableListOf<Boolean>()
         val daysResult = mutableListOf<Boolean>()
         val scheduleResult = mutableListOf<Boolean>()
@@ -297,10 +258,10 @@ class PlanViewModel(
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
-
                 days.value?.let { deleteDaysWithBatch(it) }?.let { daysResult.add(it) }
 
-                allSchedules.value?.let { deleteScheduleWithBatch(it) }?.let { scheduleResult.add(it) }
+                allSchedules.value?.let { deleteScheduleWithBatch(it) }
+                    ?.let { scheduleResult.add(it) }
 
                 allSchedules.value?.forEach { schedule ->
                     schedule.photoFileNameList?.forEach {
@@ -314,7 +275,7 @@ class PlanViewModel(
                     deleteDataListsWithBatch(plan.id, DeleteDataType.CHECK_SHOP_LIST)
                 )
 
-                planResult.add(deletePlan(plan)!!)
+                deletePlan(plan)?.let { planResult.add(it) }
                 deletePhoto(plan.coverFileName)?.let { photoResult.add(it) }
 
                 groupMsgResult = deleteDataListsWithBatch(plan.id, DeleteDataType.GROUP_MSG)
@@ -325,15 +286,15 @@ class PlanViewModel(
             }
 
             when {
-                !daysResult.contains(false)
-                        && !scheduleResult.contains(false)
-                        && !commentResult.contains(false)
-                        && !planResult.contains(false)
-                        && !checkShopListResult.contains(false)
-                        && !photoResult.contains(false)
-                        && groupMsgResult
-                        && notificationResult
-                        &&paymentResult -> {
+                !daysResult.contains(false) &&
+                        !scheduleResult.contains(false) &&
+                        !commentResult.contains(false) &&
+                        !planResult.contains(false) &&
+                        !checkShopListResult.contains(false) &&
+                        !photoResult.contains(false) &&
+                        groupMsgResult &&
+                        notificationResult &&
+                        paymentResult -> {
                     onDeletedPlan()
                     _navigateToHomeAfterDeletingPlan.value = true
                 }
@@ -343,14 +304,11 @@ class PlanViewModel(
 
     private suspend fun deletePlan(plan: Plan): Boolean? =
         when (val result = howYoRepository.deletePlan(plan)) {
-            is Result.Success -> {
-                result.data
-            }
+            is Result.Success -> result.data
             else -> null
         }
 
     private suspend fun updatePlan(type: HandleDayType): Boolean {
-
         _plan.value?.endDate = when (type) {
             HandleDayType.NEW -> {
                 _plan.value?.endDate?.plus(60 * 60 * 24 * 1000)
@@ -361,12 +319,8 @@ class PlanViewModel(
         }
 
         return when (val result = _plan.value?.let { howYoRepository.updatePlan(it) }) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> {
-                false
-            }
+            is Result.Success -> result.data
+            else -> false
         }
     }
 
@@ -379,20 +333,16 @@ class PlanViewModel(
     }
 
     fun setPrivacy(type: PlanPrivacy) {
-
-        var setPrivacyResult = false
+        var setPrivacyResult: Boolean
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
-
                 val newPlan = plan.value?.copy(privacy = type.value)
 
-                setPrivacyResult = when (val result =
-                    newPlan?.let { howYoRepository.updatePlan(it) }) {
-                    is Result.Success -> {
-                        result.data
-                    }
+                setPrivacyResult = when (
+                    val result = newPlan?.let { howYoRepository.updatePlan(it) }
+                ) {
+                    is Result.Success -> result.data
                     else -> false
                 }
             }
@@ -402,35 +352,32 @@ class PlanViewModel(
     }
 
     fun setDefaultSelectedDay() {
-        //Select first item of days by default
+        // Select first item of days by default
         selectedDayPosition.value = 0
     }
 
     private fun getLiveDaysResult() {
-        days = howYoRepository.getLiveDays(argumentPlan.id)
+        days = howYoRepository.getLiveDays(argumentPlan?.id ?: "")
     }
 
     fun addNewDay() {
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
-            withContext(Dispatchers.IO) {
 
-                _dayResult.postValue(addDay()!!)
-                _updatePlanResult.postValue(
-                    updatePlan(HandleDayType.NEW)!!
-                )
+            withContext(Dispatchers.IO) {
+                _dayResult.postValue(addDay())
+                _updatePlanResult.postValue(updatePlan(HandleDayType.NEW))
             }
 
             when {
                 dayResult.value == true && updatePlanResult.value == true -> {
-                    _handleDaySuccess.value = true
+                    _handleDayResult.value = true
                 }
             }
         }
     }
 
     fun delExistDay(day: Day) {
-
         val daysResult = mutableListOf<Boolean>()
         val scheduleResult = mutableListOf<Boolean>()
 
@@ -439,123 +386,91 @@ class PlanViewModel(
 
             withContext(Dispatchers.IO) {
                 days.value?.forEach {
-
                     when {
-                        it.position!! > day.position!! -> {
-                            val newDay = Day(
-                                it.id,
-                                it.planId,
-                                it.position!! - 1
-                            )
+                        it.position > day.position -> {
+                            val newDay = Day(it.id, it.planId, it.position - 1)
                             daysResult.add(updateDay(newDay))
                         }
-                        it.position!! == day.position!! -> {
-                            daysResult.add(deleteDay(it))
-                        }
+                        it.position == day.position -> daysResult.add(deleteDay(it))
                     }
                 }
 
                 allSchedules.value?.filter { it.dayId == day.id }?.forEach { schedule ->
                     scheduleResult.add(deleteSchedule(schedule))
                 }
-                _updatePlanResult.postValue(updatePlan(HandleDayType.DELETE)!!)
+
+                _updatePlanResult.postValue(updatePlan(HandleDayType.DELETE))
             }
 
             when {
-                !daysResult.contains(false)
-                        && !scheduleResult.contains(false)
-                        && updatePlanResult.value == true -> {
-                    _handleDaySuccess.value = true
+                !daysResult.contains(false) &&
+                        !scheduleResult.contains(false) &&
+                        updatePlanResult.value == true -> {
+                    _handleDayResult.value = true
                 }
             }
         }
     }
 
     private suspend fun addDay(): Boolean {
-
-        val newPosition = days.value?.maxByOrNull { it.position!! }!!.position?.plus(1)
+        val newPosition = days.value?.maxByOrNull { it.position }?.position?.plus(1)
         val planId = plan.value?.id
 
-        return when (howYoRepository.createDay(newPosition!!, planId!!)) {
-            is Result.Success -> {
-                true
-            }
+        return when (newPosition?.let { howYoRepository.createDay(it, planId ?: "") }) {
+            is Result.Success -> true
             else -> false
         }
     }
 
     private suspend fun updateDay(day: Day): Boolean {
-
         return when (val result = howYoRepository.updateDay(day)) {
-            is Result.Success -> {
-                result.data
-            }
+            is Result.Success -> result.data
             else -> false
         }
     }
 
     private suspend fun deleteDay(day: Day): Boolean {
-
         return when (val result = howYoRepository.deleteDay(day)) {
-            is Result.Success -> {
-                result.data
-            }
+            is Result.Success -> result.data
             else -> false
         }
     }
 
-    private suspend fun deleteDaysWithBatch(dayList: List<Day>): Boolean {
-
-        return when (val result = howYoRepository.deleteDaysWithBatch(dayList)) {
-            is Result.Success -> {
-                result.data
-            }
+    private suspend fun deleteDaysWithBatch(dayList: List<Day>): Boolean =
+        when (val result = howYoRepository.deleteDaysWithBatch(dayList)) {
+            is Result.Success -> result.data
             else -> false
         }
-    }
 
-    private suspend fun updateSchedule(schedule: Schedule): Boolean {
-
-        return when (val result = howYoRepository.updateSchedule(schedule)) {
-            is Result.Success -> {
-                result.data
-            }
+    private suspend fun updateSchedule(schedule: Schedule): Boolean =
+        when (val result = howYoRepository.updateSchedule(schedule)) {
+            is Result.Success -> result.data
             else -> false
         }
-    }
 
-    private suspend fun deleteSchedule(schedule: Schedule): Boolean {
-
-        return when (val result = howYoRepository.deleteSchedule(schedule)) {
-            is Result.Success -> {
-                result.data
-            }
+    private suspend fun deleteSchedule(schedule: Schedule): Boolean =
+        when (val result = howYoRepository.deleteSchedule(schedule)) {
+            is Result.Success -> result.data
             else -> false
         }
-    }
 
-    private suspend fun deleteScheduleWithBatch(scheduleList: List<Schedule>): Boolean {
-
-        return when (val result = howYoRepository.deleteScheduleWithBatch(scheduleList)) {
-            is Result.Success -> {
-                result.data
-            }
+    private suspend fun deleteScheduleWithBatch(scheduleList: List<Schedule>): Boolean =
+        when (val result = howYoRepository.deleteScheduleWithBatch(scheduleList)) {
+            is Result.Success -> result.data
             else -> false
         }
-    }
 
     fun delExistSchedule(schedule: Schedule) {
-
         val schedulesResult = mutableListOf<Boolean>()
         val scheduleList = schedules.value?.toList()
+
         coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
                 scheduleList?.forEach {
-
                     when {
-                        it.position!! > schedule.position!! -> {
+                        it.position > schedule.position -> {
                             val newSchedule = Schedule(
                                 it.id,
                                 it.planId,
@@ -571,13 +486,14 @@ class PlanViewModel(
                                 it.budget,
                                 it.refUrl,
                                 it.notification,
-                                it.position!! - 1,
+                                it.position - 1,
                                 it.address,
                                 it.remark
                             )
+
                             schedulesResult.add(updateSchedule(newSchedule))
                         }
-                        it.position!! == schedule.position!! -> {
+                        it.position == schedule.position -> {
                             schedulesResult.add(deleteSchedule(it))
                         }
                     }
@@ -585,67 +501,51 @@ class PlanViewModel(
             }
 
             when {
-                !schedulesResult.contains(false) -> {
-                    _handleScheduleSuccess.value = true
-                }
+                !schedulesResult.contains(false) -> _handleScheduleResult.value = true
             }
         }
     }
 
-    fun getLiveSchedulesResult() {
-        allSchedules = howYoRepository.getLiveSchedules(argumentPlan.id)
+    private fun getLiveSchedulesResult() {
+        allSchedules = howYoRepository.getLiveSchedules(argumentPlan?.id ?: "")
+
         setStatusDone()
     }
 
     fun filterSchedule() {
         val currentDayId = selectedDayPosition.value?.let {
             when (it < days.value?.size ?: 0) {
-                true -> {
-                    days.value?.get(it)?.id ?: ""
-                }
-                false -> {
-                    days.value?.get(it.minus(1))?.id ?: ""
-                }
+                true -> days.value?.get(it)?.id ?: ""
+                false -> days.value?.get(it.minus(1))?.id ?: ""
             }
         }
-        _schedules.value =
-            allSchedules.value
-                ?.filter { it.dayId == currentDayId }?.sortedBy { it.position } ?: listOf()
-    }
 
-    private suspend fun deleteCheckShopList(planId: String): Boolean =
-        when (val result = howYoRepository.deleteCheckShopListWithPlanID(planId)) {
-            is Result.Success -> {
-                result.data
-            }
-            else -> false
-        }
+        _schedules.value = allSchedules.value
+            ?.filter { it.dayId == currentDayId }
+            ?.sortedBy { it.position }
+            ?: listOf()
+    }
 
     private suspend fun deletePhoto(fileName: String): Boolean? =
         when (val result = howYoRepository.deletePhoto(fileName)) {
-            is Result.Success -> {
-                result.data
-            }
+            is Result.Success -> result.data
             else -> null
         }
 
     private suspend fun deleteCommentWithBatch(commentList: List<Comment>): Boolean? =
         when (val result = howYoRepository.deleteCommentWithBatch(commentList)) {
-            is Result.Success -> {
-                result.data
-            }
+            is Result.Success -> result.data
             else -> null
         }
 
     fun moveDay(from: Int, to: Int) {
-
         val newDays = when {
-            tempDays.isNotEmpty() -> tempDays.toMutableList()
+            movedDays.isNotEmpty() -> movedDays.toMutableList()
             else -> days.value?.toMutableList()
         }
 
         val fullSchedules = when {
-            tempSchedules.isNotEmpty() -> tempSchedules.toMutableList()
+            movedSchedules.isNotEmpty() -> movedSchedules.toMutableList()
             else -> allSchedules.value?.toMutableList()
         }
 
@@ -653,17 +553,15 @@ class PlanViewModel(
             true -> {
                 newDays?.forEachIndexed { index, day ->
                     when {
-                        day.position!! < to || day.position!! > from -> {
+                        day.position < to || day.position > from -> {
+
                         }
-                        day.position!! >= to && day.position!! != from -> {
-                            val newDay = Day(
-                                day.id,
-                                day.planId,
-                                day.position!! + 1
-                            )
+                        day.position >= to && day.position != from -> {
+                            val newDay = Day(day.id, day.planId, day.position + 1)
+
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -681,7 +579,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -700,20 +598,17 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
                         }
-                        day.position!! == from -> {
-                            val newDay = Day(
-                                day.id,
-                                day.planId,
-                                to
-                            )
+                        day.position == from -> {
+                            val newDay = Day(day.id, day.planId, to)
+
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -731,7 +626,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -752,7 +647,7 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
@@ -763,18 +658,15 @@ class PlanViewModel(
             false -> {
                 newDays?.forEachIndexed { index, day ->
                     when {
-                        day.position!! < from || day.position!! > to -> {
+                        day.position < from || day.position > to -> {
+
                         }
-                        day.position!! > from -> {
-                            val newDay = Day(
-                                day.id,
-                                day.planId,
-                                day.position!! - 1
-                            )
+                        day.position > from -> {
+                            val newDay = Day(day.id, day.planId, day.position - 1)
 
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -792,7 +684,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -813,22 +705,17 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
                         }
-                        day.position!! == from -> {
-
-                            val newDay = Day(
-                                day.id,
-                                day.planId,
-                                to
-                            )
+                        day.position == from -> {
+                            val newDay = Day(day.id, day.planId, to)
 
                             newDays[index] = newDay
 
-                            fullSchedules?.forEachIndexed { index, schedule ->
+                            fullSchedules?.forEachIndexed { scheduleIndex, schedule ->
                                 when (schedule.dayId) {
                                     day.id -> {
                                         val newSchedule = Schedule(
@@ -846,7 +733,7 @@ class PlanViewModel(
                                             schedule.budget,
                                             schedule.refUrl,
                                             schedule.notification,
-                                            schedule.position!!,
+                                            schedule.position,
                                             schedule.address,
                                             schedule.remark
                                         )
@@ -867,7 +754,7 @@ class PlanViewModel(
                                             }
                                         }
 
-                                        fullSchedules[index] = newSchedule
+                                        fullSchedules[scheduleIndex] = newSchedule
                                     }
                                 }
                             }
@@ -878,23 +765,21 @@ class PlanViewModel(
         }
 
         if (newDays != null) {
-            tempDays = newDays.toMutableList()
+            movedDays = newDays.toMutableList()
         }
 
         if (fullSchedules != null) {
-            tempSchedules = fullSchedules.toMutableList()
+            movedSchedules = fullSchedules.toMutableList()
         }
     }
 
     suspend fun submitMovedDay() {
-
         val daysResult = mutableListOf<Boolean>()
 
         _status.value = LoadApiStatus.LOADING
 
         withContext(Dispatchers.IO) {
-
-            tempDays.forEach { tempDay ->
+            movedDays.forEach { tempDay ->
                 days.value?.forEach { oldDay ->
                     if (tempDay.id == oldDay.id && tempDay.position != oldDay.position) {
                         daysResult.add(updateDay(tempDay))
@@ -903,17 +788,16 @@ class PlanViewModel(
             }
         }
 
-        _handleDaySuccess.value = !daysResult.contains(false)
+        _handleDayResult.value = !daysResult.contains(false)
     }
 
     fun onSubmitMoveDay() {
-        tempDays = mutableListOf()
+        movedDays = mutableListOf()
     }
 
     fun moveSchedule(from: Int, to: Int) {
-
         val newSchedules = when {
-            tempSchedules.isNotEmpty() -> tempSchedules.toMutableList()
+            movedSchedules.isNotEmpty() -> movedSchedules.toMutableList()
             else -> schedules.value?.toMutableList()
         }
 
@@ -921,9 +805,10 @@ class PlanViewModel(
             true -> {
                 newSchedules?.forEachIndexed { index, schedule ->
                     when {
-                        schedule.position!! < to || schedule.position!! > from -> {
+                        schedule.position < to || schedule.position > from -> {
+
                         }
-                        schedule.position!! >= to && schedule.position!! != from -> {
+                        schedule.position >= to && schedule.position != from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -939,13 +824,14 @@ class PlanViewModel(
                                 schedule.budget,
                                 schedule.refUrl,
                                 schedule.notification,
-                                schedule.position!! + 1,
+                                schedule.position + 1,
                                 schedule.address,
                                 schedule.remark
                             )
+
                             newSchedules[index] = newSchedule
                         }
-                        schedule.position!! == from -> {
+                        schedule.position == from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -965,6 +851,7 @@ class PlanViewModel(
                                 schedule.address,
                                 schedule.remark
                             )
+
                             newSchedules[index] = newSchedule
                         }
                     }
@@ -973,9 +860,10 @@ class PlanViewModel(
             false -> {
                 newSchedules?.forEachIndexed { index, schedule ->
                     when {
-                        schedule.position!! < from || schedule.position!! > to -> {
+                        schedule.position < from || schedule.position > to -> {
+
                         }
-                        schedule.position!! > from -> {
+                        schedule.position > from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -991,15 +879,14 @@ class PlanViewModel(
                                 schedule.budget,
                                 schedule.refUrl,
                                 schedule.notification,
-                                schedule.position!! - 1,
+                                schedule.position - 1,
                                 schedule.address,
                                 schedule.remark
                             )
 
                             newSchedules[index] = newSchedule
                         }
-                        schedule.position!! == from -> {
-
+                        schedule.position == from -> {
                             val newSchedule = Schedule(
                                 schedule.id,
                                 schedule.planId,
@@ -1026,21 +913,21 @@ class PlanViewModel(
                 }
             }
         }
+
         if (newSchedules != null) {
-            tempSchedules = newSchedules.toMutableList()
+            movedSchedules = newSchedules.toMutableList()
         }
     }
 
     suspend fun submitMoveSchedule(type: HandleScheduleType) {
-
         val schedulesResult = mutableListOf<Boolean>()
 
         _status.value = LoadApiStatus.LOADING
-        withContext(Dispatchers.IO) {
 
+        withContext(Dispatchers.IO) {
             when (type) {
                 HandleScheduleType.POSITION -> {
-                    tempSchedules.forEach { tempSchedule ->
+                    movedSchedules.forEach { tempSchedule ->
                         schedules.value?.forEach { schedule ->
                             when {
                                 tempSchedule.position != schedule.position -> {
@@ -1051,8 +938,7 @@ class PlanViewModel(
                     }
                 }
                 HandleScheduleType.TIME -> {
-
-                    tempSchedules.forEach { tempSchedule ->
+                    movedSchedules.forEach { tempSchedule ->
                         allSchedules.value?.forEach { oldSchedule ->
                             if (tempSchedule.id == oldSchedule.id &&
                                 (tempSchedule.startTime != oldSchedule.startTime ||
@@ -1066,11 +952,11 @@ class PlanViewModel(
             }
         }
 
-        _handleScheduleSuccess.value = !schedulesResult.contains(false)
+        _handleScheduleResult.value = !schedulesResult.contains(false)
     }
 
     fun onSubmitMoveSchedule() {
-        tempSchedules = mutableListOf()
+        movedSchedules = mutableListOf()
     }
 
     fun checkDeletePlan() {
@@ -1125,7 +1011,6 @@ class PlanViewModel(
         when (accessType) {
             AccessPlanType.EDIT -> _navigateToEditCover.value = _plan.value
             else -> {
-
             }
         }
     }
@@ -1302,16 +1187,13 @@ class PlanViewModel(
     }
 
     private fun getLiveCommentsResult() {
-        comments = argumentPlan.id.let { howYoRepository.getLiveComments(it) }
+        comments = argumentPlan?.id?.let { howYoRepository.getLiveComments(it) }
+            ?: MutableLiveData<List<Comment>>()
     }
 
-    private suspend fun deleteDataListsWithBatch(planId: String, type: DeleteDataType): Boolean {
-
-        return when (val result = howYoRepository.deleteDataListsWithPlanID(planId, type)) {
-            is Result.Success -> {
-                result.data
-            }
+    private suspend fun deleteDataListsWithBatch(planId: String, type: DeleteDataType): Boolean =
+        when (val result = howYoRepository.deleteDataListsWithPlanID(planId, type)) {
+            is Result.Success -> result.data
             else -> false
         }
-    }
 }

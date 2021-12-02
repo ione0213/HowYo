@@ -9,7 +9,6 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.home.notification.NotificationType
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.plan.LikeType
 import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +20,6 @@ class AuthorProfileViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentUserId: String
 ) : ViewModel() {
-
     private var _author = MutableLiveData<User>()
 
     val author: LiveData<User>
@@ -32,19 +30,19 @@ class AuthorProfileViewModel(
     val currentUser: LiveData<User>
         get() = _currentUser
 
-    //Plan data
+    // Plan data
     var plans = MutableLiveData<List<Plan>>()
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     // Handle navigation to friends
-    private val _navigateToFriends = MutableLiveData<FriendFilter>()
+    private val _navigateToFriends = MutableLiveData<FriendFilter?>()
 
-    val navigateToFriends: LiveData<FriendFilter>
+    val navigateToFriends: LiveData<FriendFilter?>
         get() = _navigateToFriends
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -63,26 +61,20 @@ class AuthorProfileViewModel(
     }
 
     init {
-
-        getLiveUserResult()
-        getLivePlansResult()
+        fetchLiveUserResult()
+        fetchLivePlansResult()
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveUserResult() {
+        _author = howYoRepository.getLiveUser(argumentUserId)
 
-        _author = howYoRepository.getLiveUser(argumentUserId ?: "")
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
-    private fun getLivePlansResult() {
-
+    private fun fetchLivePlansResult() {
         plans = when (argumentUserId) {
-            UserManager.userId -> {
-                howYoRepository.getLivePlans(listOf(argumentUserId))
-            }
-            else -> {
-                howYoRepository.getLivePublicPlans(listOf(argumentUserId))
-            }
+            UserManager.userId -> howYoRepository.getLivePlans(listOf(argumentUserId))
+            else -> howYoRepository.getLivePublicPlans(listOf(argumentUserId))
         }
 
         setStatusDone()
@@ -109,14 +101,13 @@ class AuthorProfileViewModel(
     }
 
     fun setFollow(type: FollowType) {
-
         val newAuthor = author.value
         val fansList = newAuthor?.fansList?.toMutableList()
 
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
 
-        val currentUserId = UserManager.userId
+        val currentUserId = UserManager.userId ?: ""
 
         val notification = Notification(
             toUserId = author.value?.id,
@@ -128,9 +119,7 @@ class AuthorProfileViewModel(
             FollowType.FOLLOW -> {
                 when {
                     newAuthor?.fansList?.contains(currentUserId) != true -> {
-                        if (currentUserId != null) {
-                            fansList?.add(currentUserId)
-                        }
+                        fansList?.add(currentUserId)
                     }
                 }
 
@@ -145,9 +134,7 @@ class AuthorProfileViewModel(
             FollowType.UNFOLLOW -> {
                 when {
                     newAuthor?.fansList?.contains(currentUserId) == true -> {
-                        if (currentUserId != null) {
-                            fansList?.removeAt(fansList.indexOf(currentUserId))
-                        }
+                        fansList?.removeAt(fansList.indexOf(currentUserId))
                     }
                 }
 
@@ -164,16 +151,19 @@ class AuthorProfileViewModel(
         newAuthor?.fansList = fansList
         newCurrentUser?.followingList = followingList
 
-        _author.value = newAuthor!!
-        _currentUser.value = newCurrentUser!!
+        newAuthor?.let { _author.value = it }
+        newCurrentUser?.let { _currentUser.value = it }
 
         coroutineScope.launch {
             _author.value?.let { howYoRepository.updateUser(it) }
             _currentUser.value?.let { howYoRepository.updateUser(it) }
+
             if (type == FollowType.FOLLOW) {
                 howYoRepository.createNotification(notification)
             } else {
-                author.value?.let { howYoRepository.deleteFollowNotification(it.id, currentUserId!!) }
+                author.value?.let {
+                    howYoRepository.deleteFollowNotification(it.id, currentUserId)
+                }
             }
         }
     }

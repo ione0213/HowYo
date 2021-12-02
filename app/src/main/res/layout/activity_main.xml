@@ -38,16 +38,19 @@
 
                 <TextView
                     android:id="@+id/text_toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:maxWidth="@dimen/profile_text_width_big"
                     style="@style/TextStyle1_matcha6"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"
+                    android:maxWidth="@dimen/profile_text_width_big"
                     android:singleLine="true"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.HOME ? View.GONE : View.VISIBLE}"
                     app:currentFragmentTypeForText="@{viewModel.currentFragmentType}"
                     app:sharedFragmentTitle="@{viewModel.sharedToolbarTitle}"
-                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.HOME ? View.GONE : View.VISIBLE}"
+                    tools:ignore="TextContrastCheck"
+                    tools:layout_editor_absoluteX="157dp"
+                    tools:layout_editor_absoluteY="22dp"
                     tools:text="HowYo"
                     tools:visibility="visible" />
 
@@ -58,7 +61,8 @@
                     android:layout_gravity="center"
                     android:background="@drawable/logo_howyo_s"
                     android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.HOME ? View.VISIBLE : View.GONE}"
-                    tools:visibility="gone" />
+                    tools:visibility="gone"
+                    android:contentDescription="@string/content_desc_app_logo" />
 
             </androidx.appcompat.widget.Toolbar>
 

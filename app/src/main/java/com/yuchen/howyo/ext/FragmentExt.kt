@@ -31,17 +31,12 @@ fun Fragment.getVmFactory(
     return EditDetailViewModelFactory(repository, schedule, plan, day)
 }
 
-//fun Fragment.getVmFactory(days: List<Day>): FindLocationViewModelFactory {
-//    val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-//    return FindLocationViewModelFactory(repository, days)
-//}
-
 fun Fragment.getVmFactory(plan: Plan?): PlanContentViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PlanContentViewModelFactory(repository, plan)
 }
 
-fun Fragment.getVmFactory(plan: Plan, accessPlanType: AccessPlanType): PlanViewModelFactory {
+fun Fragment.getVmFactory(plan: Plan?, accessPlanType: AccessPlanType): PlanViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PlanViewModelFactory(repository, plan, accessPlanType)
 }
@@ -51,7 +46,7 @@ fun Fragment.getVmFactory(planId: String, mainType: MainItemType): CheckListView
     return CheckListViewModelFactory(repository, planId, mainType)
 }
 
-fun Fragment.getVmFactory(payment: Payment?, plan: Plan): PaymentDetailViewModelFactory {
+fun Fragment.getVmFactory(payment: Payment?, plan: Plan?): PaymentDetailViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
     return PaymentDetailViewModelFactory(repository, payment, plan)
 }
@@ -62,11 +57,11 @@ fun Fragment.getVmFactory(friendType: FriendFilter, userId: String): FriendItemV
 }
 
 fun Fragment.getVmFactory(
-    schedulePhoto: SchedulePhoto,
-    schedulePhotos: SchedulePhotos
+    photoData: PhotoData,
+    photos: Photos
 ): DetailEditImageViewModelFactory {
     val repository = (requireContext().applicationContext as HowYoApplication).howYoRepository
-    return DetailEditImageViewModelFactory(repository, schedulePhoto, schedulePhotos)
+    return DetailEditImageViewModelFactory(repository, photoData, photos)
 }
 
 fun Fragment.getVmFactory(

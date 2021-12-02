@@ -10,8 +10,6 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Users
 import com.yuchen.howyo.databinding.FragmentPaymentBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
-import com.yuchen.howyo.plan.detail.view.DetailFragmentArgs
 
 class PaymentFragment : Fragment() {
 
@@ -28,7 +26,8 @@ class PaymentFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -54,23 +53,22 @@ class PaymentFragment : Fragment() {
 
         viewModel.navigateToPaymentDetail.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it -> {
-                        val users = Users()
-                        viewModel.planMembersData.value?.forEach { user ->
-                            users.add(user)
-                        }
+                if (it) {
+                    val users = Users()
 
-                        findNavController().navigate(
-                            NavigationDirections.navToPaymentDetailFragment(
-                                null,
-                                viewModel.plan.value!!,
-                                users
-                            )
-                        )
-
-                        viewModel.onPaymentDetailNavigated()
+                    viewModel.planMembersData.value?.forEach { user ->
+                        users.add(user)
                     }
+
+                    findNavController().navigate(
+                        NavigationDirections.navToPaymentDetailFragment(
+                            null,
+                            viewModel.plan.value,
+                            users
+                        )
+                    )
+
+                    viewModel.onPaymentDetailNavigated()
                 }
             }
         }
@@ -85,7 +83,7 @@ class PaymentFragment : Fragment() {
                 findNavController().navigate(
                     NavigationDirections.navToPaymentDetailFragment(
                         it,
-                        viewModel.plan.value!!,
+                        viewModel.plan.value,
                         users
                     )
                 )

@@ -10,7 +10,6 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,34 +19,33 @@ class ProfileViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentUserId: String
 ) : ViewModel() {
+    private var _currentUser = MutableLiveData<User>()
 
-    private var _user = MutableLiveData<User>()
+    val currentUser: LiveData<User>
+        get() = _currentUser
 
-    val user: LiveData<User>
-        get() = _user
-
-    //Plan data
+    // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>
         get() = _plans
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     // Handle navigation to setting
-    private val _navigateToSetting = MutableLiveData<Boolean>()
+    private val _navigateToSetting = MutableLiveData<Boolean?>()
 
-    val navigateToSetting: LiveData<Boolean>
+    val navigateToSetting: LiveData<Boolean?>
         get() = _navigateToSetting
 
     // Handle navigation to friends
-    private val _navigateToFriends = MutableLiveData<FriendFilter>()
+    private val _navigateToFriends = MutableLiveData<FriendFilter?>()
 
-    val navigateToFriends: LiveData<FriendFilter>
+    val navigateToFriends: LiveData<FriendFilter?>
         get() = _navigateToFriends
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -66,35 +64,32 @@ class ProfileViewModel(
     }
 
     init {
-
-        getLiveUserResult()
-        getPlansResult()
+        fetchLiveCurrentUserResult()
+        fetchPlansResult()
     }
 
-    private fun getLiveUserResult() {
-
-        _user = howYoRepository.getLiveUser(argumentUserId ?: "")
+    private fun fetchLiveCurrentUserResult() {
+        _currentUser = howYoRepository.getLiveUser(argumentUserId)
     }
 
-    fun getPlansResult() {
-
+    private fun fetchPlansResult() {
         _status.value = LoadApiStatus.LOADING
 
         val planResults = mutableSetOf<Plan>()
 
         coroutineScope.launch {
-
             val result = howYoRepository.getAllPlans()
+
             _plans.value = when (result) {
                 is Result.Success -> {
-
                     result.data.filter { it.authorId == UserManager.userId }.forEach {
                         planResults.add(it)
                     }
 
-                    result.data.filter { it.companionList?.contains(UserManager.userId!!) ?: false }.forEach {
-                        planResults.add(it)
-                    }
+                    result.data.filter { it.companionList?.contains(UserManager.userId) ?: false }
+                        .forEach {
+                            planResults.add(it)
+                        }
 
                     planResults.toList()
                 }
@@ -102,11 +97,6 @@ class ProfileViewModel(
             }
         }
     }
-
-//    private fun getLivePlansResult() {
-//        plans = howYoRepository.getLivePlans(listOf(UserManager.userId ?: ""))
-//        setStatusDone()
-//    }
 
     fun navigateToPlan(plan: Plan) {
         _navigateToPlan.value = plan

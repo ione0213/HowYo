@@ -9,30 +9,28 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
-    //Plan data
+    // Plan data
     var plans = MutableLiveData<List<Plan>>()
 
-    //User id set
+    // User id set
     private val _authorIds = MutableLiveData<Set<String>>()
 
     val authorIds: LiveData<Set<String>>
         get() = _authorIds
 
-    //User id set
+    // User id set
     private val _authorDataList = MutableLiveData<Set<User>>()
 
     val authorDataList: LiveData<Set<User>>
         get() = _authorDataList
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -51,11 +49,10 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     init {
-        getLivePlansResult()
+        fetchLivePlansResult()
     }
 
-    private fun getLivePlansResult() {
-
+    private fun fetchLivePlansResult() {
         _status.value = LoadApiStatus.LOADING
         plans = howYoRepository.getLiveCollectedPublicPlans(listOf(UserManager.userId ?: ""))
     }
@@ -69,7 +66,6 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun setAuthorIdSet() {
-
         val authorIdSet = mutableSetOf<String>()
 
         plans.value?.forEach {
@@ -79,17 +75,14 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
         _authorIds.value = authorIdSet
     }
 
-    fun getAuthorData() {
-
+    fun fetchAuthorData() {
         val authorDataList = mutableSetOf<User>()
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 authorIds.value?.forEach { authorId ->
-                    when (val result = howYoRepository.getUser(authorId)){
-                        is Result.Success -> {
-                            authorDataList.add(result.data)
-                        }
+                    when (val result = howYoRepository.getUser(authorId)) {
+                        is Result.Success -> authorDataList.add(result.data)
                     }
                 }
             }

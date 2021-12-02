@@ -8,7 +8,7 @@
         <variable
             name="plan"
             type="com.yuchen.howyo.data.Plan" />
-        
+
         <variable
             name="viewModel"
             type="com.yuchen.howyo.favorite.FavoriteViewModel" />
@@ -28,7 +28,7 @@
             android:background="@color/gray_f5f5f5"
             android:elevation="5dp"
             app:cardBackgroundColor="@color/gray_f5f5f5"
-            app:cardCornerRadius="@dimen/cardview_radius"
+            app:cardCornerRadius="@dimen/card_view_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,17 +41,17 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_favorite_plan_avatar"
                     android:layout_width="@dimen/favorite_avatar"
-                    app:plan="@{plan}"
-                    app:authorData="@{viewModel.authorDataList}"
                     android:layout_height="@dimen/favorite_avatar"
                     android:layout_marginStart="@dimen/small_padding"
-                    android:scaleType="centerCrop"
                     android:layout_marginBottom="@dimen/small_padding"
-                    tools:src="@drawable/avatar_sample"
-                    app:layout_constraintStart_toStartOf="parent"
                     android:elevation="1dp"
+                    android:scaleType="centerCrop"
+                    app:authorData="@{viewModel.authorDataList}"
                     app:layout_constraintBottom_toBottomOf="@+id/img_favorite_plan_cover"
-                    app:shapeAppearanceOverlay="@style/circle" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:shapeAppearanceOverlay="@style/circle"
+                    app:userId="@{plan.authorId}"
+                    tools:src="@drawable/avatar_sample" />
 
                 <TextView
                     android:id="@+id/text_home_favorite_user_name"
@@ -59,50 +59,51 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_padding"
-                    android:elevation="1dp"
-                    app:authorData="@{viewModel.authorDataList}"
-                    app:plan="@{plan}"
-                    android:maxLines="1"
                     android:layout_marginEnd="@dimen/small_padding"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:elevation="1dp"
                     android:ellipsize="end"
-                    android:textAlignment="textStart"
                     android:maxWidth="100dp"
+                    android:maxLines="1"
+                    android:textAlignment="textStart"
                     android:textStyle="bold"
+                    app:authorData="@{viewModel.authorDataList}"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_favorite_plan_avatar"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_favorite_plan_avatar"
                     app:layout_constraintStart_toEndOf="@+id/img_favorite_plan_avatar"
+                    app:userId="@{plan.authorId}"
                     tools:text="traveller" />
 
                 <ImageView
                     android:id="@+id/img_favorite_plan_cover"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
+                    android:contentDescription="@string/content_desc_cover_photo"
                     android:scaleType="centerCrop"
                     app:imageUrl="@{String.valueOf(plan.coverPhotoUrl)}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:src="@drawable/sample_cover"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/circle" />
+                    app:shapeAppearanceOverlay="@style/circle"
+                    tools:src="@drawable/sample_cover" />
 
                 <TextView
                     android:id="@+id/img_favorite_plan_title"
                     style="@style/TextStyle3_matcha_5_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/small_padding"
-                    android:layout_marginTop="@dimen/small_padding"
                     android:layout_marginStart="@dimen/small_padding"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="@dimen/small_padding"
+                    android:layout_marginBottom="@dimen/small_padding"
                     android:text="@{plan.title}"
                     android:textStyle="bold"
-                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="@+id/img_favorite_plan_cover"
                     app:layout_constraintTop_toBottomOf="@+id/img_favorite_plan_cover"
                     app:layout_goneMarginStart="@dimen/small_padding"
+                    tools:ignore="TextContrastCheck"
                     tools:text="Tokyo 2 days" />
 
                 <ImageButton
@@ -111,8 +112,10 @@
                     android:layout_height="@dimen/plan_img_btn_smallest"
                     android:layout_marginEnd="@dimen/small_padding"
                     android:background="@drawable/heart_selected"
+                    android:contentDescription="@string/content_desc_like_count"
                     app:layout_constraintEnd_toEndOf="@+id/img_favorite_plan_cover"
-                    app:layout_constraintTop_toTopOf="@+id/img_favorite_plan_title" />
+                    app:layout_constraintTop_toTopOf="@+id/img_favorite_plan_title"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <TextView
                     android:id="@+id/img_favorite_plan_likes"
@@ -124,28 +127,10 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/button_favorite_plan_heart_selected"
                     app:layout_constraintEnd_toStartOf="@+id/button_favorite_plan_heart_selected"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintTop_toTopOf="@+id/button_favorite_plan_heart_selected"
+                    tools:ignore="TextContrastCheck"
                     tools:text="87" />
-
-<!--                <TextView-->
-<!--                    android:id="@+id/text_home_favorite_duration"-->
-<!--                    style="@style/TextStyle4_black"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:textAlignment="textStart"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="@dimen/small_padding"-->
-<!--                    app:endDate="@{plan.endDate}"-->
-<!--                    app:layout_constraintHorizontal_bias="0.497"-->
-<!--                    app:layout_constraintHorizontal_chainStyle="packed"-->
-<!--                    app:layout_constraintStart_toStartOf="@+id/img_favorite_plan_title"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/img_favorite_plan_title"-->
-<!--                    app:layout_constraintEnd_toEndOf="@+id/button_favorite_plan_heart_selected"-->
-<!--                    android:layout_marginBottom="@dimen/small_padding"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:startDate="@{plan.startDate}"-->
-<!--                    tools:text="2021/10/1 - 2021/10/13" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,7 +30,7 @@ interface HowYoDataSource {
 
     suspend fun getPlan(planId: String): Result<Plan>
 
-    fun getLivePlan(planId: String): MutableLiveData<Plan>
+    fun getLivePlan(planId: String): MutableLiveData<Plan?>
 
     suspend fun getPlans(authorList: List<String>): Result<List<Plan>>
 

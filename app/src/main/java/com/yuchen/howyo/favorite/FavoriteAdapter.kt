@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.PlanDataItem
 import com.yuchen.howyo.databinding.ItemEmptyFavoriteBinding
-import com.yuchen.howyo.databinding.ItemEmptyPlanBinding
 import com.yuchen.howyo.databinding.ItemPlansFavoriteBinding
-import com.yuchen.howyo.home.HomeAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +19,6 @@ class FavoriteAdapter(
     private val viewModel: FavoriteViewModel
 ) :
     ListAdapter<PlanDataItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
@@ -30,18 +27,15 @@ class FavoriteAdapter(
 
     class PlanViewHolder(private var binding: ItemPlansFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(plan: Plan, onClickListener: OnClickListener) {
-
             binding.root.setOnClickListener { onClickListener.onClick(plan) }
             binding.plan = plan
             binding.executePendingBindings()
         }
     }
 
-    class EmptyViewHolder(private var binding: ItemEmptyFavoriteBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+    class EmptyViewHolder(binding: ItemEmptyFavoriteBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {
         override fun areItemsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {
@@ -77,7 +71,6 @@ class FavoriteAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is PlanViewHolder -> {
                 holder.bind((getItem(position) as PlanDataItem.PlanItem).plan, onClickListener)
@@ -92,16 +85,13 @@ class FavoriteAdapter(
         }
     }
 
-    fun addEmptyAndPlan(list: List<Plan>) {
+    fun addPlanOrEmptyPage(list: List<Plan>) {
         adapterScope.launch {
             val items = when (list.size) {
-                0 -> {
-                    listOf(PlanDataItem.EmptySchedule)
-                }
-                else -> {
-                    list.map { PlanDataItem.PlanItem(it) }
-                }
+                0 -> listOf(PlanDataItem.EmptySchedule)
+                else -> list.map { PlanDataItem.PlanItem(it) }
             }
+
             withContext(Dispatchers.Main) {
                 submitList(items)
             }

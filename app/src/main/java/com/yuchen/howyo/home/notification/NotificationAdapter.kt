@@ -9,7 +9,6 @@ import com.yuchen.howyo.data.Notification
 import com.yuchen.howyo.data.NotificationItem
 import com.yuchen.howyo.databinding.ItemNotifyFollowBinding
 import com.yuchen.howyo.databinding.ItemNotifyLikeBinding
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +16,6 @@ import kotlinx.coroutines.withContext
 
 class NotificationAdapter(private val viewModel: NotificationViewModel) :
     ListAdapter<NotificationItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class LikeViewHolder(private var binding: ItemNotifyLikeBinding) :
@@ -78,7 +76,6 @@ class NotificationAdapter(private val viewModel: NotificationViewModel) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is LikeViewHolder -> {
                 holder.bind((getItem(position) as NotificationItem.LikeItem).notification)
@@ -100,9 +97,7 @@ class NotificationAdapter(private val viewModel: NotificationViewModel) :
     }
 
     fun addNotificationItem(list: List<Notification>) {
-
         adapterScope.launch {
-
             val notificationItems: MutableList<NotificationItem> = mutableListOf()
 
             list.forEach {

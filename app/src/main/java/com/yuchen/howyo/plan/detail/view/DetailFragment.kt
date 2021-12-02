@@ -23,12 +23,10 @@ import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentDetailBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.util.Logger
-
 
 class DetailFragment : Fragment(), OnMapReadyCallback {
-
     private lateinit var binding: FragmentDetailBinding
+
     private val viewModel by viewModels<DetailViewModel> {
         getVmFactory(
             DetailFragmentArgs.fromBundle(requireArguments()).plan,
@@ -41,26 +39,26 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentDetailBinding.inflate(inflater, container, false)
-
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.recyclerDetailImages.adapter = DetailImagesAdapter(viewModel)
 
+        binding.recyclerDetailImages.adapter = DetailImagesAdapter(viewModel)
         LinearSnapHelper().attachToRecyclerView(binding.recyclerDetailImages)
 
-        //Map
+        // Map
         mFusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(HowYoApplication.instance)
+
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map_detail_destination) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner, {
+        viewModel.navigateToEditSchedule.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
                     NavigationDirections.navToDetailEditFragment()
@@ -70,38 +68,41 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 )
                 viewModel.onEditScheduleNavigated()
             }
-        })
+        }
 
-        viewModel.navigateToViewMap.observe(viewLifecycleOwner, {
+        viewModel.navigateToViewMap.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToMapFragment(it))
                 viewModel.onViewMapNavigated()
             }
-        })
+        }
 
-        viewModel.navigateToViewImage.observe(viewLifecycleOwner, {
+        viewModel.navigateToViewImage.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(NavigationDirections.navToDetailViewImageFragment(it))
                 viewModel.onViewImageNavigated()
             }
-        })
+        }
 
-        viewModel.navigateToUrl.observe(viewLifecycleOwner, {
+        viewModel.navigateToUrl.observe(viewLifecycleOwner) {
             it?.let {
-
                 val openURL = Intent(Intent.ACTION_VIEW)
                 openURL.data = Uri.parse(it)
+
                 startActivity(openURL)
+
                 viewModel.onUrlNavigated()
             }
-        })
+        }
 
-        viewModel.leaveViewDetail.observe(viewLifecycleOwner, {
+        viewModel.leaveViewDetail.observe(viewLifecycleOwner) {
             it?.let {
-                if (it) findNavController().popBackStack()
-                viewModel.onLeaveViewDetail()
+                if (it) {
+                    findNavController().popBackStack()
+                    viewModel.onLeaveViewDetail()
+                }
             }
-        })
+        }
 
         return binding.root
     }
@@ -112,14 +113,11 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setDestination() {
-
-
         val currentLocation =
             LatLng(
                 viewModel.schedule.value?.latitude ?: 0.0,
                 viewModel.schedule.value?.longitude ?: 0.0
             )
-
 
         googleMap?.addMarker(
             MarkerOptions().position(currentLocation).title(viewModel.schedule.value?.title)
@@ -129,7 +127,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             CameraUpdateFactory.newLatLngZoom(currentLocation, 16F)
         )
 
-        //Disable touch in scrollView
+        // Disable touch in scrollView
         googleMap?.uiSettings?.isScrollGesturesEnabled = false
     }
 }

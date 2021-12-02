@@ -1,7 +1,6 @@
 package com.yuchen.howyo.data
 
 sealed class ScheduleDataItem {
-
     abstract val id: String
 
     object EmptySchedule : ScheduleDataItem() {
@@ -10,6 +9,6 @@ sealed class ScheduleDataItem {
 
     data class ScheduleItem(val schedule: Schedule) : ScheduleDataItem() {
         override val id: String
-            get() = schedule.id!!
+            get() = schedule.id
     }
 }

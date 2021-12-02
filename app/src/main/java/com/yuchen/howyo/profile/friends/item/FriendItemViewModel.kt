@@ -15,18 +15,17 @@ class FriendItemViewModel(
     private val friendType: FriendFilter,
     private val argumentUserId: String
 ) : ViewModel() {
-
     private var _currentUser = MutableLiveData<User>()
 
     val currentUser: LiveData<User>
         get() = _currentUser
 
-    private val _userId = MutableLiveData<String>().apply {
+    private val _currentUserId = MutableLiveData<String>().apply {
         value = argumentUserId
     }
 
-    val userId: LiveData<String>
-        get() = _userId
+    private val currentUserId: LiveData<String>
+        get() = _currentUserId
 
     private var _userIdList = MutableLiveData<List<String>>()
 
@@ -41,9 +40,9 @@ class FriendItemViewModel(
     private val _status = MutableLiveData<LoadApiStatus>()
 
     // Handle navigation to user profile
-    private val _navigateToUserProfile = MutableLiveData<String>()
+    private val _navigateToUserProfile = MutableLiveData<String?>()
 
-    val navigateToUserProfile: LiveData<String>
+    val navigateToUserProfile: LiveData<String?>
         get() = _navigateToUserProfile
 
     val status: LiveData<LoadApiStatus>
@@ -60,15 +59,14 @@ class FriendItemViewModel(
     }
 
     init {
-        getLiveUserResult()
-        getUserIdList()
+        fetchLiveCurrentUserResult()
+        fetchUserIdList()
     }
 
-    private fun getUserIdList() {
-
+    private fun fetchUserIdList() {
         var userIdList = listOf<String>()
-        coroutineScope.launch {
 
+        coroutineScope.launch {
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
@@ -87,8 +85,7 @@ class FriendItemViewModel(
         }
     }
 
-    fun getUserDataList() {
-
+    fun fetchUserDataList() {
         val userDataList = mutableSetOf<User>()
 
         coroutineScope.launch {
@@ -103,28 +100,24 @@ class FriendItemViewModel(
             }
 
             _userList.value = userDataList.toList()
+
             _status.value = LoadApiStatus.DONE
         }
     }
 
-    private fun getLiveUserResult() {
-
+    private fun fetchLiveCurrentUserResult() {
         _currentUser = howYoRepository.getLiveUser(argumentUserId)
     }
 
     fun unFollow(user: User) {
         val fansList = user.fansList?.toMutableList()
-
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
-
-        val currentUserId = userId.value
+        val currentUserId = currentUserId.value ?: ""
 
         when {
             user.fansList?.contains(currentUserId) == true -> {
-                if (currentUserId != null) {
-                    fansList?.removeAt(fansList.indexOf(currentUserId))
-                }
+                fansList?.removeAt(fansList.indexOf(currentUserId))
             }
         }
 
@@ -137,34 +130,28 @@ class FriendItemViewModel(
         user.fansList = fansList
         newCurrentUser?.followingList = followingList
 
-        _currentUser.value = newCurrentUser!!
+        newCurrentUser?.let { _currentUser.value = it }
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
-
                 howYoRepository.updateUser(user)
                 _currentUser.value?.let { howYoRepository.updateUser(it) }
-                howYoRepository.deleteFollowNotification(user.id, currentUserId!!)
+                howYoRepository.deleteFollowNotification(user.id, currentUserId)
             }
 
-            getUserIdList()
+            fetchUserIdList()
         }
     }
 
     fun removeFans(user: User) {
         val followingList = user.followingList?.toMutableList()
-
         val newCurrentUser = currentUser.value
         val fansList = newCurrentUser?.fansList?.toMutableList()
-
-        val currentUserId = userId.value
+        val currentUserId = currentUserId.value ?: ""
 
         when {
             user.followingList?.contains(currentUserId) == true -> {
-                if (currentUserId != null) {
-                    followingList?.removeAt(followingList.indexOf(currentUserId))
-                }
+                followingList?.removeAt(followingList.indexOf(currentUserId))
             }
         }
 
@@ -177,18 +164,16 @@ class FriendItemViewModel(
         user.followingList = followingList
         newCurrentUser?.fansList = fansList
 
-        _currentUser.value = newCurrentUser!!
+        newCurrentUser.let { _currentUser.value = it }
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
-
                 howYoRepository.updateUser(user)
                 _currentUser.value?.let { howYoRepository.updateUser(it) }
-                howYoRepository.deleteFollowNotification(currentUserId!!, user.id)
+                howYoRepository.deleteFollowNotification(currentUserId, user.id)
             }
 
-            getUserIdList()
+            fetchUserIdList()
         }
     }
 

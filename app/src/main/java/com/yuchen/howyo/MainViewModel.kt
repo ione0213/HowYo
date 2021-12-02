@@ -11,7 +11,6 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.DrawerToggleType
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
@@ -44,36 +43,36 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     val sharedToolbarTitle: LiveData<String>
         get() = _sharedToolbarTitle
 
-    private val _resetToolbar = MutableLiveData<Boolean>()
+    private val _isResetToolbar = MutableLiveData<Boolean?>()
 
-    val resetToolbar: LiveData<Boolean>
-        get() = _resetToolbar
+    val isResetToolbar: LiveData<Boolean?>
+        get() = _isResetToolbar
 
     // Handle navigation to home by bottom nav directly which includes icon change
-    private val _navigateToHomeByBottomNav = MutableLiveData<Boolean>()
+    private val _navigateToHomeByBottomNav = MutableLiveData<Boolean?>()
 
-    val navigateToHomeByBottomNav: LiveData<Boolean>
+    val navigateToHomeByBottomNav: LiveData<Boolean?>
         get() = _navigateToHomeByBottomNav
 
-    private val _userLocation = MutableLiveData<Location>()
+    private val _userLocation = MutableLiveData<Location?>()
 
-    val userLocation: LiveData<Location>
+    val userLocation: LiveData<Location?>
         get() = _userLocation
 
-    private val _isAccessAppFirstTime = MutableLiveData<Boolean>()
+    private val _isAccessAppFirstTime = MutableLiveData<Boolean?>()
 
-    val isAccessAppFirstTime: LiveData<Boolean>
+    val isAccessAppFirstTime: LiveData<Boolean?>
         get() = _isAccessAppFirstTime
 
-    private val _isUserLocateServiceReady = MutableLiveData<Boolean>()
+    private val _isUserLocateServiceReady = MutableLiveData<Boolean?>()
 
-    val isUserLocateServiceReady: LiveData<Boolean>
+    val isUserLocateServiceReady: LiveData<Boolean?>
         get() = _isUserLocateServiceReady
 
-    private val _isBroadcastUnRegistered = MutableLiveData<Boolean>()
+    private val _isBroadcastRegistered = MutableLiveData<Boolean?>()
 
-    val isBroadcastUnRegistered: LiveData<Boolean>
-        get() = _isBroadcastUnRegistered
+    val isBroadcastRegistered: LiveData<Boolean?>
+        get() = _isBroadcastRegistered
 
     private var viewModelJob = Job()
 
@@ -86,10 +85,10 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     init {
-        _sharedToolbarTitle.value = ""
+        resetSharedToolbarTitle()
     }
 
-    //For shared fragment title
+    // For shared fragment title
     fun setSharedToolbarTitle(title: String) {
         _sharedToolbarTitle.value = title
     }
@@ -107,18 +106,18 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
     }
 
     fun resetToolbar() {
-        _resetToolbar.value = true
+        _isResetToolbar.value = true
     }
 
     fun onResetToolbar() {
-        _resetToolbar.value = null
+        _isResetToolbar.value = null
     }
 
-    fun setUserLocateServiceStatus(userLocateServiceBound: Boolean) {
-        _isUserLocateServiceReady.value = userLocateServiceBound
+    fun setUserLocateServiceStatus(userLocateServiceBoundStatus: Boolean) {
+        _isUserLocateServiceReady.value = userLocateServiceBoundStatus
     }
 
-    fun onSetUserLocateServiceStatus() {
+    fun resetUserLocateServiceStatus() {
         _isUserLocateServiceReady.value = null
     }
 
@@ -126,7 +125,7 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
         _isAccessAppFirstTime.value = true
     }
 
-    fun onSetIsAccessAppFirstTime() {
+    fun resetIsAccessAppFirstTime() {
         _isAccessAppFirstTime.value = null
     }
 
@@ -134,26 +133,24 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
         _userLocation.value = location
     }
 
-    fun onSetUserLocation() {
+    fun onUpdateUserLocation() {
         _userLocation.value = null
     }
 
     fun setBroadcastRegistered() {
-        _isBroadcastUnRegistered.value = true
+        _isBroadcastRegistered.value = true
     }
 
-    fun onsetBroadcastRegistered() {
-        _isBroadcastUnRegistered.value = null
+    fun resetBroadcastStatus() {
+        _isBroadcastRegistered.value = null
     }
 
-    fun updateUser(location: Location) {
-
+    fun updateUserLocation(location: Location) {
         coroutineScope.launch {
-
             var user: User?
 
             withContext(Dispatchers.IO) {
-                user = getUserResult()
+                user = fetchUserResult()
             }
 
             user?.apply {
@@ -165,12 +162,11 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
                 user?.let { howYoRepository.updateUser(it) }
             }
 
-            onSetUserLocation()
+            onUpdateUserLocation()
         }
     }
 
-    private suspend fun getUserResult(): User {
-
+    private suspend fun fetchUserResult(): User {
         var user = User()
 
         when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {

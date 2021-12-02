@@ -29,7 +29,8 @@
             android:checked="@{checkShoppingList.check}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:id="@+id/text_check_list_item_name"
@@ -45,6 +46,7 @@
             app:layout_constraintStart_toEndOf="@+id/checkbox_check_list"
             app:layout_constraintTop_toTopOf="@+id/checkbox_check_list"
             app:layout_constraintVertical_bias="0.0"
+            tools:ignore="TextContrastCheck"
             tools:text="護照" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -53,13 +55,15 @@
             android:layout_height="@dimen/plan_img_btn_small"
             android:layout_marginTop="@dimen/middle_padding"
             android:layout_marginEnd="@dimen/middle_padding"
-            android:onClick="@{() -> viewModel.deleteItem(checkShoppingList)}"
             android:layout_marginBottom="@dimen/middle_padding"
             android:background="@drawable/icons_24px_close"
             android:backgroundTint="@color/matcha_3"
+            android:contentDescription="@string/content_desc_delete_item"
+            android:onClick="@{() -> viewModel.deleteItem(checkShoppingList)}"
             app:layout_constraintBottom_toBottomOf="@+id/text_check_list_item_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/text_check_list_item_name" />
+            app:layout_constraintTop_toTopOf="@id/text_check_list_item_name"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <View
             android:id="@+id/view_check_list_separation"

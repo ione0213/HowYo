@@ -6,24 +6,17 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.*
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class CommentViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
     private val plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
     }
 
-    private val _users = MutableLiveData<List<User>>()
-
-    val user: LiveData<List<User>>
-        get() = _users
-
-    //All comments of plan
+    // All comments of plan
     var allComments = MutableLiveData<List<Comment>>()
 
     private val _commentData = MutableLiveData<MutableList<CommentData>>()
@@ -31,7 +24,7 @@ class CommentViewModel(
     val commentData: LiveData<MutableList<CommentData>>
         get() = _commentData
 
-    var message = MutableLiveData<String>()
+    var message = MutableLiveData<String?>()
 
     private val _commentResult = MutableLiveData<Boolean>()
 
@@ -49,20 +42,18 @@ class CommentViewModel(
     }
 
     init {
-
-        getLiveCommentsResult()
+        fetchLiveCommentsResult()
     }
 
-    private fun getLiveCommentsResult() {
-        allComments = plan.value?.id?.let { howYoRepository.getLiveComments(it) }!!
+    private fun fetchLiveCommentsResult() {
+        allComments = plan.value?.id?.let { howYoRepository.getLiveComments(it) }
+            ?: MutableLiveData<List<Comment>>()
     }
 
-    fun getUsersResult() {
-
+    fun fetchUsersResult() {
         val commentData = mutableListOf<CommentData>()
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 allComments.value?.forEach { comment ->
                     when (val result = comment.userId?.let { howYoRepository.getUser(it) }) {
@@ -85,7 +76,6 @@ class CommentViewModel(
     }
 
     fun submitComment() {
-
         val comment = Comment(
             planId = plan.value?.id,
             userId = UserManager.userId,
@@ -93,7 +83,6 @@ class CommentViewModel(
         )
 
         coroutineScope.launch {
-
             val result = howYoRepository.createComment(comment)
 
             _commentResult.value = when (result) {

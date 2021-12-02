@@ -22,8 +22,10 @@
             android:layout_marginStart="@dimen/small_padding"
             android:layout_marginTop="@dimen/standard_padding"
             android:background="@drawable/icons_44px_back01"
+            android:contentDescription="@string/content_desc_back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_find_location_days"
@@ -40,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/button_find_location_close"
             tools:listitem="@layout/item_find_location_day" />
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map_find_location_destination"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
@@ -68,6 +70,7 @@
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/small_padding"
+                android:contentDescription="@string/content_desc_search_icon"
                 android:elevation="1dp"
                 android:src="@drawable/search" />
 
@@ -78,8 +81,11 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/small_padding"
                 android:layout_toEndOf="@+id/img_find_location_search"
+                android:autofillHints="@string/search"
                 android:background="@color/white"
-                android:hint="@string/search" />
+                android:hint="@string/search"
+                android:inputType="text"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
         </RelativeLayout>
 
 

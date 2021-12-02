@@ -14,16 +14,14 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.NavigationDirections
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.SchedulePhotos
+import com.yuchen.howyo.data.Photos
 import com.yuchen.howyo.databinding.FragmentDetailEditBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.util.Logger
 import java.util.*
 
-
 class DetailEditFragment : Fragment() {
-
     private lateinit var binding: FragmentDetailEditBinding
+
     private val viewModel by viewModels<DetailEditViewModel> {
         getVmFactory(
             DetailEditFragmentArgs.fromBundle(requireArguments()).schedule,
@@ -31,19 +29,19 @@ class DetailEditFragment : Fragment() {
             DetailEditFragmentArgs.fromBundle(requireArguments()).day
         )
     }
+
     private val fromAlbum = 0x00
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentDetailEditBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         val adapter = DetailEditImagesAdapter(viewModel)
-
         binding.recyclerDetailEditImages.adapter = adapter
         LinearSnapHelper().attachToRecyclerView(binding.recyclerDetailEditImages)
 
@@ -51,85 +49,77 @@ class DetailEditFragment : Fragment() {
             HowYoApplication.instance.resources.getStringArray(R.array.schedule_type_list)
 
         val spinnerAdapter = DetailEditSpinnerAdapter(spinnerList)
-
         binding.spinnerDetailEditType.adapter = spinnerAdapter
 
-        viewModel.leaveEditDetail.observe(viewLifecycleOwner, {
+        viewModel.leaveEditDetail.observe(viewLifecycleOwner) {
             it?.let {
-                if (it) findNavController().popBackStack()
-                viewModel.onLeaveEditDetail()
+                if (it) {
+                    findNavController().popBackStack()
+                    viewModel.onLeaveEditDetail()
+                }
             }
-        })
+        }
 
-        viewModel.selectPhoto.observe(viewLifecycleOwner, {
+        viewModel.selectPhoto.observe(viewLifecycleOwner) {
             it?.let {
                 selectPhoto()
                 viewModel.onSelectedPhoto()
             }
-        })
+        }
 
-        viewModel.setTime.observe(viewLifecycleOwner, {
+        viewModel.setTime.observe(viewLifecycleOwner) {
             it?.let {
                 val c = Calendar.getInstance()
                 val hour = c.get(Calendar.HOUR_OF_DAY)
                 val minute = c.get(Calendar.MINUTE)
-                c.timeInMillis = viewModel.plan.value?.startDate!!.plus(
+
+                c.timeInMillis = viewModel.plan.value?.startDate?.plus(
                     (1000 * 60 * 60 * 24 * (viewModel.day.value?.position ?: 0))
-                )
+                ) ?: 0L
 
                 val picker = TimePickerDialog(
                     context,
                     android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth,
-                    { tp, sHour, sMinute ->
+                    { _, sHour, sMinute ->
 
                         c.set(Calendar.HOUR_OF_DAY, sHour)
                         c.set(Calendar.MINUTE, sMinute)
 
-                        when (it) {
-                            getString(R.string.detail_edit_schedule_start_time) -> {
-                                viewModel.setTimeValue(it, c.timeInMillis)
-                            }
-                            getString(R.string.detail_edit_schedule_end_time) -> {
-                                viewModel.setTimeValue(it, c.timeInMillis)
-                            }
-                        }
+                        viewModel.setTimeValue(it, c.timeInMillis)
                     },
                     hour,
                     minute,
                     true
                 )
                 picker.show()
+
                 viewModel.onSetTime()
             }
-        })
+        }
 
-        viewModel.navigateToEditImage.observe(viewLifecycleOwner, {
+        viewModel.navigateToEditImage.observe(viewLifecycleOwner) {
             it?.let {
-                val schedulePhotos = SchedulePhotos()
+                val schedulePhotos = Photos()
                 viewModel.photoDataList.value?.forEach { schedulePhoto ->
                     schedulePhotos.add(schedulePhoto)
                 }
 
                 findNavController().navigate(
-                    NavigationDirections.navToDetailEditImageFragment(
-                        it,
-                        schedulePhotos
-                    )
+                    NavigationDirections.navToDetailEditImageFragment(it, schedulePhotos)
                 )
+
                 viewModel.onEditImageNavigated()
             }
-        })
+        }
 
-        viewModel.scheduleResult.observe(viewLifecycleOwner, {
+        viewModel.scheduleResult.observe(viewLifecycleOwner) {
             it?.let {
-                when {
-                    it -> {
-                        findNavController().popBackStack()
-                        viewModel.onBackToPreviousPage()
-                    }
+                if (it) {
+                    findNavController().popBackStack()
+                    viewModel.onBackToPreviousPage()
                 }
             }
-        })
+        }
 
         return binding.root
     }
@@ -137,7 +127,6 @@ class DetailEditFragment : Fragment() {
     private fun selectPhoto() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-
         intent.type = "image/*"
 
         startActivityForResult(intent, fromAlbum)
@@ -148,9 +137,7 @@ class DetailEditFragment : Fragment() {
         when (requestCode) {
             fromAlbum -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-
                     data.data?.let { uri ->
-
                         viewModel.setBitmap(uri)
                     }
                 }

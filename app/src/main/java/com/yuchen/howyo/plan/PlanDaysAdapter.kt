@@ -4,14 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.*
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Day
 import com.yuchen.howyo.data.DayItem
 import com.yuchen.howyo.databinding.ItemPlanDayAddBinding
 import com.yuchen.howyo.databinding.ItemPlanDayBinding
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,23 +18,18 @@ import kotlinx.coroutines.withContext
 
 class PlanDaysAdapter(val viewModel: PlanViewModel) :
     ListAdapter<DayItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
-
     private lateinit var context: Context
 
     class DayViewHolder(
         private var binding: ItemPlanDayBinding,
         private val viewModel: PlanViewModel
     ) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-
         val isSelected: LiveData<Boolean> = Transformations.map(viewModel.selectedDayPosition) {
             it == adapterPosition
         }
 
-
         fun bind(day: Day) {
-
             val isTrueSelected = (adapterPosition == viewModel.selectedDayPosition.value)
             binding.lifecycleOwner = this
             binding.viewModel = viewModel
@@ -43,7 +37,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
             binding.day = day
             binding.isSelectedOnBind = isTrueSelected
             binding.executePendingBindings()
-
         }
 
         private val lifecycleRegistry = LifecycleRegistry(this)
@@ -69,9 +62,7 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
         private val binding: ItemPlanDayAddBinding,
         private val viewModel: PlanViewModel
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind() {
-
             binding.viewModel = viewModel
             binding.executePendingBindings()
         }
@@ -92,6 +83,7 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
+
         return when (viewType) {
             ITEM_VIEW_DAY -> {
                 DayViewHolder(
@@ -111,8 +103,6 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
-
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -134,13 +124,10 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
     }
 
     fun submitDays(days: List<Day>) {
-
         adapterScope.launch {
-
             val dayItems: MutableList<DayItem> = mutableListOf()
 
             days.forEach {
-
                 dayItems.add(DayItem.FullDayItem(it))
             }
 

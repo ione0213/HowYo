@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.yuchen.howyo.databinding.ItemDetailEditSpinnerBinding
 
-class DetailEditSpinnerAdapter(private val strings: Array<String>): BaseAdapter() {
+class DetailEditSpinnerAdapter(private val strings: Array<String>) : BaseAdapter() {
     override fun getItem(position: Int): Any {
         return strings[position]
     }

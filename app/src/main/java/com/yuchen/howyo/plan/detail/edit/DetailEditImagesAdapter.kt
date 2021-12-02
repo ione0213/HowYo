@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.DetailPhotoItem
-import com.yuchen.howyo.data.SchedulePhoto
+import com.yuchen.howyo.data.PhotoData
 import com.yuchen.howyo.databinding.ItemDetailEditImageAddBinding
 import com.yuchen.howyo.databinding.ItemDetailEditImageBinding
 import kotlinx.coroutines.CoroutineScope
@@ -16,14 +16,12 @@ import kotlinx.coroutines.withContext
 
 class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
     ListAdapter<DetailPhotoItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class ImageViewHolder(private var binding: ItemDetailEditImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(schedulePhoto: SchedulePhoto) {
-
-            schedulePhoto.let {
+        fun bind(photoData: PhotoData) {
+            photoData.let {
                 binding.schedulePhoto = it
                 binding.executePendingBindings()
             }
@@ -76,13 +74,12 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is AddViewHolder -> {
                 holder.bind()
             }
             is ImageViewHolder -> {
-                holder.bind((getItem(position) as DetailPhotoItem.ImageData).schedulePhoto)
+                holder.bind((getItem(position) as DetailPhotoItem.ImageData).photoData)
             }
         }
     }
@@ -94,12 +91,14 @@ class DetailEditImagesAdapter(private val viewModel: DetailEditViewModel) :
         }
     }
 
-    fun addPhotoAndBtn(list: List<SchedulePhoto>) {
+    fun addPhotoAndBtn(list: List<PhotoData>) {
         adapterScope.launch {
             val detailPhotoItems: MutableList<DetailPhotoItem> = mutableListOf()
+
             list.forEach {
                 detailPhotoItems.add(DetailPhotoItem.ImageData(it))
             }
+
             when {
                 list.size < 3 -> detailPhotoItems.add(DetailPhotoItem.AddBtn)
             }

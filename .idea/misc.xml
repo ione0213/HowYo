@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/drawable/follow_selector.xml" value="0.31971399387129723" />
         <entry key="app/src/main/res/drawable/ic_launcher.xml" value="1.46875" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2989583333333333" />
+        <entry key="app/src/main/res/drawable/ic_nav_discover_selector.xml" value="0.2921875" />
         <entry key="app/src/main/res/drawable/ic_nav_home_selector.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/ic_nav_plus_selector.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/ic_nav_profile_selector.xml" value="0.2537037037037037" />
@@ -39,7 +40,7 @@
         <entry key="app/src/main/res/drawable/shape_bubble_received.xml" value="0.12777777777777777" />
         <entry key="app/src/main/res/drawable/shape_bubble_sent.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.3067708333333333" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.359375" />
         <entry key="app/src/main/res/layout/dialog_add_new_plan.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/dialog_companion.xml" value="0.2833333333333333" />
         <entry key="app/src/main/res/layout/dialog_copy_plan.xml" value="0.25" />
@@ -55,7 +56,7 @@
         <entry key="app/src/main/res/layout/fragment_detail_edit.xml" value="0.37961335676625657" />
         <entry key="app/src/main/res/layout/fragment_detail_edit_image.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_detail_view_image.xml" value="0.265625" />
-        <entry key="app/src/main/res/layout/fragment_discover.xml" value="0.45030425963488846" />
+        <entry key="app/src/main/res/layout/fragment_discover.xml" value="0.4236453201970443" />
         <entry key="app/src/main/res/layout/fragment_edit_payment.xml" value="0.2546875" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/fragment_find_location.xml" value="0.375287797390637" />
@@ -73,6 +74,7 @@
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_shopping_list.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.30416666666666664" />
         <entry key="app/src/main/res/layout/fragment_signin.xml" value="0.2767210144927536" />
         <entry key="app/src/main/res/layout/item_chat.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_chat_receive.xml" value="0.23541666666666666" />

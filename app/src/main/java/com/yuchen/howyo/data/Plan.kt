@@ -3,9 +3,8 @@ package com.yuchen.howyo.data
 import android.os.Parcelable
 import com.google.firebase.firestore.PropertyName
 import com.yuchen.howyo.plan.PlanPrivacy
-import kotlinx.android.parcel.Parcelize
 import java.util.*
-
+import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Plan(

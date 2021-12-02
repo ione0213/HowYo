@@ -2,11 +2,10 @@ package com.yuchen.howyo.data
 
 import android.net.Uri
 import android.os.Parcelable
-import com.google.firebase.firestore.PropertyName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class SchedulePhoto(
+data class PhotoData(
     var uri: Uri? = null,
     val url: String? = null,
     val fileName: String? = null,
@@ -14,4 +13,4 @@ data class SchedulePhoto(
 ) : Parcelable
 
 @Parcelize
-class SchedulePhotos: ArrayList<SchedulePhoto>(), Parcelable
+class Photos : ArrayList<PhotoData>(), Parcelable

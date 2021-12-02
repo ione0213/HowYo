@@ -8,14 +8,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.HowYoApplication
 import com.yuchen.howyo.R
-import com.yuchen.howyo.data.*
+import com.yuchen.howyo.data.Day
+import com.yuchen.howyo.data.PhotoData
+import com.yuchen.howyo.data.Plan
+import com.yuchen.howyo.data.Result
+import com.yuchen.howyo.data.Schedule
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.util.Logger
+import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.Util.getString
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailEditViewModel(
     private val howYoRepository: HowYoRepository,
@@ -23,7 +32,6 @@ class DetailEditViewModel(
     private val argumentPlan: Plan?,
     private val argumentDay: Day?
 ) : ViewModel() {
-
     // Detail data from arguments
     private val _schedule = MutableLiveData<Schedule>().apply {
         value = argumentSchedule
@@ -40,17 +48,19 @@ class DetailEditViewModel(
         value = argumentDay
     }
 
-    private val _photoDataList = MutableLiveData<MutableList<SchedulePhoto>>().apply {
-        val photoData = mutableListOf<SchedulePhoto>()
+    private val _photoDataList = MutableLiveData<MutableList<PhotoData>>().apply {
+        val photoData = mutableListOf<PhotoData>()
+
         argumentSchedule?.let {
             it.photoUrlList?.forEachIndexed { index, url ->
-                photoData.add(SchedulePhoto(url = url, fileName = it.photoFileNameList?.get(index)))
+                photoData.add(PhotoData(url = url, fileName = it.photoFileNameList?.get(index)))
             }
         }
+
         value = photoData
     }
 
-    val photoDataList: LiveData<MutableList<SchedulePhoto>>
+    val photoDataList: LiveData<MutableList<PhotoData>>
         get() = _photoDataList
 
     val notification = MutableLiveData<Boolean>()
@@ -72,32 +82,32 @@ class DetailEditViewModel(
     val selectedScheduleTypePosition = MutableLiveData<Int>()
 
     // Handle leave edit detail
-    private val _leaveEditDetail = MutableLiveData<Boolean>()
+    private val _leaveEditDetail = MutableLiveData<Boolean?>()
 
-    val leaveEditDetail: LiveData<Boolean>
+    val leaveEditDetail: LiveData<Boolean?>
         get() = _leaveEditDetail
 
     // Handle add the photo by selecting
-    private val _selectPhoto = MutableLiveData<Boolean>()
+    private val _selectPhoto = MutableLiveData<Boolean?>()
 
-    val selectPhoto: LiveData<Boolean>
+    val selectPhoto: LiveData<Boolean?>
         get() = _selectPhoto
 
     // Handle setting time
-    private val _setTime = MutableLiveData<String>()
+    private val _setTime = MutableLiveData<String?>()
 
-    val setTime: LiveData<String>
+    val setTime: LiveData<String?>
         get() = _setTime
 
-    private val _scheduleResult = MutableLiveData<Boolean>()
+    private val _scheduleResult = MutableLiveData<Boolean?>()
 
-    val scheduleResult: LiveData<Boolean>
+    val scheduleResult: LiveData<Boolean?>
         get() = _scheduleResult
 
     // Handle navigation to edit single image
-    private val _navigateToEditImage = MutableLiveData<SchedulePhoto>()
+    private val _navigateToEditImage = MutableLiveData<PhotoData?>()
 
-    val navigateToEditImage: LiveData<SchedulePhoto>
+    val navigateToEditImage: LiveData<PhotoData?>
         get() = _navigateToEditImage
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -116,7 +126,6 @@ class DetailEditViewModel(
     }
 
     init {
-
         setData()
     }
 
@@ -134,7 +143,11 @@ class DetailEditViewModel(
                     refUrl.value = this?.refUrl ?: ""
 
                     val spinnerList =
-                        HowYoApplication.instance.resources.getStringArray(R.array.schedule_type_list)
+                        HowYoApplication
+                            .instance
+                            .resources
+                            .getStringArray(R.array.schedule_type_list)
+
                     selectedScheduleTypePosition.value = spinnerList.indexOf(this?.scheduleType)
                 }
             }
@@ -143,14 +156,15 @@ class DetailEditViewModel(
 
     fun setBitmap(uri: Uri) {
         val photoData = photoDataList.value?.toMutableList()
-        photoData?.add(SchedulePhoto(uri = uri))
+        photoData?.add(PhotoData(uri = uri))
+
         _photoDataList.value = photoData
     }
 
-    fun saveSchedule() {
-
+    fun submitSchedule() {
         val imageUrlList = mutableListOf<String>()
         val fileNameList = mutableListOf<String>()
+
         val location = when (address.value?.isNotEmpty()) {
             true -> {
                 getLatitudeAndLongitude()
@@ -169,8 +183,9 @@ class DetailEditViewModel(
                 HowYoApplication
                     .instance
                     .resources
-                    .getStringArray(R.array.schedule_type_list)[selectedScheduleTypePosition.value
-                    ?: 0]
+                    .getStringArray(R.array.schedule_type_list)[
+                        selectedScheduleTypePosition.value ?: 0
+                ]
             title = this@DetailEditViewModel.title.value
             when {
                 location?.first != 0.0 && location?.second != 0.0 -> {
@@ -184,7 +199,7 @@ class DetailEditViewModel(
             startTime = this@DetailEditViewModel.startTime.value
             endTime = this@DetailEditViewModel.endTime.value
             when {
-                this@DetailEditViewModel.budget.value?.isNullOrEmpty() == false -> {
+                this@DetailEditViewModel.budget.value?.isEmpty() == false -> {
                     budget = this@DetailEditViewModel.budget.value?.toInt()
                 }
             }
@@ -194,12 +209,10 @@ class DetailEditViewModel(
         }
 
         coroutineScope.launch {
-
             _status.value = LoadApiStatus.LOADING
 
             withContext(Dispatchers.IO) {
                 photoDataList.value?.forEach {
-
                     when (it.uri) {
                         null -> {
                             when (it.isDeleted) {
@@ -219,16 +232,23 @@ class DetailEditViewModel(
                                 false -> {
                                     val uri = it.uri
                                     val formatter =
-                                        SimpleDateFormat("yyyy_mm_dd_HH_mm_ss", Locale.getDefault())
+                                        SimpleDateFormat(
+                                            "yyyy_mm_dd_HH_mm_ss",
+                                            Locale.getDefault()
+                                        )
+
                                     val fileName =
-                                        "userIdFromSharePreference_${formatter.format(Date())}"
+                                        "${UserManager.currentUserEmail}_" +
+                                                formatter.format(Date())
 
                                     fileNameList.add(fileName)
 
-                                    when (val result =
-                                        uri?.let { imgUri ->
-                                            howYoRepository.uploadPhoto(imgUri, fileName)
-                                        }) {
+                                    when (
+                                        val result =
+                                            uri?.let { imgUri ->
+                                                howYoRepository.uploadPhoto(imgUri, fileName)
+                                            }
+                                    ) {
                                         is Result.Success -> {
                                             imageUrlList.add(result.data)
                                         }
@@ -248,19 +268,15 @@ class DetailEditViewModel(
             withContext(Dispatchers.IO) {
                 _scheduleResult.postValue(
                     when {
-                        newSchedule.id.isNullOrEmpty() -> {
+                        newSchedule.id.isEmpty() -> {
                             when (val result = howYoRepository.createSchedule(newSchedule)) {
-                                is Result.Success -> {
-                                    result.data
-                                }
+                                is Result.Success -> result.data
                                 else -> false
                             }
                         }
                         else -> {
                             when (val result = howYoRepository.updateSchedule(newSchedule)) {
-                                is Result.Success -> {
-                                    result.data
-                                }
+                                is Result.Success -> result.data
                                 else -> false
                             }
                         }
@@ -271,18 +287,14 @@ class DetailEditViewModel(
     }
 
     private fun getLatitudeAndLongitude(): Pair<Double, Double> {
-
         val geocoder = Geocoder(HowYoApplication.instance)
 
         val list: List<Address> =
             geocoder.getFromLocationName(address.value ?: "", 1)
+
         return when (list.isEmpty()) {
-            true -> {
-                Pair(0.0, 0.0)
-            }
-            else -> {
-                Pair(list.first().latitude, list.first().longitude)
-            }
+            true -> Pair(0.0, 0.0)
+            else -> Pair(list.first().latitude, list.first().longitude)
         }
     }
 
@@ -312,12 +324,8 @@ class DetailEditViewModel(
 
     fun setTimeValue(type: String, data: Long) {
         when (type) {
-            getString(R.string.detail_edit_schedule_start_time) -> {
-                startTime.value = data
-            }
-            else -> {
-                endTime.value = data
-            }
+            getString(R.string.detail_edit_schedule_start_time) -> startTime.value = data
+            else -> endTime.value = data
         }
     }
 
@@ -326,8 +334,8 @@ class DetailEditViewModel(
         _scheduleResult.value = null
     }
 
-    fun navigateToEditImage(schedulePhoto: SchedulePhoto) {
-        _navigateToEditImage.value = schedulePhoto
+    fun navigateToEditImage(photoData: PhotoData) {
+        _navigateToEditImage.value = photoData
     }
 
     fun onEditImageNavigated() {

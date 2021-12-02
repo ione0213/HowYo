@@ -10,16 +10,13 @@ import com.yuchen.howyo.databinding.ItemPlansProfileBinding
 
 class PlanAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Plan, PlanAdapter.PlanViewHolder>(DiffCallback) {
-
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
         fun onClick(plan: Plan) = clickListener(plan)
     }
 
     class PlanViewHolder(private var binding: ItemPlansProfileBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(plan: Plan, onClickListener: OnClickListener) {
-
             binding.root.setOnClickListener { onClickListener.onClick(plan) }
             binding.plan = plan
             binding.executePendingBindings()

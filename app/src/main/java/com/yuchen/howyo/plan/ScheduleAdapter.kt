@@ -21,7 +21,6 @@ class ScheduleAdapter(
     private val onClickListener: OnClickListener
 ) :
     ListAdapter<ScheduleDataItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
     private val viewBinderHelper = ViewBinderHelper()
 
@@ -33,20 +32,16 @@ class ScheduleAdapter(
         RecyclerView.ViewHolder(binding.root) {
         var swipeRevealLayout: SwipeRevealLayout = binding.swipeLayout
         fun bind(
-            schedule: Schedule,
-            onClickListener: OnClickListener,
-            viewModel: PlanViewModel
+            schedule: Schedule, onClickListener: OnClickListener, viewModel: PlanViewModel
         ) {
-
-
             binding.layoutPlanScheduleContent.setOnClickListener {
-                onClickListener.onClick(
-                    schedule
-                )
+                onClickListener.onClick(schedule)
             }
+
             if (viewModel.accessType == AccessPlanType.EDIT) {
                 binding.buttonPlanScheduleDelete.setOnClickListener {
                     viewModel.checkDeleteSchedule(schedule)
+
                     swipeRevealLayout.close(true)
                 }
             }
@@ -54,13 +49,13 @@ class ScheduleAdapter(
                 binding.schedule = it
                 binding.executePendingBindings()
             }
+
             swipeRevealLayout = binding.swipeLayout
         }
     }
 
-    class EmptyViewHolder(private var binding: ItemEmptyScheduleBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+    class EmptyViewHolder(binding: ItemEmptyScheduleBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<ScheduleDataItem>() {
         override fun areItemsTheSame(
@@ -103,8 +98,6 @@ class ScheduleAdapter(
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
-
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -130,15 +123,11 @@ class ScheduleAdapter(
         }
     }
 
-    fun addEmptyAndSchedule(list: List<Schedule>) {
+    fun addScheduleOrEmptyPage(list: List<Schedule>) {
         adapterScope.launch {
             val items = when (list.size) {
-                0 -> {
-                    listOf(ScheduleDataItem.EmptySchedule)
-                }
-                else -> {
-                    list.map { ScheduleDataItem.ScheduleItem(it) }
-                }
+                0 -> listOf(ScheduleDataItem.EmptySchedule)
+                else -> list.map { ScheduleDataItem.ScheduleItem(it) }
             }
             withContext(Dispatchers.Main) {
                 submitList(items)

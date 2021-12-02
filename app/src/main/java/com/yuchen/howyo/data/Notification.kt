@@ -4,7 +4,7 @@ import com.google.firebase.firestore.PropertyName
 import java.util.*
 
 data class Notification(
-    var id: String? = null,
+    var id: String = "",
     @get:PropertyName("to_user_id")
     @set:PropertyName("to_user_id")
     var toUserId: String? = null,

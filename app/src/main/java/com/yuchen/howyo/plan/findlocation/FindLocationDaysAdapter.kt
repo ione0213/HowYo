@@ -11,12 +11,10 @@ import com.yuchen.howyo.databinding.ItemFindLocationDayBinding
 
 class FindLocationDaysAdapter(val viewModel: FindLocationViewModel) :
     ListAdapter<Day, FindLocationDaysAdapter.DayViewHolder>(DiffCallback) {
-
     class DayViewHolder(
         private var binding: ItemFindLocationDayBinding,
         private val viewModel: FindLocationViewModel
     ) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-
         val isSelected: LiveData<Boolean> = Transformations.map(viewModel.selectedDayPosition) {
             it == adapterPosition
         }

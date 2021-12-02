@@ -4,7 +4,6 @@ import android.util.Log
 import com.yuchen.howyo.BuildConfig
 
 object Logger {
-
     private const val TAG = "HowYo-Logger"
 
     fun v(content: String) { if (BuildConfig.LOGGER_VISIABLE) Log.v(TAG, content) }

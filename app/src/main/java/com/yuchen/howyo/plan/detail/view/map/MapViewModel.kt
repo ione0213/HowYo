@@ -26,9 +26,9 @@ class MapViewModel(
         get() = _status
 
     // Handle leave map
-    private val _leaveMap = MutableLiveData<Boolean>()
+    private val _leaveMap = MutableLiveData<Boolean?>()
 
-    val leaveMap: LiveData<Boolean>
+    val leaveMap: LiveData<Boolean?>
         get() = _leaveMap
 
     init {
@@ -46,5 +46,4 @@ class MapViewModel(
     fun onLocateDone() {
         _status.value = LoadApiStatus.DONE
     }
-
 }

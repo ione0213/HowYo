@@ -48,14 +48,17 @@
 
             <EditText
                 android:id="@+id/edittext_comment"
-                android:layout_width="0dp"
                 style="@style/TextStyle2_matcha_5"
-                android:textAlignment="textStart"
-                android:background="@color/gray_f5f5f5"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:autofillHints="@string/type_message_here"
+                android:background="@color/gray_f5f5f5"
+                android:hint="@string/type_message_here"
+                android:inputType="text"
                 android:text="@={viewModel.message}"
-                android:hint="@string/type_message_here" />
+                android:textAlignment="textStart"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             <ImageView
                 android:id="@+id/button_comment"
@@ -64,7 +67,8 @@
                 android:onClick="@{() -> viewModel.submitComment()}"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/send" />
+                android:src="@drawable/send"
+                android:contentDescription="@string/content_desc_submit_message" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

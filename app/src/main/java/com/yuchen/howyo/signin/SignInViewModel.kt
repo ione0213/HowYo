@@ -6,20 +6,18 @@ import androidx.lifecycle.ViewModel
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
+    private val _createUserResult = MutableLiveData<String?>()
 
-    private val _createUserResult = MutableLiveData<String>()
-
-    val createUserResult: LiveData<String>
+    val createUserResult: LiveData<String?>
         get() = _createUserResult
 
-    private val _user = MutableLiveData<User>()
+    private val _currentUser = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    private val currentUser: LiveData<User>
+        get() = _currentUser
 
     private var viewModelJob = Job()
 
@@ -32,15 +30,13 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
     }
 
     fun createUser(user: User) {
-
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 when (val result = howYoRepository.createUser(user)) {
                     is Result.Success -> {
                         user.id = result.data
-                        _user.postValue(user)
-                        _createUserResult.postValue(result.data!!)
-
+                        _currentUser.postValue(user)
+                        _createUserResult.postValue(result.data)
                     }
                     else -> {
                         _createUserResult.value = null
@@ -48,14 +44,12 @@ class SignInViewModel(private val howYoRepository: HowYoRepository) : ViewModel(
                 }
             }
         }
-
     }
 
     fun setUser() {
-
         UserManager.apply {
-            userId = user.value?.id
-            currentUserEmail = user.value?.email
+            userId = currentUser.value?.id
+            currentUserEmail = currentUser.value?.email
         }
     }
 }

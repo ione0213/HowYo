@@ -27,7 +27,7 @@
             android:background="@color/white"
             android:elevation="5dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/cardview_radius"
+            app:cardCornerRadius="@dimen/card_view_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,18 +80,17 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginTop="@dimen/small_padding"
-                    android:layout_marginEnd="@dimen/middle_padding"
                     android:background="@drawable/follow_corner_normal"
                     android:gravity="center"
+                    android:onClick="@{() -> viewModel.unFollow(user)}"
                     android:text="@string/profile_follow_cancel"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    android:onClick="@{() -> viewModel.unFollow(user)}"
                     app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toStartOf="@+id/text_friend_user_name"
                     app:layout_constraintTop_toBottomOf="@+id/text_friend_user_name"
-                    app:layout_goneMarginTop="16dp" />
+                    app:layout_goneMarginTop="16dp"
+                    tools:ignore="TouchTargetSizeCheck,DuplicateClickableBoundsCheck" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_fans_remove"
@@ -99,18 +98,17 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginTop="@dimen/small_padding"
-                    android:layout_marginEnd="@dimen/middle_padding"
                     android:background="@drawable/follow_corner_normal"
                     android:gravity="center"
+                    android:onClick="@{() -> viewModel.removeFans(user)}"
                     android:text="@string/profile_fans_remove"
                     android:textAllCaps="false"
-                    android:onClick="@{() -> viewModel.removeFans(user)}"
                     android:textColor="@color/black"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toStartOf="@+id/text_friend_user_name"
                     app:layout_constraintTop_toBottomOf="@+id/text_friend_user_name"
-                    app:layout_goneMarginTop="16dp" />
+                    app:layout_goneMarginTop="16dp"
+                    tools:ignore="TouchTargetSizeCheck" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

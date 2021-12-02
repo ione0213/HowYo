@@ -23,4 +23,4 @@ class User(
 ) : Parcelable
 
 @Parcelize
-class Users: ArrayList<User>(), Parcelable
+class Users : ArrayList<User>(), Parcelable

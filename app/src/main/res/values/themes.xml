@@ -16,17 +16,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="ShapeAppearanceOverlayExtended" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">0dp</item>
-        <item name="cornerSizeTopLeft">50%</item>
-    </style>
-
-    <style name="FabShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerSize">50%</item>
-    </style>
-
-
     <style name="MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
 
         <!-- Header panel -->

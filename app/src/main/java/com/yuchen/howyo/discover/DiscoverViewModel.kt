@@ -8,29 +8,27 @@ import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
+    private val _plansForDisplay = MutableLiveData<List<Plan>>()
 
-    private val _plansForShow = MutableLiveData<List<Plan>>()
+    val plansForDisplay: LiveData<List<Plan>>
+        get() = _plansForDisplay
 
-    val plansForShow: LiveData<List<Plan>>
-        get() = _plansForShow
-
-    //Plan data
+    // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>
         get() = _plans
 
-    //User id set
+    // User id set
     private val _authorIds = MutableLiveData<Set<String>>()
 
     val authorIds: LiveData<Set<String>>
         get() = _authorIds
 
-    //User id set
+    // User id set
     private val _authorDataSet = MutableLiveData<Set<User>>()
 
     val authorDataSet: LiveData<Set<User>>
@@ -39,9 +37,9 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     val keywords = MutableLiveData<String>()
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -65,17 +63,15 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     init {
-
-        getPlansResult()
+        fetchPlansResult()
     }
 
-    fun getPlansResult() {
-
+    fun fetchPlansResult() {
         _status.value = LoadApiStatus.LOADING
 
         coroutineScope.launch {
-
             val result = howYoRepository.getAllPublicPlans()
+
             _plans.value = when (result) {
                 is Result.Success -> result.data
                 else -> null
@@ -84,7 +80,6 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun setAuthorIdSet() {
-
         val authorIdSet = mutableSetOf<String>()
 
         plans.value?.forEach {
@@ -94,17 +89,14 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
         _authorIds.value = authorIdSet
     }
 
-    fun getAuthorData() {
-
+    fun fetchAuthorData() {
         val authorDataList = mutableSetOf<User>()
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 authorIds.value?.forEach { authorId ->
-                    when (val result = howYoRepository.getUser(authorId)){
-                        is Result.Success -> {
-                            authorDataList.add(result.data)
-                        }
+                    when (val result = howYoRepository.getUser(authorId)) {
+                        is Result.Success -> authorDataList.add(result.data)
                     }
                 }
             }
@@ -127,24 +119,21 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
     }
 
     fun setPlansForShow() {
-
-        _plansForShow.value = plans.value?.toList()
+        _plansForDisplay.value = plans.value?.toList()
     }
 
     fun filter() {
-
-        var newPlans = listOf<Plan>()
+        var filteredPlans = listOf<Plan>()
 
         when (keywords.value?.isEmpty()) {
-            true -> {
-                newPlans = plans.value ?: listOf()
-            }
+            true -> filteredPlans = plans.value ?: listOf()
             false -> {
-                newPlans =
-                    plans.value?.filter { it.title?.contains(keywords.value?:"") ?: false } ?: listOf()
+                filteredPlans =
+                    plans.value?.filter { it.title?.contains(keywords.value ?: "") ?: false }
+                        ?: listOf()
             }
         }
 
-        _plansForShow.value = newPlans
+        _plansForDisplay.value = filteredPlans
     }
 }

@@ -32,7 +32,7 @@
                 android:layout_marginStart="@dimen/standard_padding"
                 android:layout_marginTop="@dimen/standard_padding"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{viewModel.user.avatar}"
+                app:imageUrl="@{viewModel.currentUser.avatar}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/circle"
@@ -47,7 +47,7 @@
                 android:layout_marginEnd="@dimen/middle_padding"
                 android:maxWidth="@dimen/profile_text_width_small"
                 android:singleLine="true"
-                android:text="@{viewModel.user.name}"
+                android:text="@{viewModel.currentUser.name}"
                 android:textAlignment="textStart"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -78,10 +78,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/middle_padding"
                 android:text="@{String.valueOf(viewModel.shouldPay)}"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toEndOf="@+id/text_payment_should_pay"
                 app:layout_constraintTop_toTopOf="@+id/text_payment_should_pay"
+                tools:ignore="TextContrastCheck"
                 tools:text="987" />
 
             <androidx.recyclerview.widget.RecyclerView

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -27,7 +26,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <!--        android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}"-->
 
         <TextView
             android:id="@+id/button_plan_day_normal"
@@ -38,16 +36,12 @@
             android:layout_marginEnd="@dimen/small_padding"
             android:textAlignment="center"
             android:visibility="@{(viewHolder.isSelected || isSelectedOnBind) &amp;&amp; viewModel.selectedDayPosition == viewHolder.adapterPosition ? View.GONE : View.VISIBLE}"
-
-
             android:background="@drawable/day_corner_normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-<!--        app:day="@{day.position}"-->
-<!--        android:onClick="@{() -> viewModel.selectDay(viewHolder.adapterPosition)}"-->
-<!--        app:firstDate="@{viewModel.plan.startDate}"-->
+
         <TextView
             android:id="@+id/button_plan_day_selected"
             android:layout_width="90dp"
@@ -58,12 +52,9 @@
             android:textAlignment="center"
             android:background="@drawable/day_corner_selected"
             android:visibility="@{(viewHolder.isSelected || isSelectedOnBind) &amp;&amp; viewModel.selectedDayPosition == viewHolder.adapterPosition ? View.VISIBLE : View.GONE}"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-<!--        app:day="@{day.position}"-->
-<!--        app:firstDate="@{viewModel.plan.startDate}"-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -10,8 +10,8 @@ import com.yuchen.howyo.databinding.FragmentCheckOrShoppingListBinding
 import com.yuchen.howyo.ext.getVmFactory
 
 class CheckOrShoppingListFragment : Fragment() {
-
     private lateinit var binding: FragmentCheckOrShoppingListBinding
+
     private val viewModel by viewModels<CheckOrShoppingListViewModel> {
         getVmFactory(
             CheckOrShoppingListFragmentArgs.fromBundle(requireArguments()).planId,
@@ -25,19 +25,18 @@ class CheckOrShoppingListFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentCheckOrShoppingListBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
         val adapter = CheckOrShoppingListAdapter(viewModel)
         binding.recyclerCheckList.adapter = adapter
 
-        viewModel.isItemCreated.observe(viewLifecycleOwner) {
+        viewModel.itemCreatedResult.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
                     viewModel.onCreatedItem()
@@ -76,9 +75,7 @@ class CheckOrShoppingListFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
         when (viewModel.mainType) {
-
             MainItemType.CHECK -> {
                 inflater.inflate(R.menu.home_toolbar_nav_view_menu, menu)
                 menu.findItem(R.id.resetCheckItem).isVisible = true
@@ -92,12 +89,10 @@ class CheckOrShoppingListFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
-            R.id.resetCheckItem -> {
-                viewModel.resetItem()
-            }
+            R.id.resetCheckItem -> viewModel.resetItem()
         }
+
         return super.onOptionsItemSelected(item)
     }
 }

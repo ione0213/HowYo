@@ -1,6 +1,5 @@
 package com.yuchen.howyo.plan.findlocation
 
-import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.view.KeyEvent
@@ -10,44 +9,37 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.yuchen.howyo.HowYoApplication
-import com.yuchen.howyo.MainViewModel
 import com.yuchen.howyo.R
 import com.yuchen.howyo.databinding.FragmentFindLocationBinding
 import com.yuchen.howyo.ext.getVmFactory
-import com.yuchen.howyo.plan.PlanViewModel
-import com.yuchen.howyo.plan.detail.edit.DetailEditViewModel
-import com.yuchen.howyo.util.Logger
 
 class FindLocationFragment : Fragment(), OnMapReadyCallback {
-
     private var googleMap: GoogleMap? = null
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
-
     private lateinit var binding: FragmentFindLocationBinding
     val viewModel by viewModels<FindLocationViewModel> { getVmFactory() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentFindLocationBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
+
         binding.recyclerFindLocationDays.adapter = FindLocationDaysAdapter(viewModel)
 
-        binding.edittextFindLocationSearch.setOnEditorActionListener { v, actionId, event ->
+        binding.edittextFindLocationSearch.setOnEditorActionListener { _, actionId, event ->
             when {
                 actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
-                        event.action == KeyEvent.ACTION_DOWN || event.action == KeyEvent.KEYCODE_ENTER
+                    event.action == KeyEvent.ACTION_DOWN || event.action == KeyEvent.KEYCODE_ENTER
                 -> {
                     geoLocate()
                 }
@@ -55,7 +47,7 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
             false
         }
 
-        //Map
+        // Map
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
             HowYoApplication.instance
         )
@@ -73,8 +65,6 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
     private fun geoLocate() {
         val geocoder = Geocoder(context)
 
-        val list: List<Address> =
-            geocoder.getFromLocationName(binding.edittextFindLocationSearch.text.toString(), 1)
-
+        geocoder.getFromLocationName(binding.edittextFindLocationSearch.text.toString(), 1)
     }
 }

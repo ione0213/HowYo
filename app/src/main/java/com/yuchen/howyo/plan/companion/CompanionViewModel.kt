@@ -9,41 +9,39 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class CompanionViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
+    private var _plan = MutableLiveData<Plan?>()
 
-    private var _plan = MutableLiveData<Plan>()
-
-    val plan: LiveData<Plan>
+    val plan: LiveData<Plan?>
         get() = _plan
 
-    //Current user data
-    private var _user = MutableLiveData<User>()
+    // Current user data
+    private var _currentUser = MutableLiveData<User?>()
 
-    val user: LiveData<User>
-        get() = _user
+    val currentUser: LiveData<User?>
+        get() = _currentUser
 
     private val _friends = MutableLiveData<List<User>>()
 
     val friends: LiveData<List<User>>
         get() = _friends
 
-    private val _friendsForShow = MutableLiveData<List<User>>()
+    private val _friendsForDisplay = MutableLiveData<List<User>>()
 
-    val friendsForShow: LiveData<List<User>>
-        get() = _friendsForShow
+    val friendsForDisplay: LiveData<List<User>>
+        get() = _friendsForDisplay
 
     val keywords = MutableLiveData<String>()
 
     // Handle leave companion
-    private val _leave = MutableLiveData<Boolean>()
+    private val _leave = MutableLiveData<Boolean?>()
 
-    val leave: LiveData<Boolean>
+    val leave: LiveData<Boolean?>
         get() = _leave
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -62,47 +60,35 @@ class CompanionViewModel(
     }
 
     init {
-
-        getLivePlanResult()
+        fetchLivePlanResult()
     }
 
     fun getCurrentUser() {
-
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
-                    is Result.Success -> {
-                        _user.postValue(result.data!!)
-                    }
+                    is Result.Success -> _currentUser.postValue(result.data)
                 }
             }
         }
     }
 
-    private fun getLivePlanResult() {
-
+    private fun fetchLivePlanResult() {
         _status.value = LoadApiStatus.LOADING
 
         when (argumentPlan?.id?.isNotEmpty()) {
-            true -> {
-                _plan = howYoRepository.getLivePlan(argumentPlan.id)
-            }
+            true -> _plan = howYoRepository.getLivePlan(argumentPlan.id)
         }
     }
 
-    fun getFriendsData() {
-
+    fun fetchFriendsData() {
         val friendDataList = mutableListOf<User>()
 
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-                user.value?.followingList?.forEach { friendId ->
-
+                currentUser.value?.followingList?.forEach { friendId ->
                     when (val result = howYoRepository.getUser(friendId)) {
-                        is Result.Success -> {
-                            friendDataList.add(result.data)
-                        }
+                        is Result.Success -> friendDataList.add(result.data)
                     }
                 }
             }
@@ -112,7 +98,6 @@ class CompanionViewModel(
     }
 
     fun setCompanion(userId: String, type: CompanionType) {
-
         val newPlan = plan.value
         val companionList = newPlan?.companionList?.toMutableList()
 
@@ -135,34 +120,29 @@ class CompanionViewModel(
 
         newPlan?.companionList = companionList
 
-        _plan.value = newPlan!!
+        _plan.value = newPlan
 
         coroutineScope.launch {
             _plan.value?.let { howYoRepository.updatePlan(it) }
         }
     }
 
-    fun setFriendsForShow() {
-
-        _friendsForShow.value = friends.value?.toList()
+    fun setFriendsForDisplay() {
+        _friendsForDisplay.value = friends.value?.toList()
     }
 
     fun filter() {
-
-        var newUsers = listOf<User>()
+        var filteredUsers = listOf<User>()
 
         when (keywords.value?.isEmpty()) {
-            true -> {
-                newUsers = friends.value ?: listOf()
-            }
+            true -> filteredUsers = friends.value ?: listOf()
             false -> {
-
-                newUsers =
+                filteredUsers =
                     friends.value?.filter { it.id.contains(keywords.value ?: "") } ?: listOf()
             }
         }
 
-        _friendsForShow.value = newUsers
+        _friendsForDisplay.value = filteredUsers
     }
 
     fun setStatusDone() {

@@ -10,7 +10,6 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class PaymentViewModel(
@@ -18,10 +17,10 @@ class PaymentViewModel(
     private val argumentPlan: Plan?
 ) : ViewModel() {
 
-    private var _user = MutableLiveData<User>()
+    private var _currentUser = MutableLiveData<User>()
 
-    val user: LiveData<User>
-        get() = _user
+    val currentUser: LiveData<User>
+        get() = _currentUser
 
     private val _plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
@@ -43,15 +42,15 @@ class PaymentViewModel(
         get() = _planMembersData
 
     // Handle navigation to payment detail
-    private val _navigateToPaymentDetail = MutableLiveData<Boolean>()
+    private val _navigateToPaymentDetail = MutableLiveData<Boolean?>()
 
-    val navigateToPaymentDetail: LiveData<Boolean>
+    val navigateToPaymentDetail: LiveData<Boolean?>
         get() = _navigateToPaymentDetail
 
     // Handle navigation to edit exist payment detail
-    private val _navigateToEditExistPaymentDetail = MutableLiveData<Payment>()
+    private val _navigateToEditExistPaymentDetail = MutableLiveData<Payment?>()
 
-    val navigateToEditExistPaymentDetail: LiveData<Payment>
+    val navigateToEditExistPaymentDetail: LiveData<Payment?>
         get() = _navigateToEditExistPaymentDetail
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -71,22 +70,22 @@ class PaymentViewModel(
     init {
 
         _status.value = LoadApiStatus.LOADING
-        getLiveUserResult()
-        getLivePayments()
-        getPlanMemberData()
+        fetchLiveUserResult()
+        fetchLivePayments()
+        fetchPlanMemberData()
     }
 
-    private fun getLiveUserResult() {
+    private fun fetchLiveUserResult() {
 
-        _user = howYoRepository.getLiveUser(UserManager.userId ?: "")
+        _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
-    private fun getLivePayments() {
+    private fun fetchLivePayments() {
 
         payments = howYoRepository.getLivePayments(plan.value?.id ?: "")
     }
 
-    private fun getPlanMemberData() {
+    private fun fetchPlanMemberData() {
 
         val userDataList = mutableSetOf<User>()
         val planMembers = mutableListOf(plan.value?.authorId)
@@ -95,7 +94,7 @@ class PaymentViewModel(
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 planMembers.forEach { userId ->
-                    when (val result = howYoRepository.getUser(userId!!)) {
+                    when (val result = howYoRepository.getUser(userId ?: "")) {
                         is Result.Success -> {
                             userDataList.add(result.data)
                         }

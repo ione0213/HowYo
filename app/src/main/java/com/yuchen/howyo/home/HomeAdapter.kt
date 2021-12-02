@@ -7,13 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.PlanDataItem
-import com.yuchen.howyo.data.Schedule
-import com.yuchen.howyo.data.ScheduleDataItem
 import com.yuchen.howyo.databinding.ItemEmptyPlanBinding
-import com.yuchen.howyo.databinding.ItemEmptyScheduleBinding
 import com.yuchen.howyo.databinding.ItemPlansHomeBinding
-import com.yuchen.howyo.plan.ScheduleAdapter
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +19,6 @@ class HomeAdapter(
     private val viewModel: HomeViewModel
 ) :
     ListAdapter<PlanDataItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class OnClickListener(val clickListener: (plan: Plan) -> Unit) {
@@ -33,18 +27,15 @@ class HomeAdapter(
 
     class PlanViewHolder(private var binding: ItemPlansHomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(plan: Plan, onClickListener: OnClickListener) {
-
             binding.root.setOnClickListener { onClickListener.onClick(plan) }
             binding.plan = plan
             binding.executePendingBindings()
         }
     }
 
-    class EmptyViewHolder(private var binding: ItemEmptyPlanBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+    class EmptyViewHolder(binding: ItemEmptyPlanBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {
         override fun areItemsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {
@@ -80,7 +71,6 @@ class HomeAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is PlanViewHolder -> {
                 holder.bind((getItem(position) as PlanDataItem.PlanItem).plan, onClickListener)
@@ -95,16 +85,13 @@ class HomeAdapter(
         }
     }
 
-    fun addEmptyAndPlan(list: List<Plan>) {
+    fun addPlanOrEmptyPage(list: List<Plan>) {
         adapterScope.launch {
             val items = when (list.size) {
-                0 -> {
-                    listOf(PlanDataItem.EmptySchedule)
-                }
-                else -> {
-                    list.map { PlanDataItem.PlanItem(it) }
-                }
+                0 -> listOf(PlanDataItem.EmptySchedule)
+                else -> list.map { PlanDataItem.PlanItem(it) }
             }
+
             withContext(Dispatchers.Main) {
                 submitList(items)
             }

@@ -5,7 +5,7 @@ import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.util.ServiceLocator
 import kotlin.properties.Delegates
 
-class HowYoApplication: Application() {
+class HowYoApplication : Application() {
 
     val howYoRepository: HowYoRepository
         get() = ServiceLocator.provideTasksRepository()

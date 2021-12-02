@@ -12,7 +12,6 @@ class GroupMessageViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPlan: Plan?
 ) : ViewModel() {
-
     // Plan data from arguments
     private val _plan = MutableLiveData<Plan>().apply {
         value = argumentPlan
@@ -21,7 +20,7 @@ class GroupMessageViewModel(
     val plan: LiveData<Plan>
         get() = _plan
 
-    //All messages of plan
+    // All messages of plan
     var allGroupMessages = MutableLiveData<List<GroupMessage>>()
 
     private val _groupMessagesData = MutableLiveData<List<GroupMessageData>>()
@@ -34,7 +33,7 @@ class GroupMessageViewModel(
     val groupMsgResult: LiveData<Boolean>
         get() = _groupMsgResult
 
-    var message = MutableLiveData<String>()
+    var message = MutableLiveData<String?>()
 
     private var viewModelJob = Job()
 
@@ -47,20 +46,19 @@ class GroupMessageViewModel(
     }
 
     init {
-
-        getLiveGroupMsgResult()
+        fetchLiveGroupMsgResult()
     }
 
-    private fun getLiveGroupMsgResult() {
-        allGroupMessages = plan.value?.id?.let { howYoRepository.getLiveGroupMessages(it) }!!
+    private fun fetchLiveGroupMsgResult() {
+        allGroupMessages =
+            plan.value?.id?.let { howYoRepository.getLiveGroupMessages(it) }
+                ?: MutableLiveData<List<GroupMessage>>()
     }
 
-    fun getUsersResult() {
-
+    fun fetchUsersResult() {
         val groupMsgData = mutableListOf<GroupMessageData>()
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 allGroupMessages.value?.forEach { message ->
                     when (val result = message.userId?.let { howYoRepository.getUser(it) }) {
@@ -84,7 +82,6 @@ class GroupMessageViewModel(
     }
 
     fun submitMessage() {
-
         val message = GroupMessage(
             planId = plan.value?.id,
             userId = UserManager.userId,
@@ -92,7 +89,6 @@ class GroupMessageViewModel(
         )
 
         coroutineScope.launch {
-
             val result = howYoRepository.createGroupMessage(message)
 
             _groupMsgResult.value = when (result) {
@@ -102,7 +98,7 @@ class GroupMessageViewModel(
         }
     }
 
-    fun onSubmittedComment() {
+    fun onSubmittedMessage() {
         message.value = null
     }
 }

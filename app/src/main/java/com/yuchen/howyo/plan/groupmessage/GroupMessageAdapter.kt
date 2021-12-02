@@ -17,24 +17,19 @@ import kotlinx.coroutines.withContext
 
 class GroupMessageAdapter :
     ListAdapter<GroupMessageDataItem, RecyclerView.ViewHolder>(DiffCallback) {
-
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    class ChatViewHolder(private var binding: ItemChatBinding) :
+    class SendChatViewHolder(private var binding: ItemChatBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(groupMessageData: GroupMessageData) {
-
             binding.groupMessageData = groupMessageData
             binding.executePendingBindings()
         }
     }
 
-    class ChatViewHolderReceive(private var binding: ItemChatReceiveBinding) :
+    class ReceiveChatViewHolder(private var binding: ItemChatReceiveBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(groupMessageData: GroupMessageData) {
-
             binding.groupMessageData = groupMessageData
             binding.executePendingBindings()
         }
@@ -62,14 +57,14 @@ class GroupMessageAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_MSG_SELF -> {
-                ChatViewHolder(
+                SendChatViewHolder(
                     ItemChatBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
             }
             ITEM_VIEW_MSG_RECEIVE -> {
-                ChatViewHolderReceive(
+                ReceiveChatViewHolder(
                     ItemChatReceiveBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
@@ -77,16 +72,14 @@ class GroupMessageAdapter :
             }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
-            is ChatViewHolder -> {
+            is SendChatViewHolder -> {
                 holder.bind((getItem(position) as GroupMessageDataItem.MessageSelf).groupMessageData)
             }
-            is ChatViewHolderReceive -> {
+            is ReceiveChatViewHolder -> {
                 holder.bind((getItem(position) as GroupMessageDataItem.MessageReceive).groupMessageData)
             }
         }
@@ -100,9 +93,7 @@ class GroupMessageAdapter :
     }
 
     fun checkMessageOwner(list: List<GroupMessageData>) {
-
         adapterScope.launch {
-
             val groupMsgDataItems: MutableList<GroupMessageDataItem> = mutableListOf()
 
             list.forEach {

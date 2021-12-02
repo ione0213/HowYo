@@ -8,7 +8,6 @@ import com.yuchen.howyo.R
 import com.yuchen.howyo.data.Payment
 import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
-import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.plan.payment.PaymentType
@@ -17,7 +16,7 @@ import kotlinx.coroutines.*
 class PaymentDetailViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentPayment: Payment?,
-    private val argumentPlan: Plan
+    private val argumentPlan: Plan?
 ) : ViewModel() {
 
     private val _plan = MutableLiveData<Plan>().apply {
@@ -31,7 +30,7 @@ class PaymentDetailViewModel(
         value = when (argumentPayment) {
             null -> {
                 Payment(
-                    planId = argumentPlan.id
+                    planId = argumentPlan?.id
                 )
             }
             else -> {
@@ -43,9 +42,9 @@ class PaymentDetailViewModel(
     val payment: LiveData<Payment>
         get() = _payment
 
-    val item = MutableLiveData<String>()
+    val paymentItem = MutableLiveData<String>()
 
-    val type = MutableLiveData<String>()
+    val paymentType = MutableLiveData<String>()
 
     val amount = MutableLiveData<String>()
 
@@ -56,14 +55,14 @@ class PaymentDetailViewModel(
     val invalidPayment: LiveData<Int>
         get() = _invalidPayment
 
-    private val _isSavePayment = MutableLiveData<Boolean>()
+    private val _isSavePayment = MutableLiveData<Boolean?>()
 
-    val isSavePayment: LiveData<Boolean>
+    val isSavePayment: LiveData<Boolean?>
         get() = _isSavePayment
 
-    private val _paymentResult = MutableLiveData<Boolean>()
+    private val _paymentResult = MutableLiveData<Boolean?>()
 
-    val paymentResult: LiveData<Boolean>
+    val paymentResult: LiveData<Boolean?>
         get() = _paymentResult
 
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -89,8 +88,8 @@ class PaymentDetailViewModel(
         when {
             payment.value != null -> {
                 payment.value.apply {
-                    item.value = this?.item ?: ""
-                    type.value = this?.type ?: ""
+                    paymentItem.value = this?.item ?: ""
+                    paymentType.value = this?.type ?: ""
                     amount.value = this?.amount?.toString()
 
                     val planMembers = mutableListOf(plan.value?.authorId)
@@ -105,13 +104,13 @@ class PaymentDetailViewModel(
     fun prepareSubmitPayment() {
 
         when {
-            item.value.isNullOrEmpty() -> {
+            paymentItem.value.isNullOrEmpty() -> {
                 _invalidPayment.value = INVALID_FORMAT_ITEM_EMPTY
             }
-            type.value.isNullOrEmpty() -> {
+            paymentType.value.isNullOrEmpty() -> {
                 _invalidPayment.value = INVALID_FORMAT_ITEM_TYPE_EMPTY
             }
-            amount.value.isNullOrEmpty() || amount.value!!.toInt() == 0 -> {
+            amount.value.isNullOrEmpty() || amount.value?.toInt() == 0 -> {
                 _invalidPayment.value = INVALID_FORMAT_AMOUNT_EMPTY
             }
             else -> {
@@ -140,8 +139,8 @@ class PaymentDetailViewModel(
                 plan.value?.companionList?.let { planMembers.addAll(it) }
 
                 val newPayment = payment.value?.copy(
-                    item = item.value,
-                    type = type.value,
+                    item = paymentItem.value,
+                    type = paymentType.value,
                     amount = amount.value?.toInt() ?: 0,
                     payer = selectedPaymentTypePosition.value?.let { planMembers[it] }
                 )
@@ -150,15 +149,19 @@ class PaymentDetailViewModel(
                     when (payment.value?.id.isNullOrEmpty()) {
                         true -> {
 
-                            when (val result =
-                                newPayment?.let { howYoRepository.createPayment(it) }) {
+                            when (
+                                val result =
+                                    newPayment?.let { howYoRepository.createPayment(it) }
+                            ) {
                                 is Result.Success -> result.data
                                 else -> false
                             }
                         }
                         false -> {
-                            when (val result =
-                                newPayment?.let { howYoRepository.updatePayment(it) }) {
+                            when (
+                                val result =
+                                    newPayment?.let { howYoRepository.updatePayment(it) }
+                            ) {
                                 is Result.Success -> result.data
                                 else -> false
                             }
@@ -175,7 +178,7 @@ class PaymentDetailViewModel(
     }
 
     fun onTypeChanged(radioGroup: RadioGroup, id: Int) {
-        type.value = when (id) {
+        paymentType.value = when (id) {
             R.id.radio_self_payment -> PaymentType.SELF.type
             else -> PaymentType.SHARE.type
         }
@@ -189,8 +192,10 @@ class PaymentDetailViewModel(
 
             withContext(Dispatchers.IO) {
                 _paymentResult.postValue(
-                    when (val result =
-                        payment.value?.let { howYoRepository.deletePayment(it) }) {
+                    when (
+                        val result =
+                            payment.value?.let { howYoRepository.deletePayment(it) }
+                    ) {
                         is Result.Success -> result.data
                         else -> false
                     }

@@ -23,12 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_detail_gallery"
             android:background="@drawable/ic_placeholder"
-            android:scaleType="centerCrop"
+            android:contentDescription="@string/content_desc_schedule_image"
             android:onClick="@{() -> viewModel.navigateToViewImage(imageUrl)}"
+            android:scaleType="centerCrop"
             app:imageUrl="@{imageUrl}"
-            tools:src="@drawable/ic_placeholder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ImageContrastCheck"
+            tools:src="@drawable/ic_placeholder" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

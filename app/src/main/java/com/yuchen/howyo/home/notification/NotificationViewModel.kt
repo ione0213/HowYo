@@ -10,46 +10,44 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.profile.author.FollowType
 import com.yuchen.howyo.signin.UserManager
-import com.yuchen.howyo.util.Logger
 import kotlinx.coroutines.*
 
 class NotificationViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
-
     private var _currentUser = MutableLiveData<User>()
 
     val currentUser: LiveData<User>
         get() = _currentUser
 
-    //Notification data
+    // Notification data
     var notifications = MutableLiveData<List<Notification>>()
 
-    //Plan data
+    // Plan data
     private val _plans = MutableLiveData<List<Plan>>()
 
     val plans: LiveData<List<Plan>>
         get() = _plans
 
-    //User data set
+    // User data set
     private val _userDataSet = MutableLiveData<Set<User>>()
 
     val userDataSet: LiveData<Set<User>>
         get() = _userDataSet
 
-    private val _sendNotificationResult = MutableLiveData<Boolean>()
+    private val _sendNotificationResult = MutableLiveData<Boolean?>()
 
-    val sendNotificationResult: LiveData<Boolean>
+    val sendNotificationResult: LiveData<Boolean?>
         get() = _sendNotificationResult
 
     // Handle navigation to user profile
-    private val _navigateToUserProfile = MutableLiveData<String>()
+    private val _navigateToUserProfile = MutableLiveData<String?>()
 
-    val navigateToUserProfile: LiveData<String>
+    val navigateToUserProfile: LiveData<String?>
         get() = _navigateToUserProfile
 
     // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan>()
+    private val _navigateToPlan = MutableLiveData<Plan?>()
 
-    val navigateToPlan: LiveData<Plan>
+    val navigateToPlan: LiveData<Plan?>
         get() = _navigateToPlan
 
     private var viewModelJob = Job()
@@ -63,22 +61,19 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     }
 
     init {
-
-        getLiveUserResult()
-        getLiveNotificationsResult()
+        fetchLiveCurrentUserResult()
+        fetchLiveNotificationsResult()
     }
 
-    private fun getLiveUserResult() {
-
+    private fun fetchLiveCurrentUserResult() {
         _currentUser = howYoRepository.getLiveUser(UserManager.userId ?: "")
     }
 
-    fun getLiveNotificationsResult() {
+    private fun fetchLiveNotificationsResult() {
         notifications = howYoRepository.getLiveNotifications()
     }
 
-    fun getUserData() {
-
+    fun fetchUserData() {
         val userIds = mutableSetOf<String>()
         val userDataSet = mutableSetOf<User>()
 
@@ -87,13 +82,10 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
         }
 
         coroutineScope.launch {
-
             withContext(Dispatchers.IO) {
                 userIds.forEach { userId ->
                     when (val result = howYoRepository.getUser(userId)) {
-                        is Result.Success -> {
-                            userDataSet.add(result.data)
-                        }
+                        is Result.Success -> userDataSet.add(result.data)
                     }
                 }
             }
@@ -108,7 +100,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
         val newCurrentUser = currentUser.value
         val followingList = newCurrentUser?.followingList?.toMutableList()
 
-        val currentUserId = UserManager.userId
+        val currentUserId = UserManager.userId ?: ""
 
         val notification = Notification(
             toUserId = user.id,
@@ -120,9 +112,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
             FollowType.FOLLOW -> {
                 when {
                     user.fansList?.contains(currentUserId) != true -> {
-                        if (currentUserId != null) {
-                            fansList?.add(currentUserId)
-                        }
+                        fansList?.add(currentUserId)
                     }
                 }
 
@@ -135,9 +125,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
             FollowType.UNFOLLOW -> {
                 when {
                     user.fansList?.contains(currentUserId) == true -> {
-                        if (currentUserId != null) {
-                            fansList?.removeAt(fansList.indexOf(currentUserId))
-                        }
+                        fansList?.removeAt(fansList.indexOf(currentUserId))
                     }
                 }
 
@@ -152,7 +140,7 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
         user.fansList = fansList
         newCurrentUser?.followingList = followingList
 
-        _currentUser.value = newCurrentUser!!
+        newCurrentUser?.let { _currentUser.value = it }
 
         coroutineScope.launch {
             howYoRepository.updateUser(user)
@@ -164,7 +152,8 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
                         else -> false
                     }
                 } else {
-                    when (val result = howYoRepository.deleteFollowNotification(user.id, currentUserId!!)) {
+                    when (val result =
+                        howYoRepository.deleteFollowNotification(user.id, currentUserId)) {
                         is Result.Success -> result.data
                         else -> false
                     }
@@ -182,10 +171,8 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
     }
 
     fun navigateToPlan(planId: String) {
-
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-
                 _navigateToPlan.postValue(
                     when (val result = howYoRepository.getPlan(planId)) {
                         is Result.Success -> result.data

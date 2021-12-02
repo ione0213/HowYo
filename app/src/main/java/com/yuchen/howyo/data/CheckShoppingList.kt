@@ -3,7 +3,6 @@ package com.yuchen.howyo.data
 import com.google.firebase.firestore.PropertyName
 import java.util.*
 
-
 data class CheckShoppingList(
     var id: String = "",
     @get:PropertyName("plan_id")

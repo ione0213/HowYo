@@ -12,11 +12,10 @@ import com.yuchen.howyo.databinding.FragmentCompanionBinding
 import com.yuchen.howyo.ext.closeKeyBoard
 import com.yuchen.howyo.ext.getVmFactory
 import com.yuchen.howyo.ext.setTouchDelegate
-import com.yuchen.howyo.util.Logger
 
 class CompanionFragment : Fragment() {
-
     private lateinit var binding: FragmentCompanionBinding
+
     private val viewModel by viewModels<CompanionViewModel> {
         getVmFactory(
             CompanionFragmentArgs.fromBundle(requireArguments()).plan
@@ -24,17 +23,17 @@ class CompanionFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentCompanionBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         val adapter = CompanionAdapter(viewModel)
+        binding.recyclerCompanionFriends.adapter = adapter
 
-        binding. recyclerCompanionFriends.adapter = adapter
         binding.btnCompanionClose.setTouchDelegate()
 
         binding.edittextCompanionFriend.setOnKeyListener { v, keyCode, event ->
@@ -47,38 +46,35 @@ class CompanionFragment : Fragment() {
         }
 
         viewModel.plan.observe(viewLifecycleOwner) {
-
             it?.let {
                 viewModel.getCurrentUser()
             }
         }
 
-        viewModel.user.observe(viewLifecycleOwner) {
-
+        viewModel.currentUser.observe(viewLifecycleOwner) {
             it?.let {
-                viewModel.getFriendsData()
+                viewModel.fetchFriendsData()
             }
         }
 
         viewModel.friends.observe(viewLifecycleOwner) {
-
             it?.let {
                 viewModel.setStatusDone()
-                viewModel.setFriendsForShow()
+                viewModel.setFriendsForDisplay()
             }
         }
 
-        viewModel.friendsForShow.observe(viewLifecycleOwner) {
-
+        viewModel.friendsForDisplay.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             binding.viewModel = viewModel
         }
 
         viewModel.leave.observe(viewLifecycleOwner) {
-
             it?.let {
-                findNavController().popBackStack()
-                viewModel.onLeaveCompleted()
+                if (it) {
+                    findNavController().popBackStack()
+                    viewModel.onLeaveCompleted()
+                }
             }
         }
 

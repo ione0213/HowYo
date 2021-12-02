@@ -11,8 +11,8 @@ import com.yuchen.howyo.databinding.FragmentDetailViewImageBinding
 import com.yuchen.howyo.ext.getVmFactory
 
 class DetailViewImageFragment : Fragment() {
-
     private lateinit var binding: FragmentDetailViewImageBinding
+
     private val viewModel by viewModels<DetailViewImageViewModel> {
         getVmFactory(
             DetailViewImageFragmentArgs.fromBundle(requireArguments()).imageUrl
@@ -20,20 +20,20 @@ class DetailViewImageFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentDetailViewImageBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
-        viewModel.leaveViewImage.observe(viewLifecycleOwner, {
+        viewModel.leaveViewImage.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
                     findNavController().popBackStack()
                 }
             }
-        })
+        }
 
         return binding.root
     }

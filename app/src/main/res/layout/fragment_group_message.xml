@@ -49,9 +49,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:autofillHints="@string/type_message_here"
+                android:hint="@string/type_message_here"
+                android:inputType="text"
                 android:maxLength="256"
                 android:text="@={viewModel.message}"
-                android:hint="@string/type_message_here" />
+                tools:ignore="TextContrastCheck" />
 
             <ImageView
                 android:id="@+id/button_group_msg_send"
@@ -60,7 +63,8 @@
                 android:onClick="@{() -> viewModel.submitMessage()}"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/send" />
+                android:src="@drawable/send"
+                android:contentDescription="@string/content_desc_submit_message" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
