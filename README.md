@@ -15,13 +15,13 @@ The Planning flow is for the user who would like to start a new trip, edit upcom
     
     Users could find the plan which is suitable for the reference
 
-    ![image](./readme-asset/plan_browsing.gif)
+    <img src="readme-asset/plan_browsing.gif" width="200"><br/>
 
 * Interact with the author of plan
     
     When browsing the plans, users could send a like, leave a comment, collect current plan
 
-    ![image](./readme-asset/plan_Interact.gif)
+    <img src="readme-asset/plan_Interact.gif" width="200"><br/>
 
 * Create / Copy plan
     
@@ -29,44 +29,44 @@ The Planning flow is for the user who would like to start a new trip, edit upcom
 
     Edit / Reset cover image
 
-    ![image](./readme-asset/edit_reset_cover_image.gif)
+    <img src="readme-asset/edit_reset_cover_image.gif" width="200"><br/>
 
     Define plan name and duration of traveling
 
-    ![image](./readme-asset/plan_name_duration.gif)
+  <img src="readme-asset/plan_name_duration.gif" width="200"><br/>
 
     Copy plan from other users
 
-     ![image](./readme-asset/copy_plan.gif)
-    
+    <img src="readme-asset/copy_plan.gif" width="200"><br/>
+
 * Details in the plan
     
     The author could edit the details for the new or existing plan
 
     Invite friends as the companions
 
-    ![image](./readme-asset/invite_companions.gif)
+    <img src="readme-asset/invite_companions.gif" width="200"><br/>
     
     Add / Edit schedule in one of days
+  
+    <img src="readme-asset/add_edit_schedule.gif" width="200"><br/>
 
-    ![image](./readme-asset/add_edit_schedule.gif)
-    
     move / delete schedule
 
-    ![image](./readme-asset/move_delete_schedule.gif)
+    <img src="readme-asset/move_delete_schedule.gif" width="200"><br/>
     
     Add / move / delete days in the plan
-    
-    ![image](./readme-asset/add_move_delete_day.gif)
 
-    Co-edit plan with compaions
+    <img src="readme-asset/add_move_delete_day.gif" width="200"><br/>
 
-    ![image](./readme-asset/coedit_plan.gif)
+    Co-edit plan with companions
+
+    <img src="readme-asset/coedit_plan.gif" width="200"><br/>
     
     Checking and shopping list
 
-    ![image](./readme-asset/shopping_check_list.gif)
-    
+    <img src="readme-asset/shopping_check_list.gif" width="200"><br/>
+
 ### Traveling Flow
 While users are on the journey, traveling flow provides them to check the schedules, get locations, track their spending, and contact companions with IM.
 
@@ -74,29 +74,29 @@ While users are on the journey, traveling flow provides them to check the schedu
     
     Review the image data
 
-    ![image](./readme-asset/review_image.gif)
+    <img src="readme-asset/review_image.gif" width="200"><br/>
 
     Confirm the location of schedules
 
-    ![image](./readme-asset/schedule_location.gif)
+    <img src="readme-asset/schedule_location.gif" width="200"><br/>
     
 * Get locations
     
     Check companions' current destination
 
-    ![image](./readme-asset/companion_location.gif)
+    <img src="readme-asset/companion_location.gif" width="200"><br/>
 
 * Spending
     
     Track users' spending in the trip, calculate the rate that every members should pay
 
-    ![image](./readme-asset/track_spending.gif)
+    <img src="readme-asset/track_spending.gif" width="200"><br/>
     
 * Instant Messaging
     
     The users in the same traveling plan could send message to each other with group message
 
-    ![image](./readme-asset/instant_messaging.gif)
+    <img src="readme-asset/instant_messaging.gif" width="200"><br/>
 
 ## Techniques
 ---
