@@ -1,6 +1,6 @@
 <h1 align="center">How Yo</h1>
 
-<img src="readme_asset/howyo_topic.png" width="100%">
+<img src="readme-asset/howyo_topic.png" width="100%"><br/>
 
 A comprehensive App for all travelers, which accompanies everyone from scheduling to the end of the trip.
 
@@ -63,7 +63,7 @@ The Planning flow is for the user who would like to start a new trip, edit upcom
 
     Co-edit plan with companions
 
-    <img src="readme-asset/coedit_plan.gif" width="450"><br/>
+    <img src="readme-asset/coedit_plan.gif" width="500"><br/>
     
     Checking and shopping list
 
@@ -98,7 +98,7 @@ While users are on the journey, traveling flow provides them to check the schedu
     
     The users in the same traveling plan could send message to each other with group message
 
-    <img src="readme-asset/instant_messaging.gif" width="450"><br/>
+    <img src="readme-asset/instant_messaging.gif" width="500"><br/>
 
 ## Techniques
 
