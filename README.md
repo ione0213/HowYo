@@ -1,6 +1,6 @@
 <h1 align="center">How Yo</h1>
 
-<img src="./readme_asset/howyo_topic.png" width="100%">
+<img src="readme_asset/howyo_topic.png" width="100%">
 
 A comprehensive App for all travelers, which accompanies everyone from scheduling to the end of the trip.
 
