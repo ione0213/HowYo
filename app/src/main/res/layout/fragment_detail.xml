@@ -53,8 +53,8 @@
                     android:layout_marginTop="@dimen/large_padding"
                     android:layout_marginEnd="@dimen/middle_padding"
                     android:background="@drawable/edit"
-                    android:contentDescription="@string/content_desc_edit"
                     android:backgroundTint="@{viewModel.schedule.photoUrlList.size == 0 ? @color/matcha_3 : @color/matcha_6}"
+                    android:contentDescription="@string/content_desc_edit"
                     android:onClick="@{() -> viewModel.navigateToEditSchedule()}"
                     app:accessType="@{AccessPlanType.VIEW}"
                     app:buttonForPlanMembers="@{viewModel.plan}"
@@ -82,11 +82,11 @@
                     android:layout_height="@dimen/plan_img_btn_big"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
+                    android:contentDescription="@string/content_desc_schedule_type_icon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_detail_images"
                     app:layout_goneMarginTop="96dp"
-                    app:scheduleType="@{viewModel.schedule.scheduleType}"
-                    android:contentDescription="@string/content_desc_schedule_type_icon" />
+                    app:scheduleType="@{viewModel.schedule.scheduleType}" />
 
                 <TextView
                     android:id="@+id/text_detail_title"
@@ -136,8 +136,8 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/small_padding"
                     android:layout_marginTop="@dimen/small_padding"
-                    android:contentDescription="@string/content_desc_expand"
                     android:background="@drawable/resize_arrow"
+                    android:contentDescription="@string/content_desc_expand"
                     android:onClick="@{() -> viewModel.navigateToViewMap()}"
                     android:visibility="@{viewModel.schedule.latitude == null || viewModel.schedule.longitude == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="@+id/layout_detail_destination"
@@ -149,10 +149,10 @@
                     android:layout_width="@dimen/plan_img_btn_small"
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
-                    android:contentDescription="@string/content_desc_schedule_time"
                     android:layout_marginTop="@dimen/standard_padding"
                     android:background="@drawable/clock"
                     android:backgroundTint="@color/matcha_3"
+                    android:contentDescription="@string/content_desc_schedule_time"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layout_detail_destination"
                     tools:ignore="TouchTargetSizeCheck" />
@@ -180,8 +180,8 @@
                     android:layout_height="@dimen/plan_img_btn_small"
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
-                    android:backgroundTint="@color/matcha_3"
                     android:background="@drawable/locator"
+                    android:backgroundTint="@color/matcha_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_time" />
 
@@ -262,8 +262,8 @@
                     android:layout_marginStart="@dimen/large_padding"
                     android:layout_marginTop="@dimen/standard_padding"
                     android:background="@drawable/hyperlink"
-                    android:contentDescription="@string/content_desc_url_icon"
                     android:backgroundTint="@color/matcha_3"
+                    android:contentDescription="@string/content_desc_url_icon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_budge" />
 
@@ -294,6 +294,8 @@
                     android:layout_marginTop="@dimen/standard_padding"
                     android:background="@drawable/bell"
                     android:backgroundTint="@color/matcha_3"
+                    app:accessType="@{AccessPlanType.VIEW}"
+                    app:buttonForPlanMembers="@{viewModel.plan}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/img_detail_url"
                     tools:ignore="TouchTargetSizeCheck" />
@@ -307,9 +309,11 @@
                     android:clickable="false"
                     android:shadowColor="@color/matcha_3"
                     android:switchMinWidth="56dp"
+                    app:accessType="@{AccessPlanType.VIEW}"
                     app:layout_constraintBottom_toBottomOf="@+id/img_detail_notify"
                     app:layout_constraintStart_toEndOf="@+id/img_detail_notify"
-                    app:layout_constraintTop_toTopOf="@+id/img_detail_notify" />
+                    app:layout_constraintTop_toTopOf="@+id/img_detail_notify"
+                    app:switchForPlanMembers="@{viewModel.plan}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

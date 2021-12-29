@@ -39,11 +39,11 @@ class HomeAdapter(
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {
         override fun areItemsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {
-            return oldItem === newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
 
         private const val ITEM_VIEW_EMPTY = 0x00

@@ -7,6 +7,7 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.navinterface.NavToPlanInterface
 import com.yuchen.howyo.network.LoadApiStatus
 import com.yuchen.howyo.profile.friends.FriendFilter
 import com.yuchen.howyo.signin.UserManager
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val howYoRepository: HowYoRepository,
     private val argumentUserId: String
-) : ViewModel() {
+) : ViewModel(), NavToPlanInterface {
     private var _currentUser = MutableLiveData<User>()
 
     val currentUser: LiveData<User>
@@ -29,12 +30,6 @@ class ProfileViewModel(
 
     val plans: LiveData<List<Plan>>
         get() = _plans
-
-    // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan?>()
-
-    val navigateToPlan: LiveData<Plan?>
-        get() = _navigateToPlan
 
     // Handle navigation to setting
     private val _navigateToSetting = MutableLiveData<Boolean?>()
@@ -96,14 +91,6 @@ class ProfileViewModel(
                 else -> null
             }
         }
-    }
-
-    fun navigateToPlan(plan: Plan) {
-        _navigateToPlan.value = plan
-    }
-
-    fun onPlanNavigated() {
-        _navigateToPlan.value = null
     }
 
     fun navigateToSetting() {

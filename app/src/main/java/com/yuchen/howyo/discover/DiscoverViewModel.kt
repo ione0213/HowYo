@@ -7,10 +7,12 @@ import com.yuchen.howyo.data.Plan
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
+import com.yuchen.howyo.navinterface.NavToPlanInterface
 import com.yuchen.howyo.network.LoadApiStatus
 import kotlinx.coroutines.*
 
-class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
+class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel(),
+    NavToPlanInterface {
     private val _plansForDisplay = MutableLiveData<List<Plan>>()
 
     val plansForDisplay: LiveData<List<Plan>>
@@ -35,12 +37,6 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
         get() = _authorDataSet
 
     val keywords = MutableLiveData<String>()
-
-    // Handle navigation to plan
-    private val _navigateToPlan = MutableLiveData<Plan?>()
-
-    val navigateToPlan: LiveData<Plan?>
-        get() = _navigateToPlan
 
     private val _status = MutableLiveData<LoadApiStatus>()
 
@@ -108,14 +104,6 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
 
     fun setStatusDone() {
         _status.value = LoadApiStatus.DONE
-    }
-
-    fun navigateToPlan(plan: Plan) {
-        _navigateToPlan.value = plan
-    }
-
-    fun onPlanNavigated() {
-        _navigateToPlan.value = null
     }
 
     fun setPlansForShow() {

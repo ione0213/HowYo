@@ -6,6 +6,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -456,6 +457,22 @@ fun AppCompatButton.bindFollowButton(user: User?, type: FollowType?) {
             }
         }
     }
+}
+
+@BindingAdapter("switchForPlanMembers", "accessType")
+fun SwitchCompat.bindSwitchForPlanMembers(plan: Plan?, accessType: AccessPlanType?) {
+    val userId = UserManager.userId ?: ""
+
+    visibility =
+        when {
+            (plan?.authorId == userId || plan?.companionList?.contains(userId) == true) &&
+                    accessType == AccessPlanType.VIEW -> {
+                View.VISIBLE
+            }
+            else -> {
+                View.GONE
+            }
+        }
 }
 
 @BindingAdapter("buttonForPlanMembers", "accessType")

@@ -39,7 +39,7 @@ class FavoriteAdapter(
 
     companion object DiffCallback : DiffUtil.ItemCallback<PlanDataItem>() {
         override fun areItemsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {
-            return oldItem === newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: PlanDataItem, newItem: PlanDataItem): Boolean {

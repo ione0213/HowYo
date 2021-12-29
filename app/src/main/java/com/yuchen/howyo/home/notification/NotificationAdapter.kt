@@ -41,14 +41,14 @@ class NotificationAdapter(private val viewModel: NotificationViewModel) :
             oldItem: NotificationItem,
             newItem: NotificationItem
         ): Boolean {
-            return oldItem === newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
             oldItem: NotificationItem,
             newItem: NotificationItem
         ): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
 
         private const val ITEM_VIEW_FOLLOW_ITEM = 0x00
