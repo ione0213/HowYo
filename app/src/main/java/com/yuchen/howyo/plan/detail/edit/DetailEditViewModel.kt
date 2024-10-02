@@ -3,6 +3,8 @@ package com.yuchen.howyo.plan.detail.edit
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -169,6 +171,7 @@ class DetailEditViewModel(
             true -> {
                 getLatitudeAndLongitude()
             }
+
             else -> null
         }
 
@@ -184,7 +187,7 @@ class DetailEditViewModel(
                     .instance
                     .resources
                     .getStringArray(R.array.schedule_type_list)[
-                        selectedScheduleTypePosition.value ?: 0
+                    selectedScheduleTypePosition.value ?: 0
                 ]
             title = this@DetailEditViewModel.title.value
             when {
@@ -192,6 +195,7 @@ class DetailEditViewModel(
                     latitude = location?.first
                     longitude = location?.second
                 }
+
                 else -> {
 
                 }
@@ -221,12 +225,16 @@ class DetailEditViewModel(
                                         howYoRepository.deletePhoto(fileName)
                                     }
                                 }
+
                                 false -> {
                                     fileNameList.add(it.fileName ?: "")
                                     imageUrlList.add(it.url ?: "")
                                 }
+
+                                else -> {}
                             }
                         }
+
                         else -> {
                             when (it.isDeleted) {
                                 false -> {
@@ -252,8 +260,14 @@ class DetailEditViewModel(
                                         is Result.Success -> {
                                             imageUrlList.add(result.data)
                                         }
+
+                                        else -> {
+                                            // TODO error handle
+                                        }
                                     }
                                 }
+
+                                else -> {}
                             }
                         }
                     }
@@ -274,6 +288,7 @@ class DetailEditViewModel(
                                 else -> false
                             }
                         }
+
                         else -> {
                             when (val result = howYoRepository.updateSchedule(newSchedule)) {
                                 is Result.Success -> result.data
@@ -286,15 +301,18 @@ class DetailEditViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun getLatitudeAndLongitude(): Pair<Double, Double> {
         val geocoder = Geocoder(HowYoApplication.instance)
 
-        val list: List<Address> =
-            geocoder.getFromLocationName(address.value ?: "", 1)
+        var list: List<Address>? = null
+        geocoder.getFromLocationName(address.value ?: "", 1) {
+            list = it
+        }
 
-        return when (list.isEmpty()) {
+        return when (list?.isEmpty()) {
             true -> Pair(0.0, 0.0)
-            else -> Pair(list.first().latitude, list.first().longitude)
+            else -> Pair(list?.first()?.latitude ?: 0.0, list?.first()?.longitude ?: 0.0)
         }
     }
 

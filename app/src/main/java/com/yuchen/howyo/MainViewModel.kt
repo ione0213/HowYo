@@ -3,15 +3,19 @@ package com.yuchen.howyo
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.yuchen.howyo.data.Result
 import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.signin.UserManager
 import com.yuchen.howyo.util.CurrentFragmentType
 import com.yuchen.howyo.util.DrawerToggleType
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() {
 
@@ -20,7 +24,7 @@ class MainViewModel(private val howYoRepository: HowYoRepository) : ViewModel() 
 
     // According to current fragment to change different drawer toggle
     val currentDrawerToggleType: LiveData<DrawerToggleType> =
-        Transformations.map(currentFragmentType) {
+        currentFragmentType.map {
             when (it) {
                 CurrentFragmentType.NOTIFICATION,
                 CurrentFragmentType.GROUP_MESSAGE,

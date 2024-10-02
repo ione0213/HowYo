@@ -12,7 +12,7 @@ class DetailEditImageViewModelFactory(
     private val photoData: PhotoData,
     private val photos: Photos
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
         with(modelClass) {
             when {
                 isAssignableFrom(DetailEditImageViewModel::class.java) ->

@@ -542,11 +542,11 @@ class PlanFragment : Fragment() {
             if (viewModel.accessType == AccessPlanType.VIEW) isVisible = true
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                icon.colorFilter = BlendModeColorFilter(
+                icon?.colorFilter = BlendModeColorFilter(
                     Color.TRANSPARENT, BlendMode.SRC_IN
                 )
             } else {
-                icon.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+                icon?.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
             }
         }
 

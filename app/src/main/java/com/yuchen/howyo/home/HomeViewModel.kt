@@ -123,6 +123,9 @@ class HomeViewModel(private val howYoRepository: HowYoRepository) : ViewModel(),
                         is Result.Success -> {
                             authorDataList.add(result.data)
                         }
+                        else -> {
+                            // TODO error handling
+                        }
                     }
                 }
             }

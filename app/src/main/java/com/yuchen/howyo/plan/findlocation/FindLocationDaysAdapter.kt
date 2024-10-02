@@ -15,7 +15,7 @@ class FindLocationDaysAdapter(val viewModel: FindLocationViewModel) :
         private var binding: ItemFindLocationDayBinding,
         private val viewModel: FindLocationViewModel
     ) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-        val isSelected: LiveData<Boolean> = Transformations.map(viewModel.selectedDayPosition) {
+        val isSelected: LiveData<Boolean> = viewModel.selectedDayPosition.map {
             it == adapterPosition
         }
 
@@ -30,9 +30,8 @@ class FindLocationDaysAdapter(val viewModel: FindLocationViewModel) :
             }
         }
 
-        override fun getLifecycle(): Lifecycle {
-            return lifecycleRegistry
-        }
+        override val lifecycle: Lifecycle
+            get() = lifecycleRegistry
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Day>() {

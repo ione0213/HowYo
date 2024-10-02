@@ -14,7 +14,7 @@ class EditDetailViewModelFactory(
     private val plan: Plan?,
     private val day: Day?
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+    override fun <T : ViewModel> create(modelClass: Class<T>) =
         with(modelClass) {
             when {
                 isAssignableFrom(DetailEditViewModel::class.java) ->

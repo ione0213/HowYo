@@ -11,7 +11,7 @@ class CheckListViewModelFactory(
     private val planId: String,
     private val mainType: MainItemType
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
         with(modelClass) {
             when {
                 isAssignableFrom(CheckOrShoppingListViewModel::class.java) ->

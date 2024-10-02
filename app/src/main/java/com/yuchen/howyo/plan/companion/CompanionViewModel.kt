@@ -68,6 +68,9 @@ class CompanionViewModel(
             withContext(Dispatchers.IO) {
                 when (val result = UserManager.userId?.let { howYoRepository.getUser(it) }) {
                     is Result.Success -> _currentUser.postValue(result.data)
+                    else -> {
+                        // TODO error handling
+                    }
                 }
             }
         }
@@ -78,6 +81,9 @@ class CompanionViewModel(
 
         when (argumentPlan?.id?.isNotEmpty()) {
             true -> _plan = howYoRepository.getLivePlan(argumentPlan.id)
+            else -> {
+                // TODO Handle error
+            }
         }
     }
 
@@ -89,6 +95,9 @@ class CompanionViewModel(
                 currentUser.value?.followingList?.forEach { friendId ->
                     when (val result = howYoRepository.getUser(friendId)) {
                         is Result.Success -> friendDataList.add(result.data)
+                        else -> {
+                            // TODO error handling
+                        }
                     }
                 }
             }
@@ -134,12 +143,13 @@ class CompanionViewModel(
     fun filter() {
         var filteredUsers = listOf<User>()
 
-        when (keywords.value?.isEmpty()) {
-            true -> filteredUsers = friends.value ?: listOf()
+        filteredUsers = when (keywords.value?.isEmpty()) {
+            true -> friends.value ?: listOf()
             false -> {
-                filteredUsers =
-                    friends.value?.filter { it.id.contains(keywords.value ?: "") } ?: listOf()
+                friends.value?.filter { it.id.contains(keywords.value ?: "") } ?: listOf()
             }
+
+            null -> listOf()
         }
 
         _friendsForDisplay.value = filteredUsers

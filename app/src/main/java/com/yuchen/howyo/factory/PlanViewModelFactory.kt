@@ -12,7 +12,7 @@ class PlanViewModelFactory(
     private val plan: Plan?,
     private val accessPlanType: AccessPlanType
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+    override fun <T : ViewModel> create(modelClass: Class<T>) =
         with(modelClass) {
             when {
                 isAssignableFrom(PlanViewModel::class.java) ->

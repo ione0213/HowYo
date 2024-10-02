@@ -12,7 +12,7 @@ class PaymentDetailViewModelFactory(
     private val payment: Payment?,
     private val plan: Plan?
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+    override fun <T : ViewModel> create(modelClass: Class<T>) =
         with(modelClass) {
             when {
                 isAssignableFrom(PaymentDetailViewModel::class.java) ->

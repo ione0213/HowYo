@@ -73,6 +73,9 @@ class GroupMessageViewModel(
                                 )
                             )
                         }
+                        else -> {
+                            // TODO error handling
+                        }
                     }
                 }
 

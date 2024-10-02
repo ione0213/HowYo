@@ -9,7 +9,11 @@ import com.yuchen.howyo.data.User
 import com.yuchen.howyo.data.source.HowYoRepository
 import com.yuchen.howyo.navinterface.NavToPlanInterface
 import com.yuchen.howyo.network.LoadApiStatus
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewModel(),
     NavToPlanInterface {
@@ -93,6 +97,9 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
                 authorIds.value?.forEach { authorId ->
                     when (val result = howYoRepository.getUser(authorId)) {
                         is Result.Success -> authorDataList.add(result.data)
+                        else -> {
+                            // TODO Error Handling
+                        }
                     }
                 }
             }
@@ -120,6 +127,8 @@ class DiscoverViewModel(private val howYoRepository: HowYoRepository) : ViewMode
                     plans.value?.filter { it.title?.contains(keywords.value ?: "") ?: false }
                         ?: listOf()
             }
+
+            null -> {}
         }
 
         _plansForDisplay.value = filteredPlans

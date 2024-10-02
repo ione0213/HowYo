@@ -145,6 +145,9 @@ class PlanCoverDialog : AppCompatDialogFragment() {
                             )
                         }
                         false -> findNavController().popBackStack()
+                        null -> {
+                            // TODO error handling
+                        }
                     }
                 }
             }
