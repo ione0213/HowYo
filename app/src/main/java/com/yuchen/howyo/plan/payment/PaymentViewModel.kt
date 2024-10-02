@@ -98,6 +98,9 @@ class PaymentViewModel(
                         is Result.Success -> {
                             userDataList.add(result.data)
                         }
+                        else -> {
+                            // TODO error handling
+                        }
                     }
                 }
             }

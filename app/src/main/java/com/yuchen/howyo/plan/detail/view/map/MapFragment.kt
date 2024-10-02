@@ -189,13 +189,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 mFusedLocationProviderClient.requestLocationUpdates(
                     locationRequest,
                     object : LocationCallback() {
-                        override fun onLocationResult(locationResult: LocationResult?) {
+                        override fun onLocationResult(locationResult: LocationResult) {
                             locationResult ?: return
 
                             val currentLocation =
                                 LatLng(
-                                    locationResult.lastLocation.latitude,
-                                    locationResult.lastLocation.longitude
+                                    locationResult.lastLocation?.latitude ?: 0.0,
+                                    locationResult.lastLocation?.longitude ?: 0.0
                                 )
                             googleMap?.moveCamera(
                                 CameraUpdateFactory.newLatLngZoom(

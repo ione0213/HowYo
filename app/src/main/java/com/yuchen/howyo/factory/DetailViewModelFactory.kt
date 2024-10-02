@@ -15,7 +15,7 @@ class DetailViewModelFactory(
     private val day: Day?,
     private val schedule: Schedule?
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
         with(modelClass) {
             when {
                 isAssignableFrom(DetailViewModel::class.java) ->

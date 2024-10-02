@@ -239,6 +239,9 @@ class PlanViewModel(
     private fun fetchLivePlanResult() {
         when (argumentPlan?.id?.isNotEmpty()) {
             true -> _plan = howYoRepository.getLivePlan(argumentPlan.id)
+            else -> {
+                // TODO Handle error
+            }
         }
     }
 

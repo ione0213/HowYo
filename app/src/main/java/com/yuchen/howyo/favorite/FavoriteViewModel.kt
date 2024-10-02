@@ -71,6 +71,9 @@ class FavoriteViewModel(private val howYoRepository: HowYoRepository) : ViewMode
                 authorIds.value?.forEach { authorId ->
                     when (val result = howYoRepository.getUser(authorId)) {
                         is Result.Success -> authorDataList.add(result.data)
+                        else -> {
+                            // TODO error handling
+                        }
                     }
                 }
             }

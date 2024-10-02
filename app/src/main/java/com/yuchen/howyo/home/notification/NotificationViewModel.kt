@@ -86,6 +86,9 @@ class NotificationViewModel(private val howYoRepository: HowYoRepository) : View
                 userIds.forEach { userId ->
                     when (val result = howYoRepository.getUser(userId)) {
                         is Result.Success -> userDataSet.add(result.data)
+                        else -> {
+                            // TODO error handling
+                        }
                     }
                 }
             }

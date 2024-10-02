@@ -78,6 +78,9 @@ class FriendItemViewModel(
                                 ?: listOf()
                         }
                     }
+                    else -> {
+                        // TODO error handling
+                    }
                 }
             }
 
@@ -94,6 +97,9 @@ class FriendItemViewModel(
                     when (val result = howYoRepository.getUser(userId)) {
                         is Result.Success -> {
                             userDataList.add(result.data)
+                        }
+                        else -> {
+                            // TODO error handling
                         }
                     }
                 }

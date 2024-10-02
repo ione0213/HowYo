@@ -63,7 +63,7 @@ class FindLocationFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun geoLocate() {
-        val geocoder = Geocoder(context)
+        val geocoder = Geocoder(requireContext())
 
         geocoder.getFromLocationName(binding.edittextFindLocationSearch.text.toString(), 1)
     }

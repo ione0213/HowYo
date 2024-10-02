@@ -67,6 +67,9 @@ class CommentViewModel(
                                 )
                             )
                         }
+                        else -> {
+                            // TODO error handling
+                        }
                     }
                 }
 

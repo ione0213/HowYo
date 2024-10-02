@@ -50,6 +50,7 @@ class SignInFragment : Fragment() {
                                 findNavController().navigate(NavigationDirections.navToHomeFragment())
                                 mainViewModel.setIsAccessAppFirstTime()
                             }
+                            false -> {}
                         }
                     }
                 }

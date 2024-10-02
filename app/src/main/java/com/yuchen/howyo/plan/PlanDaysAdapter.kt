@@ -3,7 +3,11 @@ package com.yuchen.howyo.plan
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +29,7 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
         private var binding: ItemPlanDayBinding,
         private val viewModel: PlanViewModel
     ) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-        val isSelected: LiveData<Boolean> = Transformations.map(viewModel.selectedDayPosition) {
+        val isSelected: LiveData<Boolean> = viewModel.selectedDayPosition.map {
             it == adapterPosition
         }
 
@@ -53,9 +57,8 @@ class PlanDaysAdapter(val viewModel: PlanViewModel) :
             lifecycleRegistry.currentState = Lifecycle.State.CREATED
         }
 
-        override fun getLifecycle(): Lifecycle {
-            return lifecycleRegistry
-        }
+        override val lifecycle: Lifecycle
+            get() = lifecycleRegistry
     }
 
     class AddViewHolder(
