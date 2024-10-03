@@ -53,6 +53,7 @@ class PlanFragment : Fragment() {
                         adapter.notifyItemMoved(from, to)
                         true
                     }
+
                     else -> false
                 }
             }
@@ -112,6 +113,7 @@ class PlanFragment : Fragment() {
                         adapter.notifyItemMoved(from, to)
                         true
                     }
+
                     else -> false
                 }
             }
@@ -168,6 +170,7 @@ class PlanFragment : Fragment() {
                 dayItemTouchHelper.attachToRecyclerView(binding.recyclerPlanDays)
                 scheduleItemTouchHelper.attachToRecyclerView(binding.recyclerPlanSchedules)
             }
+
             else -> {
 
             }
@@ -353,16 +356,16 @@ class PlanFragment : Fragment() {
                             )
                         )
                     }
+
                     AccessPlanType.EDIT -> {
                         findNavController().navigate(
-                            NavigationDirections.navToDetailEditFragment()
-                                .setPlan(viewModel.plan.value)
-                                .setDay(
-                                    viewModel.selectedDayPosition.value?.let { position ->
-                                        viewModel.days.value?.get(position)
-                                    }
-                                )
-                                .setSchedule(it)
+                            NavigationDirections.navToDetailEditFragment(
+                                it,
+                                viewModel.plan.value,
+                                viewModel.selectedDayPosition.value?.let { position ->
+                                    viewModel.days.value?.get(position)
+                                }
+                            )
                         )
                     }
                 }
@@ -374,10 +377,10 @@ class PlanFragment : Fragment() {
         viewModel.navigateToAddSchedule.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToDetailEditFragment()
-                        .setSchedule(null)
-                        .setPlan(viewModel.plan.value)
-                        .setDay(it)
+                    NavigationDirections.navToDetailEditFragment(
+                        null,
+                        viewModel.plan.value, it
+                    )
                 )
 
                 viewModel.onAddScheduleNavigated()
@@ -400,7 +403,7 @@ class PlanFragment : Fragment() {
         viewModel.navigateToEditCover.observe(viewLifecycleOwner) {
             it?.let {
                 findNavController().navigate(
-                    NavigationDirections.navToPlanCoverDialog().setPlan(it)
+                    NavigationDirections.navToPlanCoverDialog(it)
                 )
 
                 viewModel.onEditCoverNavigated()
