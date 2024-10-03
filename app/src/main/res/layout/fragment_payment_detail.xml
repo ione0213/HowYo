@@ -131,7 +131,7 @@
                     android:id="@+id/radio_group_payment_detail_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onCheckedChanged="@{viewModel.onTypeChanged}"
+                    android:onCheckedChanged="@{viewModel::onTypeChanged}"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="@+id/to_cart_select_color_text"
                     app:layout_constraintTop_toBottomOf="@id/to_cart_select_color_text">
